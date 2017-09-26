@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="###5.X更改的地方：  使用rigidbody.AddForce()出错改用：GetComponent().AddForce(movement);此为泛型方法，集合了多种类公用操作，unity对Component.GetComponent的描述：Returns the component of Type type if the game object has one attached, nul">
+<meta name="description" content="5.X更改的地方： 使用rigidbody.AddForce()出错改用：GetComponent().AddForce(movement);此为泛型方法，集合了多种类公用操作，unity对Component.GetComponent的描述：Returns the component of Type type if the game object has one attached, null if">
 <meta name="keywords" content="unity">
 <meta property="og:type" content="article">
 <meta property="og:title" content="unity官方视屏1">
 <meta property="og:url" content="http://yoursite.com/2017/09/25/unity官方视屏1/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="###5.X更改的地方：  使用rigidbody.AddForce()出错改用：GetComponent().AddForce(movement);此为泛型方法，集合了多种类公用操作，unity对Component.GetComponent的描述：Returns the component of Type type if the game object has one attached, nul">
+<meta property="og:description" content="5.X更改的地方： 使用rigidbody.AddForce()出错改用：GetComponent().AddForce(movement);此为泛型方法，集合了多种类公用操作，unity对Component.GetComponent的描述：Returns the component of Type type if the game object has one attached, null if">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-25T14:24:16.900Z">
+<meta property="og:updated_time" content="2017-09-26T15:00:26.427Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="unity官方视屏1">
-<meta name="twitter:description" content="###5.X更改的地方：  使用rigidbody.AddForce()出错改用：GetComponent().AddForce(movement);此为泛型方法，集合了多种类公用操作，unity对Component.GetComponent的描述：Returns the component of Type type if the game object has one attached, nul">
+<meta name="twitter:description" content="5.X更改的地方： 使用rigidbody.AddForce()出错改用：GetComponent().AddForce(movement);此为泛型方法，集合了多种类公用操作，unity对Component.GetComponent的描述：Returns the component of Type type if the game object has one attached, null if">
 
 
 
@@ -372,10 +372,9 @@
       
 
       
-        <p>###5.X更改的地方：</p>
-<ol>
+        <h3 id="5-X更改的地方："><a href="#5-X更改的地方：" class="headerlink" title="5.X更改的地方："></a>5.X更改的地方：</h3><ol>
 <li>使用rigidbody.AddForce()出错改用：GetComponent<rigidbody>().AddForce(movement);此为泛型方法，集合了多种类公用操作，unity对Component.GetComponent的描述：Returns the component of Type type if the game object has one attached, null if it doesn’t.额….感觉就是在确认组件？</rigidbody></li>
-<li>GUIText被UI Text所取代–增加头文件UnityEngine.UI<br>###其它收获：</li>
+<li>GUIText被UI Text所取代–增加头文件UnityEngine.UI<h3 id="其它收获："><a href="#其它收获：" class="headerlink" title="其它收获："></a>其它收获：</h3></li>
 <li>静态物体运动，资源损耗严重,加刚体默认为动态，iskinenatic只用translate移动</li>
 <li>vs tools for unity还算好用，但还有不足…..</li>
 <li>start等方法为私有..unity究竟是如何调用的呢？搜索答案：<br>Unity使用类反射而非虚函数的方式来调用Update等函数，主要原因是在于，并非所有的MonoBehaviour都需要Update（或Start，Awake等等，下同）。Unity会维护一个需要Update的Behaviour列表，藉此避免进行空的虚函数调用，提高性能。—-未理解透彻，需了解架构</li>
@@ -474,8 +473,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/1.png"
@@ -537,6 +545,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-X更改的地方："><span class="nav-number">1.</span> <span class="nav-text">5.X更改的地方：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它收获："><span class="nav-number">2.</span> <span class="nav-text">其它收获：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

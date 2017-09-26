@@ -525,10 +525,9 @@
       
         
           
-            <p>###5.X更改的地方：</p>
-<ol>
+            <h3 id="5-X更改的地方："><a href="#5-X更改的地方：" class="headerlink" title="5.X更改的地方："></a>5.X更改的地方：</h3><ol>
 <li>使用rigidbody.AddForce()出错改用：GetComponent<rigidbody>().AddForce(movement);此为泛型方法，集合了多种类公用操作，unity对Component.GetComponent的描述：Returns the component of Type type if the game object has one attached, null if it doesn’t.额….感觉就是在确认组件？</rigidbody></li>
-<li>GUIText被UI Text所取代–增加头文件UnityEngine.UI<br>###其它收获：</li>
+<li>GUIText被UI Text所取代–增加头文件UnityEngine.UI<h3 id="其它收获："><a href="#其它收获：" class="headerlink" title="其它收获："></a>其它收获：</h3></li>
 <li>静态物体运动，资源损耗严重,加刚体默认为动态，iskinenatic只用translate移动</li>
 <li>vs tools for unity还算好用，但还有不足…..</li>
 <li>start等方法为私有..unity究竟是如何调用的呢？搜索答案：<br>Unity使用类反射而非虚函数的方式来调用Update等函数，主要原因是在于，并非所有的MonoBehaviour都需要Update（或Start，Awake等等，下同）。Unity会维护一个需要Update的Behaviour列表，藉此避免进行空的虚函数调用，提高性能。—-未理解透彻，需了解架构</li>
