@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="思路 用putty的ssh端口映射，将连接到的云服务器中指定端口映射到本地服务器监听的端口上，并修改服务器文件编辑/etc/ssh/sshd_config 然后把GatewayPorts 改成yes（去掉注释#并重启）即可 具体步骤：我们称云服务器为中继服务器，我的pc为服务器 服务器中安装putty点开ssh端口映射 上方选项全选，源端口填中继服务器希望客户连接的端口 目的地填127.0.0.1">
+<meta name="description" content="思路 用putty的ssh端口映射，将连接到的云服务器中指定端口映射到本地服务器监听的端口上，并修改服务器文件编辑/etc/ssh/sshd_config 然后把GatewayPorts 改成yes（去掉注释#并重启）即可 具体步骤：我们称云服务器为中继服务器，我的pc为服务器 服务器中安装putty点开ssh端口映射 源端口填中继服务器希望客户连接的端口 目的地填127.0.0.1:服务器程序监">
 <meta name="keywords" content="网络,putty,服务器">
 <meta property="og:type" content="article">
 <meta property="og:title" content="服务器突破内网">
 <meta property="og:url" content="http://yoursite.com/2017/10/25/服务器突破内网/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="思路 用putty的ssh端口映射，将连接到的云服务器中指定端口映射到本地服务器监听的端口上，并修改服务器文件编辑/etc/ssh/sshd_config 然后把GatewayPorts 改成yes（去掉注释#并重启）即可 具体步骤：我们称云服务器为中继服务器，我的pc为服务器 服务器中安装putty点开ssh端口映射 上方选项全选，源端口填中继服务器希望客户连接的端口 目的地填127.0.0.1">
+<meta property="og:description" content="思路 用putty的ssh端口映射，将连接到的云服务器中指定端口映射到本地服务器监听的端口上，并修改服务器文件编辑/etc/ssh/sshd_config 然后把GatewayPorts 改成yes（去掉注释#并重启）即可 具体步骤：我们称云服务器为中继服务器，我的pc为服务器 服务器中安装putty点开ssh端口映射 源端口填中继服务器希望客户连接的端口 目的地填127.0.0.1:服务器程序监">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-25T15:59:16.778Z">
+<meta property="og:updated_time" content="2017-10-26T02:53:40.895Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="服务器突破内网">
-<meta name="twitter:description" content="思路 用putty的ssh端口映射，将连接到的云服务器中指定端口映射到本地服务器监听的端口上，并修改服务器文件编辑/etc/ssh/sshd_config 然后把GatewayPorts 改成yes（去掉注释#并重启）即可 具体步骤：我们称云服务器为中继服务器，我的pc为服务器 服务器中安装putty点开ssh端口映射 上方选项全选，源端口填中继服务器希望客户连接的端口 目的地填127.0.0.1">
+<meta name="twitter:description" content="思路 用putty的ssh端口映射，将连接到的云服务器中指定端口映射到本地服务器监听的端口上，并修改服务器文件编辑/etc/ssh/sshd_config 然后把GatewayPorts 改成yes（去掉注释#并重启）即可 具体步骤：我们称云服务器为中继服务器，我的pc为服务器 服务器中安装putty点开ssh端口映射 源端口填中继服务器希望客户连接的端口 目的地填127.0.0.1:服务器程序监">
 
 
 
@@ -375,7 +375,7 @@
         <h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p> 用putty的ssh端口映射，将连接到的云服务器中指定端口映射到本地服务器监听的端口上，并修改服务器文件编辑/etc/ssh/sshd_config 然后把GatewayPorts 改成yes（去掉注释#并重启）即可</p>
 <h3 id="具体步骤："><a href="#具体步骤：" class="headerlink" title="具体步骤："></a>具体步骤：</h3><h4 id="我们称云服务器为中继服务器，我的pc为服务器"><a href="#我们称云服务器为中继服务器，我的pc为服务器" class="headerlink" title="我们称云服务器为中继服务器，我的pc为服务器"></a>我们称云服务器为中继服务器，我的pc为服务器</h4><ol>
 <li>服务器中安装putty点开ssh端口映射</li>
-<li>上方选项全选，源端口填中继服务器希望客户连接的端口</li>
+<li>源端口填中继服务器希望客户连接的端口</li>
 <li>目的地填127.0.0.1:服务器程序监听的端口</li>
 <li>选远程</li>
 <li>add</li>
