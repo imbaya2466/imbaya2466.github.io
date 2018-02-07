@@ -283,6 +283,162 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/08/anima2D使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/08/anima2D使用/" itemprop="url">anima2D使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-08T00:34:57+08:00">
+                2018-02-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/unity/" itemprop="url" rel="index">
+                    <span itemprop="name">unity</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="2D骨骼动画步骤："><a href="#2D骨骼动画步骤：" class="headerlink" title="2D骨骼动画步骤："></a>2D骨骼动画步骤：</h4><h5 id="建立骨架和图片的关系，用来建立骨架"><a href="#建立骨架和图片的关系，用来建立骨架" class="headerlink" title="建立骨架和图片的关系，用来建立骨架"></a>建立骨架和图片的关系，用来建立骨架</h5><ol>
+<li>图片生成sprite meshes，用于实际使用的图片</li>
+<li>将生成的sprite meshes摆放于合适的位置</li>
+<li>该对象下创建骨头bone，用于当骨架同样具有层次，其设置除了child和length都是用于显示</li>
+<li>sprite meshes内选择对应的bone，可多选</li>
+<li>进入spritemesh edit 编辑绑定骨骼，同时决定可以运动的部分加点bind</li>
+</ol>
+<p>注意点：<br>建立骨架时若想子不在父的端点处但是跟随父动，只用把子置于父下并且将父的child设置为none即可…<br>设置的child指定的是下一关节，跟随的同时还会涉及到关节蒙皮，直接置于子而不设置child就是只是跟随运动</p>
+<h5 id="IK"><a href="#IK" class="headerlink" title="IK"></a>IK</h5><p>ik用来反向运动，指定子运动带动父运动，可以设置带动几个父运动，如果不设置ik子运动其父不会动，只有父动子才动<br>添加ik只需创建ik并将指定骨骼拖入即可</p>
+<h5 id="spring-bone："><a href="#spring-bone：" class="headerlink" title="spring bone："></a>spring bone：</h5><p>人物添加spring manager脚本<br>需要spring bone的骨头添加spring bone脚本<br>将添加spring bone的骨头拖到spring manager里</p>
+<p>spring manager在add脚本里其选项：<br>stuffness force 刚力</p>
+<p>spring bone 脚本选项：<br>1.radius半径</p>
+<h4 id="关于该插件"><a href="#关于该插件" class="headerlink" title="关于该插件"></a>关于该插件</h4><p>导入anima2D包，多了的选项有：<br>1.creat在project下右键的选项多了anima2d里的sprite meshes用于创建图片对应的网格   pose<br>2.窗口多了anima2d里面有5个，第一个是网格编辑器<br>3.hierarchy阶层窗口2dobject多了5个，1.骨头   2.3.ik</p>
+<h4 id="便捷操作"><a href="#便捷操作" class="headerlink" title="便捷操作"></a>便捷操作</h4><p>shift指定首尾间文件多选</p>
+<p>锁定Inspector<br>在inspector面板上方有一个小“锁”图标，点击锁住后可以将inspector面板锁定在当前选择的GameObject上。在你需要大量设置某个GameObject的参数时非常有效（例如为一个数组里添加大量引用）</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/java-netty-文件服务器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1615,148 +1771,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/lambda表达式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/27/lambda表达式/" itemprop="url">lambda表达式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T22:29:13+08:00">
-                2017-09-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/c/" itemprop="url" rel="index">
-                    <span itemprop="name">c#</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>λ表达式，可理解为匿名函数，提供快速的函数作用，而不用去创建方法，目前在集合处理中经常见到。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1807,7 +1821,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1829,7 +1843,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
