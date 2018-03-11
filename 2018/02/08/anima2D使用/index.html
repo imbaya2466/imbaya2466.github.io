@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="2D骨骼动画步骤：建立骨架和图片的关系，用来建立骨架 图片生成sprite meshes，用于实际使用的图片 将生成的sprite meshes摆放于合适的位置 该对象下创建骨头bone，用于当骨架同样具有层次，其设置除了child和length都是用于显示 sprite meshes内选择对应的bone，可多选 进入spritemesh edit 编辑绑定骨骼，同时决定可以运动的部分加点bind">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-09T15:49:29.163Z">
+<meta property="og:updated_time" content="2018-02-10T13:44:49.628Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="anima2D使用">
 <meta name="twitter:description" content="2D骨骼动画步骤：建立骨架和图片的关系，用来建立骨架 图片生成sprite meshes，用于实际使用的图片 将生成的sprite meshes摆放于合适的位置 该对象下创建骨头bone，用于当骨架同样具有层次，其设置除了child和length都是用于显示 sprite meshes内选择对应的bone，可多选 进入spritemesh edit 编辑绑定骨骼，同时决定可以运动的部分加点bind">
@@ -380,7 +380,7 @@
 <li>进入spritemesh edit 编辑绑定骨骼，同时决定可以运动的部分加点bind</li>
 </ol>
 <p>注意点：<br>建立骨架时若想子不在父的端点处但是跟随父动，只用把子置于父下并且将父的child设置为none即可…<br>设置的child指定的是下一关节，跟随的同时还会涉及到关节蒙皮，直接置于子而不设置child就是只是跟随运动</p>
-<h5 id="IK"><a href="#IK" class="headerlink" title="IK"></a>IK</h5><p>ik用来反向运动，指定子运动带动父运动，可以设置带动几个父运动，如果不设置ik子运动其父不会动，只有父动子才动<br>添加ik只需创建ik并将指定骨骼拖入即可</p>
+<h5 id="IK"><a href="#IK" class="headerlink" title="IK"></a>IK</h5><p>ik用来反向运动，指定子运动带动父运动，可以设置带动几个父运动，如果不设置ik子运动其父不会动，只有父动子才动<br>添加ik只需创建ik并将指定子骨骼拖入即可</p>
 <h5 id="spring-bone："><a href="#spring-bone：" class="headerlink" title="spring bone："></a>spring bone：</h5><p>用于飘扬的头发，丝带等<br>人物添加spring manager脚本<br>需要spring bone的骨头添加spring bone脚本<br>将添加spring bone的骨头拖到spring manager里</p>
 <p>spring manager在add脚本里其选项：<br>Dynamic Ratio：柔软度，0-1之间，骨骼当前方向到目标方向的平滑度，越大越接近目标<br>Stiffness Force：整体硬度，越小像丝带，越大像钢筋0-1<br>Stiffness Curve：硬度的逐节点变化<br>Drag Force：力衰减0-1<br>Drag Curve：力的逐节点变化</p>
 <p>spring bone 脚本选项：<br>Radius：半径<br>Is Use Each Bone Force Settings：是否使用自身设置，而不受管理器控制<br>Stiffness Force：整体硬度，越小像丝带，越大像钢筋0-1<br>Drag Force：力衰减，0-1<br>spring force：力</p>
@@ -438,6 +438,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/11/虚拟地址/" rel="prev" title="虚拟地址">
+                虚拟地址 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -514,7 +518,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -536,7 +540,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
