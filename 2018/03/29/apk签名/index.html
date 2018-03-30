@@ -103,7 +103,7 @@
 <meta property="og:description" content="数据摘要消息摘要算法（Message Digest Algorithm）是一种能产生特殊输出格式的算法，其原理是根据一定的运算规则对原始数据进行某种形式的信息提取，被提取出的信息就被称作原始数据的消息摘要。著名的摘要算法有RSA公司的MD5算法和SHA-1算法及其大量的变体。特点：  无论输入的消息有多长，计算出来的消息摘要的长度总是固定的。 一般来说（不考虑碰撞的情况下），只要输入的原始数据不同">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/lzrjA7X.png">
-<meta property="og:updated_time" content="2018-03-29T12:51:46.953Z">
+<meta property="og:updated_time" content="2018-03-29T13:02:49.937Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="apk签名">
 <meta name="twitter:description" content="数据摘要消息摘要算法（Message Digest Algorithm）是一种能产生特殊输出格式的算法，其原理是根据一定的运算规则对原始数据进行某种形式的信息提取，被提取出的信息就被称作原始数据的消息摘要。著名的摘要算法有RSA公司的MD5算法和SHA-1算法及其大量的变体。特点：  无论输入的消息有多长，计算出来的消息摘要的长度总是固定的。 一般来说（不考虑碰撞的情况下），只要输入的原始数据不同">
@@ -387,7 +387,7 @@
 <li>防止抵赖（数字签名）：<br>这需要一个第三方认证机构。例如A写了一个文件，认证机构对此文件用MD5算法产生摘要信息并做好记录。若以后A说这文件不是他写的，权威机构只需对此文件重新产生摘要信息，然后跟记录在册的摘要信息进行比对，相同的话，就证明是A写的了。这就是所谓的“数字签名”。</li>
 </ol>
 <h4 id="签名文件和证书"><a href="#签名文件和证书" class="headerlink" title="签名文件和证书"></a>签名文件和证书</h4><p>数字签名技术：<br>生成一对公私钥对，将公钥给消息的接收者。<br>私匙加密的只能用公匙解，其他人无法篡改私匙加密的内容，因此保证发出的唯一。<br>那么如何保证公钥的安全可信呢？这就要靠数字证书来解决了。<br>数字证书其实也用到了数字签名技术.<br><img src="https://i.imgur.com/lzrjA7X.png" alt=""></p>
-<h4 id="jarsign和signapk工具"><a href="#jarsign和signapk工具" class="headerlink" title="jarsign和signapk工具"></a>jarsign和signapk工具</h4><p>jarsign是Java本生自带的一个工具，他可以对jar进行签名的。而signapk是后面专门为了Android应用程序apk进行签名的工具，他们两的签名算法没什么区别，主要是签名时使用的文件不一样（第4点）</p>
+<h4 id="jarsign和signapk工具"><a href="#jarsign和signapk工具" class="headerlink" title="jarsign和signapk工具"></a>jarsign和signapk工具</h4><p>jarsign是Java本生自带的一个工具，他可以对jar进行签名的。而signapk是后面专门为了Android应用程序apk进行签名的工具，他们两的签名算法没什么区别，主要是签名时使用的文件不一样（第4点）<br>二者都是签名apk</p>
 <h4 id="keystore文件和pk8，x509-pem文件的区别"><a href="#keystore文件和pk8，x509-pem文件的区别" class="headerlink" title="keystore文件和pk8，x509.pem文件的区别"></a>keystore文件和pk8，x509.pem文件的区别</h4><p>jarsign工具签名时使用的是keystore文件<br>signapk工具签名时使用的是pk8,x509.pem文件<br>ide生成debug版时有个默认的keystore，默认用的是jarsign工具进行签名的，它有有MD5和SHA1的摘要，这个就是keystore文件中私钥的数据摘要，这个信息也是我们在申请很多开发平台账号的时候需要填入的信息，比如申请百度地图，微信SDK等，会需要填写应用的MD5或者是SHA1信息。从而确定是谁生成的应用在使用。</p>
 <p>pk8是私钥文件<br>x509.pem是含有公钥的文件</p>
 <h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>只要修改了Apk中的任何内容，就必须重新签名，不然会提示安装失败，保证了apk未修改</p>
@@ -435,6 +435,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/30/安卓逆向第一天的坑/" rel="prev" title="安卓逆向第一天的坑">
+                安卓逆向第一天的坑 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -511,7 +515,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -522,7 +526,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -533,7 +537,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
