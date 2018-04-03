@@ -94,19 +94,19 @@
 
 
 
-<meta name="description" content="先上个出处https://www.cnblogs.com/chenyangyao/p/5240079.html的图： 2018.3.31待续…(看完《java虚拟机规范》再详细写下java文件到.class到jar到执行的详细过程) 源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码">
+<meta name="description" content="先上个出处https://www.cnblogs.com/chenyangyao/p/5240079.html的图： 2018.3.31待续…(看完.java虚拟机规范.再详细写下java文件到.class到jar到执行的详细过程) 源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码">
 <meta name="keywords" content="java,.class,jvm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="jvm的.class文件格式">
 <meta property="og:url" content="http://yoursite.com/2018/03/31/jvm的-class文件格式/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="先上个出处https://www.cnblogs.com/chenyangyao/p/5240079.html的图： 2018.3.31待续…(看完《java虚拟机规范》再详细写下java文件到.class到jar到执行的详细过程) 源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码">
+<meta property="og:description" content="先上个出处https://www.cnblogs.com/chenyangyao/p/5240079.html的图： 2018.3.31待续…(看完.java虚拟机规范.再详细写下java文件到.class到jar到执行的详细过程) 源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/IJXpXwG.jpg">
-<meta property="og:updated_time" content="2018-03-31T08:58:35.165Z">
+<meta property="og:updated_time" content="2018-04-01T11:28:23.794Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jvm的.class文件格式">
-<meta name="twitter:description" content="先上个出处https://www.cnblogs.com/chenyangyao/p/5240079.html的图： 2018.3.31待续…(看完《java虚拟机规范》再详细写下java文件到.class到jar到执行的详细过程) 源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码">
+<meta name="twitter:description" content="先上个出处https://www.cnblogs.com/chenyangyao/p/5240079.html的图： 2018.3.31待续…(看完.java虚拟机规范.再详细写下java文件到.class到jar到执行的详细过程) 源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码">
 <meta name="twitter:image" content="https://i.imgur.com/IJXpXwG.jpg">
 
 
@@ -375,7 +375,7 @@
 
       
         <p>先上个出处<a href="https://www.cnblogs.com/chenyangyao/p/5240079.html的图：" target="_blank" rel="external">https://www.cnblogs.com/chenyangyao/p/5240079.html的图：</a><br><img src="https://i.imgur.com/IJXpXwG.jpg" alt=""></p>
-<p>2018.3.31待续…(看完《java虚拟机规范》再详细写下java文件到.class到jar到执行的详细过程)</p>
+<p>2018.3.31待续…(看完.java虚拟机规范.再详细写下java文件到.class到jar到执行的详细过程)</p>
 <p>源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码文件的兼容性，因为所有的JVM全部遵守Java虚拟机规范，也就是说所有的JVM环境都是一样的，这样一来字节码文件可以在各种JVM上运行。 当然也包括KVM。<br>每一个线程都有一个保存帧的栈。在每一个方法调用的时候创建一个帧。一个帧包括了三个部分：操作栈，局部变量数组，和一个对当前方法所属类的常量池的引用。<br>局部变量数组也被称之为局部变量表，它包含了方法的参数，也用于保存一些局部变量的值。参数值得存放总是在局部变量数组的index0开始的。如果当前帧是由构造函数或者实例方法创建的，那么该对象引用将会存放在location0处，然后才开始存放其余的参数。<br>局部变量表的大小由编译时决定，同时也依赖于局部变量的数量和一些方法的大小。操作栈是一个（LIFO）栈，用于压入和取出值，其大小也在编译时决定。某些opcode指令将值压入操作栈，其余的opcode指令将操作数取出栈。使用它们后再把结果压入栈。操作栈也用于接收从方法中返回的值。</p>
 
       
@@ -420,6 +420,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/02/Dalvik字节码及相关/" rel="prev" title="Dalvik字节码及相关">
+                Dalvik字节码及相关 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -487,7 +491,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -509,7 +513,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
