@@ -94,13 +94,13 @@
 
 
 
-<meta name="description" content="一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 2.Dalvik虚拟机作用：运行dex文件于linux下。每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实">
+<meta name="description" content="一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 1.1 apk的生成具体过程：  aapt程序将资源标记生成R.java，并生成resources.arsc用来索引，并加密xml将后二者打包为.ap aidl程序将.aidl（为了进程通信分割出的描述语言，进程通信需要信息化为系统所">
 <meta name="keywords" content="android逆向,dex,dalvik">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Dalvik字节码及相关">
 <meta property="og:url" content="http://yoursite.com/2018/04/02/Dalvik字节码及相关/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 2.Dalvik虚拟机作用：运行dex文件于linux下。每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实">
+<meta property="og:description" content="一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 1.1 apk的生成具体过程：  aapt程序将资源标记生成R.java，并生成resources.arsc用来索引，并加密xml将后二者打包为.ap aidl程序将.aidl（为了进程通信分割出的描述语言，进程通信需要信息化为系统所">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/Ti7761P.png">
 <meta property="og:image" content="https://i.imgur.com/ET73kFM.png">
@@ -108,10 +108,10 @@
 <meta property="og:image" content="https://i.imgur.com/UuIIhAn.png">
 <meta property="og:image" content="https://i.imgur.com/4rFBjnX.png">
 <meta property="og:image" content="https://i.imgur.com/7ReGTLb.png">
-<meta property="og:updated_time" content="2018-04-03T15:10:50.412Z">
+<meta property="og:updated_time" content="2018-04-08T15:57:14.130Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dalvik字节码及相关">
-<meta name="twitter:description" content="一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 2.Dalvik虚拟机作用：运行dex文件于linux下。每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实">
+<meta name="twitter:description" content="一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 1.1 apk的生成具体过程：  aapt程序将资源标记生成R.java，并生成resources.arsc用来索引，并加密xml将后二者打包为.ap aidl程序将.aidl（为了进程通信分割出的描述语言，进程通信需要信息化为系统所">
 <meta name="twitter:image" content="https://i.imgur.com/Ti7761P.png">
 
 
@@ -380,7 +380,16 @@
 
       
         <h3 id="一：前备知识"><a href="#一：前备知识" class="headerlink" title="一：前备知识"></a>一：前备知识</h3><h4 id="1-dex文件"><a href="#1-dex文件" class="headerlink" title="1.dex文件"></a>1.dex文件</h4><p>Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。</p>
-<h4 id="2-Dalvik虚拟机"><a href="#2-Dalvik虚拟机" class="headerlink" title="2.Dalvik虚拟机"></a>2.Dalvik虚拟机</h4><p>作用：运行dex文件于linux下。<br>每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实现的。<br>所有Android应用的线程都对应一个Linux线程，虚拟机因而可以更多的依赖操作系统的线程调度和管理机制。<br>Zygote是一个虚拟机进程，同时也是一个虚拟机实例的孵化器，每当系统要求执行一个 Android应用程序，Zygote就会FORK出一个子进程来执行该应用程序。这样做的好处显而易见：Zygote进程是在系统启动时产生的，它会完成虚拟机的初始化，库的加载，预置类库的加载和初始化等等操作，而在系统需要一个新的虚拟机实例时。<br>Zygote通过复制自身，最快速的提供个系统。另外，对于一些只读的系统库，所有虚拟机实例都和Zygote共享一块内存区域，大大节省了内存开销。<br>dalvik为每个线程维护一个pc计数器（x86的ip）和调用栈。调用栈负责函数栈及虚拟寄存器（传参，变量使用，计算等用）。<strong> 调用栈具体如何处理函数调用的呢？ </strong><br>dalvik的jit（即时编译）将dex化为可执行机器码于真实cpu上运行(具体dex指令执行方式见dalvik实现)</p>
+<h4 id="1-1-apk的生成"><a href="#1-1-apk的生成" class="headerlink" title="1.1 apk的生成"></a>1.1 apk的生成</h4><p>具体过程：</p>
+<ol>
+<li>aapt程序将资源标记生成R.java，并生成resources.arsc用来索引，并加密xml将后二者打包为.ap</li>
+<li>aidl程序将.aidl（为了进程通信分割出的描述语言，进程通信需要信息化为系统所需）生成java接口</li>
+<li>javac程序编译源码及上述1.2.的java文件为.class。同时编译native代码</li>
+<li>dx程序转化所有class为dex字节码文件（化为一个dex）</li>
+<li>apkbuilder程序打包1的.ap，向主文件写入依赖库，添加资源，添加native库，添加dex（一个）</li>
+<li>签名</li>
+<li>用zipalign对齐处理（所有偏移均为4字节倍数32位cpu访问快）<h4 id="1-2apk的安装"><a href="#1-2apk的安装" class="headerlink" title="1.2apk的安装"></a>1.2apk的安装</h4>手机存储分为俩部分：ROM与外部存储（相当于分了俩个盘），其中ROM分为内部存储、系统存储、系统缓存。系统程序（在rom /system/app）下的开机后自动安装，外部来源通过packageinstaller.apk来安装，(这个安装器的源码另分析，用于脱壳？)将外部程序apk复制到date/app date/date放数据  date/dalvik-cache放dex从而安装外部apk<h4 id="1-3ROM"><a href="#1-3ROM" class="headerlink" title="1.3ROM"></a>1.3ROM</h4>ROM 是 ROM image（只读内存镜像）的简称，常用于手机定制系统玩家的圈子中。<br>智能手机配置中的ROM指的是 EEProm (电擦除可写只读存储器)，类似于计算机的硬盘，一般手机刷机的过程，就是将只读内存镜像（ROM image）写入只读内存（ROM）的过程。智能手机的ROM指的是其存储空间，一般是由UFS等闪存制作，其硬件不是只读的，所谓只读是指软件层面对系统分区的读写权限设置。<br>常见的 ROM image 有 img、zip 等格式，前者通常用fastboot程序通过数据线刷入（线刷），后者通常用 recovery 模式从 sd刷入（卡刷），固 img 镜像也被称为线刷包，zip 镜像也被称为卡刷包。<br>因为 ROM image 是定制系统最常见的发布形式，所以通常玩家会使用 ROM 这个词指代手机的操作系统。<br>国内的定制系统开发者，经常会陷入自己的产品究竟是应该称为OS 还是UI 的争论，为了避免此类争论和表示谦虚，会自称为 ROM。很多定制系统玩家也会统一将定制系统称为 ROM。<br>因为系统源码需要打包才能成为镜像，所以 ROM 也会被称为「包」。<h4 id="2-Dalvik虚拟机"><a href="#2-Dalvik虚拟机" class="headerlink" title="2.Dalvik虚拟机"></a>2.Dalvik虚拟机</h4>作用：运行dex文件于linux下。<br>每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实现的。<br>所有Android应用的线程都对应一个Linux线程，虚拟机因而可以更多的依赖操作系统的线程调度和管理机制。<br>Zygote是一个虚拟机进程，同时也是一个虚拟机实例的孵化器，每当系统要求执行一个 Android应用程序，Zygote就会FORK出一个子进程来执行该应用程序。这样做的好处显而易见：Zygote进程是在系统启动时产生的，它会完成虚拟机的初始化，库的加载，预置类库的加载和初始化等等操作，而在系统需要一个新的虚拟机实例时。<br>Zygote通过复制自身，最快速的提供个系统。另外，对于一些只读的系统库，所有虚拟机实例都和Zygote共享一块内存区域，大大节省了内存开销。<br>dalvik为每个线程维护一个pc计数器（x86的ip）和调用栈。调用栈负责函数栈及虚拟寄存器（传参，变量使用，计算等用）。<strong> 调用栈具体如何处理函数调用的呢？ </strong><br>dalvik的jit（即时编译）将dex化为可执行机器码于真实cpu上运行(具体dex指令执行方式见dalvik实现)</li>
+</ol>
 <h4 id="3-jvm和dalvik的区别"><a href="#3-jvm和dalvik的区别" class="headerlink" title="3.jvm和dalvik的区别"></a>3.jvm和dalvik的区别</h4><p>jvm基于栈架构。操作都是基于栈的（具体见jvm的实现）。而dalvik基于寄存器的每个寄存器都是32位。（具体见下指令）</p>
 <h4 id="4-smali"><a href="#4-smali" class="headerlink" title="4.smali"></a>4.smali</h4><p>只是dex字节码化为助记符的一种形式。可由它再编译为dex文件 <strong> 具体的编译方法与映射关系？ </strong></p>
 <h3 id="二：Dalvik与dex规则"><a href="#二：Dalvik与dex规则" class="headerlink" title="二：Dalvik与dex规则"></a>二：Dalvik与dex规则</h3><ol>
@@ -428,7 +437,8 @@
 + if-gez 如果vAA大于等于 0 则跳转。Java语法表示为 if(vAA &gt;= 0)
 </code></pre><h5 id="10-比较指令"><a href="#10-比较指令" class="headerlink" title="10.比较指令"></a>10.比较指令</h5><p>比较指令用于两个寄存器的值（浮点型或长整型）进行比较。它的格式为 cmpkind vAA,vBB,vCC，其中vBB寄存器与vCC寄存器是需要比较的两个寄存器或者两个寄存器对，比较的结果放到vAA寄存器。Dalvik指令集中共有 5 条比较指令。<br>cmpl-float 比较两个单精度浮点数。如果vBB寄存器小于vCC寄存器，则结果为1，相等则结果为0，大于的话结果为-1。<br>cmpg-float 比较两个单精度浮点数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。<br>cmpl-double  比较两个双精度浮点数。如果vBB寄存器小于vCC寄存器，则结果为1，相等则结果为0，大于的话结果为-1。<br>cmpg-double 比较两个双精度浮点数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。<br>cmp-long 比较两个长整型数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。</p>
 <h5 id="11-字段操作指令"><a href="#11-字段操作指令" class="headerlink" title="11.字段操作指令"></a>11.字段操作指令</h5><p><img src="https://i.imgur.com/UuIIhAn.png" alt=""><br><img src="https://i.imgur.com/4rFBjnX.png" alt=""></p>
-<h5 id="12-方法调用指令"><a href="#12-方法调用指令" class="headerlink" title="12.方法调用指令"></a>12.方法调用指令</h5><p><img src="https://i.imgur.com/7ReGTLb.png" alt=""><br>调用格式：<br>invoke-* {params}, type-&gt;method(params_type)return_type<br>如果需要传递this引用，将其放置在param的第一个位置。</p>
+<p>对象的子段需要一个对象参数。</p>
+<h5 id="12-方法调用指令"><a href="#12-方法调用指令" class="headerlink" title="12.方法调用指令"></a>12.方法调用指令</h5><p>方法的第一个参数一般为this。<br><img src="https://i.imgur.com/7ReGTLb.png" alt=""><br>调用格式：<br>invoke-* {params}, type-&gt;method(params_type)return_type<br>如果需要传递this引用，将其放置在param的第一个位置。</p>
 <p>那么这些指令有什么不同呢？首先要分辨两个概念，虚方法和直接方法（JVM 里面叫特殊方法）。其实 Java 是没有虚方法这个概念的，但是 DVM 里面有，直接方法是指类的（type为某个类）所有实例构造器和private实例方法。反之protected或者public方法都叫做虚方法。</p>
 <p>invoke-static比较好分辨，当且仅当调用静态方法时，才会使用它。</p>
 <p>invoke-direct（在 JVM 中叫做invokespecial）用于调用直接方法，invoke-virtual用于调用虚方法。除了一种情况，显式使用super调用超类的虚方法时，使用invoke-super（直接方法仍然使用invoke-direct）。</p>
@@ -481,6 +491,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/06/指令集与cpu/" rel="prev" title="指令集与cpu">
+                指令集与cpu <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -557,7 +571,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -568,7 +582,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -614,7 +628,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一：前备知识"><span class="nav-number">1.</span> <span class="nav-text">一：前备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-dex文件"><span class="nav-number">1.1.</span> <span class="nav-text">1.dex文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Dalvik虚拟机"><span class="nav-number">1.2.</span> <span class="nav-text">2.Dalvik虚拟机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-jvm和dalvik的区别"><span class="nav-number">1.3.</span> <span class="nav-text">3.jvm和dalvik的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-smali"><span class="nav-number">1.4.</span> <span class="nav-text">4.smali</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二：Dalvik与dex规则"><span class="nav-number">2.</span> <span class="nav-text">二：Dalvik与dex规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三：dalvik语法"><span class="nav-number">3.</span> <span class="nav-text">三：dalvik语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-描述符"><span class="nav-number">3.1.</span> <span class="nav-text">1.描述符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-描述字段-方法"><span class="nav-number">3.2.</span> <span class="nav-text">2.描述字段.方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#字段"><span class="nav-number">3.2.1.</span> <span class="nav-text">字段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法"><span class="nav-number">3.2.2.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Dalvik指令集"><span class="nav-number">3.3.</span> <span class="nav-text">3.Dalvik指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-空操作指令"><span class="nav-number">3.3.1.</span> <span class="nav-text">1.空操作指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-数据操作指令"><span class="nav-number">3.3.2.</span> <span class="nav-text">2.数据操作指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-返回指令"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.返回指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-数据定义指令"><span class="nav-number">3.3.4.</span> <span class="nav-text">4.数据定义指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-锁指令"><span class="nav-number">3.3.5.</span> <span class="nav-text">5.锁指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-对象操作"><span class="nav-number">3.3.6.</span> <span class="nav-text">6.对象操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-数组操作"><span class="nav-number">3.3.7.</span> <span class="nav-text">7.数组操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-异常指令"><span class="nav-number">3.3.8.</span> <span class="nav-text">8.异常指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-跳转指令"><span class="nav-number">3.3.9.</span> <span class="nav-text">9.跳转指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-比较指令"><span class="nav-number">3.3.10.</span> <span class="nav-text">10.比较指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#11-字段操作指令"><span class="nav-number">3.3.11.</span> <span class="nav-text">11.字段操作指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#12-方法调用指令"><span class="nav-number">3.3.12.</span> <span class="nav-text">12.方法调用指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#13-数据转化指令"><span class="nav-number">3.3.13.</span> <span class="nav-text">13.数据转化指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-数据运算"><span class="nav-number">3.3.14.</span> <span class="nav-text">14.数据运算</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四：具体实现"><span class="nav-number">4.</span> <span class="nav-text">四：具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-类定义"><span class="nav-number">4.1.</span> <span class="nav-text">1.类定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-字段定义"><span class="nav-number">4.2.</span> <span class="nav-text">2.字段定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-方法定义"><span class="nav-number">4.3.</span> <span class="nav-text">3.方法定义</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一：前备知识"><span class="nav-number">1.</span> <span class="nav-text">一：前备知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-dex文件"><span class="nav-number">1.1.</span> <span class="nav-text">1.dex文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-apk的生成"><span class="nav-number">1.2.</span> <span class="nav-text">1.1 apk的生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2apk的安装"><span class="nav-number">1.3.</span> <span class="nav-text">1.2apk的安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3ROM"><span class="nav-number">1.4.</span> <span class="nav-text">1.3ROM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Dalvik虚拟机"><span class="nav-number">1.5.</span> <span class="nav-text">2.Dalvik虚拟机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-jvm和dalvik的区别"><span class="nav-number">1.6.</span> <span class="nav-text">3.jvm和dalvik的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-smali"><span class="nav-number">1.7.</span> <span class="nav-text">4.smali</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二：Dalvik与dex规则"><span class="nav-number">2.</span> <span class="nav-text">二：Dalvik与dex规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三：dalvik语法"><span class="nav-number">3.</span> <span class="nav-text">三：dalvik语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-描述符"><span class="nav-number">3.1.</span> <span class="nav-text">1.描述符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-描述字段-方法"><span class="nav-number">3.2.</span> <span class="nav-text">2.描述字段.方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#字段"><span class="nav-number">3.2.1.</span> <span class="nav-text">字段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法"><span class="nav-number">3.2.2.</span> <span class="nav-text">方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Dalvik指令集"><span class="nav-number">3.3.</span> <span class="nav-text">3.Dalvik指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-空操作指令"><span class="nav-number">3.3.1.</span> <span class="nav-text">1.空操作指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-数据操作指令"><span class="nav-number">3.3.2.</span> <span class="nav-text">2.数据操作指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-返回指令"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.返回指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-数据定义指令"><span class="nav-number">3.3.4.</span> <span class="nav-text">4.数据定义指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-锁指令"><span class="nav-number">3.3.5.</span> <span class="nav-text">5.锁指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-对象操作"><span class="nav-number">3.3.6.</span> <span class="nav-text">6.对象操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-数组操作"><span class="nav-number">3.3.7.</span> <span class="nav-text">7.数组操作</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#8-异常指令"><span class="nav-number">3.3.8.</span> <span class="nav-text">8.异常指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#9-跳转指令"><span class="nav-number">3.3.9.</span> <span class="nav-text">9.跳转指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#10-比较指令"><span class="nav-number">3.3.10.</span> <span class="nav-text">10.比较指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#11-字段操作指令"><span class="nav-number">3.3.11.</span> <span class="nav-text">11.字段操作指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#12-方法调用指令"><span class="nav-number">3.3.12.</span> <span class="nav-text">12.方法调用指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#13-数据转化指令"><span class="nav-number">3.3.13.</span> <span class="nav-text">13.数据转化指令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#14-数据运算"><span class="nav-number">3.3.14.</span> <span class="nav-text">14.数据运算</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四：具体实现"><span class="nav-number">4.</span> <span class="nav-text">四：具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-类定义"><span class="nav-number">4.1.</span> <span class="nav-text">1.类定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-字段定义"><span class="nav-number">4.2.</span> <span class="nav-text">2.字段定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-方法定义"><span class="nav-number">4.3.</span> <span class="nav-text">3.方法定义</span></a></li></ol></li></ol></div>
             
 
           </div>
