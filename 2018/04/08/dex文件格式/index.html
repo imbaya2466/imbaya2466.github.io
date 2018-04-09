@@ -103,7 +103,8 @@
 <meta property="og:description" content="先上图之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，data">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/3514dvx.jpg">
-<meta property="og:updated_time" content="2018-04-08T16:20:20.773Z">
+<meta property="og:image" content="https://i.imgur.com/mDOEFRJ.jpg">
+<meta property="og:updated_time" content="2018-04-09T16:30:22.298Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dex文件格式">
 <meta name="twitter:description" content="先上图之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，data">
@@ -381,8 +382,14 @@
 <li>dex为了小，字串重复利用，被type等均用字串索引指向。位于data区，而date区的其他数据（如代码）等都用文件偏移指定。</li>
 <li>proto为方法元，表示的是方法的参和返回类型。</li>
 <li>class结构最复杂，第一层含类的基本信息，第二层是字段和方法信息，第三层是方法代码等详情。</li>
-<li>…</li>
+<li>破解时可以直接修改dex文件后修改效验值和sha。不用拆包为smali再打包。不过签名是必须的</li>
 </ol>
+<p>ODEX是安卓上的应用程序apk中提取出来的可运行文件，即将APK中的classes.dex文件通过dex优化过程将其优化生成一个·dex文件单独存放，原APK中的classes.dex文件会保留。<br>这样做可以加快软件的启动速度，预先提取，减少对RAM的占用，因为没有odex的话，系统要从apk包中提取dex再运行。<br>俩种存在方式：</p>
+<ol>
+<li>cache/dalvik-cache目录下，命名为apk路径@apk名@classes.dex。用于加快程序读取速度</li>
+<li>与apk存于同一目录，以.odex后缀，多是系统程序。</li>
+</ol>
+<p><img src="https://i.imgur.com/mDOEFRJ.jpg" alt=""></p>
 
       
     </div>
@@ -424,6 +431,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/09/android文件系统目录结构/" rel="prev" title="android文件系统目录结构">
+                android文件系统目录结构 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -491,7 +502,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -513,7 +524,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
