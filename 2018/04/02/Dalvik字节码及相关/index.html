@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://i.imgur.com/UuIIhAn.png">
 <meta property="og:image" content="https://i.imgur.com/4rFBjnX.png">
 <meta property="og:image" content="https://i.imgur.com/7ReGTLb.png">
-<meta property="og:updated_time" content="2018-04-08T15:57:14.130Z">
+<meta property="og:updated_time" content="2018-04-11T09:11:55.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dalvik字节码及相关">
 <meta name="twitter:description" content="一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 1.1 apk的生成具体过程：  aapt程序将资源标记生成R.java，并生成resources.arsc用来索引，并加密xml将后二者打包为.ap aidl程序将.aidl（为了进程通信分割出的描述语言，进程通信需要信息化为系统所">
@@ -442,6 +442,7 @@
 <p>那么这些指令有什么不同呢？首先要分辨两个概念，虚方法和直接方法（JVM 里面叫特殊方法）。其实 Java 是没有虚方法这个概念的，但是 DVM 里面有，直接方法是指类的（type为某个类）所有实例构造器和private实例方法。反之protected或者public方法都叫做虚方法。</p>
 <p>invoke-static比较好分辨，当且仅当调用静态方法时，才会使用它。</p>
 <p>invoke-direct（在 JVM 中叫做invokespecial）用于调用直接方法，invoke-virtual用于调用虚方法。除了一种情况，显式使用super调用超类的虚方法时，使用invoke-super（直接方法仍然使用invoke-direct）。</p>
+<p>方法返回的数据通过 move-result指令获取。</p>
 <h5 id="13-数据转化指令"><a href="#13-数据转化指令" class="headerlink" title="13.数据转化指令"></a>13.数据转化指令</h5><p>数据转换指令用于将一种类型的数值转换成另一种类型，它的格式为 unop vA,vB 。 vB寄存器或vB寄存器对存放需要转换的数据，转换后的结果保存在vA寄存器或vA寄存器对中。<br>neg-int 对整型数求补<br>not-int  对整型数求反<br>neg-long 对长整型求补<br>not-long 对长整型求反<br>neg-float 对单精度浮点型数求补<br>neg-double 对双精度浮点型数求补<br>int-to-long 将整型数转换为长整型<br>int-to-float 将整型数转换为单精度浮点型<br>int-to-double 将整型数转换为双精度浮点型<br>long-to-int 将长整型数转换为整型<br>long-to-float 将长整型数转换为单精度浮点型<br>long-to-double 将长整型数转换为双精度浮点型<br>float-to-int 将单精度浮点型数转换为整型<br>float-to-long 将单精度浮点型数转换为长整型<br>float-to-double 将单精度浮点型数转换为双精度浮点型<br>double-to-int 将双精度浮点型数转换为整型<br>double-to-long 将双精度浮点型数转换为长整型<br>double-to-float 将双精度浮点型数转换为单精度浮点型<br>int-to-byte 将整型转换为字节型<br>int-to-char 将整型转换为字符串<br>int-to-short 将整型转换为短整型</p>
 <h5 id="14-数据运算"><a href="#14-数据运算" class="headerlink" title="14.数据运算"></a>14.数据运算</h5><p>binop vAA,vBB,vCC 将vBB寄存器与vCC寄存器进行运算，结果保存到vAA寄存器<br>binop/2addr vA,vB 将vA寄存器与vB寄存器进行运算，结果保存到vA寄存器<br>binop/lit16 vA,vB,#+CCCC 将vB寄存器与常量CCCC进行运算，结果保存到vA寄存器<br>binop/lit8 vAA,vBB,#+CC 将vBB寄存器与常量CC进行运算，结果保存到vAA寄存器<br>后面3类指令比第1类指令分别多了addr、lit16、lit8等指令后缀。四类指令中基础字节码后面加上数据类型后缀，如-int或-long分别表示操作的数据类型那个为整型与长整型。第1类指令可归类如下：<br>add-type     vBB寄存器与vCC寄存器值进行加法运算（vBB  + vCC）<br>sub-type     vBB寄存器与vCC寄存器值进行减法运算（vBB  - vCC）<br>mul-type     vBB寄存器与vCC寄存器值进行乘法运算（vBB  * vCC）<br>div-type     vBB寄存器与vCC寄存器值进除法运算（vBB  / vCC）<br>rem-type     vBB寄存器与vCC寄存器值进行模运算（vBB  % vCC）<br>and-type     vBB寄存器与vCC寄存器值进行与运算（vBB  &amp; vCC）<br>or-type     vBB寄存器与vCC寄存器值进行或运算（vBB  | vCC）<br>xor-type     vBB寄存器与vCC寄存器值进行异或运算（vBB  ^ vCC）<br>shl-type     vBB寄存器（有符号数）左移vCC位（vBB &lt;&lt; vCC）<br>shr-type     vBB寄存器（有符号数）右移vCC位（vBB &gt;&gt; vCC）<br>ushr-type     vBB寄存器（无符号数）右移vCC位（vBB &gt;&gt; vCC）<br>其中基础字节码后面的-type可以是-int、-long、-float、-double。后面3类指令与之类似。</p>
 <h3 id="四：具体实现"><a href="#四：具体实现" class="headerlink" title="四：具体实现"></a>四：具体实现</h3><h4 id="1-类定义"><a href="#1-类定义" class="headerlink" title="1.类定义"></a>1.类定义</h4><p>一个 smali 文件中存放一个类，文件开头保存类的各种信息。类的定义是这样的。<br>.class &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;完全限定名称&gt;<br>.super &lt;超类的完全限定名称&gt;<br>.source &lt;源文件名&gt;<br>例子：MainActivity：<br>.class public Lnet/flygon/myapplication/MainActivity;<br>.super Landroid/app/Activity;<br>.source “MainActivity.java”<br>类可以实现接口，如果类实现了接口，那么这三条语句下面会出现.implements &lt;接口的完全限定名称&gt;。比如通常用于回调的匿名类中会出现.implements Landroid/view/View$OnClickListener;。<br>类还可以拥有注解<br>.annotation &lt;完全限定名称&gt;<br>    键 = 值<br>    …<br>.end annotation</p>
@@ -492,8 +493,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/06/指令集与cpu/" rel="prev" title="指令集与cpu">
-                指令集与cpu <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/06/硬件与系统安装/" rel="prev" title="硬件与系统安装">
+                硬件与系统安装 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -571,7 +572,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
