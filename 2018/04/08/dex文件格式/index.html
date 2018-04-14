@@ -94,21 +94,22 @@
 
 
 
-<meta name="description" content="先上图之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，data">
+<meta name="description" content="结构体图: 之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，d">
 <meta name="keywords" content="android逆向,dex">
 <meta property="og:type" content="article">
 <meta property="og:title" content="dex文件格式">
 <meta property="og:url" content="http://yoursite.com/2018/04/08/dex文件格式/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="先上图之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，data">
+<meta property="og:description" content="结构体图: 之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，d">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/T1b5fAc.jpg">
 <meta property="og:image" content="https://i.imgur.com/3514dvx.jpg">
 <meta property="og:image" content="https://i.imgur.com/mDOEFRJ.jpg">
-<meta property="og:updated_time" content="2018-04-09T16:30:22.298Z">
+<meta property="og:updated_time" content="2018-04-14T05:56:35.061Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="dex文件格式">
-<meta name="twitter:description" content="先上图之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，data">
-<meta name="twitter:image" content="https://i.imgur.com/3514dvx.jpg">
+<meta name="twitter:description" content="结构体图: 之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，d">
+<meta name="twitter:image" content="https://i.imgur.com/T1b5fAc.jpg">
 
 
 
@@ -375,7 +376,8 @@
       
 
       
-        <p>先上图<br><img src="https://i.imgur.com/3514dvx.jpg" alt=""><br>之后说几个坑</p>
+        <p>结构体图:<br><img src="https://i.imgur.com/T1b5fAc.jpg" alt=""></p>
+<p><img src="https://i.imgur.com/3514dvx.jpg" alt=""><br>之后说几个坑</p>
 <ol>
 <li>数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。</li>
 <li>dex只分header，索引结构区，data区。header中的各off均指向索引区。dex被映射为DexMapList结构（header中的mapoff）。该map中指定了头，索引区，以及各数据的文件偏移</li>
