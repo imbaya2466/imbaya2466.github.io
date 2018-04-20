@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://i.imgur.com/UuIIhAn.png">
 <meta property="og:image" content="https://i.imgur.com/4rFBjnX.png">
 <meta property="og:image" content="https://i.imgur.com/7ReGTLb.png">
-<meta property="og:updated_time" content="2018-04-14T07:19:01.683Z">
+<meta property="og:updated_time" content="2018-04-20T14:22:00.961Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dalvik字节码及相关">
 <meta name="twitter:description" content="首先建议参考谷歌官方文档https://source.android.com/devices/tech/dalvik/dex-format  一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 1.1 apk的生成具体过程：  aapt程序将资源标记生成R.java，并生成resou">
@@ -389,8 +389,20 @@
 <li>dx程序转化所有class为dex字节码文件（化为一个dex）</li>
 <li>apkbuilder程序打包1的.ap，向主文件写入依赖库，添加资源，添加native库，添加dex（一个）</li>
 <li>签名</li>
-<li>用zipalign对齐处理（所有偏移均为4字节倍数32位cpu访问快）<h4 id="1-2apk的安装"><a href="#1-2apk的安装" class="headerlink" title="1.2apk的安装"></a>1.2apk的安装</h4>手机存储分为俩部分：ROM与外部存储（相当于分了俩个盘），其中ROM分为内部存储、系统存储、系统缓存。系统程序（在rom /system/app）下的开机后自动安装，外部来源通过packageinstaller.apk来安装，(这个安装器的源码另分析，用于脱壳？)将外部程序apk复制到date/app date/date放数据  date/dalvik-cache放dex从而安装外部apk<h4 id="1-3ROM"><a href="#1-3ROM" class="headerlink" title="1.3ROM"></a>1.3ROM</h4>ROM 是 ROM image（只读内存镜像）的简称，常用于手机定制系统玩家的圈子中。<br>智能手机配置中的ROM指的是 EEProm (电擦除可写只读存储器)，类似于计算机的硬盘，一般手机刷机的过程，就是将只读内存镜像（ROM image）写入只读内存（ROM）的过程。智能手机的ROM指的是其存储空间，一般是由UFS等闪存制作，其硬件不是只读的，所谓只读是指软件层面对系统分区的读写权限设置。<br>常见的 ROM image 有 img、zip 等格式，前者通常用fastboot程序通过数据线刷入（线刷），后者通常用 recovery 模式从 sd刷入（卡刷），固 img 镜像也被称为线刷包，zip 镜像也被称为卡刷包。<br>因为 ROM image 是定制系统最常见的发布形式，所以通常玩家会使用 ROM 这个词指代手机的操作系统。<br>国内的定制系统开发者，经常会陷入自己的产品究竟是应该称为OS 还是UI 的争论，为了避免此类争论和表示谦虚，会自称为 ROM。很多定制系统玩家也会统一将定制系统称为 ROM。<br>因为系统源码需要打包才能成为镜像，所以 ROM 也会被称为「包」。<h4 id="2-Dalvik虚拟机"><a href="#2-Dalvik虚拟机" class="headerlink" title="2.Dalvik虚拟机"></a>2.Dalvik虚拟机</h4>作用：运行dex文件于linux下。<br>每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实现的。<br>所有Android应用的线程都对应一个Linux线程，虚拟机因而可以更多的依赖操作系统的线程调度和管理机制。<br>Zygote是一个虚拟机进程，同时也是一个虚拟机实例的孵化器，每当系统要求执行一个 Android应用程序，Zygote就会FORK出一个子进程来执行该应用程序。这样做的好处显而易见：Zygote进程是在系统启动时产生的，它会完成虚拟机的初始化，库的加载，预置类库的加载和初始化等等操作，而在系统需要一个新的虚拟机实例时。<br>Zygote通过复制自身，最快速的提供个系统。另外，对于一些只读的系统库，所有虚拟机实例都和Zygote共享一块内存区域，大大节省了内存开销。<br>dalvik为每个线程维护一个pc计数器（x86的ip）和调用栈。调用栈负责函数栈及虚拟寄存器（传参，变量使用，计算等用）。<strong> 调用栈具体如何处理函数调用的呢？ </strong><br>dalvik的jit（即时编译）将dex化为可执行机器码于真实cpu上运行(具体dex指令执行方式见dalvik实现)对于ART下，安装后的dex文件会被编译为oat文件，这个oat文件其实是一个ELF文件。<strong> 看dvm源码！ </strong></li>
+<li>用zipalign对齐处理（所有偏移均为4字节倍数32位cpu访问快）</li>
 </ol>
+<p>apk目录：</p>
+<ol>
+<li>AndroidManifest：配置文件</li>
+<li>classes.dex:代码文件</li>
+<li>resources.arsc:二进制资源文件，通过加密res/value下的xml生成</li>
+<li>res文件夹:图片，layout等资源</li>
+<li>META-INF文件夹：签名文件</li>
+<li>lib文件夹：native原生文件</li>
+</ol>
+<h4 id="1-2apk的安装"><a href="#1-2apk的安装" class="headerlink" title="1.2apk的安装"></a>1.2apk的安装</h4><p>手机存储分为俩部分：ROM与外部存储（相当于分了俩个盘），其中ROM分为内部存储、系统存储、系统缓存。系统程序（在rom /system/app）下的开机后自动安装，外部来源通过packageinstaller.apk来安装，(这个安装器的源码另分析，用于脱壳？)将外部程序apk复制到date/app date/date放数据  date/dalvik-cache放dex从而安装外部apk</p>
+<h4 id="1-3ROM"><a href="#1-3ROM" class="headerlink" title="1.3ROM"></a>1.3ROM</h4><p>ROM 是 ROM image（只读内存镜像）的简称，常用于手机定制系统玩家的圈子中。<br>智能手机配置中的ROM指的是 EEProm (电擦除可写只读存储器)，类似于计算机的硬盘，一般手机刷机的过程，就是将只读内存镜像（ROM image）写入只读内存（ROM）的过程。智能手机的ROM指的是其存储空间，一般是由UFS等闪存制作，其硬件不是只读的，所谓只读是指软件层面对系统分区的读写权限设置。<br>常见的 ROM image 有 img、zip 等格式，前者通常用fastboot程序通过数据线刷入（线刷），后者通常用 recovery 模式从 sd刷入（卡刷），固 img 镜像也被称为线刷包，zip 镜像也被称为卡刷包。<br>因为 ROM image 是定制系统最常见的发布形式，所以通常玩家会使用 ROM 这个词指代手机的操作系统。<br>国内的定制系统开发者，经常会陷入自己的产品究竟是应该称为OS 还是UI 的争论，为了避免此类争论和表示谦虚，会自称为 ROM。很多定制系统玩家也会统一将定制系统称为 ROM。<br>因为系统源码需要打包才能成为镜像，所以 ROM 也会被称为「包」。</p>
+<h4 id="2-Dalvik虚拟机"><a href="#2-Dalvik虚拟机" class="headerlink" title="2.Dalvik虚拟机"></a>2.Dalvik虚拟机</h4><p>作用：运行dex文件于linux下。<br>每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实现的。<br>所有Android应用的线程都对应一个Linux线程，虚拟机因而可以更多的依赖操作系统的线程调度和管理机制。<br>Zygote是一个虚拟机进程，同时也是一个虚拟机实例的孵化器，每当系统要求执行一个 Android应用程序，Zygote就会FORK出一个子进程来执行该应用程序。这样做的好处显而易见：Zygote进程是在系统启动时产生的，它会完成虚拟机的初始化，库的加载，预置类库的加载和初始化等等操作，而在系统需要一个新的虚拟机实例时。<br>Zygote通过复制自身，最快速的提供个系统。另外，对于一些只读的系统库，所有虚拟机实例都和Zygote共享一块内存区域，大大节省了内存开销。<br>dalvik为每个线程维护一个pc计数器（x86的ip）和调用栈。调用栈负责函数栈及虚拟寄存器（传参，变量使用，计算等用）。<strong> 调用栈具体如何处理函数调用的呢？ </strong><br>dalvik的jit（即时编译）将dex化为可执行机器码于真实cpu上运行(具体dex指令执行方式见dalvik实现)对于ART下，安装后的dex文件会被编译为oat文件，这个oat文件其实是一个ELF文件。<strong> 看dvm源码！ </strong></p>
 <h4 id="3-jvm和dalvik的区别"><a href="#3-jvm和dalvik的区别" class="headerlink" title="3.jvm和dalvik的区别"></a>3.jvm和dalvik的区别</h4><p>jvm基于栈架构。操作都是基于栈的（具体见jvm的实现）。而dalvik基于寄存器的每个寄存器都是32位。（具体见下指令）</p>
 <h4 id="4-smali"><a href="#4-smali" class="headerlink" title="4.smali"></a>4.smali</h4><p>只是dex字节码化为助记符的一种形式。可由它再编译为dex文件 <strong> 具体的编译方法与映射关系？ </strong></p>
 <h3 id="二：Dalvik与dex规则"><a href="#二：Dalvik与dex规则" class="headerlink" title="二：Dalvik与dex规则"></a>二：Dalvik与dex规则</h3><ol>
@@ -569,7 +581,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -591,7 +603,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

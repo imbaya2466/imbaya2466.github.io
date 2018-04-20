@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android,逆向,安全," />
+  <meta name="keywords" content="android,NDK,c++," />
 
 
 
@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="1.签名签名时使用signapk但报错反射类无法找到。经排查发现是java版本太高（1.9） 2.更改java配置无用环境变量改成1.8但version仍是1.9，此时应该注意其它的path，特别是系统等的优先级高的。这次在C:\ProgramData\Oracle\Java\javapath下发现了java.exe，更改后解决 3. 安装apk破解并且重新签名的apk安装显示应用未安装，后来想起">
-<meta name="keywords" content="android,逆向,安全">
+<meta name="description" content="前景补充： GUN是自由操作系统计划–GNU is Not Unix   1990有了GCC-GNU Compiler Collection和大部分UNIX系统的程序库和工具 1991年Linus Torvalds编写出了与UNIX兼容的Linux操作系统内核并在GPL条款下发布。 GUN MAKE也是其中之一  NDK基本概念 native-原生：指的是用原生代码编写android程序 NDK中">
+<meta name="keywords" content="android,NDK,c++">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安卓逆向第一天的坑">
-<meta property="og:url" content="http://yoursite.com/2018/03/30/安卓逆向第一天的坑/index.html">
+<meta property="og:title" content="android NDK开发">
+<meta property="og:url" content="http://yoursite.com/2018/04/20/android-NDK开发/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="1.签名签名时使用signapk但报错反射类无法找到。经排查发现是java版本太高（1.9） 2.更改java配置无用环境变量改成1.8但version仍是1.9，此时应该注意其它的path，特别是系统等的优先级高的。这次在C:\ProgramData\Oracle\Java\javapath下发现了java.exe，更改后解决 3. 安装apk破解并且重新签名的apk安装显示应用未安装，后来想起">
+<meta property="og:description" content="前景补充： GUN是自由操作系统计划–GNU is Not Unix   1990有了GCC-GNU Compiler Collection和大部分UNIX系统的程序库和工具 1991年Linus Torvalds编写出了与UNIX兼容的Linux操作系统内核并在GPL条款下发布。 GUN MAKE也是其中之一  NDK基本概念 native-原生：指的是用原生代码编写android程序 NDK中">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-30T11:06:40.886Z">
+<meta property="og:updated_time" content="2018-04-20T13:46:10.133Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="安卓逆向第一天的坑">
-<meta name="twitter:description" content="1.签名签名时使用signapk但报错反射类无法找到。经排查发现是java版本太高（1.9） 2.更改java配置无用环境变量改成1.8但version仍是1.9，此时应该注意其它的path，特别是系统等的优先级高的。这次在C:\ProgramData\Oracle\Java\javapath下发现了java.exe，更改后解决 3. 安装apk破解并且重新签名的apk安装显示应用未安装，后来想起">
+<meta name="twitter:title" content="android NDK开发">
+<meta name="twitter:description" content="前景补充： GUN是自由操作系统计划–GNU is Not Unix   1990有了GCC-GNU Compiler Collection和大部分UNIX系统的程序库和工具 1991年Linus Torvalds编写出了与UNIX兼容的Linux操作系统内核并在GPL条款下发布。 GUN MAKE也是其中之一  NDK基本概念 native-原生：指的是用原生代码编写android程序 NDK中">
 
 
 
@@ -134,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/30/安卓逆向第一天的坑/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/20/android-NDK开发/"/>
 
 
 
 
 
-  <title>安卓逆向第一天的坑 | GGWP</title>
+  <title>android NDK开发 | GGWP</title>
   
 
 
@@ -283,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/30/安卓逆向第一天的坑/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/20/android-NDK开发/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="imbaya">
@@ -300,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">安卓逆向第一天的坑</h1>
+          <h1 class="post-title" itemprop="name headline">android NDK开发</h1>
         
 
         <div class="post-meta">
@@ -312,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-30T18:55:05+08:00">
-                2018-03-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-20T20:50:41+08:00">
+                2018-04-20
               </time>
             
 
@@ -335,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
                   </a>
                 </span>
 
@@ -372,9 +372,41 @@
       
 
       
-        <h4 id="1-签名"><a href="#1-签名" class="headerlink" title="1.签名"></a>1.签名</h4><p>签名时使用signapk但报错反射类无法找到。经排查发现是java版本太高（1.9）</p>
-<h4 id="2-更改java配置无用"><a href="#2-更改java配置无用" class="headerlink" title="2.更改java配置无用"></a>2.更改java配置无用</h4><p>环境变量改成1.8但version仍是1.9，此时应该注意其它的path，特别是系统等的优先级高的。这次在C:\ProgramData\Oracle\Java\javapath下发现了java.exe，更改后解决</p>
-<h4 id="3-安装apk"><a href="#3-安装apk" class="headerlink" title="3. 安装apk"></a>3. 安装apk</h4><p>破解并且重新签名的apk安装显示应用未安装，后来想起来签名机制应该要保持新旧一致才可以更新（这也告诉我在开发实际安卓应用时要保管好签名文件，否则无法更新），卸载旧版本，新版本就可以安装了</p>
+        <h3 id="前景补充："><a href="#前景补充：" class="headerlink" title="前景补充："></a>前景补充：</h3><ol>
+<li>GUN是自由操作系统计划–GNU is Not Unix  </li>
+<li>1990有了GCC-GNU Compiler Collection和大部分UNIX系统的程序库和工具</li>
+<li>1991年Linus Torvalds编写出了与UNIX兼容的Linux操作系统内核并在GPL条款下发布。</li>
+<li>GUN MAKE也是其中之一</li>
+</ol>
+<h3 id="NDK"><a href="#NDK" class="headerlink" title="NDK"></a>NDK</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ol>
+<li>native-原生：指的是用原生代码编写android程序</li>
+<li>NDK中对应于不同cpu框架的固定平台c/c++代码，执行格式为linux下的.so与.a与.elf，采用的是交叉编译，生成运行于其它平台的代码</li>
+<li>使用 NativeActivity 的 Android 应用仍会在其自己的虚拟机中运行，与其他应用以沙盒分隔。（android应用运行.so的过程？依靠虚拟机加载调用本地动态库.so？）</li>
+<li>以前编写原生程序一般用的是ndk提供的NDK-build。当然也可以单纯使用gcc（了解项目管理工具与gcc的使用？android是make）AS使用构建原生库的默认工具是CMake,也可以用ndk-build</li>
+<li>通过ABI指定生成的平台，默认下在lib中会生成多平台的.so</li>
+</ol>
+<h4 id="AS下编辑native"><a href="#AS下编辑native" class="headerlink" title="AS下编辑native"></a>AS下编辑native</h4><p>官方AS的文档十分详细。。</p>
+<h5 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h5><p>创建支持原生代码的项目与创建任何其他 Android Studio 项目类似，不过前者还需要额外几个步骤：</p>
+<ol>
+<li>在向导的 Configure your new project 部分，选中 Include C++ Support 复选框。点击 Next。</li>
+<li>正常填写所有其他字段并完成向导接下来的几个部分。</li>
+<li>在向导的 Customize C++ Support 部分，您可以使用下列选项自定义项目：<br>C++ Standard：使用下拉列表选择您希望使用哪种 C++ 标准。选择 Toolchain Default 会使用默认的 CMake 设置。<br>Exceptions Support：如果您希望启用对 C++ 异常处理的支持，请选中此复选框。如果启用此复选框，Android Studio 会将 -fexceptions 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>Runtime Type Information Support：如果您希望支持 RTTI，请选中此复选框。如果启用此复选框，Android Studio 会将 -frtti 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>点击 Finish。</li>
+</ol>
+<h5 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h5><ol>
+<li>在 cpp 组中，您可以找到属于项目的所有原生源文件、标头和预构建库。对于新项目，Android Studio 会创建一个示例 C++ 源文件 native-lib.cpp，并将其置于应用模块的 src/main/cpp/ 目录中。本示例代码提供了一个简单的 C++ 函数 stringFromJNI()，此函数可以返回字符串“Hello from C++”。要了解如何向项目添加其他源文件，请参阅介绍如何创建新的原生源文件的部分。</li>
+<li>在 External Build Files 组中，您可以找到 CMake 或 ndk-build 的构建脚本。与 build.gradle 文件指示 Gradle 如何构建应用一样，CMake 和 ndk-build 需要一个构建脚本来了解如何构建您的原生库。对于新项目，Android Studio 会创建一个 CMake 构建脚本 CMakeLists.txt，并将其置于模块的根目录中。且必须叫这个名字。</li>
+<li>cmake与ndk-build的配置都在build.gradle的管理配置下。</li>
+</ol>
+<h5 id="运行过程"><a href="#运行过程" class="headerlink" title="运行过程"></a>运行过程</h5><ol>
+<li>Gradle 调用您的外部构建脚本 CMakeLists.txt。</li>
+<li>CMake 按照构建脚本中的命令将 C++ 源文件 native-lib.cpp 编译到共享的对象库中，并命名为 libnative-lib.so，Gradle 随后会将其打包到 APK 中。</li>
+<li>运行时，应用的 MainActivity 会使用 System.loadLibrary() 加载原生库。现在，应用可以使用库的原生函数 stringFromJNI()。</li>
+<li>MainActivity.onCreate() 调用 stringFromJNI()，这将返回“Hello from C++”并使用这些文字更新 TextView。</li>
+</ol>
+<h4 id="CMakeLists-txt"><a href="#CMakeLists-txt" class="headerlink" title="CMakeLists.txt"></a>CMakeLists.txt</h4><h5 id="使用ndk库"><a href="#使用ndk库" class="headerlink" title="使用ndk库"></a>使用ndk库</h5><p>Android NDK 提供了一套实用的原生 API 和库。通过将 NDK 库包含到项目的 CMakeLists.txt 脚本文件中，您可以使用这些 API 中的任意一种。</p>
+<p>预构建的 NDK 库已经存在于 Android 平台上，因此，您无需再构建或将其打包到 APK 中。由于 NDK 库已经是 CMake 搜索路径的一部分，您甚至不需要在您的本地 NDK 安装中指定库的位置 - 只需要向 CMake 提供您希望使用的库的名称，并将其关联到您自己的原生库。</p>
+<p>将 find_library() 命令添加到您的 CMake 构建脚本中以定位 NDK 库，并将其路径存储为一个变量。您可以使用此变量在构建脚本的其他部分引用 NDK 库。<br>动态加载：为了确保您的原生库可以在 log 库中调用函数，您需要使用 CMake 构建脚本中的 target_link_libraries() 命令关联库。让你的.cpp文件可用ndk库<br>静态加载：NDK 还以源代码的形式包含一些库，您在构建和关联到您的原生库时需要使用这些代码。您可以使用 CMake 构建脚本中的 add_library() 命令，将源代码编译到原生库中。要提供本地 NDK 库的路径，您可以使用 ANDROID_NDK 路径变量，Android Studio 会自动为您定义此变量。</p>
+<h5 id="添加自己的文件"><a href="#添加自己的文件" class="headerlink" title="添加自己的文件"></a>添加自己的文件</h5><p>用 add_library() 向您的 CMake 构建脚本添加源文件或库<br>CMake 使用以下规范来为库文件命名：<br>lib库名称.so<br>例如，如果您在构建脚本中指定“native-lib”作为共享库的名称，CMake 将创建一个名称为 libnative-lib.so 的文件。不过，在 Java 代码中加载此库时，请使用您在 CMake 构建脚本中指定的名称：</p>
 
       
     </div>
@@ -394,9 +426,9 @@
           
             <a href="/tags/android/" rel="tag"># android</a>
           
-            <a href="/tags/逆向/" rel="tag"># 逆向</a>
+            <a href="/tags/NDK/" rel="tag"># NDK</a>
           
-            <a href="/tags/安全/" rel="tag"># 安全</a>
+            <a href="/tags/c/" rel="tag"># c++</a>
           
         </div>
       
@@ -409,8 +441,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/29/apk签名/" rel="next" title="apk签名">
-                <i class="fa fa-chevron-left"></i> apk签名
+              <a href="/2018/04/11/android系统架构/" rel="next" title="android系统架构">
+                <i class="fa fa-chevron-left"></i> android系统架构
               </a>
             
           </div>
@@ -418,10 +450,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/31/jvm的-class文件格式/" rel="prev" title="jvm的.class文件格式">
-                jvm的.class文件格式 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -555,7 +583,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-签名"><span class="nav-number">1.</span> <span class="nav-text">1.签名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-更改java配置无用"><span class="nav-number">2.</span> <span class="nav-text">2.更改java配置无用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-安装apk"><span class="nav-number">3.</span> <span class="nav-text">3. 安装apk</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前景补充："><span class="nav-number">1.</span> <span class="nav-text">前景补充：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NDK"><span class="nav-number">2.</span> <span class="nav-text">NDK</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本概念"><span class="nav-number">2.1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AS下编辑native"><span class="nav-number">2.2.</span> <span class="nav-text">AS下编辑native</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#创建项目"><span class="nav-number">2.2.1.</span> <span class="nav-text">创建项目</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#目录"><span class="nav-number">2.2.2.</span> <span class="nav-text">目录</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#运行过程"><span class="nav-number">2.2.3.</span> <span class="nav-text">运行过程</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CMakeLists-txt"><span class="nav-number">2.3.</span> <span class="nav-text">CMakeLists.txt</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用ndk库"><span class="nav-number">2.3.1.</span> <span class="nav-text">使用ndk库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加自己的文件"><span class="nav-number">2.3.2.</span> <span class="nav-text">添加自己的文件</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

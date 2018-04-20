@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="安卓的存储  一部Android手机存在不同的存储空间类型。512MB ROM和512MB RAM，还有一个SDHC的扩展槽，标配2G内存卡，最大可支持32G内存卡。那么这些数据都是什么意思呢？ RAM：RAM是Random Access Memory的缩写，中文名称是随机存取存储器。对于大多数的计算机和智能手机来说，RAM可以使一个软件快速并直接地读取和写入数据。当断电的时候RAM中的内容就会丢">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-09T14:26:13.392Z">
+<meta property="og:updated_time" content="2018-04-20T02:35:50.888Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android文件系统目录结构">
 <meta name="twitter:description" content="安卓的存储  一部Android手机存在不同的存储空间类型。512MB ROM和512MB RAM，还有一个SDHC的扩展槽，标配2G内存卡，最大可支持32G内存卡。那么这些数据都是什么意思呢？ RAM：RAM是Random Access Memory的缩写，中文名称是随机存取存储器。对于大多数的计算机和智能手机来说，RAM可以使一个软件快速并直接地读取和写入数据。当断电的时候RAM中的内容就会丢">
@@ -374,7 +374,7 @@
       
         <h3 id="安卓的存储"><a href="#安卓的存储" class="headerlink" title="安卓的存储"></a>安卓的存储</h3><p>  一部Android手机存在不同的存储空间类型。512MB ROM和512MB RAM，还有一个SDHC的扩展槽，标配2G内存卡，最大可支持32G内存卡。那么这些数据都是什么意思呢？</p>
 <h4 id="RAM："><a href="#RAM：" class="headerlink" title="RAM："></a>RAM：</h4><p>RAM是Random Access Memory的缩写，中文名称是随机存取存储器。对于大多数的计算机和智能手机来说，RAM可以使一个软件快速并直接地读取和写入数据。当断电的时候RAM中的内容就会丢失，比如手机关机。RAM的大小决定了你能同时运行几个程序，也决定了你最大能加载多大的文件。当RAM不足的时候就会提示“Out of memory”错误。因为Android 2.2能提前预测当需要内存的时候，哪一个程序将要被从RAM中去除，所以RAM的信息并没有显示到“设置”菜单里。Android 2.2之前的版本最大只支持256MB内存，但是Android 2.2可以支持大容量内存，比如512MB RAM。</p>
-<h4 id="ROM："><a href="#ROM：" class="headerlink" title="ROM："></a>ROM：</h4><p>ROM是Read-Only Memory的缩写。以前常用来表示一旦出厂后上面存储的数据就不能被修改，同时即使没有电，数据也不会丢失。后来，一种新型的ROM——EEPROM，代替了原来的ROM。这种EEPROM允许用高一点的电压改写数据以便用于升级。以后Flash Memory（闪存）代替了EEPROM，闪存可以很容易的修改内容。现在我们说智能手机中的ROM一般指的是Flash Memory了。<br>手机中的ROM一般被分成若干区域。在Android中，有一部分被分给了操作系统，分给操作系统的这部分通常被保护起来，用户不能向里面写入数据。通常我们说Rooting指的就是获得操作系统的最高权限，因此我们可以读取和写入到这部分区域。比如替换系统默认的图片。<br>另外ROM还分了一部分空间给用户作为存储数据用，用于存储下载应用程序，保存用户数据等。这部分区域已经完全脱离了“Read-Only”，不再“只读”。在Android 2.2版本中，这部分空间被挂载到/mnt/asec目录下，我们可以进入查看下载的应用程序的APK文件。这部分空间有时被称作“手机内部存储”，想一下Windows中的C盘，windows的文件夹是不可见的并且在系统分区。在我的LG Optimus中，最初有180MB可用，这些可用的空间随着安装的程序的增多而变小。我们可以通过“设置”-“SD卡和手机内存”-“手机内部存储”来查看剩余的空间大小。最后强调一点，当可用空间变得非常小的时候，就不能再下载或者安装应用程序了。</p>
+<h4 id="ROM："><a href="#ROM：" class="headerlink" title="ROM："></a>ROM：</h4><p>相当于c盘<br>ROM是Read-Only Memory的缩写。以前常用来表示一旦出厂后上面存储的数据就不能被修改，同时即使没有电，数据也不会丢失。后来，一种新型的ROM——EEPROM，代替了原来的ROM。这种EEPROM允许用高一点的电压改写数据以便用于升级。以后Flash Memory（闪存）代替了EEPROM，闪存可以很容易的修改内容。现在我们说智能手机中的ROM一般指的是Flash Memory了。<br>手机中的ROM一般被分成若干区域。在Android中，有一部分被分给了操作系统，分给操作系统的这部分通常被保护起来，用户不能向里面写入数据。通常我们说Rooting指的就是获得操作系统的最高权限，因此我们可以读取和写入到这部分区域。比如替换系统默认的图片。<br>另外ROM还分了一部分空间给用户作为存储数据用，用于存储下载应用程序，保存用户数据等。这部分区域已经完全脱离了“Read-Only”，不再“只读”。在Android 2.2版本中，这部分空间被挂载到/mnt/asec目录下，我们可以进入查看下载的应用程序的APK文件。这部分空间有时被称作“手机内部存储”，想一下Windows中的C盘，windows的文件夹是不可见的并且在系统分区。在我的LG Optimus中，最初有180MB可用，这些可用的空间随着安装的程序的增多而变小。我们可以通过“设置”-“SD卡和手机内存”-“手机内部存储”来查看剩余的空间大小。最后强调一点，当可用空间变得非常小的时候，就不能再下载或者安装应用程序了。</p>
 <h4 id="Micro-SD-SDHC"><a href="#Micro-SD-SDHC" class="headerlink" title="Micro SD/SDHC"></a>Micro SD/SDHC</h4><p>这是增加手机存储空间的唯一方法。他相当于一个计算机的外部硬盘。LG Optimus出厂的时候配置了一个2GB SD卡，我们用32GB及以下的内存卡替换掉他。SD卡目录挂载到/mnt/sdcard目录下，可以去“设置”-“SD卡和手机内存”-“SD卡”查看。<br>在SD卡上，你可以存储任何的数据，电影，音乐，照片等随你。如果你喜欢你可以把手机作为一个（非常昂贵的）读卡器^_^。在Android 2.2手机中，一部分应用程序可以从手机内部存储移动到SD卡上，以便节约宝贵的内部存储空间。不过你得记住，不是所有的程序或者程序的一部分能被移动到SD卡上的。所以，如果你的手机内部存储空间几乎没有空闲，通过一味的增大SD卡的容量，并不会对你有帮助。<br>当你想替换一个SD卡的时候，记得在抠下老的SD卡之前，先去“设置”-“SD卡和手机内存”-“SD卡”-“卸下SD卡”（别忘了Android是基于Linux的）。新插入的SD卡会自动的被加载。</p>
 <h3 id="文件夹"><a href="#文件夹" class="headerlink" title="文件夹"></a>文件夹</h3><p>cache：是缓存临时文件夹，据说是除了T-mobile的OTA更新外，别无用处。</p>
 <p>sdcard：是Android手机中SD卡的文件夹路径。</p>
@@ -527,7 +527,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -549,7 +549,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
