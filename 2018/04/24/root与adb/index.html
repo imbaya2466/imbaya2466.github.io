@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="root,adb," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="rootroot就是指linux内核中的最高权限，与linux下完全同我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行adb需要root，但是adb没有root权限无法一般获取原因：su负责获取root权限；但是该程序位于/system/bin下。andr">
+<meta name="keywords" content="root,adb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="root与adb">
+<meta property="og:url" content="http://yoursite.com/2018/04/24/root与adb/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="rootroot就是指linux内核中的最高权限，与linux下完全同我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行adb需要root，但是adb没有root权限无法一般获取原因：su负责获取root权限；但是该程序位于/system/bin下。andr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/6oOlqBe.png">
+<meta property="og:updated_time" content="2018-04-24T15:50:52.282Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="root与adb">
+<meta name="twitter:description" content="rootroot就是指linux内核中的最高权限，与linux下完全同我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行adb需要root，但是adb没有root权限无法一般获取原因：su负责获取root权限；但是该程序位于/system/bin下。andr">
+<meta name="twitter:image" content="https://i.imgur.com/6oOlqBe.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/24/root与adb/"/>
+
+
+
+
+
+  <title>root与adb | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/24/root与adb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">root与adb</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-24T22:58:43+08:00">
+                2018-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="root"><a href="#root" class="headerlink" title="root"></a>root</h2><p>root就是指linux内核中的最高权限，与linux下完全同<br>我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行<br>adb需要root，但是adb没有root权限<br>无法一般获取原因：<br>su负责获取root权限；但是该程序位于/system/bin下。android为了安全去掉了linux这个命令。而想要将su拷贝到Android手机底层命令的执行目录（/system/bin）下并赋予执行权限。但是这里有一个问题，拷贝到系统目录下的操作，和在系统目录下更改权限的操作，只有root权限才可以做这个操作。这就是一个死锁。</p>
+<p>因此。需要漏洞。系统漏洞<br>计划于linux系统熟实后解决rop，看漏洞战争与安卓那本漏洞书进入漏洞研究。</p>
+<p>有俩方案：</p>
+<ol>
+<li>系统漏洞方案<br>主旨思想是查找系统漏洞，让本身具有root权限的进程执行打开root权限的操作。</li>
+<li>重烧eng boot.img方案<br>Android版本有user版本和eng版本的区别，其中eng版本可以用于开发调试，所以本身可以开启root权限。通过重烧eng boot.img版本来获取root权限。</li>
+</ol>
+<h2 id="adb"><a href="#adb" class="headerlink" title="adb"></a>adb</h2><p><a href="https://www.jianshu.com/p/3bacaeab06b2" target="_blank" rel="external">https://www.jianshu.com/p/3bacaeab06b2</a></p>
+<ol>
+<li>adb devices  获取手机设备序列号和连接状态</li>
+<li>adb get-serialno 获得设备序列号</li>
+<li>如果有多个模拟器或者Android设备同时连接上adb，那么可以通过命令来选择指定的目标设备。在执行adb命令时 在一般命令前再加入 –s &lt;序列号&gt;即可。adb -s XXXX shell（命令）</li>
+<li>只有一个设备时命令任意执行</li>
+<li>adb shell为进入shell模式</li>
+<li>adb install <apk路径>  安装apk<br>adb install -r <apk路径>  保留数据和缓存文件，重新安装APK<br>adb install -s <apk路径>  安装apk到sd卡<br>adb root 以root权限重启adb服务</apk路径></apk路径></apk路径></li>
+<li>adb tcpip 5555让设备在 5555 端口监听 TCP/IP 连接</li>
+<li>adb connect <device-ip-address>通过ip adb </device-ip-address></li>
+<li>adb pull导出文件</li>
+</ol>
+<p>…</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>1)adb client（客户端）<br>client是运行在PC端的，该组件发送命令，可以通过发出adb命令从命令行终端调用客户端。每当我们发起一个adb命令的时候，就会开启一个client程序。当然，当我们开启DDMS或者ADT的时候，也会自动创建client。当我们开启一个client的时候，它首先会去检测后台是否已经有一个server程序在运行着，否则会开启一个adb-server进程。所有的client都是通过5037端口与adb-server进行通信的。</p>
+<p>2）adb daemon（adbd后台程序）<br>Daemon，该组件作为一个后台进程运行在模拟器/真实Android设备中，在设备上运行命令。daemon使用端口的范围是5554-5585，每个模拟器/设备连接到PC端时，总会开启这样一个后台进程，并且为其分配了两个连续的端口，比如：<br>Emulator1, console: 5554<br>Emulator1, adb: 5555<br>因为每个设备都分一组两个端口，所以adb连接手机的最大数量为16。<br>端口的作用，在这两个端口中，其中偶数端口是用于server与设备进行交互的，可以让server直接从设备中读取数据，而奇数端口是用来与设备的adbd进行连接通信的。</p>
+<p>3)adb server（服务器）<br>Server，该组件管理客户端和后台程序之间的通信，作为一个后台的程序运行在PC端。当一个server开启的时候，会自动绑定并且监听5037端口，接收client通过该端口发送过来的命令。同时server还会对5555-5585间的奇数端口进行扫描，进行对已连接设备的定位。<br><img src="https://i.imgur.com/6oOlqBe.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/root/" rel="tag"># root</a>
+          
+            <a href="/tags/adb/" rel="tag"># adb</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/20/android-NDK开发/" rel="next" title="android NDK开发">
+                <i class="fa fa-chevron-left"></i> android NDK开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/25/项目构建工具/" rel="prev" title="项目构建工具">
+                项目构建工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#root"><span class="nav-number">1.</span> <span class="nav-text">root</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#adb"><span class="nav-number">2.</span> <span class="nav-text">adb</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">2.0.1.</span> <span class="nav-text">原理</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
