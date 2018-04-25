@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,底层,逆向," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一.前备小理解 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是i">
+<meta name="keywords" content="android,底层,逆向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ARM汇编">
+<meta property="og:url" content="http://yoursite.com/2018/04/25/ARM汇编/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="一.前备小理解 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是i">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/zKymBGG.jpg">
+<meta property="og:image" content="https://i.imgur.com/TspgmUE.png">
+<meta property="og:updated_time" content="2018-04-25T17:15:34.704Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ARM汇编">
+<meta name="twitter:description" content="一.前备小理解 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是i">
+<meta name="twitter:image" content="https://i.imgur.com/zKymBGG.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/25/ARM汇编/"/>
+
+
+
+
+
+  <title>ARM汇编 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/25/ARM汇编/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ARM汇编</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-25T22:07:44+08:00">
+                2018-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-前备小理解"><a href="#一-前备小理解" class="headerlink" title="一.前备小理解"></a>一.前备小理解</h2><ol>
+<li>linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64</li>
+<li>x86汇编与AT&amp;T汇编。其实层次应该是AT&amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是intel）举几个例子：<br>AT&amp;T: movw 4(%bp), %dx<br>Intel: mov dx,[bp+4]<br>另注：读懂操作系统底层资源管理需要：汇编，微机原理</li>
+</ol>
+<h2 id="二-ARM处理器"><a href="#二-ARM处理器" class="headerlink" title="二.ARM处理器"></a>二.ARM处理器</h2><p>ARM采用RISC指令集，主要全面用于嵌入式及移动领域<br>ARM处理器家族：<br><img src="https://i.imgur.com/zKymBGG.jpg" alt=""><br>相同架构兼容同一套ARM指令集<br>特性解释：</p>
+<ol>
+<li>Thumb是ARM指令压缩形式子集，1为16位，2扩充32位</li>
+<li>VFP提供浮点运算能力</li>
+<li>Jazelle为 .class文件运行加速dex无用</li>
+<li>NEON、SIMD多媒体加速</li>
+</ol>
+<p>我的1+5：骁龙835是兼容ARM指令集的处理器，由高通公司产，支持快充。</p>
+<h2 id="三-android支持的架构"><a href="#三-android支持的架构" class="headerlink" title="三.android支持的架构"></a>三.android支持的架构</h2><p>最初选择ARM并做了大量优化。但也支持其他架构cpu。比如：x86、atom（凌动）、MIPS</p>
+<h2 id="四-android-native-与arm汇编程序"><a href="#四-android-native-与arm汇编程序" class="headerlink" title="四.android native 与arm汇编程序"></a>四.android native 与arm汇编程序</h2><p>android ndk可将c++编译为基于特定处理器的可执行文件于apk的lib中。这是我环境下打包apk/lib中的：<br><img src="https://i.imgur.com/TspgmUE.png" alt=""><br>可见不同cpu架构下的可执行文件不同，操作系统只能提供api来屏蔽底层。但为了执行还需ABI相同。<br>在这里主要为arm elf<br>android的arm汇编是gun arm汇编格式，使用的汇编器为GAS<br>android ndk中编译使用的是gcc。过程：</p>
+<ol>
+<li>预处理 -E 生成.i全部展开</li>
+<li>编译 -S 语法检查生成arm汇编代码.s</li>
+<li>汇编 -c 生成.o目标文件</li>
+<li>连接 生成可执行文件</li>
+</ol>
+<p>底层汇编与c同用一套api接口<br>arm处理器有7种运行模式，一般为用户模式，不同模式寄存器与可访问资源不同<br>arm处理器有俩种工作状态：arm与thumb</p>
+<h3 id="arm汇编程序结构"><a href="#arm汇编程序结构" class="headerlink" title="arm汇编程序结构"></a>arm汇编程序结构</h3><p>示例：</p>
+<p>c：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char* argv[])&#123;</div><div class="line">	printf(&quot;Hello ARM!\n&quot;);</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>ARM：<strong>.s</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">@开头为架构定义</div><div class="line">  .arch armv5te  @指定arm处理器架构确定指令集</div><div class="line">        .fpu softvfp @协处理类型，这里表示用浮点运算库模拟协处理器。</div><div class="line">        .eabi_attribute 20, 1 @接口属性</div><div class="line">        .eabi_attribute 21, 1</div><div class="line">        .eabi_attribute 23, 3</div><div class="line">        .eabi_attribute 24, 1</div><div class="line">        .eabi_attribute 25, 1</div><div class="line">        .eabi_attribute 26, 2</div><div class="line">        .eabi_attribute 30, 6</div><div class="line">        .eabi_attribute 34, 0</div><div class="line">        .eabi_attribute 18, 4</div><div class="line">        .file   &quot;hello.c&quot;</div><div class="line">        .section        .rodata   @段1：只读</div><div class="line">        .align  2</div><div class="line">.LC0:</div><div class="line">        .ascii  &quot;Hello ARM World\000&quot;</div><div class="line">        .text     @段2：代码</div><div class="line">        .align  2</div><div class="line">        .global main</div><div class="line">        .type   main, %function</div><div class="line">main:</div><div class="line">        @ args = 0, pretend = 0, frame = 8</div><div class="line">        @ frame_needed = 1, uses_anonymous_args = 0</div><div class="line">        stmfd   sp!, &#123;fp, lr&#125;   </div><div class="line">        add     fp, sp, #4</div><div class="line">        sub     sp, sp, #8</div><div class="line">        str     r0, [fp, #-8]</div><div class="line">        str     r1, [fp, #-12]</div><div class="line">        ldr     r3, .L3</div><div class="line">.LPIC0:</div><div class="line">        add     r3, pc, r3</div><div class="line">        mov     r0, r3</div><div class="line">        bl      puts(PLT)</div><div class="line">        mov     r3, #0</div><div class="line">        mov     r0, r3</div><div class="line">        sub     sp, fp, #4</div><div class="line">        @ sp needed</div><div class="line">        ldmfd   sp!, &#123;fp, pc&#125;</div><div class="line">.L4:</div><div class="line">        .align  2</div><div class="line">.L3:</div><div class="line">        .word   .LC0-(.LPIC0+8) @字符串相对于调用处的偏移</div><div class="line">        .size   main, .-main</div><div class="line">        .ident  &quot;GCC: (GNU) 4.8.2&quot;</div><div class="line">        .section        .note.GNU-stack,&quot;&quot;,%progbits  @段3：禁止生成可执行堆栈，放溢出漏洞</div></pre></td></tr></table></figure>
+<p>EXPORT 表示被程序导出</p>
+<h4 id="段"><a href="#段" class="headerlink" title="段"></a>段</h4><p>c等语言的段（节区）是编译器自动生成的：列如.data .text之类<br>section的存在并不是为了以数据功能为准则划分数据，而是以数据属性为标准来归类数据。就是可读性、可写性以及可执行性。<br>c中的节区十分自由，常见的有：</p>
+<ol>
+<li>.text - 不多说了，就是保存代码的节</li>
+<li>.data - 保存数据的节，这个对应C语言中以初始化的全局变量数据。想想为什么你在源码里初始化一个全局变量后运行时这个变量的值正是你想要的那个？int a = 12;并不意味着CRT为你执行了一个赋值语句，而是a在PE文件中保存的位置已经被硬编码了一个12的值。这样loader加载程序时，你给的初值被从PE文件读取到了内存中变量a的位置，这样才使你的变量a有了初值。</li>
+<li>.rdata - 保存常量数据的节。这个可以对应C语言中的常数和常量字符串，同上面一样的原因，他们的初值被保存到了PE文件的次Section中，而不是在运行时被赋值。</li>
+<li>.bss - (Block Start with Symbol)这个section对应C程序中的全局未初始化变量。啥？你说C中未初始化的全局变量实际上全被初始化成了0？这是因为实际上操作系统是这样干的——你的全局未初始化变量由于没有初值，所以不需要将值像上面两个一样保存到PE文件中（所以.bss节除了描述信息之外不占据磁盘空间），但是.bss会描述一段内存区域，loader在加载.bss section时直接开辟这么一块包括所有未初始化数据的内存区域，然后直接将这区域清零。这就是C中全局未初始化数据之所以为零的原因了。</li>
+<li>.idata - 这个是保存程序导入表(Import Table)的节。当然，IT、ILT以及IAT也常常被保存在.rdata中，为什么？是考虑到安全的因素，所以将IAT放在不可写的.rdata里以防止IAT被恶意更改从而造成程序的安全隐患吧。</li>
+<li>.edata - 这个是保存导处表的(Export Table)的节。</li>
+<li>.reloc - 这个节是保存重定位数据的</li>
+<li>.rsrc - 这节是保存程序资源的。想你的程序字符串啊、对话框模板啊、位图、鼠标光标什么的都在这里。实际上这个节储存.resx文件编译后的结果。</li>
+<li>.textbss - 这节比较好玩，它是和微软Incremental Linking(增量链接)特性相关的。</li>
+</ol>
+<p>而在汇编中，我们需要手动分段（汇编基本就是机器码助记符，基本内存中就不变了）<br>arm下：<br>.section name flag type 平台参数<br>flag：段的属性：读写执行<br>type：段的类型progbits表示有数据，note表示数据非本程序使用</p>
+<h4 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h4><p>arm汇编支持俩种：</p>
+<ol>
+<li>/<em> </em>/</li>
+<li>@一行</li>
+</ol>
+<h4 id="标号"><a href="#标号" class="headerlink" title="标号"></a>标号</h4><p>标号名 :<br>标号名任意，前面不用加.</p>
+<h4 id="编译器指令"><a href="#编译器指令" class="headerlink" title="编译器指令"></a>编译器指令</h4><p>arm汇编中所有.开头的都是汇编器指令，汇编器指令与汇编器相关，不属于arm指令集<br>GAS本示例中有：</p>
+<ol>
+<li>.file指定了源文件名</li>
+<li>.align指定代码对齐方式，后面的数是2的几次方</li>
+<li>.ascii申明字符串</li>
+<li>.global申明全局符号</li>
+<li>.type指定符号类型</li>
+<li>.word用来存放地址</li>
+<li>.size设置指定符号的大小</li>
+<li>ident编译器标识，无用。生成后位于.comment段中。（注解）</li>
+</ol>
+<h4 id="子程序与参数传递"><a href="#子程序与参数传递" class="headerlink" title="子程序与参数传递"></a>子程序与参数传递</h4><p>.global 函数名<br>.type 函数名,%function<br>函数名：<br>函数体</p>
+<p><strong>ARM汇编规定：R0-R3这4个寄存器用来传递函数调用的1到4个参数，多的用堆栈来传递。R0寄存器用于存放函数返回值</strong></p>
+<h2 id="五-ARM汇编指令"><a href="#五-ARM汇编指令" class="headerlink" title="五.ARM汇编指令"></a>五.ARM汇编指令</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/底层/" rel="tag"># 底层</a>
+          
+            <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/25/项目构建工具/" rel="next" title="项目构建工具">
+                <i class="fa fa-chevron-left"></i> 项目构建工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前备小理解"><span class="nav-number">1.</span> <span class="nav-text">一.前备小理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-ARM处理器"><span class="nav-number">2.</span> <span class="nav-text">二.ARM处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-android支持的架构"><span class="nav-number">3.</span> <span class="nav-text">三.android支持的架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-android-native-与arm汇编程序"><span class="nav-number">4.</span> <span class="nav-text">四.android native 与arm汇编程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arm汇编程序结构"><span class="nav-number">4.1.</span> <span class="nav-text">arm汇编程序结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#段"><span class="nav-number">4.1.1.</span> <span class="nav-text">段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注释"><span class="nav-number">4.1.2.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标号"><span class="nav-number">4.1.3.</span> <span class="nav-text">标号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译器指令"><span class="nav-number">4.1.4.</span> <span class="nav-text">编译器指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子程序与参数传递"><span class="nav-number">4.1.5.</span> <span class="nav-text">子程序与参数传递</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-ARM汇编指令"><span class="nav-number">5.</span> <span class="nav-text">五.ARM汇编指令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
