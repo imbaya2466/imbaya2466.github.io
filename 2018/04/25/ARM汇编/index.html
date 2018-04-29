@@ -94,20 +94,25 @@
 
 
 
-<meta name="description" content="一.前备小理解 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是i">
+<meta name="description" content="一.前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。">
 <meta name="keywords" content="android,底层,逆向">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ARM汇编">
 <meta property="og:url" content="http://yoursite.com/2018/04/25/ARM汇编/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="一.前备小理解 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是i">
+<meta property="og:description" content="一.前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/zKymBGG.jpg">
 <meta property="og:image" content="https://i.imgur.com/TspgmUE.png">
-<meta property="og:updated_time" content="2018-04-25T17:15:34.704Z">
+<meta property="og:image" content="https://i.imgur.com/qwUMkRh.png">
+<meta property="og:image" content="https://i.imgur.com/dy0Ee5S.jpg">
+<meta property="og:image" content="https://i.imgur.com/LiWHGVL.png">
+<meta property="og:image" content="https://i.imgur.com/9MziHmD.png">
+<meta property="og:image" content="https://i.imgur.com/vrpY3LR.png">
+<meta property="og:updated_time" content="2018-04-29T13:47:29.818Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ARM汇编">
-<meta name="twitter:description" content="一.前备小理解 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是i">
+<meta name="twitter:description" content="一.前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。">
 <meta name="twitter:image" content="https://i.imgur.com/zKymBGG.jpg">
 
 
@@ -375,10 +380,22 @@
       
 
       
-        <h2 id="一-前备小理解"><a href="#一-前备小理解" class="headerlink" title="一.前备小理解"></a>一.前备小理解</h2><ol>
-<li>linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64</li>
-<li>x86汇编与AT&amp;T汇编。其实层次应该是AT&amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是intel）举几个例子：<br>AT&amp;T: movw 4(%bp), %dx<br>Intel: mov dx,[bp+4]<br>另注：读懂操作系统底层资源管理需要：汇编，微机原理</li>
+        <h2 id="一-前备小理解"><a href="#一-前备小理解" class="headerlink" title="一.前备小理解"></a>一.前备小理解</h2><h4 id="1-平台"><a href="#1-平台" class="headerlink" title="1.平台"></a>1.平台</h4><p> linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64</p>
+<h4 id="2-x86汇编与AT-amp-T汇编"><a href="#2-x86汇编与AT-amp-T汇编" class="headerlink" title="2.x86汇编与AT&amp;T汇编"></a>2.x86汇编与AT&amp;T汇编</h4><p> x86汇编与AT&amp;T汇编。其实层次应该是AT&amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是intel）举几个例子：<br>AT&amp;T: movw 4(%bp), %dx<br>Intel: mov dx,[bp+4]</p>
+<h4 id="3-中断"><a href="#3-中断" class="headerlink" title="3.中断"></a>3.中断</h4><p>中断用于cpu停止执行当前代码，转而执行中断处理，处理后可以回到原代码处。<br>分类：可分为CPU内部与外部中断，百度上：<br>硬件中断：</p>
+<ol>
+<li>可屏蔽中断：可以被屏蔽</li>
+<li>非可屏蔽中断：不可屏蔽的硬件中断</li>
+<li>处理器间中断：一种特殊的硬件中断。由处理器发出，被其它处理器接收。用于多处理器间同步</li>
+<li>伪中断：一类不希望被产生的硬件中断。</li>
 </ol>
+<p>软件中断：</p>
+<ol>
+<li>软件中断。是一条CPU指令，用以自陷一个中断。由于软中断指令通常要运行一个切换CPU至内核态（Kernel Mode/Ring 0）的子例程，它常被用作实现系统调用（System call）。x86中的od基于int 3中断</li>
+</ol>
+<p>内存中从0开始的部分有着中断向量表，用于cpu寻找对应的中断发生时该执行的代码位置</p>
+<h4 id="4-端口"><a href="#4-端口" class="headerlink" title="4.端口"></a>4.端口</h4><p>和cpu通过总线相连的除了内存RAM、内部寄存器，还有各种芯片（外设），它们对cpu提供端口（寄存器）从而cpu可操控。</p>
+<p>另注：读懂操作系统底层资源管理需要：汇编，微机原理</p>
 <h2 id="二-ARM处理器"><a href="#二-ARM处理器" class="headerlink" title="二.ARM处理器"></a>二.ARM处理器</h2><p>ARM采用RISC指令集，主要全面用于嵌入式及移动领域<br>ARM处理器家族：<br><img src="https://i.imgur.com/zKymBGG.jpg" alt=""><br>相同架构兼容同一套ARM指令集<br>特性解释：</p>
 <ol>
 <li>Thumb是ARM指令压缩形式子集，1为16位，2扩充32位</li>
@@ -386,7 +403,7 @@
 <li>Jazelle为 .class文件运行加速dex无用</li>
 <li>NEON、SIMD多媒体加速</li>
 </ol>
-<p>我的1+5：骁龙835是兼容ARM指令集的处理器，由高通公司产，支持快充。</p>
+<p>我的1+5：骁龙835是兼容ARM指令集的处理器，由高通公司产，支持快充。<br>ARM公司本身并不参与终端处理器芯片的制造和销售，而是通过向其它芯片厂商授权设计方案，来获取收益。但也有少数手机处理器厂商，如高通，直接在ARM v7指令集的基础上深度开发自己的处理器微架构，如高通公司的Scorpion和Krait，进而设计自主的CPU，具有更大的灵活性。</p>
 <h2 id="三-android支持的架构"><a href="#三-android支持的架构" class="headerlink" title="三.android支持的架构"></a>三.android支持的架构</h2><p>最初选择ARM并做了大量优化。但也支持其他架构cpu。比如：x86、atom（凌动）、MIPS</p>
 <h2 id="四-android-native-与arm汇编程序"><a href="#四-android-native-与arm汇编程序" class="headerlink" title="四.android native 与arm汇编程序"></a>四.android native 与arm汇编程序</h2><p>android ndk可将c++编译为基于特定处理器的可执行文件于apk的lib中。这是我环境下打包apk/lib中的：<br><img src="https://i.imgur.com/TspgmUE.png" alt=""><br>可见不同cpu架构下的可执行文件不同，操作系统只能提供api来屏蔽底层。但为了执行还需ABI相同。<br>在这里主要为arm elf<br>android的arm汇编是gun arm汇编格式，使用的汇编器为GAS<br>android ndk中编译使用的是gcc。过程：</p>
 <ol>
@@ -433,7 +450,84 @@
 </ol>
 <h4 id="子程序与参数传递"><a href="#子程序与参数传递" class="headerlink" title="子程序与参数传递"></a>子程序与参数传递</h4><p>.global 函数名<br>.type 函数名,%function<br>函数名：<br>函数体</p>
 <p><strong>ARM汇编规定：R0-R3这4个寄存器用来传递函数调用的1到4个参数，多的用堆栈来传递。R0寄存器用于存放函数返回值</strong></p>
-<h2 id="五-ARM汇编指令"><a href="#五-ARM汇编指令" class="headerlink" title="五.ARM汇编指令"></a>五.ARM汇编指令</h2>
+<h2 id="五-ARM寄存器"><a href="#五-ARM寄存器" class="headerlink" title="五.ARM寄存器"></a>五.ARM寄存器</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>ARM微处理器共有37个32位寄存器，其中31个为通用寄存器，6个为状态寄存器。但是这些寄存器不能被同时访问，具体哪些寄存器是可以访问的，取决ARM处理器的工作状态及具体的运行模式。但在任何时候，通用寄存器R14~R0、程序计数器PC、一个状态寄存器都是可访问的。都是32位。</p>
+<h3 id="7种状态"><a href="#7种状态" class="headerlink" title="7种状态"></a>7种状态</h3><p>ARM手册中的寄存器状态图：<br><img src="https://i.imgur.com/qwUMkRh.png" alt=""><br>上面为通用寄存器。下面为状态寄存器。<br>CPU会根据不同的工作模式，使部分寄存器可见（即可被使用），图中有灰色下标的正是不同模式下可见的寄存器，被称为分组寄存器。未分组的寄存器在不同模式下都是可见的，但是在寄存器使用时，分组寄存器会屏蔽共享寄存器，从而实现特殊用途。</p>
+<h3 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h3><h4 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h4><ol>
+<li>不分组寄存器（R0-R7） ：R0-R7是不分组寄存器。这意味着在所有处理器模式下，访问的都是同一个物理寄存器。不分组寄存器没有被系统用于特别的用途，任何可采用通用寄存器的应用场合都可以使用未分组寄存器。</li>
+<li>分组寄存器（R8-R14） ：在不同模式下可能作用不同，且每个寄存器不同状态可能对应不同物理寄存器。（表中的_后缀）。主要用于在中断等的备份。</li>
+<li>程序计数器R15（PC）：寄存器R15被用作程序计数器，也称为PC。其值等于当前正在执行的指令的地址+8。</li>
+</ol>
+<p>几个特殊的：<br>1、R13 ——&gt; SP，为堆栈寄存器，用于C语言类程序之间调用所需的空间指针；</p>
+<p>2、R14 ——&gt; LR，为连接寄存器，在发生程序调用时，一般用户存放程序返回地址；</p>
+<p>3、R15 ——&gt; PC，为程序计数寄存器，存放西一条要执行的程序码地址。</p>
+<h4 id="cpu执行过程详解"><a href="#cpu执行过程详解" class="headerlink" title="cpu执行过程详解"></a>cpu执行过程详解</h4><p>LR的俩个功能：</p>
+<ol>
+<li>保存子程序返回地址，使用BL或BLX时，跳转指令自动把返回地址放入r14中</li>
+<li>当异常发生时，异常模式的r14用来保存异常返回地址，将r14入栈可以处理嵌套中断。</li>
+</ol>
+<p>ARM处理器的三级流水线和多级流水线：<br><img src="https://i.imgur.com/dy0Ee5S.jpg" alt=""></p>
+<p>一条汇编指令的运行有三个步骤，取指、译码、执行，当第一条汇编指令取指完成后，紧接着就是第二条指令的取指，然后第三条…如此嵌套<br>因此一条arm指令为4字节但是却+8<br>注意存的LR是自动存跳转时+4。所以直接赋给pc就回去了。<br>但异常时就不一定了，pc要单独计算。</p>
+<h4 id="状态寄存器"><a href="#状态寄存器" class="headerlink" title="状态寄存器"></a>状态寄存器</h4><p>CPSR在每个异常模式下都有一个对应的物理寄存器——程序状态保存寄存器SPSR。当异常出现时，SPSR用于保存CPSR的值，以便异常返回后恢复异常发生时的工作状态。</p>
+<p><img src="https://i.imgur.com/LiWHGVL.png" alt=""></p>
+<h5 id="条件标志位"><a href="#条件标志位" class="headerlink" title="条件标志位"></a>条件标志位</h5><p>N(Negative)、Z(Zero)、C(Carry)及V(oVerflow)统称为条件标志位。大部分的ARM指令可以根据CPSR中的这些条件标志位来选择性地执行。</p>
+<ol>
+<li>N:本位设置成当前指令运算结果的bit[31)的值当两个补码表示的有符号整数运算时，N=I表示运算的结果为负数；N=0表示结果为正数或零。</li>
+<li>Z:Z=1表示运算的结果为零；Z=0表示运算的结果不为零。对于CMP指令，Z=1表示进行比较的两个数大小相等。</li>
+<li>C:在加法指令中(包括比较指令CMN)，当结果产生了进位，则C=1，表示无符号数运算发生上溢出；其他情况下C=0。<br>在减法指令中(包括比较指令CMP)，当运算中发生借位则C=0表示无符号数运算发生下溢出；其他情况下C=1。<br>对于包含移位操作的非加／减法运算指令，C中包含最后一次溢出的位数数值。<br>对于其他非加／减法运算指令，C位的值通常不受影响。</li>
+<li>V:对于加／减法运算指令，当操作数和运算结果为二进制的补码表示的带符号数时V＝1表示符号位溢出。通常其他的指令不影响V位.</li>
+</ol>
+<h5 id="Q标志位"><a href="#Q标志位" class="headerlink" title="Q标志位"></a>Q标志位</h5><p>主要用于指示增强的DSP指令是否发生了溢出。</p>
+<h5 id="CPSR中的控制位"><a href="#CPSR中的控制位" class="headerlink" title="CPSR中的控制位"></a>CPSR中的控制位</h5><p>CPSR的低8位I、F、T及M[4：0]统称为控制位。当异常中断发生时这些位发生变化。在特权级的处理器模式下，软件可以修改这些控制位。</p>
+<ol>
+<li>当I=1时禁止IRQ中断。<br>当F=1时禁止FIQ中断。</li>
+<li>对于ARMv4以及更高版本的T系列的ARM处理器：<br>T=0表示执行ARM指令。<br>T=1表示执行Thumb指令。<br>对于ARMv5以及更高的版本的非T系列的ARM处理器：<br>T=0表示执行ARM指令。<br>T=1表示强制下一条执行的指令产生未定义指令中断。</li>
+<li>控制位M[4：0]控制处理器模式：<br><img src="https://i.imgur.com/9MziHmD.png" alt=""></li>
+</ol>
+<p>CPSR中的其他位用于将来ARM版本的扩展。</p>
+<h2 id="六-ARM汇编"><a href="#六-ARM汇编" class="headerlink" title="六.ARM汇编"></a>六.ARM汇编</h2><h3 id="ARM处理器寻址方式"><a href="#ARM处理器寻址方式" class="headerlink" title="ARM处理器寻址方式"></a>ARM处理器寻址方式</h3><p>寻址：找操作数</p>
+<ol>
+<li>立即寻址：<br>mov R0,#123  R0=123<br>立即数以#前缀，表示16进制时用0x开头。</li>
+<li>寄存器寻址：<br>mov R0,R1    R0=R1</li>
+<li>寄存器位移寻址：<br>LSL逻辑左移，LSL逻辑右移，ASR算数（用符号位补）右移,ROR循环右移，RRX带扩展的循环右移<br>mov R0，R1,LSL #2   R0=R1*4;</li>
+<li>寄存器间接寻址：<br>LDR R0,[R1]<br>取地址为R1值上的值。</li>
+<li>基址寻址：<br>LDR R0,[R1,#-4]<br>带偏移的指针取值</li>
+<li>多寄存器寻址：<br>LMDIA R0,{R1-R4}<br>R1=[R0]  R2=[R0+#4]……</li>
+<li>堆栈寻址：<br>LMDFD SP！,{R1-R7,LR}<br>针对栈的LMD</li>
+<li>块拷贝寻址：<br>LMDIA R0!,{R1-R3}<br>!表示带写回</li>
+<li>相对寻址：<br>BL NEXT<br>…<br>NEXT:<br>…<br>偏移+当前执行PC</li>
+</ol>
+<h3 id="ARM指令集"><a href="#ARM指令集" class="headerlink" title="ARM指令集"></a>ARM指令集</h3><p>指令和伪指令：前者编译后会生成一串1和0组成的机器码，后者帮助前者进行编译过程，不会生成机器码。<br>&lt;必须&gt;{可选}<br>指令格式：助记符{执行条件}{S}{.W|.N}+参1，参2，{参3}<br><strong> 格式说明 </strong><br>助记符：指令助记符<br>执行条件后缀：<br><img src="https://i.imgur.com/vrpY3LR.png" alt=""><br>S表示是否影响CPSR寄存器的值<br>.W.N表示有些代码可以生成的宽度。<br>参1表示目的，参2,参3表示源</p>
+<p><strong> LDR/STR架构 </strong><br>ARM采用RISC架构，CPU本身不能直接读取内存，而需要先将内存中内容加载入CPU中通用寄存器中才能被CPU处理。ldr/str组合用来实现 ARM CPU和内存数据交换。</p>
+<p><strong>指令后缀 </strong><br>大部分指令适用<br>依次：</p>
+<ol>
+<li>type  默认为4字节</li>
+<li>条件  默认AL</li>
+<li>S    有的默认改变</li>
+<li>WN</li>
+</ol>
+<p>type有：<br>B、H：无符号8、16位<br>SB、SH：有符号8、16位</p>
+<h4 id="1-跳转"><a href="#1-跳转" class="headerlink" title="1.跳转"></a>1.跳转</h4><p>跳转方式：使用指令或者给pc寄存器赋值</p>
+<ol>
+<li>B ： B{执行条件}+标号  直接跳</li>
+<li>BL ： BL{执行条件}+标号    存下一条地址到LR中，然后跳</li>
+<li>BX ： BX{执行条件}+Rm 判断Rm的位0是否为1，如果1就跳时改变CPSR的T标志位为1否则为0。</li>
+<li>BLX ： BX+BL</li>
+</ol>
+<h4 id="2-存储器访问"><a href="#2-存储器访问" class="headerlink" title="2.存储器访问"></a>2.存储器访问</h4><p>ldmia r0, {r2 - r3}</p>
+<p>LDR ：寄存器&lt;-存储器<br>STR ：寄存器-&gt;存储器<br>批量<br>LDM、STM可以加后缀大块存储器与多个寄存器传输，其后缀：<br>ia先传输，再地址+4<br>ib先地址+4，再传输<br>da先传输，再地址-4<br>db先地址-4，再传输<br>fd满递减堆栈<br>ed空递减堆栈<br>fa满递增堆栈<br>ea空递增堆栈<br>后四个最后针对栈的主要：<br>空栈：栈指针指向空位，每次存入时可以直接存入然后栈指针移动一格；而取出时需要先移动一格才能取出。<br>满栈：栈指针指向栈中最后一格数据，每次存入时需要先移动栈指针一格再存入；取出时可以直接取出，然后再移动栈指针。<br>增栈：栈指针移动时向地址增加的方向移动的栈。<br>减栈：栈指针移动时向地址减小的方向移动的栈。</p>
+<p>！：感叹号的作用就是r0的值在ldm过程中发生的增加或者减少最后写回到r0去，也就是说ldm时会改变r0的值。<br>^ ：在目标寄存器中有pc时，会同时将spsr写入到cpsr，一般用于从异常模式返回。</p>
+<p>各种后缀以理解为主，不需记忆，最常见的是stmia和stmfd。<br>谨记：操作栈时使用相同的后缀就不会出错，不管是满栈还是空栈、增栈还是减栈。</p>
+<p>—————————————————————————<br>PUSH：将寄存器推入满递减堆栈，可批量<br>POP：从满递减堆栈中弹出。<br>SWP：SWP R1，R2，[R3]  R3所指到R1，R2赋给R3所指</p>
+<h4 id="3-数据处理指令"><a href="#3-数据处理指令" class="headerlink" title="3.数据处理指令"></a>3.数据处理指令</h4><p>mov R&lt;-X数据传送<br>mvn R&lt;-X数据非后传送</p>
+<p>add R1,R2,R3  R1=R2+R3<br>ADC R1,R2,R3  R1=R2+R3+CPSR的C条件位</p>
+<p>SUB R1,R2,R3   R1=R2-R3<br>RSB R1,R2,R3   R1=R3-R2<br>SBC R1,R2,R3   R1=R2-R3再减去取反的C条件位<br>RSC R1,R2,R3   R1=R3-R2再减去取反的C条件位</p>
+<p>MUL R1,R2,R3   R1=R2<em>R3<br>MLS R1,R2,R3,R4 R1=R4-R2</em>R3<br>MLA R1,R2,R3,R4 R1=R4+R2<em>R3<br>UMULL R1,R2,R3,R4 （R2,R1)=R3</em>R4 无符号<br>UMLAL R1,R2,R3,R4 （R2,R1)=R3<em>R4+（R2,R1) 无符号<br>SMULL R1,R2,R3,R4 （R2,R1)=R3</em>R4 有符号<br>SMLAL R1,R2,R3,R4 （R2,R1)=R3*R4+（R2,R1) 有符号</p>
+<p>SDIV R1,R2,R3 有符号除法<br>UDIV R1,R2,R3 R0=R1/R2无符号除法</p>
+<p>ASR算数右移<br>LSL逻辑左移<br>LSR逻辑右移<br>ROR循环右移<br>RRX带扩展循环右移</p>
+<p>AND逻辑与<br>ORR逻辑或<br>EOR异或<br>BIC R1,R2,R3 R3取反与R2与赋给R1 清除指令</p>
+<p>CMP R1,R2 R1-R2仅改标志位<br>CMN R1,R2 R1+R2仅改标志位<br>TST R1,R2 R1&amp;R2仅改标志位<br>TEQ R1,R2 R1异或^R2仅改标志位</p>
+<p>SWI R0   软中断R0为24位中断号，系统中断为0<br>NOP 空指令<br>MRS R1,CPSR读取状态寄存器<br>MSR R1,CPSR写入状态存储器</p>
+
       
     </div>
     
@@ -476,6 +570,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/27/java知识点/" rel="prev" title="java知识点">
+                java知识点 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -552,7 +650,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -574,7 +672,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -609,7 +707,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前备小理解"><span class="nav-number">1.</span> <span class="nav-text">一.前备小理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-ARM处理器"><span class="nav-number">2.</span> <span class="nav-text">二.ARM处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-android支持的架构"><span class="nav-number">3.</span> <span class="nav-text">三.android支持的架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-android-native-与arm汇编程序"><span class="nav-number">4.</span> <span class="nav-text">四.android native 与arm汇编程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arm汇编程序结构"><span class="nav-number">4.1.</span> <span class="nav-text">arm汇编程序结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#段"><span class="nav-number">4.1.1.</span> <span class="nav-text">段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注释"><span class="nav-number">4.1.2.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标号"><span class="nav-number">4.1.3.</span> <span class="nav-text">标号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译器指令"><span class="nav-number">4.1.4.</span> <span class="nav-text">编译器指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子程序与参数传递"><span class="nav-number">4.1.5.</span> <span class="nav-text">子程序与参数传递</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-ARM汇编指令"><span class="nav-number">5.</span> <span class="nav-text">五.ARM汇编指令</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前备小理解"><span class="nav-number">1.</span> <span class="nav-text">一.前备小理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-平台"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.平台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-x86汇编与AT-amp-T汇编"><span class="nav-number">1.0.2.</span> <span class="nav-text">2.x86汇编与AT&T汇编</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-中断"><span class="nav-number">1.0.3.</span> <span class="nav-text">3.中断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-端口"><span class="nav-number">1.0.4.</span> <span class="nav-text">4.端口</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-ARM处理器"><span class="nav-number">2.</span> <span class="nav-text">二.ARM处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-android支持的架构"><span class="nav-number">3.</span> <span class="nav-text">三.android支持的架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-android-native-与arm汇编程序"><span class="nav-number">4.</span> <span class="nav-text">四.android native 与arm汇编程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arm汇编程序结构"><span class="nav-number">4.1.</span> <span class="nav-text">arm汇编程序结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#段"><span class="nav-number">4.1.1.</span> <span class="nav-text">段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注释"><span class="nav-number">4.1.2.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标号"><span class="nav-number">4.1.3.</span> <span class="nav-text">标号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译器指令"><span class="nav-number">4.1.4.</span> <span class="nav-text">编译器指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子程序与参数传递"><span class="nav-number">4.1.5.</span> <span class="nav-text">子程序与参数传递</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-ARM寄存器"><span class="nav-number">5.</span> <span class="nav-text">五.ARM寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">5.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7种状态"><span class="nav-number">5.2.</span> <span class="nav-text">7种状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详解"><span class="nav-number">5.3.</span> <span class="nav-text">详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通用寄存器"><span class="nav-number">5.3.1.</span> <span class="nav-text">通用寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cpu执行过程详解"><span class="nav-number">5.3.2.</span> <span class="nav-text">cpu执行过程详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#状态寄存器"><span class="nav-number">5.3.3.</span> <span class="nav-text">状态寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#条件标志位"><span class="nav-number">5.3.3.1.</span> <span class="nav-text">条件标志位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q标志位"><span class="nav-number">5.3.3.2.</span> <span class="nav-text">Q标志位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CPSR中的控制位"><span class="nav-number">5.3.3.3.</span> <span class="nav-text">CPSR中的控制位</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六-ARM汇编"><span class="nav-number">6.</span> <span class="nav-text">六.ARM汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM处理器寻址方式"><span class="nav-number">6.1.</span> <span class="nav-text">ARM处理器寻址方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM指令集"><span class="nav-number">6.2.</span> <span class="nav-text">ARM指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-跳转"><span class="nav-number">6.2.1.</span> <span class="nav-text">1.跳转</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-存储器访问"><span class="nav-number">6.2.2.</span> <span class="nav-text">2.存储器访问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-数据处理指令"><span class="nav-number">6.2.3.</span> <span class="nav-text">3.数据处理指令</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

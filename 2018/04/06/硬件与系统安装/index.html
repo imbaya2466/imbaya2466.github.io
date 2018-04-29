@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="一直以来对计算机组成原理等硬件知识十分不重视，终于是在逆向过程中被些小问题困扰到导致思绪跑偏。在这里时不时整理下 关于cpu与指令集指令集是存储在CPU内部，对CPU运算进行指导和优化的硬程序。拥有这些指令集，CPU就可以更高效地运行。Intel主要有x86，EM64T，MMX，SSE，SSE2，SSE3，SSSE3 (Super SSE3)，SSE4A，SSE4.1，SSE4.2，AVX，AVX">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-25T15:22:38.558Z">
+<meta property="og:updated_time" content="2018-04-26T14:44:12.458Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="硬件与系统安装">
 <meta name="twitter:description" content="一直以来对计算机组成原理等硬件知识十分不重视，终于是在逆向过程中被些小问题困扰到导致思绪跑偏。在这里时不时整理下 关于cpu与指令集指令集是存储在CPU内部，对CPU运算进行指导和优化的硬程序。拥有这些指令集，CPU就可以更高效地运行。Intel主要有x86，EM64T，MMX，SSE，SSE2，SSE3，SSSE3 (Super SSE3)，SSE4A，SSE4.1，SSE4.2，AVX，AVX">
@@ -373,13 +373,16 @@
 
       
         <p>一直以来对计算机组成原理等硬件知识十分不重视，终于是在逆向过程中被些小问题困扰到导致思绪跑偏。在这里时不时整理下</p>
-<h3 id="关于cpu与指令集"><a href="#关于cpu与指令集" class="headerlink" title="关于cpu与指令集"></a>关于cpu与指令集</h3><p>指令集是存储在CPU内部，对CPU运算进行指导和优化的硬程序。拥有这些指令集，CPU就可以更高效地运行。Intel主要有x86，EM64T，MMX，SSE，SSE2，SSE3，SSSE3 (Super SSE3)，SSE4A，SSE4.1，SSE4.2，AVX，AVX2，AVX-512，VMX等指令集。AMD主要是x86，x86-64，3D-Now!指令集。<br>再看cpu：<br>中央处理器主要包括运算器（算术逻辑运算单元，ALU，Arithmetic Logic Unit）和高速缓冲存储器（Cache）及实现它们之间联系的数据（Data）、控制及状态的总线（Bus）。它与内部存储器（Memory）和输入/输出（I/O）设备合称为电子计算机三大核心部件。CPU还包括运算逻辑部件、寄存器部件和控制部件等。<br>工作过程：<br>CPU从存储器或高速缓冲存储器中取出指令，放入指令寄存器，并对指令译码。它把指令分解成一系列的微操作，然后发出各种控制命令，执行微操作系列，结果改变寄存器或内存。从而完成一条指令的执行。并有多线程多核心等技术。其中乱序执行导致了cpu漏洞<br>而指令的助记符就是汇编，基本上就是直接翻译就可<br>Core i5：pc<br>ARM：移动端多，现已全面使用<br>i386：即Intel 80386。其实i386通常被用来作为对Intel（英特尔）32位微处理器的统称。</p>
+<h2 id="关于cpu与指令集"><a href="#关于cpu与指令集" class="headerlink" title="关于cpu与指令集"></a>关于cpu与指令集</h2><p>指令集是存储在CPU内部，对CPU运算进行指导和优化的硬程序。拥有这些指令集，CPU就可以更高效地运行。Intel主要有x86，EM64T，MMX，SSE，SSE2，SSE3，SSSE3 (Super SSE3)，SSE4A，SSE4.1，SSE4.2，AVX，AVX2，AVX-512，VMX等指令集。AMD主要是x86，x86-64，3D-Now!指令集。<br>再看cpu：<br>中央处理器主要包括运算器（算术逻辑运算单元，ALU，Arithmetic Logic Unit）和高速缓冲存储器（Cache）及实现它们之间联系的数据（Data）、控制及状态的总线（Bus）。它与内部存储器（Memory）和输入/输出（I/O）设备合称为电子计算机三大核心部件。CPU还包括运算逻辑部件、寄存器部件和控制部件等。<br>工作过程：<br>CPU从存储器或高速缓冲存储器中取出指令，放入指令寄存器，并对指令译码。它把指令分解成一系列的微操作，然后发出各种控制命令，执行微操作系列，结果改变寄存器或内存。从而完成一条指令的执行。并有多线程多核心等技术。其中乱序执行导致了cpu漏洞<br>而指令的助记符就是汇编，基本上就是直接翻译就可<br>Core i5：pc<br>ARM：移动端多，现已全面使用<br>i386：即Intel 80386。其实i386通常被用来作为对Intel（英特尔）32位微处理器的统称。</p>
 <p>由此可见一个cpu可支持多种指令集。cpu其上一层就是指令集。</p>
 <p>这些都是指指令集：<br>与具体cpu无关  大多cpu支持多个<br>X86   庞大的intel早期用的<br>x86-64  AMD推出的兼容x86的64位<br>IA64   intel推出的不兼容86的64位<br>EMT64   intel推出的兼容86的64位</p>
 <p>CISC 复杂指令集   其实它是英特尔生产的x86系列（也就是IA-32架构）CPU及其兼容CPU，如AMD、VIA的。即使是新起的X86-64（也说成AMD64）都是属于CISC的范畴。<br>由于Intel X86系列及其兼容CPU（如AMD Athlon MP、）都使用X86指令集，所以就形成了今天庞大的X86系列及兼容CPU阵容。x86CPU主要有intel的服务器CPU和AMD的服务器CPU两类。为了兼容而一直用，庞大</p>
 <p>RISC 精简指令集   RISC指令系统更加适合高档服务器的操作系统Windows 7，Linux也属于类似Windows OS(UNIX)的操作系统。RISC型CPU与Intel和AMD的CPU在软件和硬件上都不兼容。在中高档服务器中采用RISC指令的CPU主要有以下几类：PowerPC处理器、SPARC处理器、PA-RISC处理器、MIPS处理器、Alpha处理器。</p>
-<h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h3><h3 id="io"><a href="#io" class="headerlink" title="io"></a>io</h3><h3 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h3><p>磁道：同心圆<br>扇区：分割磁道<br>柱面：多层磁道<br>分区：对应cdef盘<br>第一个扇区提供引导和分区表，主分区+扩充分区表最多4个，扩充分区最多一个，扩充分区中可以再分逻辑分区从而分多个盘。</p>
-<h3 id="显卡"><a href="#显卡" class="headerlink" title="显卡"></a>显卡</h3><h3 id="操作系统一般过程"><a href="#操作系统一般过程" class="headerlink" title="操作系统一般过程"></a>操作系统一般过程</h3>
+<h3 id="大小端再次记录（老忘）"><a href="#大小端再次记录（老忘）" class="headerlink" title="大小端再次记录（老忘）"></a>大小端再次记录（老忘）</h3><p>大端模式，是指数据的高字节保存在内存的低地址中，而数据的低字节保存在内存的高地址中，这样的存储模式有点儿类似于把数据当作字符串顺序处理：地址由小向大增加，而数据从高位往低位放；这和我们的阅读习惯一致。<br>小端模式，是指数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中，这种存储模式将地址的高低和数据位权有效地结合起来，高地址部分权值高，低地址部分权值低。</p>
+<p>目前Intel的80x86系列芯片是唯一还在坚持使用小端的芯片，ARM芯片默认采用小端，但可以切换为大端；而MIPS等芯片要么采用全部大端的方式储存，要么提供选项支持大端——可以在大小端之间切换。另外，对于大小端的处理也和编译器的实现有关，在C语言中，默认是小端（但在一些对于单片机的实现中却是基于大端，比如Keil 51C），Java是平台无关的，默认是大端。在网络上传输数据普遍采用的都是大端。</p>
+<p>注意一般书写方式都是大到小，不论字串还是数字。但硬编码输入是按顺序从小到大输入的</p>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h2 id="io"><a href="#io" class="headerlink" title="io"></a>io</h2><h2 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h2><p>磁道：同心圆<br>扇区：分割磁道<br>柱面：多层磁道<br>分区：对应cdef盘<br>第一个扇区提供引导和分区表，主分区+扩充分区表最多4个，扩充分区最多一个，扩充分区中可以再分逻辑分区从而分多个盘。</p>
+<h2 id="显卡"><a href="#显卡" class="headerlink" title="显卡"></a>显卡</h2><h2 id="操作系统一般过程"><a href="#操作系统一般过程" class="headerlink" title="操作系统一般过程"></a>操作系统一般过程</h2>
       
     </div>
     
@@ -500,7 +503,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -522,7 +525,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -557,7 +560,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于cpu与指令集"><span class="nav-number">1.</span> <span class="nav-text">关于cpu与指令集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存"><span class="nav-number">2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#io"><span class="nav-number">3.</span> <span class="nav-text">io</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#硬盘"><span class="nav-number">4.</span> <span class="nav-text">硬盘</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显卡"><span class="nav-number">5.</span> <span class="nav-text">显卡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作系统一般过程"><span class="nav-number">6.</span> <span class="nav-text">操作系统一般过程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于cpu与指令集"><span class="nav-number">1.</span> <span class="nav-text">关于cpu与指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#大小端再次记录（老忘）"><span class="nav-number">1.1.</span> <span class="nav-text">大小端再次记录（老忘）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存"><span class="nav-number">2.</span> <span class="nav-text">内存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#io"><span class="nav-number">3.</span> <span class="nav-text">io</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#硬盘"><span class="nav-number">4.</span> <span class="nav-text">硬盘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#显卡"><span class="nav-number">5.</span> <span class="nav-text">显卡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作系统一般过程"><span class="nav-number">6.</span> <span class="nav-text">操作系统一般过程</span></a></li></ol></div>
             
 
           </div>

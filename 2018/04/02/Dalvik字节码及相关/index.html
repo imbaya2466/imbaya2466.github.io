@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://i.imgur.com/UuIIhAn.png">
 <meta property="og:image" content="https://i.imgur.com/4rFBjnX.png">
 <meta property="og:image" content="https://i.imgur.com/7ReGTLb.png">
-<meta property="og:updated_time" content="2018-04-20T14:22:00.961Z">
+<meta property="og:updated_time" content="2018-04-27T11:20:51.364Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dalvik字节码及相关">
 <meta name="twitter:description" content="首先建议参考谷歌官方文档https://source.android.com/devices/tech/dalvik/dex-format  一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 1.1 apk的生成具体过程：  aapt程序将资源标记生成R.java，并生成resou">
@@ -454,6 +454,8 @@
 <h5 id="14-数据运算"><a href="#14-数据运算" class="headerlink" title="14.数据运算"></a>14.数据运算</h5><p>binop vAA,vBB,vCC 将vBB寄存器与vCC寄存器进行运算，结果保存到vAA寄存器<br>binop/2addr vA,vB 将vA寄存器与vB寄存器进行运算，结果保存到vA寄存器<br>binop/lit16 vA,vB,#+CCCC 将vB寄存器与常量CCCC进行运算，结果保存到vA寄存器<br>binop/lit8 vAA,vBB,#+CC 将vBB寄存器与常量CC进行运算，结果保存到vAA寄存器<br>后面3类指令比第1类指令分别多了addr、lit16、lit8等指令后缀。四类指令中基础字节码后面加上数据类型后缀，如-int或-long分别表示操作的数据类型那个为整型与长整型。第1类指令可归类如下：<br>add-type     vBB寄存器与vCC寄存器值进行加法运算（vBB  + vCC）<br>sub-type     vBB寄存器与vCC寄存器值进行减法运算（vBB  - vCC）<br>mul-type     vBB寄存器与vCC寄存器值进行乘法运算（vBB  * vCC）<br>div-type     vBB寄存器与vCC寄存器值进除法运算（vBB  / vCC）<br>rem-type     vBB寄存器与vCC寄存器值进行模运算（vBB  % vCC）<br>and-type     vBB寄存器与vCC寄存器值进行与运算（vBB  &amp; vCC）<br>or-type     vBB寄存器与vCC寄存器值进行或运算（vBB  | vCC）<br>xor-type     vBB寄存器与vCC寄存器值进行异或运算（vBB  ^ vCC）<br>shl-type     vBB寄存器（有符号数）左移vCC位（vBB &lt;&lt; vCC）<br>shr-type     vBB寄存器（有符号数）右移vCC位（vBB &gt;&gt; vCC）<br>ushr-type     vBB寄存器（无符号数）右移vCC位（vBB &gt;&gt; vCC）<br>其中基础字节码后面的-type可以是-int、-long、-float、-double。后面3类指令与之类似。</p>
 <h3 id="四：具体实现"><a href="#四：具体实现" class="headerlink" title="四：具体实现"></a>四：具体实现</h3><p>.XXXX都是辅助信息</p>
 <h4 id="1-类定义"><a href="#1-类定义" class="headerlink" title="1.类定义"></a>1.类定义</h4><p>一个 smali 文件中存放一个类，文件开头保存类的各种信息。类的定义是这样的。<br>.class &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;完全限定名称&gt;<br>.super &lt;超类的完全限定名称&gt;<br>.source &lt;源文件名&gt;<br>例子：MainActivity：<br>.class public Lnet/flygon/myapplication/MainActivity;<br>.super Landroid/app/Activity;<br>.source “MainActivity.java”<br>类可以实现接口，如果类实现了接口，那么这三条语句下面会出现.implements &lt;接口的完全限定名称&gt;。比如通常用于回调的匿名类中会出现.implements Landroid/view/View$OnClickListener;。<br>类还可以拥有注解<br>.annotation &lt;完全限定名称&gt;<br>    键 = 值<br>    …<br>.end annotation</p>
+<p>.synthetic 表示由编译器合成的，用于jvm内部调用的字段，方法，类等<br>比如内部类为了能调用外面类的方法会自动含一个指向外部的this$x<br>不用存自己的，因为自己的都是在方法调用时自动传过来，（一个存有数据的结构体）而该结构体内存有指向外部的this指针。<br>内部类构造过程：保存外部类对象的引用，调用父构造，调用自己的构造。注意是内部类，匿名类没有自己的构造函数（不知道名字）</p>
+<p>R与BuildConfig都是自动生成的类<br>前者将名称与int对应。后者只是标志发布的类型</p>
 <h4 id="2-字段定义"><a href="#2-字段定义" class="headerlink" title="2.字段定义"></a>2.字段定义</h4><p>.field &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;名称&gt;:&lt;类型&gt;<br>非权限修饰符可以为final或者abstract<br>比如我在MainActivity中定义一个按钮：<br>.field private button1:Landroid/widget/Button;</p>
 <h4 id="3-方法定义"><a href="#3-方法定义" class="headerlink" title="3.方法定义"></a>3.方法定义</h4><p>.method &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;名称&gt;(&lt;参数类型&gt;)&lt;返回值类型&gt;<br>    …<br>.end method</p>
 <p>可以含有：<br>.parameter指定参数<br>.registers指定使用的寄存器个数或者.locals<br>.prologue开启代码<br>.line用来标识java代码的行</p>
@@ -581,7 +583,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -603,7 +605,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
