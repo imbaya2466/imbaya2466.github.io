@@ -488,7 +488,7 @@
 <h4 id="调用方法"><a href="#调用方法" class="headerlink" title="调用方法"></a>调用方法</h4><p><strong> 1.获取方法id </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jmethodID id=env-&gt;GetMethodID(jclass,&quot;方法名&quot;,&quot;方法原&quot;);</div><div class="line">//用于实例方法：方法原就是字节码中的样子：()Ljava/lang/String;</div><div class="line">jmethodID id=env-&gt;GetStaticMethodID(jclass,&quot;方法名&quot;,&quot;方法原&quot;);</div><div class="line">//静态用</div></pre></td></tr></table></figure></p>
 <p><strong> 2.调用方法 </strong><br>如何传参????<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jstring fanhui=env-&gt;CallStringMethod(jobject,jmethodID);</div><div class="line">//实例方法用，参1为需要调用方法的java对象，参2是id</div><div class="line">jstring fanhui=env-&gt;CallStaticStringMethod(jclass,jmethodID);</div><div class="line">//静态用</div></pre></td></tr></table></figure></p>
 <p>ps:回调java方法开销大，慎用。</p>
-<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><h3 id="局部与全局引用"><a href="#局部与全局引用" class="headerlink" title="局部与全局引用"></a>局部与全局引用</h3><h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><h2 id="android动态调试原理-可记录在动态调试处"><a href="#android动态调试原理-可记录在动态调试处" class="headerlink" title="android动态调试原理-可记录在动态调试处"></a>android动态调试原理-可记录在动态调试处</h2><h2 id="Bionic-API"><a href="#Bionic-API" class="headerlink" title="Bionic API"></a>Bionic API</h2>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><h3 id="局部与全局引用"><a href="#局部与全局引用" class="headerlink" title="局部与全局引用"></a>局部与全局引用</h3><h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><h2 id="Bionic-API"><a href="#Bionic-API" class="headerlink" title="Bionic API"></a>Bionic API</h2>
           
         
       
@@ -815,6 +815,7 @@
 <li>在AS中打开Edit Configuration，添加remote类型的调试，port为8700</li>
 <li>此时随意在smali中添加断点然后开启debug即可进入调试</li>
 </ol>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>因为安卓的应用程序都是Zygote fork自己来快速启动进程进而快速启动程序的，因此不能直接以调试方式打开app，只能先启动app，再依靠android上的虚拟机与gdb调试，将调试信息通过adb发给主机</p>
 
           
         

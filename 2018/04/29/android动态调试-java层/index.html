@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-29T13:58:38.252Z">
+<meta property="og:updated_time" content="2018-05-03T08:48:32.311Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android动态调试-java层">
 <meta name="twitter:description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
@@ -384,6 +384,7 @@
 <li>在AS中打开Edit Configuration，添加remote类型的调试，port为8700</li>
 <li>此时随意在smali中添加断点然后开启debug即可进入调试</li>
 </ol>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>因为安卓的应用程序都是Zygote fork自己来快速启动进程进而快速启动程序的，因此不能直接以调试方式打开app，只能先启动app，再依靠android上的虚拟机与gdb调试，将调试信息通过adb发给主机</p>
 
       
     </div>
@@ -564,7 +565,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前备条件"><span class="nav-number">1.</span> <span class="nav-text">前备条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前备条件"><span class="nav-number">1.</span> <span class="nav-text">前备条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">3.</span> <span class="nav-text">原理</span></a></li></ol></div>
             
 
           </div>
