@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android,底层,逆向," />
+  <meta name="keywords" content="android,逆向,底层," />
 
 
 
@@ -95,7 +95,7 @@
 
 
 <meta name="description" content="一.前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。">
-<meta name="keywords" content="android,底层,逆向">
+<meta name="keywords" content="android,逆向,底层">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ARM汇编">
 <meta property="og:url" content="http://yoursite.com/2018/04/25/ARM汇编/index.html">
@@ -109,7 +109,7 @@
 <meta property="og:image" content="https://i.imgur.com/LiWHGVL.png">
 <meta property="og:image" content="https://i.imgur.com/9MziHmD.png">
 <meta property="og:image" content="https://i.imgur.com/vrpY3LR.png">
-<meta property="og:updated_time" content="2018-04-29T13:47:29.818Z">
+<meta property="og:updated_time" content="2018-05-08T16:36:56.934Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ARM汇编">
 <meta name="twitter:description" content="一.前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。">
@@ -516,7 +516,7 @@
 <h4 id="2-存储器访问"><a href="#2-存储器访问" class="headerlink" title="2.存储器访问"></a>2.存储器访问</h4><p>ldmia r0, {r2 - r3}</p>
 <p>LDR ：寄存器&lt;-存储器<br>STR ：寄存器-&gt;存储器<br>批量<br>LDM、STM可以加后缀大块存储器与多个寄存器传输，其后缀：<br>ia先传输，再地址+4<br>ib先地址+4，再传输<br>da先传输，再地址-4<br>db先地址-4，再传输<br>fd满递减堆栈<br>ed空递减堆栈<br>fa满递增堆栈<br>ea空递增堆栈<br>后四个最后针对栈的主要：<br>空栈：栈指针指向空位，每次存入时可以直接存入然后栈指针移动一格；而取出时需要先移动一格才能取出。<br>满栈：栈指针指向栈中最后一格数据，每次存入时需要先移动栈指针一格再存入；取出时可以直接取出，然后再移动栈指针。<br>增栈：栈指针移动时向地址增加的方向移动的栈。<br>减栈：栈指针移动时向地址减小的方向移动的栈。</p>
 <p>！：感叹号的作用就是r0的值在ldm过程中发生的增加或者减少最后写回到r0去，也就是说ldm时会改变r0的值。<br>^ ：在目标寄存器中有pc时，会同时将spsr写入到cpsr，一般用于从异常模式返回。</p>
-<p>各种后缀以理解为主，不需记忆，最常见的是stmia和stmfd。<br>谨记：操作栈时使用相同的后缀就不会出错，不管是满栈还是空栈、增栈还是减栈。</p>
+<p>各种后缀以理解为主，不需记忆，最常见的是stmia和stmfd。<br>谨记：操作栈时使用相同的后缀就不会出错，不管是满栈还是空栈、增栈还是减栈。<br>ia、ib、da、db都是手动决定加减传输。fd、ed、fa、ea指的是专门4种栈的方式，由stm、ldm自动识别并相反处理。</p>
 <p>—————————————————————————<br>PUSH：将寄存器推入满递减堆栈，可批量<br>POP：从满递减堆栈中弹出。<br>SWP：SWP R1，R2，[R3]  R3所指到R1，R2赋给R3所指</p>
 <h4 id="3-数据处理指令"><a href="#3-数据处理指令" class="headerlink" title="3.数据处理指令"></a>3.数据处理指令</h4><p>mov R&lt;-X数据传送<br>mvn R&lt;-X数据非后传送</p>
 <p>add R1,R2,R3  R1=R2+R3<br>ADC R1,R2,R3  R1=R2+R3+CPSR的C条件位</p>
@@ -546,9 +546,9 @@
           
             <a href="/tags/android/" rel="tag"># android</a>
           
-            <a href="/tags/底层/" rel="tag"># 底层</a>
-          
             <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+            <a href="/tags/底层/" rel="tag"># 底层</a>
           
         </div>
       
@@ -650,7 +650,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

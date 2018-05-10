@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="概述Android NDK就是谷歌借助java JNI来调用本地native代码。具体过程依靠NDK工具与lib库，使用各平台gcc编译工具，make管理工具，交叉编译连接ndklib将c/c++编译为特定平台程序或动态连接库（linux系统不同cpu架构下的elf）。可以手写make构建生成。 而ndk-build就是提供可以在android-SDK生成的项目下，通过更加集成的makefile执">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-06T10:28:51.239Z">
+<meta property="og:updated_time" content="2018-05-06T11:15:51.270Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android NDK开发2">
 <meta name="twitter:description" content="概述Android NDK就是谷歌借助java JNI来调用本地native代码。具体过程依靠NDK工具与lib库，使用各平台gcc编译工具，make管理工具，交叉编译连接ndklib将c/c++编译为特定平台程序或动态连接库（linux系统不同cpu架构下的elf）。可以手写make构建生成。 而ndk-build就是提供可以在android-SDK生成的项目下，通过更加集成的makefile执">
@@ -401,7 +401,7 @@
 <p>ps.还可以指定各种变量用于引入库等</p>
 <h3 id="cmake"><a href="#cmake" class="headerlink" title="cmake"></a>cmake</h3><p>还是推荐查看谷歌：<a href="https://developer.android.com/ndk/guides/cmake" target="_blank" rel="external">https://developer.android.com/ndk/guides/cmake</a><br>同时上一篇中讲的基本够了</p>
 <h2 id="jni：java与c-c-的数据传递"><a href="#jni：java与c-c-的数据传递" class="headerlink" title="jni：java与c/c++的数据传递"></a>jni：java与c/c++的数据传递</h2><p>win下用javah生成的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JNIEXPORT void JNICALL Java_a_b_testHello(JNIEnv *env, jobject this)</div></pre></td></tr></table></figure></p>
-<p>AS生成的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">extern &quot;C&quot; JNIEXPORT jstring</div><div class="line">JNICALL</div><div class="line">Java_com_example_imbaya_native2_MainActivity_stringFromJNI(</div><div class="line">        JNIEnv *env,</div><div class="line">        jobject /* this */)</div></pre></td></tr></table></figure></p>
+<p>AS生成的：注意as下如果是cpp文件extern “C” 必加<br>当你使用错误修正时是生成c版本的时自动不加，当是cpp文件中错误修正时自动加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">extern &quot;C&quot; JNIEXPORT jstring</div><div class="line">JNICALL</div><div class="line">Java_com_example_imbaya_native2_MainActivity_stringFromJNI(</div><div class="line">        JNIEnv *env,</div><div class="line">        jobject /* this */)</div></pre></td></tr></table></figure></p>
 <h3 id="JNICALL-JNIEXPORT"><a href="#JNICALL-JNIEXPORT" class="headerlink" title="JNICALL JNIEXPORT"></a>JNICALL JNIEXPORT</h3><p>注意这些都在jni_md中被定义，而这个文件存在与win32文件下，因此与平台有关<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#ifndef _JAVASOFT_JNI_MD_H_</div><div class="line">#define _JAVASOFT_JNI_MD_H_</div><div class="line"></div><div class="line">#define JNIEXPORT __declspec(dllexport)</div><div class="line">#define JNIIMPORT __declspec(dllimport)</div><div class="line">#define JNICALL __stdcall</div><div class="line"></div><div class="line">typedef long jint;</div><div class="line">typedef __int64 jlong;</div><div class="line">typedef signed char jbyte;</div><div class="line"></div><div class="line">#endif /* !_JAVASOFT_JNI_MD_H_ */</div></pre></td></tr></table></figure></p>
 <p><strong>stdcall:右到左压参，被调用者修改堆栈
 </strong>declspec(dllexport)微软dll的导出函数</p>
@@ -618,7 +618,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
