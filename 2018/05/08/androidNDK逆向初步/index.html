@@ -103,7 +103,7 @@
 <meta property="og:description" content="知识补充 elf，linux下程序执行，连接等需要详细补充。  原生程序启动流程概述 2013注意这里是原生可执行程序，不是动态库so的加载运行过程静态链接出的可执行文件：_start(crtbegin_static.S)调用__libc_init(bionic\lib\bionic\libc_init_static.c)调用main *动态连接出的可执行文件（.interp段指定加载器默认为sy">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/wP0XSIH.png">
-<meta property="og:updated_time" content="2018-05-08T16:31:06.128Z">
+<meta property="og:updated_time" content="2018-05-10T16:47:36.125Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="androidNDK逆向初步">
 <meta name="twitter:description" content="知识补充 elf，linux下程序执行，连接等需要详细补充。  原生程序启动流程概述 2013注意这里是原生可执行程序，不是动态库so的加载运行过程静态链接出的可执行文件：_start(crtbegin_static.S)调用__libc_init(bionic\lib\bionic\libc_init_static.c)调用main *动态连接出的可执行文件（.interp段指定加载器默认为sy">
@@ -386,8 +386,14 @@
 <li>__libc_init动态的少点因为大部分工作linker做了</li>
 </ol>
 <h2 id="原生文件格式"><a href="#原生文件格式" class="headerlink" title="原生文件格式"></a>原生文件格式</h2><p>不同系统、架构下的elf有所不同。android下的elf遵循了arm的标准，不同版本ndk与连接器脚本生成的elf有所不同。具体的格式需要阅读源码：NDK的platforms\android-14\arch-arm\usr\include\sys\exec_elf.h<br>目前简单百度了下，大概可理解为由头部决定节头和段头的位置，由段头和节头分别决定段与节的位置，节用来存储数据代码等给link用的，而段是内存中用来执行的。<br><img src="https://i.imgur.com/wP0XSIH.png" alt=""></p>
-<h2 id="原生c的逆向分析"><a href="#原生c的逆向分析" class="headerlink" title="原生c的逆向分析"></a>原生c的逆向分析</h2><p>ida</p>
-<h2 id="原生c-的逆向分析"><a href="#原生c-的逆向分析" class="headerlink" title="原生c++的逆向分析"></a>原生c++的逆向分析</h2>
+<h2 id="原生c的逆向分析"><a href="#原生c的逆向分析" class="headerlink" title="原生c的逆向分析"></a>原生c的逆向分析</h2><p>注意主要用寄存器传参 R0 R1 R2 依次左到右（不同于栈的右到左压，右在高地址）。返回用R0<br>R11常作为栈帧<br>ida蓝色表示顺序执行，绿色满足时，红色不满足时执行<br>全局变量从全局偏移表里取（具体？详细了解elf结构和内存布局后）</p>
+<p>switch依旧依靠跳转表</p>
+<p>gcc的-O2优化效果好，取消了栈的存储操作，基本全用寄存器，而且逻辑上也省去了许多无用的部分</p>
+<h2 id="原生c-的逆向分析"><a href="#原生c-的逆向分析" class="headerlink" title="原生c++的逆向分析"></a>原生c++的逆向分析</h2><p>c++的类被解析为结构体的空间分配，而各函数代码都是直接化在流程中了，不是分成块的存储调用方式。<br>c++的各种特性库slt（如gunslt、stlport、gabi++、system）都分别支持各种不同的c++功能，其中前俩个提供容器类，默认为system自动连接，其它的都分为动态和静态连接方式。详见ndk高级编程中</p>
+<p>动态连接时ida可以解析出函数的来源，而静态时ida只能识别出子程序调用，无法识别出具体的函数。因此静态分析难度更大，只有动态分析好用</p>
+<h2 id="JNI"><a href="#JNI" class="headerlink" title="JNI"></a>JNI</h2><p>而DNK中最为常用的就是jni中的交互函数：JNIEnv和JavaVM<br>前者是原生与java交互用，后者代表虚拟机常用于多线程中。<br>c中都是指向函数表结构体的指针，c++中为类对象指针。为了方便ida识别出JNI的结构体，需要导入jni头文件用来看出具体调用的函数</p>
+<p>以下为ida解析头文件结构体方法：<br>进入ida，点击文件-&gt;读取文件-&gt;解析c头文件<br>这里选择ndk的jni文件，需要删除报错的俩个include和1107的#define JNIEXPORT  …改为#define JNIEXPORT<br>然后结构体选项卡按insert-&gt;Add standard structure<br>之后反汇编窗口中选中env函数偏移的量右键中会出现解析为该结构体的内容</p>
+
       
     </div>
     
@@ -565,7 +571,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识补充"><span class="nav-number">1.</span> <span class="nav-text">知识补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生程序启动流程概述-2013"><span class="nav-number">2.</span> <span class="nav-text">原生程序启动流程概述 2013</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生文件格式"><span class="nav-number">3.</span> <span class="nav-text">原生文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生c的逆向分析"><span class="nav-number">4.</span> <span class="nav-text">原生c的逆向分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生c-的逆向分析"><span class="nav-number">5.</span> <span class="nav-text">原生c++的逆向分析</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识补充"><span class="nav-number">1.</span> <span class="nav-text">知识补充</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生程序启动流程概述-2013"><span class="nav-number">2.</span> <span class="nav-text">原生程序启动流程概述 2013</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生文件格式"><span class="nav-number">3.</span> <span class="nav-text">原生文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生c的逆向分析"><span class="nav-number">4.</span> <span class="nav-text">原生c的逆向分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生c-的逆向分析"><span class="nav-number">5.</span> <span class="nav-text">原生c++的逆向分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JNI"><span class="nav-number">6.</span> <span class="nav-text">JNI</span></a></li></ol></div>
             
 
           </div>
