@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-03T08:48:32.311Z">
+<meta property="og:updated_time" content="2018-05-12T13:39:06.247Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android动态调试-java层">
 <meta name="twitter:description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
@@ -335,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
                   </a>
                 </span>
 
@@ -385,6 +385,9 @@
 <li>此时随意在smali中添加断点然后开启debug即可进入调试</li>
 </ol>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>因为安卓的应用程序都是Zygote fork自己来快速启动进程进而快速启动程序的，因此不能直接以调试方式打开app，只能先启动app，再依靠android上的虚拟机与gdb调试，将调试信息通过adb发给主机</p>
+<p>关于端口转发：<br>adb forward  本机：  设备：<br>本机的端口转发到设备的端口上</p>
+<p>当一个设备链接上时，DDSM和ADB之间又会建立VM monitoring service用于监控设备上的虚拟机。 对于设备上每个虚拟机的debugger， DDMS都会开启一个监听端口。端口从8600开始。将设备中的调试信息通过adb取出转发到主机上的监听端口中。</p>
+<p>androdi环境-&gt;adb-&gt;DDMS分别转发各进程-&gt;其它</p>
 
       
     </div>
@@ -508,7 +511,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -530,7 +533,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android,android系统," />
+  <meta name="keywords" content="android,逆向,动态调试,静态分析," />
 
 
 
@@ -94,22 +94,18 @@
 
 
 
-<meta name="description" content="安卓运行架构： linux运行： 关于内核：① Android采用Linux作为内核 ② Android对Linux内核做了修改，目的是适应在移动设备上使用 ③ Android开始作为Linux的一个分支，后来由于无法并入Linux的主开发树，已被Linux Kernel小组从开发树中删除 Android内核是有标准的Linux内核修改而来的，继承了Linux内核的诸多优点，保留了Linux内核的">
-<meta name="keywords" content="android,android系统">
+<meta name="description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail apk打包apktool b 文件名会把打包好的文件输出到文件下的dist目录 签名用已加好的ba">
+<meta name="keywords" content="android,逆向,动态调试,静态分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="android系统架构">
-<meta property="og:url" content="http://yoursite.com/2018/04/11/android系统架构/index.html">
+<meta property="og:title" content="android逆向基本常用操作">
+<meta property="og:url" content="http://yoursite.com/2018/05/12/android逆向基本常用操作/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="安卓运行架构： linux运行： 关于内核：① Android采用Linux作为内核 ② Android对Linux内核做了修改，目的是适应在移动设备上使用 ③ Android开始作为Linux的一个分支，后来由于无法并入Linux的主开发树，已被Linux Kernel小组从开发树中删除 Android内核是有标准的Linux内核修改而来的，继承了Linux内核的诸多优点，保留了Linux内核的">
+<meta property="og:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail apk打包apktool b 文件名会把打包好的文件输出到文件下的dist目录 签名用已加好的ba">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.imgur.com/yQWNzEP.jpg">
-<meta property="og:image" content="https://i.imgur.com/Oq4q1L9.jpg">
-<meta property="og:image" content="https://i.imgur.com/Ia7sd3G.png">
-<meta property="og:updated_time" content="2018-04-24T14:53:42.908Z">
+<meta property="og:updated_time" content="2018-05-12T15:17:36.288Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="android系统架构">
-<meta name="twitter:description" content="安卓运行架构： linux运行： 关于内核：① Android采用Linux作为内核 ② Android对Linux内核做了修改，目的是适应在移动设备上使用 ③ Android开始作为Linux的一个分支，后来由于无法并入Linux的主开发树，已被Linux Kernel小组从开发树中删除 Android内核是有标准的Linux内核修改而来的，继承了Linux内核的诸多优点，保留了Linux内核的">
-<meta name="twitter:image" content="https://i.imgur.com/yQWNzEP.jpg">
+<meta name="twitter:title" content="android逆向基本常用操作">
+<meta name="twitter:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail apk打包apktool b 文件名会把打包好的文件输出到文件下的dist目录 签名用已加好的ba">
 
 
 
@@ -138,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/11/android系统架构/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/05/12/android逆向基本常用操作/"/>
 
 
 
 
 
-  <title>android系统架构 | GGWP</title>
+  <title>android逆向基本常用操作 | GGWP</title>
   
 
 
@@ -287,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/11/android系统架构/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/android逆向基本常用操作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="imbaya">
@@ -304,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">android系统架构</h1>
+          <h1 class="post-title" itemprop="name headline">android逆向基本常用操作</h1>
         
 
         <div class="post-meta">
@@ -316,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T17:20:41+08:00">
-                2018-04-11
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T21:36:28+08:00">
+                2018-05-12
               </time>
             
 
@@ -339,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
                   </a>
                 </span>
 
@@ -376,18 +372,15 @@
       
 
       
-        <p>安卓运行架构：<br><img src="https://i.imgur.com/yQWNzEP.jpg" alt=""></p>
-<p>linux运行：<br><img src="https://i.imgur.com/Oq4q1L9.jpg" alt=""></p>
-<h4 id="关于内核："><a href="#关于内核：" class="headerlink" title="关于内核："></a>关于内核：</h4><p>① Android采用Linux作为内核</p>
-<p>② Android对Linux内核做了修改，目的是适应在移动设备上使用</p>
-<p>③ Android开始作为Linux的一个分支，后来由于无法并入Linux的主开发树，已被Linux Kernel小组从开发树中删除</p>
-<p>Android内核是有标准的Linux内核修改而来的，继承了Linux内核的诸多优点，保留了Linux内核的主题框架，同时Android按照移动设备的要求，在文件系统、内存管理、进程间通信机智和电源管理方面进行了修改，添加了相关的驱动程序和必要的新功能。Android在很大程度上保留了Linux的基本架构，因此Android的应用型和扩展性更强。</p>
-<h4 id="关于HAL"><a href="#关于HAL" class="headerlink" title="关于HAL"></a>关于HAL</h4><p>Android是在Linux内核基础上运行的，提供的核心系统服务包括安全、内存管理、进程管理、网络组和驱动模型等内容。在硬件层和系统中其他软件之间添加了硬件抽象层（HAL）。<br>HAL主要用于屏蔽硬件实现（厂商利益）</p>
-<h4 id="运行时与native"><a href="#运行时与native" class="headerlink" title="运行时与native"></a>运行时与native</h4><p>Android系统的系统层面的底层是Linux，中间加上Dalvik的Java虚拟机，表面层上面是Android运行库。每个Android应用都运行在自己的进程上，享有Dalvik虚拟机为他分配的专有实例。</p>
-<p>Dalvik虚拟机执行的是Dalvik格式的可执行文件（.dex）。Java编译器将Java源码转为.class文件，.class文件又被内置的dx工具转化为.dex格式文件，这种文件在Dalvik虚拟机上注册并运行。</p>
-<p>Android系统的应用软件都是运行在Dalvik上的Java软件，而Dalvik是运行在Linux上的</p>
-<h4 id="官方图："><a href="#官方图：" class="headerlink" title="官方图："></a>官方图：</h4><p><img src="https://i.imgur.com/Ia7sd3G.png" alt=""></p>
-<h4 id="一个程序的过程"><a href="#一个程序的过程" class="headerlink" title="一个程序的过程:"></a>一个程序的过程:</h4><p>待清楚后补充</p>
+        <p>本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章</p>
+<h1 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h1><h2 id="手动分析"><a href="#手动分析" class="headerlink" title="手动分析"></a>手动分析</h2><h3 id="apk拆包"><a href="#apk拆包" class="headerlink" title="apk拆包"></a>apk拆包</h3><p>一般使用官方的apktool即可<br>指令：apktool d apk名 -o 输出文件名</p>
+<h3 id="拆包后"><a href="#拆包后" class="headerlink" title="拆包后"></a>拆包后</h3><p>含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail</p>
+<h3 id="apk打包"><a href="#apk打包" class="headerlink" title="apk打包"></a>apk打包</h3><p>apktool b 文件名<br>会把打包好的文件输出到文件下的dist目录</p>
+<h3 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h3><p>用已加好的bat脚本启动signapk.jar<br>signapk apk名  即可完成签名<br>注意一点在win下不加入path的程序，当前目录要写全才可以运行(./xxx)和linux下一样。<br>win下\分割  linux下/分割</p>
+<h2 id="一键式分析"><a href="#一键式分析" class="headerlink" title="一键式分析"></a>一键式分析</h2><p>java-拖入jeb<br>c/c++-拖入ida</p>
+<h1 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h1><h2 id="java层"><a href="#java层" class="headerlink" title="java层"></a>java层</h2><p>成功<br>参见之前的博客-android动态调试-java层<br>用AS加插件或者jeb都好使的很<br>DDMS：log可设置过滤器查看。点击Start Method Profiling可以获取一段时间的函数调用过程。</p>
+<p>原理:java代码调试接口:JDWP是传统java虚拟机调试java的协议，dalvik也实现了该接口。启用调试的da虚拟机(需要指令adb shell am start -D -n)会启动JDWP调试线程，系统属性ro.debuggable为1时所有程序都可以开启调试支持（不用分别改android:debuggable了），我个人理解为adb负责转发android环境到DDMS，DDMS自带端口转发功能，将对java的调试信息通过指定端口(8700)转发到对应的调试线程中。<br>线程-&gt;adb-&gt;DDMS开放端口-&gt;java调试器</p>
+<h2 id="c-c-层"><a href="#c-c-层" class="headerlink" title="c/c++层"></a>c/c++层</h2><p>未成功<br>将ida的android_server复制到android设备中执行。<br>执行提示中指明了端口号，用adb forward tcp:pcxxx tcp:xxx 转发pc端口到android。<br>执行：<br>debugger-&gt;Run-&gt;Remote即可运行调试原生程序。需要填入原生程序的全路径和目录，本地端口填localhost  之前写的那个pcXXX<br>附加：</p>
 
       
     </div>
@@ -407,7 +400,11 @@
           
             <a href="/tags/android/" rel="tag"># android</a>
           
-            <a href="/tags/android系统/" rel="tag"># android系统</a>
+            <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+            <a href="/tags/动态调试/" rel="tag"># 动态调试</a>
+          
+            <a href="/tags/静态分析/" rel="tag"># 静态分析</a>
           
         </div>
       
@@ -420,8 +417,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/09/android文件系统目录结构/" rel="next" title="android文件系统目录结构">
-                <i class="fa fa-chevron-left"></i> android文件系统目录结构
+              <a href="/2018/05/12/android刷机/" rel="next" title="android刷机">
+                <i class="fa fa-chevron-left"></i> android刷机
               </a>
             
           </div>
@@ -429,10 +426,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/20/android-NDK开发/" rel="prev" title="android NDK开发">
-                android NDK开发 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -566,7 +559,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于内核："><span class="nav-number">1.</span> <span class="nav-text">关于内核：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于HAL"><span class="nav-number">2.</span> <span class="nav-text">关于HAL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运行时与native"><span class="nav-number">3.</span> <span class="nav-text">运行时与native</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#官方图："><span class="nav-number">4.</span> <span class="nav-text">官方图：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一个程序的过程"><span class="nav-number">5.</span> <span class="nav-text">一个程序的过程:</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#静态分析"><span class="nav-number">1.</span> <span class="nav-text">静态分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#手动分析"><span class="nav-number">1.1.</span> <span class="nav-text">手动分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#apk拆包"><span class="nav-number">1.1.1.</span> <span class="nav-text">apk拆包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#拆包后"><span class="nav-number">1.1.2.</span> <span class="nav-text">拆包后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#apk打包"><span class="nav-number">1.1.3.</span> <span class="nav-text">apk打包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#签名"><span class="nav-number">1.1.4.</span> <span class="nav-text">签名</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一键式分析"><span class="nav-number">1.2.</span> <span class="nav-text">一键式分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态分析"><span class="nav-number">2.</span> <span class="nav-text">动态分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#java层"><span class="nav-number">2.1.</span> <span class="nav-text">java层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#c-c-层"><span class="nav-number">2.2.</span> <span class="nav-text">c/c++层</span></a></li></ol></li></ol></div>
             
 
           </div>

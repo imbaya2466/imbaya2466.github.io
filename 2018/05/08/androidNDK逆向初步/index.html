@@ -103,7 +103,7 @@
 <meta property="og:description" content="知识补充 elf，linux下程序执行，连接等需要详细补充。  原生程序启动流程概述 2013注意这里是原生可执行程序，不是动态库so的加载运行过程静态链接出的可执行文件：_start(crtbegin_static.S)调用__libc_init(bionic\lib\bionic\libc_init_static.c)调用main *动态连接出的可执行文件（.interp段指定加载器默认为sy">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/wP0XSIH.png">
-<meta property="og:updated_time" content="2018-05-10T16:47:36.125Z">
+<meta property="og:updated_time" content="2018-05-12T10:02:38.240Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="androidNDK逆向初步">
 <meta name="twitter:description" content="知识补充 elf，linux下程序执行，连接等需要详细补充。  原生程序启动流程概述 2013注意这里是原生可执行程序，不是动态库so的加载运行过程静态链接出的可执行文件：_start(crtbegin_static.S)调用__libc_init(bionic\lib\bionic\libc_init_static.c)调用main *动态连接出的可执行文件（.interp段指定加载器默认为sy">
@@ -392,7 +392,8 @@
 <h2 id="原生c-的逆向分析"><a href="#原生c-的逆向分析" class="headerlink" title="原生c++的逆向分析"></a>原生c++的逆向分析</h2><p>c++的类被解析为结构体的空间分配，而各函数代码都是直接化在流程中了，不是分成块的存储调用方式。<br>c++的各种特性库slt（如gunslt、stlport、gabi++、system）都分别支持各种不同的c++功能，其中前俩个提供容器类，默认为system自动连接，其它的都分为动态和静态连接方式。详见ndk高级编程中</p>
 <p>动态连接时ida可以解析出函数的来源，而静态时ida只能识别出子程序调用，无法识别出具体的函数。因此静态分析难度更大，只有动态分析好用</p>
 <h2 id="JNI"><a href="#JNI" class="headerlink" title="JNI"></a>JNI</h2><p>而DNK中最为常用的就是jni中的交互函数：JNIEnv和JavaVM<br>前者是原生与java交互用，后者代表虚拟机常用于多线程中。<br>c中都是指向函数表结构体的指针，c++中为类对象指针。为了方便ida识别出JNI的结构体，需要导入jni头文件用来看出具体调用的函数</p>
-<p>以下为ida解析头文件结构体方法：<br>进入ida，点击文件-&gt;读取文件-&gt;解析c头文件<br>这里选择ndk的jni文件，需要删除报错的俩个include和1107的#define JNIEXPORT  …改为#define JNIEXPORT<br>然后结构体选项卡按insert-&gt;Add standard structure<br>之后反汇编窗口中选中env函数偏移的量右键中会出现解析为该结构体的内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">struct _JNIEnv;</div><div class="line">struct _JavaVM;</div><div class="line">typedef const struct JNINativeInterface* C_JNIEnv;</div><div class="line"></div><div class="line">#if defined(__cplusplus)</div><div class="line">typedef _JNIEnv JNIEnv;</div><div class="line">typedef _JavaVM JavaVM;</div><div class="line">#else</div><div class="line">typedef const struct JNINativeInterface* JNIEnv;</div><div class="line">typedef const struct JNIInvokeInterface* JavaVM;</div><div class="line">#endif</div></pre></td></tr></table></figure>
+<p>以下为ida解析头文件结构体方法：<br>进入ida，点击文件-&gt;读取文件-&gt;解析c头文件<br>这里选择ndk的jni文件(已修改并存入工具库中)，需要删除报错的俩个include和1107的#define JNIEXPORT  …改为#define JNIEXPORT<br>然后结构体选项卡按insert-&gt;Add standard structure<br>之后反汇编窗口中选中env函数偏移的量右键中会出现解析为该结构体的内容</p>
 
       
     </div>
@@ -514,7 +515,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -536,7 +537,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

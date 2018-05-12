@@ -103,7 +103,7 @@
 <meta property="og:description" content="rootroot就是指linux内核中的最高权限，与linux下完全同我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行adb需要root，但是adb没有root权限无法一般获取原因：su负责获取root权限；但是该程序位于/system/bin下。andr">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/6oOlqBe.png">
-<meta property="og:updated_time" content="2018-04-24T15:50:52.282Z">
+<meta property="og:updated_time" content="2018-05-12T14:17:54.741Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="root与adb">
 <meta name="twitter:description" content="rootroot就是指linux内核中的最高权限，与linux下完全同我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行adb需要root，但是adb没有root权限无法一般获取原因：su负责获取root权限；但是该程序位于/system/bin下。andr">
@@ -391,9 +391,10 @@
 <li>adb install <apk路径>  安装apk<br>adb install -r <apk路径>  保留数据和缓存文件，重新安装APK<br>adb install -s <apk路径>  安装apk到sd卡<br>adb root 以root权限重启adb服务</apk路径></apk路径></apk路径></li>
 <li>adb tcpip 5555让设备在 5555 端口监听 TCP/IP 连接</li>
 <li>adb connect <device-ip-address>通过ip adb </device-ip-address></li>
-<li>adb pull导出文件</li>
+<li>aadb pull sdcard/pull.txt d:\导出</li>
+<li>adb push d:\push.txt sdcard/导入</li>
+<li>adb forward tcp:主机端口 tcp:androd端口 转发主机端口到android端口<br>…</li>
 </ol>
-<p>…</p>
 <h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>1)adb client（客户端）<br>client是运行在PC端的，该组件发送命令，可以通过发出adb命令从命令行终端调用客户端。每当我们发起一个adb命令的时候，就会开启一个client程序。当然，当我们开启DDMS或者ADT的时候，也会自动创建client。当我们开启一个client的时候，它首先会去检测后台是否已经有一个server程序在运行着，否则会开启一个adb-server进程。所有的client都是通过5037端口与adb-server进行通信的。</p>
 <p>2）adb daemon（adbd后台程序）<br>Daemon，该组件作为一个后台进程运行在模拟器/真实Android设备中，在设备上运行命令。daemon使用端口的范围是5554-5585，每个模拟器/设备连接到PC端时，总会开启这样一个后台进程，并且为其分配了两个连续的端口，比如：<br>Emulator1, console: 5554<br>Emulator1, adb: 5555<br>因为每个设备都分一组两个端口，所以adb连接手机的最大数量为16。<br>端口的作用，在这两个端口中，其中偶数端口是用于server与设备进行交互的，可以让server直接从设备中读取数据，而奇数端口是用来与设备的adbd进行连接通信的。</p>
 <p>3)adb server（服务器）<br>Server，该组件管理客户端和后台程序之间的通信，作为一个后台的程序运行在PC端。当一个server开启的时候，会自动绑定并且监听5037端口，接收client通过该端口发送过来的命令。同时server还会对5555-5585间的奇数端口进行扫描，进行对已连接设备的定位。<br><img src="https://i.imgur.com/6oOlqBe.png" alt=""></p>
@@ -518,7 +519,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -540,7 +541,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
