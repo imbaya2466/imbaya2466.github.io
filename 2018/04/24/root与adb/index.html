@@ -103,7 +103,7 @@
 <meta property="og:description" content="rootroot就是指linux内核中的最高权限，与linux下完全同我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行adb需要root，但是adb没有root权限无法一般获取原因：su负责获取root权限；但是该程序位于/system/bin下。andr">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/6oOlqBe.png">
-<meta property="og:updated_time" content="2018-05-12T14:17:54.741Z">
+<meta property="og:updated_time" content="2018-05-14T13:41:07.463Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="root与adb">
 <meta name="twitter:description" content="rootroot就是指linux内核中的最高权限，与linux下完全同我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行adb需要root，但是adb没有root权限无法一般获取原因：su负责获取root权限；但是该程序位于/system/bin下。andr">
@@ -388,9 +388,9 @@
 <li>如果有多个模拟器或者Android设备同时连接上adb，那么可以通过命令来选择指定的目标设备。在执行adb命令时 在一般命令前再加入 –s &lt;序列号&gt;即可。adb -s XXXX shell（命令）</li>
 <li>只有一个设备时命令任意执行</li>
 <li>adb shell为进入shell模式</li>
-<li>adb install <apk路径>  安装apk<br>adb install -r <apk路径>  保留数据和缓存文件，重新安装APK<br>adb install -s <apk路径>  安装apk到sd卡<br>adb root 以root权限重启adb服务</apk路径></apk路径></apk路径></li>
+<li>adb install APK路径  安装apk<br>adb install -r APK路径  保留数据和缓存文件，重新安装APK<br>adb install -s APK路径  安装apk到sd卡<br>adb root 以root权限重启adb服务</li>
 <li>adb tcpip 5555让设备在 5555 端口监听 TCP/IP 连接</li>
-<li>adb connect <device-ip-address>通过ip adb </device-ip-address></li>
+<li>adb connect device-ip-address 通过ip adb </li>
 <li>aadb pull sdcard/pull.txt d:\导出</li>
 <li>adb push d:\push.txt sdcard/导入</li>
 <li>adb forward tcp:主机端口 tcp:androd端口 转发主机端口到android端口<br>…</li>

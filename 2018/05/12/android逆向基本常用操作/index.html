@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail apk打包apktool b 文件名会把打包好的文件输出到文件下的dist目录 签名用已加好的ba">
+<meta name="description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
 <meta name="keywords" content="android,逆向,动态调试,静态分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android逆向基本常用操作">
 <meta property="og:url" content="http://yoursite.com/2018/05/12/android逆向基本常用操作/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail apk打包apktool b 文件名会把打包好的文件输出到文件下的dist目录 签名用已加好的ba">
+<meta property="og:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-12T15:17:36.288Z">
+<meta property="og:updated_time" content="2018-05-14T17:03:56.076Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android逆向基本常用操作">
-<meta name="twitter:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail apk打包apktool b 文件名会把打包好的文件输出到文件下的dist目录 签名用已加好的ba">
+<meta name="twitter:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
 
 
 
@@ -373,14 +373,41 @@
 
       
         <p>本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章</p>
+<p>adb用法：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/</a></p>
 <h1 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h1><h2 id="手动分析"><a href="#手动分析" class="headerlink" title="手动分析"></a>手动分析</h2><h3 id="apk拆包"><a href="#apk拆包" class="headerlink" title="apk拆包"></a>apk拆包</h3><p>一般使用官方的apktool即可<br>指令：apktool d apk名 -o 输出文件名</p>
 <h3 id="拆包后"><a href="#拆包后" class="headerlink" title="拆包后"></a>拆包后</h3><p>含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail</p>
 <h3 id="apk打包"><a href="#apk打包" class="headerlink" title="apk打包"></a>apk打包</h3><p>apktool b 文件名<br>会把打包好的文件输出到文件下的dist目录</p>
 <h3 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h3><p>用已加好的bat脚本启动signapk.jar<br>signapk apk名  即可完成签名<br>注意一点在win下不加入path的程序，当前目录要写全才可以运行(./xxx)和linux下一样。<br>win下\分割  linux下/分割</p>
 <h2 id="一键式分析"><a href="#一键式分析" class="headerlink" title="一键式分析"></a>一键式分析</h2><p>java-拖入jeb<br>c/c++-拖入ida</p>
-<h1 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h1><h2 id="java层"><a href="#java层" class="headerlink" title="java层"></a>java层</h2><p>成功<br>参见之前的博客-android动态调试-java层<br>用AS加插件或者jeb都好使的很<br>DDMS：log可设置过滤器查看。点击Start Method Profiling可以获取一段时间的函数调用过程。</p>
-<p>原理:java代码调试接口:JDWP是传统java虚拟机调试java的协议，dalvik也实现了该接口。启用调试的da虚拟机(需要指令adb shell am start -D -n)会启动JDWP调试线程，系统属性ro.debuggable为1时所有程序都可以开启调试支持（不用分别改android:debuggable了），我个人理解为adb负责转发android环境到DDMS，DDMS自带端口转发功能，将对java的调试信息通过指定端口(8700)转发到对应的调试线程中。<br>线程-&gt;adb-&gt;DDMS开放端口-&gt;java调试器</p>
-<h2 id="c-c-层"><a href="#c-c-层" class="headerlink" title="c/c++层"></a>c/c++层</h2><p>未成功<br>将ida的android_server复制到android设备中执行。<br>执行提示中指明了端口号，用adb forward tcp:pcxxx tcp:xxx 转发pc端口到android。<br>执行：<br>debugger-&gt;Run-&gt;Remote即可运行调试原生程序。需要填入原生程序的全路径和目录，本地端口填localhost  之前写的那个pcXXX<br>附加：</p>
+<h1 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h1><h2 id="java层"><a href="#java层" class="headerlink" title="java层"></a>java层</h2><p>成功<br>参见之前的博客：android动态调试-java层<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/29/android%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95-java%E5%B1%82/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/29/android%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95-java%E5%B1%82/</a><br>用AS加插件或者jeb都好使的很<br>DDMS：log可设置过滤器查看。点击Start Method Profiling可以获取一段时间的函数调用过程。</p>
+<p>原理:java代码调试接口:JDWP是传统java虚拟机调试java的协议，dalvik也实现了该接口。启用调试的da虚拟机(需要指令adb shell am start -D -n)会启动JDWP调试线程，系统属性ro.debuggable为1时所有程序都可以开启调试支持（不用分别改android:debuggable了），我个人理解为adb负责转发android环境到DDMS，DDMS自带端口转发功能，将对java的调试信息通过指定端口(8700)转发到对应的调试线程中。<br>线程-&gt;adb-&gt;DDMS转发端口-&gt;java调试器</p>
+<h2 id="c-c-层"><a href="#c-c-层" class="headerlink" title="c/c++层"></a>c/c++层</h2><p>ida的debugger-&gt;run/attach选项只有不加载文件时才有。<br><strong>前提:</strong><br>将ida的android_server复制到android设备中执行。并转发本地端口到设备端口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">放server这个文件路径随意</div><div class="line">adb push android_server /data/local/tmp</div><div class="line">adb shell chmod 777 /data/local/tmp/android_server</div><div class="line">运行server</div><div class="line">adb shell su  /data/local/tmp/android_server</div><div class="line"></div><div class="line">转发端口</div><div class="line">adb forward tcp:23946 tcp:23946</div></pre></td></tr></table></figure></p>
+<p>执行android_server提示中指明了端口号，用adb forward tcp:xxx tcp:xxx 转发pc端口(参一)到android(参二)。</p>
+<p><strong>执行已有原生程序：</strong><br>成功<br>注意生成native程序时Android.mk加如下语句,否则Android 5.0 and later only support position-independent executables (-fPIE).是android5.0之后随机分配程序的内存地址机制<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">LOCAL_CFLAGS += -pie -fPIE</div><div class="line">LOCAL_LDFLAGS += -pie -fPIE</div></pre></td></tr></table></figure></p>
+<ol>
+<li>前提完成,且要调试的文件放入android并保证可以运行</li>
+<li>打开ida不加载文件。</li>
+<li>debugger-&gt;Run-&gt;Remote即可运行调试原生程序。需要填入目标程序在android的全路径和目标程序所在目录，本地端口填localhost  之前写的那个pcXXX。ida会自动加载分析该文件并执行(知道模块的文件位置即可加载分析)</li>
+</ol>
+<p><strong>调试so库俩种方式</strong><br><strong>直接附加app的开始</strong><br>此方法一般脱壳用，从应用的一开始加载调试。dump(自己写ida脚本)内存取出正确的dex与so</p>
+<ol>
+<li>前提完成，apk安装</li>
+<li>adb shell am start -D -n packageName/ActivityName开启android进程调试状态</li>
+<li>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程(这就是DDMS的功能之一)</li>
+<li>ida-&gt;debugger-&gt;attach-&gt;localhost(此时可设置debug options设置ida断点位置)-&gt;指定目标进程附加,此时该进程会处于ida调试之中。</li>
+<li>jdb -connect com.sun.jdi.SocketAttach:hostname=localhost,port=8700（jdb进行附加）这个就是java层的调试原理，通过java调试协议JDWP运行该应用，此时jdb调试与应用一起被ida中断</li>
+<li>此时ida中就可以使用od调试方法了。</li>
+</ol>
+<p><strong>静态分析so后附加进程</strong><br>成功<br>此方法用于已经有了so文件,停在so文件指定的位置。</p>
+<ol>
+<li>前提完成,apk安装。</li>
+<li>首先打开ida加载指定so,找到需要调试的函数并记住函数的地址</li>
+<li>运行应用并保证要调的模块已经加载</li>
+<li>ida-&gt;debugger-&gt;selectdebugger-&gt;..-&gt;process option设置localhost。但其他的不用改，那是指定应该匹配什么so文件用的之后会匹配对应模块</li>
+<li>ida-&gt;debugger-&gt;Attach to process。之后选择要附加的进程进行附加，附加成功后弹出模块找不到错误(大概为ida找不到模块的代码文件(已加载进程序的so，ida不知其路径，而对于之前的可执行程序有路径就可分析文件中的代码))但是有一个模块可选same按钮，这是识别出进程中某模块和本地ida分析的文件名相同</li>
+<li>ctrl+s找到与目标so同名的模块code区记住其start地址，按G跳到该地址加之前记住的函数地址处即可找到该函数，断点即可。</li>
+<li>android中触发原生函数，即可中断开始调试</li>
+</ol>
 
       
     </div>

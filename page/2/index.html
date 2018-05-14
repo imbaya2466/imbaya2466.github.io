@@ -987,9 +987,9 @@
 <li>如果有多个模拟器或者Android设备同时连接上adb，那么可以通过命令来选择指定的目标设备。在执行adb命令时 在一般命令前再加入 –s &lt;序列号&gt;即可。adb -s XXXX shell（命令）</li>
 <li>只有一个设备时命令任意执行</li>
 <li>adb shell为进入shell模式</li>
-<li>adb install <apk路径>  安装apk<br>adb install -r <apk路径>  保留数据和缓存文件，重新安装APK<br>adb install -s <apk路径>  安装apk到sd卡<br>adb root 以root权限重启adb服务</apk路径></apk路径></apk路径></li>
+<li>adb install APK路径  安装apk<br>adb install -r APK路径  保留数据和缓存文件，重新安装APK<br>adb install -s APK路径  安装apk到sd卡<br>adb root 以root权限重启adb服务</li>
 <li>adb tcpip 5555让设备在 5555 端口监听 TCP/IP 连接</li>
-<li>adb connect <device-ip-address>通过ip adb </device-ip-address></li>
+<li>adb connect device-ip-address 通过ip adb </li>
 <li>aadb pull sdcard/pull.txt d:\导出</li>
 <li>adb push d:\push.txt sdcard/导入</li>
 <li>adb forward tcp:主机端口 tcp:androd端口 转发主机端口到android端口<br>…</li>

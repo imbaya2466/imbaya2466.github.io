@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-12T13:39:06.247Z">
+<meta property="og:updated_time" content="2018-05-14T17:02:38.759Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android动态调试-java层">
 <meta name="twitter:description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
@@ -378,7 +378,7 @@
 <li>android真机/模拟器</li>
 </ol>
 <h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li>拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。<br>将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&gt;Generated S R即将smali目录设置为源码根目录。</li>
+<li>拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。<br>将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&gt;Generated S R即将smali目录设置为源码根目录(导入前重命名为src)。</li>
 <li>首先运行device moniter与android（测试海马模拟器可行），当dm无法找到android时使用adb connect连接。<br>输入：adb connect 127.0.0.1:26944。如下：<br>海马玩模拟器的端口号是26944。<br>逍遥安卓模拟器的端口号是21503。<br>夜神玩模拟器的端口号是62001。<br>当dm可显示android进程时即可</li>
 <li>android中安装需要调试的apk，<br>adb shell am start -D -n packageName/ActivityName来开启程序进入等待调试状态后面俩个name在AndroidManifest.xml下找，如：<br>adb shell am start -D -n com.example.imbaya.crackme01/com.example.imbaya.crackme01.MainActivity<br>这样就可以让android中该应用处于调试状态<br>在dm中找到选中进程就会开启8700调试端口</li>
 <li>在AS中打开Edit Configuration，添加remote类型的调试，port为8700</li>
@@ -386,8 +386,8 @@
 </ol>
 <h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>因为安卓的应用程序都是Zygote fork自己来快速启动进程进而快速启动程序的，因此不能直接以调试方式打开app，只能先启动app，再依靠android上的虚拟机与gdb调试，将调试信息通过adb发给主机</p>
 <p>关于端口转发：<br>adb forward  本机：  设备：<br>本机的端口转发到设备的端口上</p>
-<p>当一个设备链接上时，DDSM和ADB之间又会建立VM monitoring service用于监控设备上的虚拟机。 对于设备上每个虚拟机的debugger， DDMS都会开启一个监听端口。端口从8600开始。将设备中的调试信息通过adb取出转发到主机上的监听端口中。</p>
-<p>androdi环境-&gt;adb-&gt;DDMS分别转发各进程-&gt;其它</p>
+<p>当一个设备链接上时，DDSM和ADB之间又会建立VM monitoring service用于监控设备上的虚拟机。 对于设备上每个虚拟机的进程， DDMS都会在主机开启一个监听端口。端口从8600开始。将设备中的调试信息通过adb取出转发到主机上的监听端口中。其中选中的额外开一个8700<br>等价于<br>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程</p>
+<p>android进程-&gt;adb映射到主机端口并转化调试协议JDWP-&gt;AS连接pc的端口从而调试android进程</p>
 
       
     </div>
