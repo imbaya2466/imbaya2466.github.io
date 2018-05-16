@@ -680,7 +680,7 @@
 <h4 id="jarsign和signapk工具"><a href="#jarsign和signapk工具" class="headerlink" title="jarsign和signapk工具"></a>jarsign和signapk工具</h4><p>jarsign是Java本生自带的一个工具，他可以对jar进行签名的。而signapk是后面专门为了Android应用程序apk进行签名的工具，他们两的签名算法没什么区别，主要是签名时使用的文件不一样（第4点）<br>二者都是签名apk</p>
 <h4 id="keystore文件和pk8，x509-pem文件的区别"><a href="#keystore文件和pk8，x509-pem文件的区别" class="headerlink" title="keystore文件和pk8，x509.pem文件的区别"></a>keystore文件和pk8，x509.pem文件的区别</h4><p>jarsign工具签名时使用的是keystore文件<br>signapk工具签名时使用的是pk8,x509.pem文件<br>ide生成debug版时有个默认的keystore，默认用的是jarsign工具进行签名的，它有有MD5和SHA1的摘要，这个就是keystore文件中私钥的数据摘要，这个信息也是我们在申请很多开发平台账号的时候需要填入的信息，比如申请百度地图，微信SDK等，会需要填写应用的MD5或者是SHA1信息。从而确定是谁生成的应用在使用。</p>
 <p>pk8是私钥文件<br>x509.pem是含有公钥的文件</p>
-<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>只要修改了Apk中的任何内容，就必须重新签名，不然会提示安装失败，保证了apk未修改</p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>只要修改了Apk中的任何内容，就必须重新签名，不然会提示安装失败，保证了apk未修改。且旧软件与新软件签名使用签名文件不同不可安装，即只有签名文件拥有者可以更新自己的软件<br><strong>签名标明了软件作者和软件内容</strong></p>
 <p>连接：<br><a href="https://blog.csdn.net/jiangwei0910410003/article/details/50402000" title="详解" target="_blank" rel="external">https://blog.csdn.net/jiangwei0910410003/article/details/50402000</a></p>
 
           
