@@ -283,6 +283,169 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/17/android软件破解初步/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/17/android软件破解初步/" itemprop="url">android软件破解初步</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T21:14:52+08:00">
+                2018-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>此文总结于看雪安卓安全白皮书第9章</p>
+<p>破解重点于核心功能存在于那端，若在服务端只能尽可能分析交互数据手动仿造</p>
+<h3 id="1-试用版软件"><a href="#1-试用版软件" class="headerlink" title="1.试用版软件"></a>1.试用版软件</h3><p>常见类型<br>免费试用:过一定期限后无法使用，理论上存在完整数据，可破解<br>演示版:只有部分功能演示用,本地无数据，不可破解<br>限制版:部分功能付费开启，视情况定，看是否有功能数据。</p>
+<p>关于示例1:</p>
+<ol>
+<li>createPackageContext用于获取其它程序的context，甚至可执行其它软件的代码，要求有相同的用户id(manifest标签中的android:sharedUserID)与签名。当俩个程序用户id相同时，这俩个程序运行在同一个进程空间。</li>
+<li>java的加密解密类：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">取key  参数为种子</div><div class="line">public static byte[] getRawKey(byte[] seed) throws Exception &#123;    </div><div class="line">	KeyGenerator kgen = KeyGenerator.getInstance(&quot;AES&quot;);    //key生产者，生成指定算法的key</div><div class="line">	SecureRandom sr = SecureRandom.getInstance(&quot;SHA1PRNG&quot;);    //安全随机</div><div class="line">	sr.setSeed(seed);    //设置seed</div><div class="line">	kgen.init(128, sr); // 192 and 256 bits may not be available    //指定密匙大小和随机源</div><div class="line">	SecretKey skey = kgen.generateKey();    //生成一个密钥   同一个key同一次使用生成的是一个，但一次运行多次生成的不同</div><div class="line">	byte[] raw = skey.getEncoded();    //返回基本编码格式的密钥</div><div class="line">	return raw;    </div><div class="line">&#125;  </div><div class="line">加密 参数1：key  参数2：明文   返回密文</div><div class="line">private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception &#123;    </div><div class="line">	SecretKeySpec skeySpec = new SecretKeySpec(raw, &quot;AES&quot;); //key的规格与值   </div><div class="line">	Cipher cipher = Cipher.getInstance(&quot;AES&quot;);    //密码初始</div><div class="line">	cipher.init(Cipher.ENCRYPT_MODE, skeySpec);    //密码设置key</div><div class="line">	byte[] encrypted = cipher.doFinal(clear);    </div><div class="line">	return encrypted;    </div><div class="line">&#125;    </div><div class="line">   </div><div class="line">   解密 参数1：key 参数2密文    返回明文</div><div class="line">private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception &#123;    </div><div class="line">	SecretKeySpec skeySpec = new SecretKeySpec(raw, &quot;AES&quot;);    //key的规格与值</div><div class="line">	Cipher cipher = Cipher.getInstance(&quot;AES&quot;);    //密码实例</div><div class="line">	cipher.init(Cipher.DECRYPT_MODE, skeySpec);    //用key设置密码</div><div class="line">	byte[] decrypted = cipher.doFinal(encrypted);    //解密</div><div class="line">	return decrypted;    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="2-序列号保护"><a href="#2-序列号保护" class="headerlink" title="2.序列号保护"></a>2.序列号保护</h3><p>用户提供机器码，厂商用注册机生成注册码，用户用注册码使用软件，一般软件注册码保证机器/用户对应</p>
+<h3 id="3-网络验证"><a href="#3-网络验证" class="headerlink" title="3.网络验证"></a>3.网络验证</h3><p>未成功<br>网络分析可以使用android移植版的tcpdump工具。位于模拟器下的/system/xbin/下。<br>adb shell tcpdump -p -vv -s 0 -w /sdcard/xxx.pcap<br>之后用 adb pull /scard/xxx.pcap取出用wireshark分析即可</p>
+<p>网上还有种思路是pc开热点用wireshark分析虚拟网卡即可。但我的ws识别不出虚拟网卡……？</p>
+<h3 id="4-应用内付费"><a href="#4-应用内付费" class="headerlink" title="4.应用内付费"></a>4.应用内付费</h3><p>这个建议写一个应用试试。<br>应用实现一个服务与广播接收器，该服务与付费服务（由支付宝等提供）沟通，用户操作结果通过广播/服务返回，应用再随意处理。</p>
+<h3 id="5-向商店查询"><a href="#5-向商店查询" class="headerlink" title="5.向商店查询"></a>5.向商店查询</h3><p>通过应用商点app接口向商店查询用户已买app</p>
+<h3 id="6-重启验证"><a href="#6-重启验证" class="headerlink" title="6.重启验证"></a>6.重启验证</h3><p>将得到的信息保存本地。之后应用在执行各种功能，步骤时检验文件核心的检验步骤可放在native层。<br>示例中：</p>
+<ol>
+<li>JNI_OnLoad加载时调用。JNIEnv表示java环境，不可跨线程，因此设置java native函数对应地址表没问题，JavaVM代表虚拟机，主要就是线程相关</li>
+<li>由native层验证判断后调用java层代码实现功能。</li>
+<li>JNI中对应的java native函数的名字不一定是javah生成的那样。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(*env)-&gt;RegisterNatives(env,native_class, methods, num)&#123;</div><div class="line">//把java类的native函数对应到原生函数中,手动。自动的话是按javah生成的对应，这里没有包含javah生成的头文件</div><div class="line">//参1：jclass：要对应的java类</div><div class="line">//参2：JNINativeMethod数组，表明了java类中方法的名字，元数据，原生函数地址</div><div class="line">//参3：参数2数组length</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="7-Mono初探"><a href="#7-Mono初探" class="headerlink" title="7.Mono初探"></a>7.Mono初探</h3><p>Mono使linux上可运行.NET c#程序。<br>未完</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/android逆向基本常用操作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -380,6 +543,7 @@
 <p>adb用法：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/</a></p>
 <h1 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h1><h2 id="手动分析"><a href="#手动分析" class="headerlink" title="手动分析"></a>手动分析</h2><h3 id="apk拆包"><a href="#apk拆包" class="headerlink" title="apk拆包"></a>apk拆包</h3><p>一般使用官方的apktool即可<br>指令：apktool d apk名 -o 输出文件名</p>
 <h3 id="拆包后"><a href="#拆包后" class="headerlink" title="拆包后"></a>拆包后</h3><p>含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail</p>
+<p>问题:如何改so？网上查的用010改太麻烦了。改dex的其它方案？</p>
 <h3 id="apk打包"><a href="#apk打包" class="headerlink" title="apk打包"></a>apk打包</h3><p>apktool b 文件名<br>会把打包好的文件输出到文件下的dist目录</p>
 <h3 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h3><p>用已加好的bat脚本启动signapk.jar<br>signapk apk名  即可完成签名<br>注意一点在win下不加入path的程序，当前目录要写全才可以运行(./xxx)和linux下一样。<br>win下\分割  linux下/分割</p>
 <h2 id="一键式分析"><a href="#一键式分析" class="headerlink" title="一键式分析"></a>一键式分析</h2><p>java-拖入jeb<br>c/c++-拖入ida</p>
@@ -883,7 +1047,7 @@
 <h2 id="原生c-的逆向分析"><a href="#原生c-的逆向分析" class="headerlink" title="原生c++的逆向分析"></a>原生c++的逆向分析</h2><p>c++的类被解析为结构体的空间分配，而各函数代码都是直接化在流程中了，不是分成块的存储调用方式。<br>c++的各种特性库slt（如gunslt、stlport、gabi++、system）都分别支持各种不同的c++功能，其中前俩个提供容器类，默认为system自动连接，其它的都分为动态和静态连接方式。详见ndk高级编程中</p>
 <p>动态连接时ida可以解析出函数的来源，而静态时ida只能识别出子程序调用，无法识别出具体的函数。因此静态分析难度更大，只有动态分析好用</p>
 <h2 id="JNI"><a href="#JNI" class="headerlink" title="JNI"></a>JNI</h2><p>而DNK中最为常用的就是jni中的交互函数：JNIEnv和JavaVM<br>前者是原生与java交互用，后者代表虚拟机常用于多线程中。<br>c中都是指向函数表结构体的指针，c++中为类对象指针。为了方便ida识别出JNI的结构体，需要导入jni头文件用来看出具体调用的函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">struct _JNIEnv;</div><div class="line">struct _JavaVM;</div><div class="line">typedef const struct JNINativeInterface* C_JNIEnv;</div><div class="line"></div><div class="line">#if defined(__cplusplus)</div><div class="line">typedef _JNIEnv JNIEnv;</div><div class="line">typedef _JavaVM JavaVM;</div><div class="line">#else</div><div class="line">typedef const struct JNINativeInterface* JNIEnv;</div><div class="line">typedef const struct JNIInvokeInterface* JavaVM;</div><div class="line">#endif</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">struct _JNIEnv;</div><div class="line">struct _JavaVM;</div><div class="line">typedef const struct JNINativeInterface* C_JNIEnv;</div><div class="line"></div><div class="line">#if defined(__cplusplus)</div><div class="line">typedef _JNIEnv JNIEnv;</div><div class="line">typedef _JavaVM JavaVM;</div><div class="line">#else</div><div class="line">typedef const struct JNINativeInterface* JNIEnv;</div><div class="line">typedef const struct JNIInvokeInterface* JavaVM;</div><div class="line">#endif</div><div class="line"></div><div class="line">在定义完JNI俩个函数指针集合结构体之后</div><div class="line"></div><div class="line">定义c++用的类</div><div class="line">struct _JNIEnv &#123;</div><div class="line">    /* do not rename this; it does not seem to be entirely opaque */</div><div class="line">    const struct JNINativeInterface* functions;</div><div class="line"></div><div class="line">......定义类的方法调用该结构体。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>以下为ida解析头文件结构体方法：<br>进入ida，点击文件-&gt;读取文件-&gt;解析c头文件<br>这里选择ndk的jni文件(已修改并存入工具库中)，需要删除报错的俩个include和1107的#define JNIEXPORT  …改为#define JNIEXPORT<br>然后结构体选项卡按insert-&gt;Add standard structure<br>之后反汇编窗口中选中env函数偏移的量右键中会出现解析为该结构体的内容</p>
 
           
@@ -1831,163 +1995,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/29/android动态调试-java层/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/29/android动态调试-java层/" itemprop="url">android动态调试-java层</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-29T17:19:51+08:00">
-                2018-04-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="前备条件"><a href="#前备条件" class="headerlink" title="前备条件"></a>前备条件</h3><ol>
-<li>AS &amp;安装smalidea插件</li>
-<li>device monitor(DDMS)-位于SDK/tool</li>
-<li>android真机/模拟器</li>
-</ol>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li>拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。<br>将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&gt;Generated S R即将smali目录设置为源码根目录(导入前重命名为src)。</li>
-<li>首先运行device moniter与android（测试海马模拟器可行），当dm无法找到android时使用adb connect连接。<br>输入：adb connect 127.0.0.1:26944。如下：<br>海马玩模拟器的端口号是26944。<br>逍遥安卓模拟器的端口号是21503。<br>夜神玩模拟器的端口号是62001。<br>当dm可显示android进程时即可</li>
-<li>android中安装需要调试的apk，<br>adb shell am start -D -n packageName/ActivityName来开启程序进入等待调试状态后面俩个name在AndroidManifest.xml下找，如：<br>adb shell am start -D -n com.example.imbaya.crackme01/com.example.imbaya.crackme01.MainActivity<br>这样就可以让android中该应用处于调试状态<br>在dm中找到选中进程就会开启8700调试端口</li>
-<li>在AS中打开Edit Configuration，添加remote类型的调试，port为8700</li>
-<li>此时随意在smali中添加断点然后开启debug即可进入调试</li>
-</ol>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>因为安卓的应用程序都是Zygote fork自己来快速启动进程进而快速启动程序的，因此不能直接以调试方式打开app，只能先启动app，再依靠android上的虚拟机与gdb调试，将调试信息通过adb发给主机</p>
-<p>关于端口转发：<br>adb forward  本机：  设备：<br>本机的端口转发到设备的端口上</p>
-<p>当一个设备链接上时，DDSM和ADB之间又会建立VM monitoring service用于监控设备上的虚拟机。 对于设备上每个虚拟机的进程， DDMS都会在主机开启一个监听端口。端口从8600开始。将设备中的调试信息通过adb取出转发到主机上的监听端口中。其中选中的额外开一个8700<br>等价于<br>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程</p>
-<p>android进程-&gt;adb映射到主机端口并转化调试协议JDWP-&gt;AS连接pc的端口从而调试android进程</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2038,7 +2045,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-count">44</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

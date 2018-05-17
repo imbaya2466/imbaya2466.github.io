@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android,逆向,动态调试,静态分析," />
+  <meta name="keywords" content="逆向,android,动态调试,静态分析," />
 
 
 
@@ -95,14 +95,14 @@
 
 
 <meta name="description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
-<meta name="keywords" content="android,逆向,动态调试,静态分析">
+<meta name="keywords" content="逆向,android,动态调试,静态分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android逆向基本常用操作">
 <meta property="og:url" content="http://yoursite.com/2018/05/12/android逆向基本常用操作/index.html">
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-14T17:03:56.076Z">
+<meta property="og:updated_time" content="2018-05-17T15:42:06.889Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android逆向基本常用操作">
 <meta name="twitter:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
@@ -376,6 +376,7 @@
 <p>adb用法：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/</a></p>
 <h1 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h1><h2 id="手动分析"><a href="#手动分析" class="headerlink" title="手动分析"></a>手动分析</h2><h3 id="apk拆包"><a href="#apk拆包" class="headerlink" title="apk拆包"></a>apk拆包</h3><p>一般使用官方的apktool即可<br>指令：apktool d apk名 -o 输出文件名</p>
 <h3 id="拆包后"><a href="#拆包后" class="headerlink" title="拆包后"></a>拆包后</h3><p>含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail</p>
+<p>问题:如何改so？网上查的用010改太麻烦了。改dex的其它方案？</p>
 <h3 id="apk打包"><a href="#apk打包" class="headerlink" title="apk打包"></a>apk打包</h3><p>apktool b 文件名<br>会把打包好的文件输出到文件下的dist目录</p>
 <h3 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h3><p>用已加好的bat脚本启动signapk.jar<br>signapk apk名  即可完成签名<br>注意一点在win下不加入path的程序，当前目录要写全才可以运行(./xxx)和linux下一样。<br>win下\分割  linux下/分割</p>
 <h2 id="一键式分析"><a href="#一键式分析" class="headerlink" title="一键式分析"></a>一键式分析</h2><p>java-拖入jeb<br>c/c++-拖入ida</p>
@@ -425,9 +426,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/android/" rel="tag"># android</a>
-          
             <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+            <a href="/tags/android/" rel="tag"># android</a>
           
             <a href="/tags/动态调试/" rel="tag"># 动态调试</a>
           
@@ -453,6 +454,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/17/android软件破解初步/" rel="prev" title="android软件破解初步">
+                android软件破解初步 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -529,7 +534,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-count">44</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
