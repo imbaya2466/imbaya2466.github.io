@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="一直以来对计算机组成原理等硬件知识十分不重视，终于是在逆向过程中被些小问题困扰到导致思绪跑偏。在这里时不时整理下 关于cpu与指令集指令集是存储在CPU内部，对CPU运算进行指导和优化的硬程序。拥有这些指令集，CPU就可以更高效地运行。Intel主要有x86，EM64T，MMX，SSE，SSE2，SSE3，SSSE3 (Super SSE3)，SSE4A，SSE4.1，SSE4.2，AVX，AVX">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-15T09:11:57.372Z">
+<meta property="og:updated_time" content="2018-05-18T12:13:32.631Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="硬件与系统安装">
 <meta name="twitter:description" content="一直以来对计算机组成原理等硬件知识十分不重视，终于是在逆向过程中被些小问题困扰到导致思绪跑偏。在这里时不时整理下 关于cpu与指令集指令集是存储在CPU内部，对CPU运算进行指导和优化的硬程序。拥有这些指令集，CPU就可以更高效地运行。Intel主要有x86，EM64T，MMX，SSE，SSE2，SSE3，SSSE3 (Super SSE3)，SSE4A，SSE4.1，SSE4.2，AVX，AVX">
@@ -380,7 +380,7 @@
 <p>RISC 精简指令集   RISC指令系统更加适合高档服务器的操作系统Windows 7，Linux也属于类似Windows OS(UNIX)的操作系统。RISC型CPU与Intel和AMD的CPU在软件和硬件上都不兼容。在中高档服务器中采用RISC指令的CPU主要有以下几类：PowerPC处理器、SPARC处理器、PA-RISC处理器、MIPS处理器、Alpha处理器。</p>
 <h3 id="大小端再次记录（老忘）"><a href="#大小端再次记录（老忘）" class="headerlink" title="大小端再次记录（老忘）"></a>大小端再次记录（老忘）</h3><p>大端模式，是指数据的高字节保存在内存的低地址中，而数据的低字节保存在内存的高地址中，这样的存储模式有点儿类似于把数据当作字符串顺序处理：地址由小向大增加，而数据从高位往低位放；这和我们的阅读习惯一致。<br>小端模式，是指数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中，这种存储模式将地址的高低和数据位权有效地结合起来，高地址部分权值高，低地址部分权值低。</p>
 <p>目前Intel的80x86系列芯片是唯一还在坚持使用小端的芯片，ARM芯片默认采用小端，但可以切换为大端；而MIPS等芯片要么采用全部大端的方式储存，要么提供选项支持大端——可以在大小端之间切换。另外，对于大小端的处理也和编译器的实现有关，在C语言中，默认是小端（但在一些对于单片机的实现中却是基于大端，比如Keil 51C），Java是平台无关的，默认是大端。在网络上传输数据普遍采用的都是大端。</p>
-<p>注意一般书写方式都是大到小，不论字串还是数字。但硬编码输入是按顺序从小到大输入的</p>
+<p>注意一般书写16进制数字时都是大到小，不论表示字串还是数字。但硬编码输入是按顺序从小到大输入的<br>具体用大小端由平台决定（cpu或虚拟机）</p>
 <h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h2 id="io"><a href="#io" class="headerlink" title="io"></a>io</h2><p>中断:中断分为软中断（cpu内部）与硬中断（cpu外部）<br>中断的过程：因某原因触发了中断（有中断类型码）根据码去中断向量表（位于内存最开始）找到处理中断的程序处理完后可决定是否返回。<br>软中断:除法错误、单步执行、int触发（3号为转到调试器处理<a href="https://blog.csdn.net/trochiluses/article/details/20209593" title="关于int3" target="_blank" rel="external">https://blog.csdn.net/trochiluses/article/details/20209593</a>）<br>硬中断：外设硬件触发，其芯片发给cpu的中断，比如处理io</p>
 <h2 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h2><p>磁道：同心圆<br>扇区：分割磁道<br>柱面：多层磁道<br>分区：对应cdef盘<br>第一个扇区提供引导和分区表，主分区+扩充分区表最多4个，扩充分区最多一个，扩充分区中可以再分逻辑分区从而分多个盘。</p>
 <h2 id="显卡"><a href="#显卡" class="headerlink" title="显卡"></a>显卡</h2><h2 id="操作系统一般过程"><a href="#操作系统一般过程" class="headerlink" title="操作系统一般过程"></a>操作系统一般过程</h2>
@@ -504,7 +504,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-count">45</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -515,7 +515,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -526,7 +526,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">53</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

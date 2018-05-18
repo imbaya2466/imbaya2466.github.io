@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android逆向,android," />
+  <meta name="keywords" content="android,android逆向," />
 
 
 
@@ -95,14 +95,14 @@
 
 
 <meta name="description" content="此文总结于看雪安卓安全白皮书第9章 破解重点于核心功能存在于那端，若在服务端只能尽可能分析交互数据手动仿造 1.试用版软件常见类型免费试用:过一定期限后无法使用，理论上存在完整数据，可破解演示版:只有部分功能演示用,本地无数据，不可破解限制版:部分功能付费开启，视情况定，看是否有功能数据。 关于示例1:  createPackageContext用于获取其它程序的context，甚至可执行其它软件">
-<meta name="keywords" content="android逆向,android">
+<meta name="keywords" content="android,android逆向">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android软件破解初步">
 <meta property="og:url" content="http://yoursite.com/2018/05/17/android软件破解初步/index.html">
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="此文总结于看雪安卓安全白皮书第9章 破解重点于核心功能存在于那端，若在服务端只能尽可能分析交互数据手动仿造 1.试用版软件常见类型免费试用:过一定期限后无法使用，理论上存在完整数据，可破解演示版:只有部分功能演示用,本地无数据，不可破解限制版:部分功能付费开启，视情况定，看是否有功能数据。 关于示例1:  createPackageContext用于获取其它程序的context，甚至可执行其它软件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-17T16:02:15.061Z">
+<meta property="og:updated_time" content="2018-05-18T14:29:35.094Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android软件破解初步">
 <meta name="twitter:description" content="此文总结于看雪安卓安全白皮书第9章 破解重点于核心功能存在于那端，若在服务端只能尽可能分析交互数据手动仿造 1.试用版软件常见类型免费试用:过一定期限后无法使用，理论上存在完整数据，可破解演示版:只有部分功能演示用,本地无数据，不可破解限制版:部分功能付费开启，视情况定，看是否有功能数据。 关于示例1:  createPackageContext用于获取其它程序的context，甚至可执行其它软件">
@@ -393,7 +393,7 @@
 <li>JNI中对应的java native函数的名字不一定是javah生成的那样。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(*env)-&gt;RegisterNatives(env,native_class, methods, num)&#123;</div><div class="line">//把java类的native函数对应到原生函数中,手动。自动的话是按javah生成的对应，这里没有包含javah生成的头文件</div><div class="line">//参1：jclass：要对应的java类</div><div class="line">//参2：JNINativeMethod数组，表明了java类中方法的名字，元数据，原生函数地址</div><div class="line">//参3：参数2数组length</div></pre></td></tr></table></figure>
 </li>
 </ol>
-<h3 id="7-Mono初探"><a href="#7-Mono初探" class="headerlink" title="7.Mono初探"></a>7.Mono初探</h3><p>Mono使linux上可运行.NET c#程序。<br>未完</p>
+<h3 id="7-Mono初探"><a href="#7-Mono初探" class="headerlink" title="7.Mono初探"></a>7.Mono初探</h3><p>Mono使linux上可运行.NET c#程序。untiy使用该方法跨平台，游戏安全中重点了解。<br>目前只找到官网资料：<a href="http://www.mono-project.com/" title="Mono" target="_blank" rel="external">http://www.mono-project.com/</a></p>
 
       
     </div>
@@ -411,9 +411,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/android逆向/" rel="tag"># android逆向</a>
-          
             <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/android逆向/" rel="tag"># android逆向</a>
           
         </div>
       
@@ -435,6 +435,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/18/数据库设计理论/" rel="prev" title="数据库设计理论">
+                数据库设计理论 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -511,7 +515,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">44</span>
+                <span class="site-state-item-count">45</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -522,7 +526,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -533,7 +537,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">53</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
