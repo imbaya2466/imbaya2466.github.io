@@ -377,7 +377,19 @@
         
           
             <p>本章记录安卓逆向看雪白皮书11章</p>
-<h2 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h2><p>现在一般采用卡刷方式。传入scard卡。音量+加关机键重启进入recory模式双清选择刷入即可。<br>推荐ROM网站<a href="https://forum.xda-developers.com/" target="_blank" rel="external">https://forum.xda-developers.com/</a></p>
+<h2 id="root"><a href="#root" class="headerlink" title="root"></a>root</h2><p>通过su与superuser应用协作管理root权限，root后可访问全部数据文件，对数据安全影响大</p>
+<h2 id="权限攻击"><a href="#权限攻击" class="headerlink" title="权限攻击"></a>权限攻击</h2><p>android应用权限分为底层与高层，每个应用都有自己的用户与用户组，底层权限通过把用户添加到相应的权限组从而可使用，高层权限是通过Framework层的检查代码来进行权限检查，然后决定程序是否可使用相应函数。<br>android程序中的资源访问包括使用Framework提供的与访问其他程序的组件，前者通过系统提供的权限控制，后者通过自定义的权限控制。当自己的权限管理不当时，其他程序可通过自己的程序获得系统权限功能。<br>intent-filter只是响应级别的过滤器，决定响应的信息。</p>
+<h2 id="组件安全"><a href="#组件安全" class="headerlink" title="组件安全"></a>组件安全</h2><p>四大组件都存在通信和接受方面的安全问题，在过滤器同层可加android：permission指定其它应用使用该组件需要的权限，同时可设置exported表明是否只有自己可用。<br>发送方面可以setclass用来只对某个组件发送intent信息，而不会被别的恶意程序用高优先级截取。其实都有相应的安全机制，只是有的人不用。<br>Activity还存在劫持问题，仿冒页面覆盖正常页面弹出。<br>广播提供私有发送函数</p>
+<h2 id="存储安全"><a href="#存储安全" class="headerlink" title="存储安全"></a>存储安全</h2><p>在root下没有什么数据是不可见的，所以必须加密。存储方式有4种：</p>
+<ol>
+<li>sd卡file控制</li>
+<li>data私有下的file(openfile…)</li>
+<li>Shared Proferences键值对在data下</li>
+<li>Sqlite数据库data下</li>
+</ol>
+<h2 id="ROM安全"><a href="#ROM安全" class="headerlink" title="ROM安全"></a>ROM安全</h2><p>现在一般采用卡刷方式。传入scard卡。音量+加关机键重启进入recory模式双清选择刷入即可。<br>推荐ROM网站<a href="https://forum.xda-developers.com/" target="_blank" rel="external">https://forum.xda-developers.com/</a><br>没啥特殊需求最好用大厂官方的，不要用第三方rom。最好用google的机器驱动加官方的android源码编译系统。自己改改<br>毕竟系统所做的一切你都可以不知道<br>直接编译的android由于缺少驱动无法直接刷入，所以一般基于CM的改改<br>线刷的权限更高点但不同厂格式不同，卡刷就是更改system文件夹内容，Recovery启动类似于单用户与windows下pe模式。也就是系统启动文件不同，一般启动是用system下的。<br>img(可压缩全部盘)是ios(只能用于压缩CDDVD)的超集</p>
+<p>关于Recovery升级原理：<a href="https://blog.csdn.net/luzhenrong45/article/details/60968458" target="_blank" rel="external">https://blog.csdn.net/luzhenrong45/article/details/60968458</a></p>
+<p>android系统计划：android源码编译，项目过程理解，安装系统，系统运行过程理解，读源码，改源码自己用。</p>
 
           
         
