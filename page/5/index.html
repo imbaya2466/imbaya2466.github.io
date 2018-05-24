@@ -283,6 +283,179 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/01/unity示例学习2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/01/unity示例学习2/" itemprop="url">unity示例学习2</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-01T14:26:21+08:00">
+                2017-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/unity/" itemprop="url" rel="index">
+                    <span itemprop="name">unity</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="飞行射击游戏3D中发现的问题"><a href="#飞行射击游戏3D中发现的问题" class="headerlink" title="飞行射击游戏3D中发现的问题"></a>飞行射击游戏3D中发现的问题</h3><ol>
+<li>c#的字串==为直接判断值而java的字串==对于new俩个一样的是不等！为比地址</li>
+<li>旋转基于中心!赋予上层对象时小心中心不一定在子对象中心</li>
+<li>物理的velocity表速度，在start给予一次时一直保持</li>
+</ol>
+<hr>
+<h3 id="关于yield-return-XXXX-的原理："><a href="#关于yield-return-XXXX-的原理：" class="headerlink" title="关于yield return XXXX 的原理："></a>关于yield return XXXX 的原理：</h3><p><strong> 划重点：IEnumerale和IEnumerator 枚举器和迭代器 </strong></p>
+<h4 id="一-首先明白c-中的foreach遍历枚举器"><a href="#一-首先明白c-中的foreach遍历枚举器" class="headerlink" title="一. 首先明白c#中的foreach遍历枚举器"></a>一. 首先明白c#中的foreach遍历枚举器</h4><p> 这个东西初见源自枚举集合————为了自己实现的数据结构类能使用foreach遍历。而实现foreach首先需要本类实现IEnumerable接(其实现等同于可枚举集合)查看该接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">using System.Runtime.CompilerServices;</div><div class="line"></div><div class="line">namespace System.Collections.Generic</div><div class="line">&#123;</div><div class="line">    //</div><div class="line">    // 摘要:</div><div class="line">    //     公开枚举数，该枚举数支持在指定类型的集合上进行简单迭代。若要浏览此类型的.NET Framework 源代码，请参阅参考源。</div><div class="line">    //</div><div class="line">    // 类型参数:</div><div class="line">    //   T:</div><div class="line">    //     要枚举的对象的类型。此类型参数是协变。即可以使用指定的类型或派生程度更高的类型。有关协变和逆变的详细信息，请参阅 泛型中的协变和逆变。</div><div class="line">    [TypeDependencyAttribute(&quot;System.SZArrayHelper&quot;)]</div><div class="line">    public interface IEnumerable&lt;out T&gt; : IEnumerable</div><div class="line">    &#123;</div><div class="line">        //</div><div class="line">        // 摘要:</div><div class="line">        //     返回一个循环访问集合的枚举器。</div><div class="line">        //</div><div class="line">        // 返回结果:</div><div class="line">        //     用于循环访问集合的枚举数。</div><div class="line">        IEnumerator&lt;T&gt; GetEnumerator();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>PS:针对类前加[]语法还没深究，估计和UI显示有关</p>
+<p>好的，就一个方法IEnumerator<t> GetEnumerator();这个方法用来返回一个实现了IEnumerator<t><em> 枚举器 </em>（自建类） 在自己的类中该枚举器需要自己创建一个类继承接口以实现。直接放个示例代码演示一般方法：</t></t></p>
+<ol>
+<li>创建Tree(一个自己写的树数据结构类)的枚举器：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">class TreeEnumerator&lt;TItem&gt; : IEnumerator&lt;TItem&gt; where TItem : IComparable&lt;TItem&gt;</div><div class="line">&#123;</div><div class="line">    private Tree&lt;TItem&gt; currentData = null;</div><div class="line">    private TItem currentItem = default(TItem);</div><div class="line">    private Queue&lt;TItem&gt; enumData = null;</div><div class="line"></div><div class="line">    public TreeEnumerator(Tree&lt;TItem&gt; data)</div><div class="line">    &#123;</div><div class="line">        this.currentData = data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    object IEnumerator.Current</div><div class="line">    &#123;</div><div class="line">        get</div><div class="line">        &#123;</div><div class="line">            throw new NotImplementedException();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    TItem IEnumerator&lt;TItem&gt;.Current</div><div class="line">    &#123;</div><div class="line">        get</div><div class="line">        &#123;</div><div class="line">            if(this.enumData == null)</div><div class="line">            &#123;</div><div class="line">                throw new InvalidOperationException(&quot;Use MoveNext before calling Current&quot;);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            return this.currentItem;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    void IDisposable.Dispose()</div><div class="line">    &#123;</div><div class="line">        // throw new NotImplementedException();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    bool IEnumerator.MoveNext()</div><div class="line">    &#123;</div><div class="line">        if(this.enumData == null)</div><div class="line">        &#123;</div><div class="line">            this.enumData = new Queue&lt;TItem&gt;();</div><div class="line">            populate(this.enumData, this.currentData);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if(this.enumData.Count &gt; 0)</div><div class="line">        &#123;</div><div class="line">            this.currentItem = this.enumData.Dequeue();</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void populate(Queue&lt;TItem&gt; enumQueue, Tree&lt;TItem&gt; tree)</div><div class="line">    &#123;</div><div class="line">        if (tree.LeftTree != null)</div><div class="line">        &#123;</div><div class="line">            populate(enumQueue, tree.LeftTree);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        enumQueue.Enqueue(tree.NodeData);</div><div class="line"></div><div class="line">        if (tree.RightTree != null)</div><div class="line">        &#123;</div><div class="line">            populate(enumQueue, tree.RightTree);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    void IEnumerator.Reset()</div><div class="line">    &#123;</div><div class="line">        throw new NotImplementedException();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol>
+<li><p>在Tree中使用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line">public class Tree&lt;TItem&gt; : IEnumerable&lt;TItem&gt; where TItem : IComparable&lt;TItem&gt;</div><div class="line">&#123;</div><div class="line">    public TItem NodeData &#123; get; set; &#125;</div><div class="line">    public Tree&lt;TItem&gt; LeftTree &#123; get; set; &#125;</div><div class="line">    public Tree&lt;TItem&gt; RightTree &#123; get; set; &#125;</div><div class="line"></div><div class="line">    public Tree(TItem nodeValue)</div><div class="line">    &#123;</div><div class="line">        this.NodeData = nodeValue;</div><div class="line">        this.LeftTree = null;</div><div class="line">        this.RightTree = null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void Insert(TItem newItem)</div><div class="line">    &#123;</div><div class="line">        TItem currentNodeValue = this.NodeData;</div><div class="line">        if (currentNodeValue.CompareTo(newItem) &gt; 0)</div><div class="line">        &#123;</div><div class="line">            // Insert the item into the left subtree</div><div class="line">            if (this.LeftTree == null)</div><div class="line">            &#123;</div><div class="line">                this.LeftTree = new Tree&lt;TItem&gt;(newItem);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                this.LeftTree.Insert(newItem);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        else</div><div class="line">        &#123;</div><div class="line">            // Insert the new item into the right subtree</div><div class="line">            if (this.RightTree == null)</div><div class="line">            &#123;</div><div class="line">                this.RightTree = new Tree&lt;TItem&gt;(newItem);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                this.RightTree.Insert(newItem);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public string WalkTree()</div><div class="line">    &#123;</div><div class="line">        string result = &quot;&quot;;</div><div class="line"></div><div class="line">        if (this.LeftTree != null)</div><div class="line">        &#123;</div><div class="line">            result = this.LeftTree.WalkTree();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        result += String.Format($&quot; &#123;this.NodeData.ToString()&#125; &quot;);</div><div class="line"></div><div class="line">        if (this.RightTree != null)</div><div class="line">        &#123;</div><div class="line">            result += this.RightTree.WalkTree();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        return result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    IEnumerator&lt;TItem&gt; IEnumerable&lt;TItem&gt;.GetEnumerator()</div><div class="line">    &#123;</div><div class="line">        return new TreeEnumerator&lt;TItem&gt;(this);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    IEnumerator IEnumerable.GetEnumerator()</div><div class="line">    &#123;</div><div class="line">        throw new NotImplementedException();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>这样就可以用了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Tree&lt;int&gt; tree1 = new Tree&lt;int&gt;(10);        </div><div class="line">foreach(int item in tree1)</div><div class="line">&#123;</div><div class="line">    Console.WriteLine(item);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>以上就是实现foreach遍历可枚举集合的创建方法，但是…..太复杂了！所以有了一种<em> 迭代器 </em>实现IEnumerator<t>GetEnumerator()的简便方法，而迭代器就和<strong> yield </strong>关系大了！</t></p>
+<h4 id="二-迭代器与yield"><a href="#二-迭代器与yield" class="headerlink" title="二.迭代器与yield"></a>二.迭代器与yield</h4><p>官方定义：迭代器是能生成已排序值序列的代码块。也就是说，迭代器是对序列的一种描述C#用它自动生成枚举器<br>实现方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">IEnumerator&lt;TItem&gt; IEnumerable&lt;TItem&gt;.GetEnumerator()</div><div class="line">&#123;</div><div class="line">    if(this.LeftTree!=null)</div><div class="line">    &#123;</div><div class="line">        foreach(TItem item in this.LeftTree)</div><div class="line">        &#123;</div><div class="line">            yield return item;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    yield return this.NodeData;</div><div class="line"></div><div class="line">    if(this.RightTree!=null)</div><div class="line">    &#123;</div><div class="line">        foreach(TItem item in this.RightTree)</div><div class="line">        &#123;</div><div class="line">            yield return item;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段代码是对上面提到的一般枚举器实现方式的重写，只需关注yield即可：它不反回IEnumerator对象，而是<strong> 每次将方法叫停，讲一个值传回调用者，当调用者需要下一个值时，就从上次停止处继续，数据耗尽时停止 </strong></p>
+<h4 id="三-unity中的用法"><a href="#三-unity中的用法" class="headerlink" title="三.unity中的用法"></a>三.unity中的用法</h4><ol>
+<li>WWW - after Updates happen for all game objects; check the isDone flag. If true, call the IEnumerator’s MoveNext() function;</li>
+<li>WaitForSeconds - after Updates happen for all game objects; check if the time has elapsed, if it has, call MoveNext();</li>
+<li>null or some unknown value - after Updates happen for all game objects; Call MoveNext();</li>
+<li>WaitForEndOfFrame - after Render happens for all cameras; Call MoveNext().<br>有一篇博客写的很实践：<a href="http://www.cnblogs.com/hammerc/p/4432969.html" target="_blank" rel="external">点这里</a><br>在这里我简单总结本示例需要用到的：<br>Unity使用 StartCoroutine(routine: IEnumerator): Coroutine 启动协程，参数必须是 IEnumerator 对象。在函数内使用前面介绍 yield 关键字返回 IEnumerator 对象，Unity 中实现了 YieldInstruction 作为 yield 返回的基类，有 Cortoutine, WaitForSecondes, WaitForEndOfFrame, WaitForFixedUpdate, WWW 几个子类实现。StartCoroutine 将 传入的 IEnumerator 封装为 Coroutine 返回，引擎会对 Corountines 存储和检查 IEnumerator 的 Current值。</li>
+</ol>
+<p><strong> 总之，使用是就是用StartCoroutine调用一个带yield返回的函数，这个函数会按照yield后的规定慢慢一段一段执行完，该过程位于Update之后，永远产生一波波敌人时只用在start调用StartCoroutine启动迭代器让其在update后面默默运行就好了</strong></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/lambda表达式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1197,7 +1370,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">47</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
+<meta name="description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 mali/baksmali 针对单个dex文件更好。 拆包后含有smail代码及资">
 <meta name="keywords" content="android,逆向,动态调试,静态分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android逆向基本常用操作">
 <meta property="og:url" content="http://yoursite.com/2018/05/12/android逆向基本常用操作/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
+<meta property="og:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 mali/baksmali 针对单个dex文件更好。 拆包后含有smail代码及资">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-18T11:43:51.611Z">
+<meta property="og:updated_time" content="2018-05-24T14:12:48.050Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android逆向基本常用操作">
-<meta name="twitter:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 拆包后含有smail代码及资源，注意其对string资源的引用为id索引。目前修改">
+<meta name="twitter:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 mali/baksmali 针对单个dex文件更好。 拆包后含有smail代码及资">
 
 
 
@@ -375,8 +375,10 @@
         <p>本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章</p>
 <p>adb用法：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/</a></p>
 <h1 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h1><h2 id="手动分析"><a href="#手动分析" class="headerlink" title="手动分析"></a>手动分析</h2><h3 id="apk拆包"><a href="#apk拆包" class="headerlink" title="apk拆包"></a>apk拆包</h3><p>一般使用官方的apktool即可<br>指令：apktool d apk名 -o 输出文件名</p>
+<p>mali/baksmali 针对单个dex文件更好。</p>
 <h3 id="拆包后"><a href="#拆包后" class="headerlink" title="拆包后"></a>拆包后</h3><p>含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail</p>
-<p>问题:如何改so？网上查的用010改太麻烦了。改dex的其它方案？如何dump内存内的dex/so?。</p>
+<p>静态ida HexView改so的内容后，点击”Edit-&gt;Plugins-&gt;modifyfile”，然后就可以保存新的so文件了。</p>
+<p>问题:改dex的其它方案？如何dump内存内的dex/so?。</p>
 <h3 id="apk打包"><a href="#apk打包" class="headerlink" title="apk打包"></a>apk打包</h3><p>apktool b 文件名<br>会把打包好的文件输出到文件下的dist目录</p>
 <h3 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h3><p>用已加好的bat脚本启动signapk.jar<br>signapk apk名  即可完成签名<br>注意一点在win下不加入path的程序，当前目录要写全才可以运行(./xxx)和linux下一样。<br>win下\分割  linux下/分割</p>
 <h2 id="一键式分析"><a href="#一键式分析" class="headerlink" title="一键式分析"></a>一键式分析</h2><p>java-拖入jeb<br>c/c++-拖入ida</p>
@@ -395,7 +397,7 @@
 <li>前提完成，apk安装</li>
 <li>adb shell am start -D -n packageName/ActivityName开启android进程调试状态</li>
 <li>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程(这就是DDMS的功能之一)</li>
-<li>ida-&gt;debugger-&gt;attach-&gt;localhost(此时可设置debug options设置ida断点位置)-&gt;指定目标进程附加,此时该进程会处于ida调试之中。</li>
+<li>ida-&gt;debugger-&gt;attach-&gt;localhost(此时可设置debug options设置ida断点位置，比如在加载so时停下，可分析一个app的所有过程)-&gt;指定目标进程附加,此时该进程会处于ida调试之中。</li>
 <li>jdb -connect com.sun.jdi.SocketAttach:hostname=localhost,port=8700（jdb进行附加）这个就是java层的调试原理，通过java调试协议JDWP运行该应用，此时jdb调试与应用一起被ida中断</li>
 <li>此时ida中就可以使用od调试方法了。</li>
 </ol>
@@ -403,7 +405,7 @@
 <ol>
 <li>前提完成,apk安装。</li>
 <li>首先打开ida加载指定so,找到需要调试的函数并记住函数的地址</li>
-<li>运行应用并保证要调的模块已经加载</li>
+<li>运行应用并保证要调的模块已经加载(此时JNI_Onload()什么的已经执行了)</li>
 <li>ida-&gt;debugger-&gt;selectdebugger-&gt;..-&gt;process option设置localhost。但其他的不用改，那是指定应该匹配什么so文件用的之后会匹配对应模块</li>
 <li>ida-&gt;debugger-&gt;Attach to process。之后选择要附加的进程进行附加，附加成功后弹出模块找不到错误(大概为ida找不到模块的代码文件(已加载进程序的so，ida不知其路径，而对于之前的可执行程序有路径就可分析文件中的代码))但是有一个模块可选same按钮，这是识别出进程中某模块和本地ida分析的文件名相同</li>
 <li>ctrl+s找到与目标so同名的模块code区记住其start地址，按G跳到该地址加之前记住的函数地址处即可找到该函数，断点即可。</li>
@@ -534,7 +536,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">47</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
