@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="2018.5.24分析博客：https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;amp;articleid=339https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;amp;article">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-24T15:45:20.244Z">
+<meta property="og:updated_time" content="2018-05-26T09:22:11.910Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android逆向分析操作随笔">
 <meta name="twitter:description" content="2018.5.24分析博客：https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;amp;articleid=339https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;amp;article">
@@ -391,9 +391,6 @@
 <p>学习ida脚本！！！但许多壳完全动态修改dex等文件，很难dump。</p>
 <p>使用ida直接反编译的代码：<br>defs.h头文件导入可识别ida定义的宏了。复制代码即可直接使用。</p>
 <p>直接调用：<br>另外我们还可以自己创建一个NDK项目，然后自己编写一个so或者elf利用dlopen()和dlsym()调用目标so中的函数。比如我们想要调用libdvm.so中的dvmGetCurrentJNIMethod()函数，我们就可以在我们的NDK项目中这么写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">typedefvoid* (*dvmGetCurrentJNIMethod_func)();</div><div class="line">dvmGetCurrentJNIMethod_func dvmGetCurrentJNIMethod_fnPtr;</div><div class="line">dvm_hand= dlopen(&quot;libdvm.so&quot;, RTLD_NOW);</div><div class="line">dvmGetCurrentJNIMethod_fnPtr =dlsym(dvm_hand,&quot;_Z22dvmGetCurrentJNIMethodv&quot;);</div><div class="line"></div><div class="line">dvmGetCurrentJNIMethod_fnPtr();</div></pre></td></tr></table></figure></p>
-<h2 id="2018-5-25"><a href="#2018-5-25" class="headerlink" title="2018.5.25"></a>2018.5.25</h2><p>未看<br><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373</a></p>
-<p>hooking linux与android<br>框架非常多，hook native，jni和java层的函数，但是需要研究原理，可以阅读开源的代码，比如xpose。</p>
-<p>其实无论是hook还是调试都离不开ptrace这个system call </p>
 
       
     </div>
@@ -439,6 +436,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/25/win下实现简单的android-arm-linux-交叉编译/" rel="prev" title="win下实现简单的android(arm linux)交叉编译">
+                win下实现简单的android(arm linux)交叉编译 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -515,7 +516,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -572,7 +573,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-5-24"><span class="nav-number">1.</span> <span class="nav-text">2018.5.24</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-5-25"><span class="nav-number">2.</span> <span class="nav-text">2018.5.25</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-5-24"><span class="nav-number">1.</span> <span class="nav-text">2018.5.24</span></a></li></ol></div>
             
 
           </div>

@@ -283,6 +283,300 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/26/android-hook/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/26/android-hook/" itemprop="url">android hook</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-26T17:22:48+08:00">
+                2018-05-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373</a></p>
+<p>hooking linux与android<br>框架非常多，hook native，jni和java层的函数，但是需要研究原理，可以阅读开源框架的代码，比如xpose。</p>
+<h2 id="原生层hook"><a href="#原生层hook" class="headerlink" title="原生层hook"></a>原生层hook</h2><h3 id="hook1获取目标系统调用"><a href="#hook1获取目标系统调用" class="headerlink" title="hook1获取目标系统调用"></a>hook1获取目标系统调用</h3><p>其实无论是hook还是调试都离不开ptrace这个system call<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);</div><div class="line"></div><div class="line">//其中request参数为一个联合体，该参数决定了ptrace函数的行为，pid参数为远程进程的ID，addr参数与data参数在不同的request参数取值下表示不同的含义。</div><div class="line">//因为long随linux系统位数改变，所以返回采用long</div></pre></td></tr></table></figure></p>
+<p>自己实现了个交叉编译make脚本，见同期博客</p>
+<p>hook1:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line">#include &lt;sys/ptrace.h&gt;</div><div class="line">#include &lt;sys/types.h&gt;</div><div class="line">#include &lt;sys/wait.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;errno.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;sys/syscall.h&gt;</div><div class="line"></div><div class="line">long getSysCallNo(int pid, struct pt_regs *regs)</div><div class="line">&#123;</div><div class="line">    long scno = 0;</div><div class="line">    scno = ptrace(PTRACE_PEEKTEXT, pid, (void *)(regs-&gt;ARM_pc - 4), NULL);//读取一个指令(4字节)，从指定内存地址 pc-4所指向的 </div><div class="line">    if(scno == 0)</div><div class="line">        return 0;</div><div class="line">         //ARM架构上，所有的系统调用都是通过SWI来实现的。并且在ARM 架构中有两个SWI指令，分别针对EABI和OABI：</div><div class="line">    if (scno == 0xef000000) &#123;</div><div class="line">        scno = regs-&gt;ARM_r7;</div><div class="line">/*</div><div class="line">[EABI] 机器码：</div><div class="line"></div><div class="line">1110 1111 0000 0000 2字节 SWI 0 </div><div class="line">0为立即数 表示系统调用 </div><div class="line">具体的调用号存放在寄存器r7中. </div><div class="line">*/ </div><div class="line">    &#125; else &#123;</div><div class="line">    	//    命令后半 +立即数的半字节 因为立即数=调用号|0x900000所以  查看立即数是否合法  </div><div class="line">        if ((scno &amp; 0x0ff00000) != 0x0f900000) &#123;</div><div class="line">            return -1;</div><div class="line">        &#125;</div><div class="line">        scno &amp;= 0x000fffff;     //取调用号 </div><div class="line">/*</div><div class="line">[OABI] 机器码：</div><div class="line"></div><div class="line">1101 1111 vvvv vvvv 2字节 SWI immed_8 </div><div class="line">immed_8  为立即数 </div><div class="line">调用号进行转换以后得到指令中的立即数。立即数=调用号 | 0x900000 立即数中含调用号 </div><div class="line">*/ </div><div class="line">    &#125;</div><div class="line">    return scno;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">void hookSysCallBefore(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs regs;</div><div class="line">    int sysCallNo = 0;</div><div class="line">    </div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);    //读取寄存器</div><div class="line">    sysCallNo = getSysCallNo(pid, &amp;regs);</div><div class="line">    printf(&quot;Before SysCallNo = %d\n&quot;,sysCallNo);</div><div class="line">    //关于system call number对应的具体system call可以参考</div><div class="line">    </div><div class="line">    if(sysCallNo == __NR_write)</div><div class="line">    &#123;</div><div class="line">        printf(&quot;__NR_write: %ld %p %ld\n&quot;,regs.ARM_r0,(void*)regs.ARM_r1,regs.ARM_r2);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void hookSysCallAfter(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs regs;</div><div class="line">    int sysCallNo = 0;</div><div class="line"></div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);  </div><div class="line">    sysCallNo = getSysCallNo(pid, &amp;regs);</div><div class="line">    </div><div class="line">    printf(&quot;After SysCallNo = %d\n&quot;,sysCallNo);</div><div class="line">    </div><div class="line">    if(sysCallNo == __NR_write)</div><div class="line">    &#123;</div><div class="line">        printf(&quot;__NR_write return: %ld\n&quot;,regs.ARM_r0);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    printf(&quot;\n&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char *argv[])</div><div class="line">&#123;</div><div class="line">    if(argc != 2) &#123;</div><div class="line">        printf(&quot;Usage: %s &lt;pid to be traced&gt;\n&quot;, argv[0]);//第一个参数为文件名 </div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">                                                                                                     </div><div class="line">    pid_t pid; //32位为int </div><div class="line">    int status;</div><div class="line">    pid = atoi(argv[1]); //字串化为int </div><div class="line">    </div><div class="line">    if(0 != ptrace(PTRACE_ATTACH, pid, NULL, NULL))  //附着目标任务 </div><div class="line">    &#123;</div><div class="line">        printf(&quot;Trace process failed:%d.\n&quot;, errno);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">        </div><div class="line">    ptrace(PTRACE_SYSCALL, pid, NULL, NULL); //在system call前下断点 再次使用使syscall后也停。 </div><div class="line">    </div><div class="line">    while(1)</div><div class="line">    &#123;</div><div class="line">        wait(&amp;status);//等待子进程终止（fork，clone出的），任意一个子进程停则返回，返回id，状态存于status中 </div><div class="line">        hookSysCallBefore(pid);</div><div class="line">        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">        </div><div class="line">        wait(&amp;status);</div><div class="line">        hookSysCallAfter(pid);</div><div class="line">        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    ptrace(PTRACE_DETACH, pid, NULL, NULL);//结束附着 </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>用ps命令找到目标进程的pid。./hook1 xx 即可。原理就是用ptrace附着进程。 具体见代码注释，printf本质就是调用write这个系统调用，参数为流，内容，大小。</p>
+<p><img src="https://i.imgur.com/fFlShDh.png" alt=""></p>
+<h3 id="hook2更改目标内存"><a href="#hook2更改目标内存" class="headerlink" title="hook2更改目标内存"></a>hook2更改目标内存</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div></pre></td><td class="code"><pre><div class="line">#include &lt;sys/ptrace.h&gt;</div><div class="line">#include &lt;sys/types.h&gt;</div><div class="line">#include &lt;sys/wait.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;errno.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;sys/syscall.h&gt;</div><div class="line"></div><div class="line">const int long_size = sizeof(long);</div><div class="line">//随着宏__WORDSIZE值的改变，long int数据类型的大小也会发生改变。如果__WORDSIZE的值为32，则long int和int类型一样，占有32位。 </div><div class="line">// 字=word=int=long =32位下为4字节      </div><div class="line"></div><div class="line">long getSysCallNo(int pid, struct pt_regs *regs)</div><div class="line">&#123;</div><div class="line">    long scno = 0;</div><div class="line">     </div><div class="line">    scno = ptrace(PTRACE_PEEKTEXT, pid, (void *)(regs-&gt;ARM_pc - 4), NULL);</div><div class="line">    if(scno == 0)</div><div class="line">        return 0;</div><div class="line">         </div><div class="line">    if (scno == 0xef000000) &#123;</div><div class="line">        scno = regs-&gt;ARM_r7;</div><div class="line">    &#125; else &#123;</div><div class="line">        if ((scno &amp; 0x0ff00000) != 0x0f900000) &#123;</div><div class="line">            return -1;</div><div class="line">        &#125;</div><div class="line">        scno &amp;= 0x000fffff;</div><div class="line">    &#125;</div><div class="line">    return scno;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">void reverse(char *str)</div><div class="line">&#123;   int i, j;</div><div class="line">    char temp;</div><div class="line">    for(i = 0, j = strlen(str) - 2;//\n不翻所以多-1 </div><div class="line">        i &lt;= j; ++i, --j) &#123;</div><div class="line">        temp = str[i];</div><div class="line">        str[i] = str[j];</div><div class="line">        str[j] = temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void getdata(pid_t child, long addr,</div><div class="line">             char *str, int len)</div><div class="line">&#123;   char *laddr;</div><div class="line">    int i, j;</div><div class="line">    union u &#123;</div><div class="line">            long val;</div><div class="line">            char chars[long_size];</div><div class="line">    &#125;data;//date读时作为long  写时作为char数组 </div><div class="line">    i = 0;</div><div class="line">    j = len / long_size;</div><div class="line">    laddr = str;</div><div class="line">    while(i &lt; j) &#123;</div><div class="line">        data.val = ptrace(PTRACE_PEEKDATA,</div><div class="line">                          child, addr + i * 4,</div><div class="line">                          NULL); </div><div class="line">//用PEEKTEXT去取程序指令,用PEEKDATA去取数据,因为linux下程序质量和数据都在一个地址空间,所以没区别</div><div class="line">        memcpy(laddr, data.chars, long_size);</div><div class="line">        ++i;</div><div class="line">        laddr += long_size;</div><div class="line">    &#125;</div><div class="line">    j = len % long_size;</div><div class="line">    if(j != 0) &#123;//把余下的读了 </div><div class="line">        data.val = ptrace(PTRACE_PEEKDATA,</div><div class="line">                          child, addr + i * 4,</div><div class="line">                          NULL);</div><div class="line">        memcpy(laddr, data.chars, j);</div><div class="line">    &#125;</div><div class="line">    str[len] = &apos;\0&apos;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void putdata(pid_t child, long addr,</div><div class="line">             char *str, int len)</div><div class="line">&#123;   char *laddr;</div><div class="line">    int i, j;</div><div class="line">    union u &#123;</div><div class="line">            long val;</div><div class="line">            char chars[long_size];</div><div class="line">    &#125;data;</div><div class="line">    i = 0;</div><div class="line">    j = len / long_size;</div><div class="line">    laddr = str;</div><div class="line">    while(i &lt; j) &#123;</div><div class="line">        memcpy(data.chars, laddr, long_size);</div><div class="line">        ptrace(PTRACE_POKEDATA, child,</div><div class="line">               addr + i * 4, data.val);//写时long（4字节）直接用参4传 </div><div class="line">        ++i;</div><div class="line">        laddr += long_size;</div><div class="line">    &#125;</div><div class="line">    j = len % long_size;</div><div class="line">    if(j != 0) &#123;</div><div class="line">        memcpy(data.chars, laddr, j);</div><div class="line">        ptrace(PTRACE_POKEDATA, child,</div><div class="line">               addr + i * 4, data.val);//这里可能会覆盖目标内存中字串后的一部分 </div><div class="line">//应该首先通过request参数为PTRACE_PEEKTEXT的ptrace函数读取原内存中的一个word大小的数据，然后将要写入的数据复制到读取出的数据的低位，然后调用ptrace函数将修改后的数据写入远程进程的内存地址处。</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//翻转字符串        任务id     字串地址     字串长度 </div><div class="line">void modifyString(pid_t pid, long addr, long strlen)</div><div class="line">&#123;</div><div class="line">    char* str;</div><div class="line">    str = (char *)calloc((strlen+1) * sizeof(char), 1);//分配内存在自己这里 </div><div class="line">    getdata(pid, addr, str, strlen);//取 </div><div class="line">    reverse(str);//翻 </div><div class="line">    putdata(pid, addr, str, strlen);//存 </div><div class="line">&#125;</div><div class="line"></div><div class="line">void hookSysCallBefore(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs regs;</div><div class="line">    int sysCallNo = 0;</div><div class="line">    </div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);    //取寄存器 </div><div class="line">    sysCallNo = getSysCallNo(pid, &amp;regs);//取系统调用编号 </div><div class="line">    printf(&quot;Before SysCallNo = %d\n&quot;,sysCallNo);</div><div class="line">    </div><div class="line">    if(sysCallNo == __NR_write)</div><div class="line">    &#123;</div><div class="line">        printf(&quot;__NR_write: %ld %p %ld\n&quot;,regs.ARM_r0,(void*)regs.ARM_r1,regs.ARM_r2);</div><div class="line">        modifyString(pid, regs.ARM_r1, regs.ARM_r2);//r1指向字符串，r2存储长度 </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void hookSysCallAfter(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs regs;</div><div class="line">    int sysCallNo = 0;</div><div class="line"></div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);  </div><div class="line">    sysCallNo = getSysCallNo(pid, &amp;regs);</div><div class="line">    </div><div class="line">    printf(&quot;After SysCallNo = %d\n&quot;,sysCallNo);</div><div class="line">    </div><div class="line">    if(sysCallNo == __NR_write)</div><div class="line">    &#123;</div><div class="line">        printf(&quot;__NR_write return: %ld\n&quot;,regs.ARM_r0);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    printf(&quot;\n&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char *argv[])</div><div class="line">&#123;</div><div class="line">    if(argc != 2) &#123;</div><div class="line">        printf(&quot;Usage: %s &lt;pid to be traced&gt;\n&quot;, argv[0]);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">                                                                                                     </div><div class="line">    pid_t pid;</div><div class="line">    int status;</div><div class="line">    pid = atoi(argv[1]);</div><div class="line">    </div><div class="line">    if(0 != ptrace(PTRACE_ATTACH, pid, NULL, NULL))</div><div class="line">    &#123;</div><div class="line">        printf(&quot;Trace process failed:%d.\n&quot;, errno);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">        </div><div class="line">    ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">    </div><div class="line">    while(1)</div><div class="line">    &#123;</div><div class="line">        wait(&amp;status);</div><div class="line">        hookSysCallBefore(pid);</div><div class="line">        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">        </div><div class="line">        wait(&amp;status);</div><div class="line">        hookSysCallAfter(pid);</div><div class="line">        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    ptrace(PTRACE_DETACH, pid, NULL, NULL);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="hook3利用Ptrace动态执行sleep-函数"><a href="#hook3利用Ptrace动态执行sleep-函数" class="headerlink" title="hook3利用Ptrace动态执行sleep()函数"></a>hook3利用Ptrace动态执行sleep()函数</h3><h3 id="hook4利用Ptrace动态加载so并执行自定义函数"><a href="#hook4利用Ptrace动态加载so并执行自定义函数" class="headerlink" title="hook4利用Ptrace动态加载so并执行自定义函数"></a>hook4利用Ptrace动态加载so并执行自定义函数</h3>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/25/win下实现简单的android-arm-linux-交叉编译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/25/win下实现简单的android-arm-linux-交叉编译/" itemprop="url">win下实现简单的android(arm linux)交叉编译</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-25T22:34:03+08:00">
+                2018-05-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h2><p>由于需要写些可执行native代码，但又懒得开AS，生成的可执行elf也不打包进apk。所以自己参看之前的gcc与make博客，简单写了下交叉编译工具。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">NDK_ROOT=D:/TrueSDK/AndroidNdk/android-ndk-r16b</div><div class="line">TOOLCHAINS_ROOT=$(NDK_ROOT)/toolchains/arm-linux-androideabi-4.9/prebuilt/windows-x86_64</div><div class="line">TOOLCHAINS_PREFIX=$(TOOLCHAINS_ROOT)/bin/arm-linux-androideabi</div><div class="line">TOOLCHAINS_INCLUDE=$(TOOLCHAINS_ROOT)/lib/gcc/arm-linux-androideabi/4.9.x/include-fixed</div><div class="line">TOOLCHAINS_GCCLIB=$(TOOLCHAINS_ROOT)/lib/gcc/arm-linux-androideabi/4.9.x/armv7-a</div><div class="line"></div><div class="line">PLATFORM_ROOT=$(NDK_ROOT)/platforms/android-26/arch-arm</div><div class="line">PLATFORM_INCLUDE=$(NDK_ROOT)/sysroot/usr/include</div><div class="line">PLATFORM_LIB=$(PLATFORM_ROOT)/usr/lib</div><div class="line"></div><div class="line">NAME=hello</div><div class="line">RM=del</div><div class="line"></div><div class="line"># -I用来告诉gcc去哪里找头文件    -L告诉gcc去哪里找库文件</div><div class="line">FLAGS=-I$(TOOLCHAINS_INCLUDE) \</div><div class="line">	-I$(PLATFORM_INCLUDE) \</div><div class="line">	-L$(PLATFORM_LIB) \</div><div class="line">	-L$(TOOLCHAINS_GCCLIB) \</div><div class="line">	-nostdlib \</div><div class="line">	-lgcc \</div><div class="line">	-Bdynamic \</div><div class="line">	-lc \</div><div class="line">	-pie -fPIE</div><div class="line">	</div><div class="line"># 这里是告诉链接器该链接什么  libgcc.a定了除法来用  其它库文件如include中的会自动包含从-L中寻找</div><div class="line">OBJS=$(NAME).o \</div><div class="line">	$(PLATFORM_LIB)/crtbegin_dynamic.o \</div><div class="line">	$(PLATFORM_LIB)/crtend_android.o \</div><div class="line">	$(TOOLCHAINS_GCCLIB)/libgcc.a</div><div class="line"></div><div class="line">all:</div><div class="line">	$(TOOLCHAINS_PREFIX)-gcc $(FLAGS) -c $(NAME).c -o $(NAME).o</div><div class="line">	$(TOOLCHAINS_PREFIX)-gcc $(FLAGS) $(OBJS) -o $(NAME) </div><div class="line">clean:</div><div class="line">	$(RM) *.o</div><div class="line">install:</div><div class="line">	adb push $(NAME) /data/local/</div><div class="line">	adb shell chmod 755 /data/local/$(NAME)</div></pre></td></tr></table></figure>
+<p>说明：目前只能实现单个自定义c文件编译，且需要输入文件名参数，示例：<br>make NAME=hello<br>就可编译hello.c了</p>
+<p>这玩意是真的麻烦…….<br>-I来显式指定头文件的所在地<br>-L指定库文件所在地，根据include情况<br>printf什么的库名字是指定好的，gcc会自动寻找这些基本库文件（但个数有限），路径已经由你指定了。所以能找到。（自己猜测，问问权威的老师）<br>所以特定需要的库手动添加就好了…..<br>make自动编译能做的只是.c-&gt;.o自动而已</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/24/android逆向分析操作随笔/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -395,9 +689,6 @@
 <p>学习ida脚本！！！但许多壳完全动态修改dex等文件，很难dump。</p>
 <p>使用ida直接反编译的代码：<br>defs.h头文件导入可识别ida定义的宏了。复制代码即可直接使用。</p>
 <p>直接调用：<br>另外我们还可以自己创建一个NDK项目，然后自己编写一个so或者elf利用dlopen()和dlsym()调用目标so中的函数。比如我们想要调用libdvm.so中的dvmGetCurrentJNIMethod()函数，我们就可以在我们的NDK项目中这么写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">typedefvoid* (*dvmGetCurrentJNIMethod_func)();</div><div class="line">dvmGetCurrentJNIMethod_func dvmGetCurrentJNIMethod_fnPtr;</div><div class="line">dvm_hand= dlopen(&quot;libdvm.so&quot;, RTLD_NOW);</div><div class="line">dvmGetCurrentJNIMethod_fnPtr =dlsym(dvm_hand,&quot;_Z22dvmGetCurrentJNIMethodv&quot;);</div><div class="line"></div><div class="line">dvmGetCurrentJNIMethod_fnPtr();</div></pre></td></tr></table></figure></p>
-<h2 id="2018-5-25"><a href="#2018-5-25" class="headerlink" title="2018.5.25"></a>2018.5.25</h2><p>未看<br><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373</a></p>
-<p>hooking linux与android<br>框架非常多，hook native，jni和java层的函数，但是需要研究原理，可以阅读开源的代码，比如xpose。</p>
-<p>其实无论是hook还是调试都离不开ptrace这个system call </p>
 
           
         
@@ -1565,336 +1856,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/05/PWN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/05/PWN/" itemprop="url">PWN</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-05T18:47:33+08:00">
-                2018-05-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/安全/" itemprop="url" rel="index">
-                    <span itemprop="name">安全</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="自我思考"><a href="#自我思考" class="headerlink" title="自我思考"></a>自我思考</h2><p>操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">char s[5];</div><div class="line">scanf(&quot;%s&quot;,s);</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/05/android-NDK开发3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/05/android-NDK开发3/" itemprop="url">android-NDK开发3</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-05T18:18:51+08:00">
-                2018-05-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h2><ol>
-<li>POSIX表示可移植操作系统接口（Portable Operating System Interface of UNIX，缩写为 POSIX ），POSIX标准定义了操作系统应该为应用程序提供的接口标准，是IEEE为要在各种UNIX操作系统上运行的软件而定义的一系列API标准的总称</li>
-<li>Bionic是谷歌为android开发的POSIX标准的c库，不复用现有的gun c库</li>
-<li>几乎每一种语言都有一个标准库，java为JCL，android扩展了它</li>
-<li>后面的system，gunstl是c++的标准库，由于c++功能较多每个库所提供的能力不一</li>
-<li>C语言的标准库由ANSI C标准制定，POSIX附加了些</li>
-<li>静态，全局变量在程序加载时分配内存（直接从文件存于内存中）</li>
-<li>思考、查询：c与java等的库都是基于什么实现的？（猜测为系统api）</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">数组名与函数名都可以当指针，不过只有sizeof数组名比较特殊会显示数组大小。也就是说数组名和类型的指针其实是不同的。</div><div class="line">char *pa[4]  </div><div class="line">char (*pa)[4]</div><div class="line">//[]的优先级比较高所以第一个pa被优先识别为数组，后识别数组的类型-char*，</div><div class="line">//第二个被识别为*pa，后识别指针的类型-为char [4]的数组</div><div class="line">同理</div><div class="line">int *func(int,int）;//是一个全局的变量声明，可以直接用该函数</div><div class="line">int (*func)(int,int);  </div><div class="line">//第一个是指针函数，优先识别为函数，其返回类型为int*，可以用来调用</div><div class="line">//第二个为函数指针，优先识别为指针，其返回类型为int，参数为俩个int，可以赋值后调用</div></pre></td></tr></table></figure>
-<h2 id="Bionic-API"><a href="#Bionic-API" class="headerlink" title="Bionic API"></a>Bionic API</h2><p>该库不与其他c库兼容，其他c库编译的程序不可以动态链接Bionic，但其他c库静态连接生成的程序不动态加载系统库的话可以在android上运行。<br>该库提供了：<br>内存管理，文件io，字符操作，数字，日期时间，进程控制，信号处理，套接字，多线程，用户与组，系统配置，命名服务切换</p>
-<h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><p>stdlib.h<br>c:malloc分配 free释放 realloc改变<br>c++:new分配 delete delete[]释放 </p>
-<h3 id="文件io"><a href="#文件io" class="headerlink" title="文件io"></a>文件io</h3><p>三种标准的：stdin,stdout,stderr<br>FILE* fopen(“文件名”,”模式”);<br>r只读,w只写、存在覆盖,a附加。r+读写,w+读写、存在覆盖,a+读写附加、读写位置分离</p>
-<p>FILE*表示流</p>
-<p>写入：fwrite二进制,fputs写字串,fputc写字符,fprintf格式写</p>
-<p>fflush：写入的数据是异步写入而且会积累，读取是块读取。双向都有缓冲，刷新用于把缓冲区中的刷入目的中。</p>
-<p>读取：fread二进制,fgets读一行,fgetc读一个,fscanf格式读</p>
-<p>feof:检查流末尾,0表示还有，EOF=-1表示错误并末尾<br>ferror：错误检查</p>
-<p>fseek(流，相对便宜，参照)：改变流的位置</p>
-<p>fclose：关闭流</p>
-<h3 id="与进程交互"><a href="#与进程交互" class="headerlink" title="与进程交互"></a>与进程交互</h3><p>stdilb.h<br>system(“命令”)；执行shell命令开启子进程，不能交互，只能得知结果exit()，而且会阻塞</p>
-<p>FILE <em>popen(“命令”,”模式”);返回一个流，非阻塞，可以对结果读取<br>pclose(FILE</em>)等待子进程终止,返回exit状态。</p>
-<h3 id="系统配置"><a href="#系统配置" class="headerlink" title="系统配置"></a>系统配置</h3><p>键值对保存的属性：环变、版本、用户、当前目录、分隔符等<br>sys/system_properties.h<br>int <strong>system_property_get()通过名字获取值<br>prop_info* </strong>system_property_find()通过名字获取系统属性直接指针<br>java也可以通过System.Property读取</p>
-<h3 id="用户和组"><a href="#用户和组" class="headerlink" title="用户和组"></a>用户和组</h3><p>android中每个应用被当成不同的用户对待，通过依赖用户的权限模型来禁止应用访问其他应用的数据，服务和硬件资源也是用用户的权限模型来保护的。</p>
-<p><unistd.h><br>每个应用从10000开始获取用户id和组id，并拥有分配的用户名app_id尾<br>uid_t a=getuid();获取用户id<br>gid_t a=getgid();获取组id<br>char * a=getlogin();获取用户名</unistd.h></p>
-<h3 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h3><p>目前只能用android java的Binder<br>当系统决定要在一个新的进程中启动一个Activity或者Service时，它就会创建一个新的进程了，所以service和activity是属于不同进程的，想要通讯必须用binder（第一行代码中的下载服务）<br><a href="https://www.cnblogs.com/Doing-what-I-love/p/5530291.html" target="_blank" rel="external">https://www.cnblogs.com/Doing-what-I-love/p/5530291.html</a></p>
-<h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><p>java调用native时进程不变，线程也不变。所以ui线程调用原生代码阻塞时ui也会阻塞。</p>
-<h3 id="用java创建线程"><a href="#用java创建线程" class="headerlink" title="用java创建线程"></a>用java创建线程</h3><p>由于方法id可以被缓存，同时每次调用原生方法都得会传入java线程的env和object。所以可以用java创建线程然后在run中调用native方法执行具体操作。此时应该在java中留有回调方法。<br>好处：简单方便，缺点：原生不能创建java线程，原生代码线程需要安全，线程间的原生代码不能通信<br>示例<br>java:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div></pre></td><td class="code"><pre><div class="line">import android.app.Activity;</div><div class="line">import android.os.Bundle;</div><div class="line">import android.view.View;</div><div class="line">import android.view.View.OnClickListener;</div><div class="line">import android.widget.Button;</div><div class="line">import android.widget.EditText;</div><div class="line">import android.widget.TextView;</div><div class="line"></div><div class="line">/**</div><div class="line"> * Main activity.</div><div class="line"> *</div><div class="line"> * @author Onur Cinar</div><div class="line"> */</div><div class="line">public class MainActivity extends Activity &#123;</div><div class="line">	/** Threads edit. */</div><div class="line">	private EditText threadsEdit;</div><div class="line">	</div><div class="line">	/** Iterations edit. */</div><div class="line">	private EditText iterationsEdit;</div><div class="line">	</div><div class="line">	/** Start button. */</div><div class="line">	private Button startButton;</div><div class="line">	</div><div class="line">	/** Log view. */</div><div class="line">	private TextView logView;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	public void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">		super.onCreate(savedInstanceState);</div><div class="line">		setContentView(R.layout.activity_main);</div><div class="line"></div><div class="line">		// Initialize the native code</div><div class="line">		nativeInit();</div><div class="line">		</div><div class="line">		threadsEdit = (EditText) findViewById(R.id.threads_edit);</div><div class="line">		iterationsEdit = (EditText) findViewById(R.id.iterations_edit);</div><div class="line">		startButton = (Button) findViewById(R.id.start_button);</div><div class="line">		logView = (TextView) findViewById(R.id.log_view);</div><div class="line">		</div><div class="line">		startButton.setOnClickListener(new OnClickListener() &#123;</div><div class="line">			public void onClick(View view) &#123;</div><div class="line">				int threads = getNumber(threadsEdit, 0);</div><div class="line">				int iterations = getNumber(iterationsEdit, 0);</div><div class="line"></div><div class="line">				if (threads &gt; 0 &amp;&amp; iterations &gt; 0) &#123;</div><div class="line">					startThreads(threads, iterations);</div><div class="line">				&#125;				</div><div class="line">			&#125;			</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	@Override</div><div class="line">	protected void onDestroy() &#123;</div><div class="line">		// Free the native resources</div><div class="line">		nativeFree();</div><div class="line">		</div><div class="line">		super.onDestroy();</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	/**</div><div class="line">	 * On native message callback.</div><div class="line">	 * </div><div class="line">	 * @param message</div><div class="line">	 *            native message.</div><div class="line">	 */</div><div class="line">	private void onNativeMessage(final String message) &#123;</div><div class="line">		runOnUiThread(new Runnable() &#123;</div><div class="line">			public void run() &#123;</div><div class="line">				logView.append(message);</div><div class="line">				logView.append(&quot;\n&quot;);</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * Gets the value of edit text as integer. If the value</div><div class="line">	 * is empty or count not be parsed, it returns the </div><div class="line">	 * default value.</div><div class="line">	 * </div><div class="line">	 * @param editText edit text.</div><div class="line">	 * @param defaultValue default value.</div><div class="line">	 * @return numeric value.</div><div class="line">	 */</div><div class="line">	private static int getNumber(EditText editText, int defaultValue) &#123;</div><div class="line">		int value;</div><div class="line">		</div><div class="line">		try &#123;</div><div class="line">			value = Integer.parseInt(editText.getText().toString());</div><div class="line">		&#125; catch (NumberFormatException e) &#123;</div><div class="line">			value = defaultValue;</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		return value;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * Starts the given number of threads for iterations.</div><div class="line">	 * </div><div class="line">	 * @param threads thread count.</div><div class="line">	 * @param iterations iteration count.</div><div class="line">	 */</div><div class="line">	private void startThreads(int threads, int iterations) &#123;</div><div class="line">		javaThreads(threads, iterations);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/**</div><div class="line">	 * Initializes the native code.</div><div class="line">	 */</div><div class="line">	private native void nativeInit();</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * Free the native resources.</div><div class="line">	 */</div><div class="line">	private native void nativeFree();</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * Native worker.</div><div class="line">	 * </div><div class="line">	 * @param id worker id.</div><div class="line">	 * @param iterations iteration count.</div><div class="line">	 */</div><div class="line">	private native void nativeWorker(int id, int iterations);</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * Using the POSIX threads.</div><div class="line">	 * </div><div class="line">	 * @param threads thread count.</div><div class="line">	 * @param iterations iteration count.</div><div class="line">	 */</div><div class="line">	private native void posixThreads(int threads, int iterations);</div><div class="line">	</div><div class="line">	/**</div><div class="line">	 * Using Java based threads.</div><div class="line">	 * </div><div class="line">	 * @param threads thread count.</div><div class="line">	 * @param iterations iteration count.</div><div class="line">	 */</div><div class="line">	private void javaThreads(int threads, final int iterations) &#123;</div><div class="line">		// Create a Java based thread for each worker</div><div class="line">		for (int i = 0; i &lt; threads; i++) &#123;</div><div class="line">			final int id = i;</div><div class="line">			</div><div class="line">			Thread thread = new Thread() &#123;</div><div class="line">				public void run() &#123;</div><div class="line">					nativeWorker(id, iterations);</div><div class="line">				&#125;</div><div class="line">			&#125;;</div><div class="line">			</div><div class="line">			thread.start();</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	static &#123;</div><div class="line">		System.loadLibrary(&quot;Threads&quot;);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>c++<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">static jmethodID gOnNativeMessage = NULL;</div><div class="line"></div><div class="line">void Java_com_apress_threads_MainActivity_nativeInit (</div><div class="line">		JNIEnv* env,</div><div class="line">		jobject obj)</div><div class="line">&#123;</div><div class="line">	// If method ID is not cached</div><div class="line">	if (NULL == gOnNativeMessage)</div><div class="line">	&#123;</div><div class="line">		// Get the class from the object</div><div class="line">		jclass clazz = env-&gt;GetObjectClass(obj);</div><div class="line"></div><div class="line">		// Get the method id for the callback</div><div class="line">		gOnNativeMessage = env-&gt;GetMethodID(clazz,</div><div class="line">				&quot;onNativeMessage&quot;,</div><div class="line">				&quot;(Ljava/lang/String;)V&quot;);</div><div class="line"></div><div class="line">		// If method could not be found</div><div class="line">		if (NULL == gOnNativeMessage)</div><div class="line">		&#123;</div><div class="line">			// Get the exception class</div><div class="line">			jclass exceptionClazz = env-&gt;FindClass(</div><div class="line">					&quot;java/lang/RuntimeException&quot;);</div><div class="line"></div><div class="line">			// Throw exception</div><div class="line">			env-&gt;ThrowNew(exceptionClazz, &quot;Unable to find method&quot;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">void Java_com_apress_threads_MainActivity_nativeFree (</div><div class="line">		JNIEnv* env,</div><div class="line">		jobject obj)</div><div class="line">&#123;&#125;</div><div class="line"></div><div class="line">void Java_com_apress_threads_MainActivity_nativeWorker (</div><div class="line">		JNIEnv* env,</div><div class="line">		jobject obj,</div><div class="line">		jint id,</div><div class="line">		jint iterations)</div><div class="line">&#123;</div><div class="line"></div><div class="line">	// Loop for given number of iterations</div><div class="line">	for (jint i = 0; i &lt; iterations; i++)</div><div class="line">	&#123;</div><div class="line">		// Prepare message</div><div class="line">		char message[26];</div><div class="line">		sprintf(message, &quot;Worker %d: Iteration %d&quot;, id, i);</div><div class="line"></div><div class="line">		// Message from the C string</div><div class="line">		jstring messageString = env-&gt;NewStringUTF(message);</div><div class="line"></div><div class="line">		// Call the on native message method</div><div class="line">		env-&gt;CallVoidMethod(obj, gOnNativeMessage, messageString);</div><div class="line"></div><div class="line">		// Check if an exception occurred</div><div class="line">		if (NULL != env-&gt;ExceptionOccurred())</div><div class="line">			break;</div><div class="line"></div><div class="line">		// Sleep for a second</div><div class="line">		sleep(1);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="原生线程"><a href="#原生线程" class="headerlink" title="原生线程"></a>原生线程</h3><p>使用库<pthread.h>在c++代码中创建线程，与其他平台不同，编译时不用链接其它任何库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//创建线程</div><div class="line">int pthread_create(pthread_t *tidp,</div><div class="line">	const pthread_attr_t *attr,</div><div class="line">	(void*)(*start_rtn)(void*),</div><div class="line">	void *arg);</div></pre></td></tr></table></figure></pthread.h></p>
-<p>若线程创建成功，则返回0。若线程创建失败，则返回出错编号，并且*thread中的内容是未定义的。注意这个result只是是否创建成功，不是线程函数返回的void指针。</p>
-<p>第一个参数为指向线程标识符的指针。<br>第二个参数用来设置线程属性。<br>第三个参数是线程运行函数的起始地址。函数指针<br>最后一个参数是运行函数的参数。</p>
-<p>示例：<br>java:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">把上修改为：</div><div class="line">	private void startThreads(int threads, int iterations) &#123;</div><div class="line">		posixThreads(threads, iterations);</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
-<p>c++<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line"></div><div class="line">#include &lt;pthread.h&gt;</div><div class="line"></div><div class="line"></div><div class="line">// Native worker thread arguments</div><div class="line">struct NativeWorkerArgs</div><div class="line">&#123;</div><div class="line">	jint id;</div><div class="line">	jint iterations;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// Method ID can be cached</div><div class="line">static jmethodID gOnNativeMessage = NULL;</div><div class="line"></div><div class="line">// Java VM interface pointer</div><div class="line">static JavaVM* gVm = NULL;</div><div class="line"></div><div class="line">// Global reference to object</div><div class="line">static jobject gObj = NULL;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">jint JNI_OnLoad (JavaVM* vm, void* reserved)</div><div class="line">&#123;</div><div class="line">	// Cache the JavaVM interface pointer</div><div class="line">	gVm = vm;</div><div class="line"></div><div class="line">	return JNI_VERSION_1_4;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Java_com_apress_threads_MainActivity_nativeInit (</div><div class="line">		JNIEnv* env,</div><div class="line">		jobject obj)</div><div class="line">&#123;</div><div class="line"></div><div class="line"></div><div class="line">	// If object global reference is not set</div><div class="line">	if (NULL == gObj)</div><div class="line">	&#123;</div><div class="line">		// Create a new global reference for the object</div><div class="line">		gObj = env-&gt;NewGlobalRef(obj);</div><div class="line"></div><div class="line">		if (NULL == gObj)</div><div class="line">		&#123;</div><div class="line">			goto exit;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	// If method ID is not cached</div><div class="line">	if (NULL == gOnNativeMessage)</div><div class="line">	&#123;</div><div class="line">		// Get the class from the object</div><div class="line">		jclass clazz = env-&gt;GetObjectClass(obj);</div><div class="line"></div><div class="line">		// Get the method id for the callback</div><div class="line">		gOnNativeMessage = env-&gt;GetMethodID(clazz,</div><div class="line">				&quot;onNativeMessage&quot;,</div><div class="line">				&quot;(Ljava/lang/String;)V&quot;);</div><div class="line"></div><div class="line">		// If method could not be found</div><div class="line">		if (NULL == gOnNativeMessage)</div><div class="line">		&#123;</div><div class="line">			// Get the exception class</div><div class="line">			jclass exceptionClazz = env-&gt;FindClass(</div><div class="line">					&quot;java/lang/RuntimeException&quot;);</div><div class="line"></div><div class="line">			// Throw exception</div><div class="line">			env-&gt;ThrowNew(exceptionClazz, &quot;Unable to find method&quot;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">exit:</div><div class="line">	return;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Java_com_apress_threads_MainActivity_nativeFree (</div><div class="line">		JNIEnv* env,</div><div class="line">		jobject obj)</div><div class="line">&#123;</div><div class="line">	// If object global reference is set</div><div class="line">	if (NULL != gObj)</div><div class="line">	&#123;</div><div class="line">		// Delete the global reference</div><div class="line">		env-&gt;DeleteGlobalRef(gObj);</div><div class="line">		gObj = NULL;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">void Java_com_apress_threads_MainActivity_nativeWorker (</div><div class="line">		JNIEnv* env,</div><div class="line">		jobject obj,</div><div class="line">		jint id,</div><div class="line">		jint iterations)</div><div class="line">&#123;</div><div class="line"></div><div class="line"></div><div class="line">	// Loop for given number of iterations</div><div class="line">	for (jint i = 0; i &lt; iterations; i++)</div><div class="line">	&#123;</div><div class="line">		// Prepare message</div><div class="line">		char message[26];</div><div class="line">		sprintf(message, &quot;Worker %d: Iteration %d&quot;, id, i);</div><div class="line"></div><div class="line">		// Message from the C string</div><div class="line">		jstring messageString = env-&gt;NewStringUTF(message);</div><div class="line"></div><div class="line">		// Call the on native message method</div><div class="line">		env-&gt;CallVoidMethod(obj, gOnNativeMessage, messageString);</div><div class="line"></div><div class="line">		// Check if an exception occurred</div><div class="line">		if (NULL != env-&gt;ExceptionOccurred())</div><div class="line">			break;</div><div class="line"></div><div class="line">		// Sleep for a second</div><div class="line">		sleep(1);</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">exit:</div><div class="line">	return;</div><div class="line">&#125;</div><div class="line"></div><div class="line">static void* nativeWorkerThread (void* args)</div><div class="line">&#123;</div><div class="line">	JNIEnv* env = NULL;</div><div class="line"></div><div class="line">	// Attach current thread to Java virtual machine</div><div class="line">	// and obrain JNIEnv interface pointer</div><div class="line">	if (0 == gVm-&gt;AttachCurrentThread(&amp;env, NULL))</div><div class="line">	&#123;</div><div class="line">		// Get the native worker thread arguments</div><div class="line">		NativeWorkerArgs* nativeWorkerArgs = (NativeWorkerArgs*) args;</div><div class="line"></div><div class="line">		// Run the native worker in thread context</div><div class="line">		Java_com_apress_threads_MainActivity_nativeWorker(env,</div><div class="line">				gObj,</div><div class="line">				nativeWorkerArgs-&gt;id,</div><div class="line">				nativeWorkerArgs-&gt;iterations);</div><div class="line"></div><div class="line">		// Free the native worker thread arguments</div><div class="line">		delete nativeWorkerArgs;</div><div class="line"></div><div class="line">		// Detach current thread from Java virtual machine</div><div class="line">		gVm-&gt;DetachCurrentThread();</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return (void*) 1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Java_com_apress_threads_MainActivity_posixThreads (</div><div class="line">		JNIEnv* env,</div><div class="line">		jobject obj,</div><div class="line">		jint threads,</div><div class="line">		jint iterations)</div><div class="line">&#123;</div><div class="line">	// Create a POSIX thread for each worker</div><div class="line">	for (jint i = 0; i &lt; threads; i++)</div><div class="line">	&#123;</div><div class="line">		// Thread handle</div><div class="line">		pthread_t thread;</div><div class="line"></div><div class="line">		// Native worker thread arguments</div><div class="line">		NativeWorkerArgs* nativeWorkerArgs = new NativeWorkerArgs();</div><div class="line">		nativeWorkerArgs-&gt;id = i;</div><div class="line">		nativeWorkerArgs-&gt;iterations = iterations;</div><div class="line"></div><div class="line">		// Create a new thread</div><div class="line">		int result = pthread_create(</div><div class="line">				&amp;thread,</div><div class="line">				NULL,</div><div class="line">				nativeWorkerThread,</div><div class="line">				(void*) nativeWorkerArgs);</div><div class="line"></div><div class="line">		if (0 != result)</div><div class="line">		&#123;</div><div class="line">			// Get the exception class</div><div class="line">			jclass exceptionClazz = env-&gt;FindClass(</div><div class="line">					&quot;java/lang/RuntimeException&quot;);</div><div class="line"></div><div class="line">			// Throw exception</div><div class="line">			env-&gt;ThrowNew(exceptionClazz, &quot;Unable to create thread&quot;);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="获取线程的返回结果"><a href="#获取线程的返回结果" class="headerlink" title="获取线程的返回结果"></a>获取线程的返回结果</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int pthread_join（pthread_t thread,void** ret）;</div></pre></td></tr></table></figure>
-<p>该函数让当前线程等待目标线程结束，第一个参数是线程句柄，第二个参数接受返回结果（为了改变void指针的指向必须传指针的指针）。返回值表示是否成功0。</p>
-<h3 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h3><p>有多种同步机制，这里有互斥锁与信号量</p>
-<h4 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h4><p>返回值都是0成功<br><strong> 初始化锁 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int pthread_mutex_init(pthread_mutex_t * mutex,</div><div class="line">const pthread_mutex_t *attr);</div></pre></td></tr></table></figure></p>
-<p>mutex  互斥量<br>attr     互斥锁属性<br><strong> 加锁 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int pthread_mutex_lock(pthread_mutex_t *mutex);</div></pre></td></tr></table></figure></p>
-<p>若以锁将会线程阻塞等待<br><strong> 解锁 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int pthread_mutex_unlock(pthread_mutex_t *mutex);</div></pre></td></tr></table></figure></p>
-<p><strong> 销毁锁 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int  pthread_mutex_destroy(pthread_mutex_t *mutex);</div></pre></td></tr></table></figure></p>
-<p>已锁的锁销毁结果不可确定</p>
-<h4 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h4><p>信号量有可同步使用数量限制。<br>在 <semaphore.h> 中<br><strong> 初始化 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int sem_init(sem_t *sem, int pshared,unsigned int value);</div></pre></td></tr></table></figure></semaphore.h></p>
-<p>sem ：信号量变量；<br>pshared：表明是否在多个进程中使用信号量，如果是则应该传递非0值；<br>value：该参数指定信号量的初始值。如果想要在两个进程之间使用信号量，需要确保sem参数指向两个进程之间共享的内存范围。<br><strong> 锁定 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int sem_wait(sem_t *sem);</div></pre></td></tr></table></figure></p>
-<p>若信号量不等于0就锁并减一<br><strong> 解锁 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int sem_post(sem_t *sem);</div></pre></td></tr></table></figure></p>
-<p>信号量加一<br><strong> 销毁 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int sem_destroy(sem_t *sem);</div></pre></td></tr></table></figure></p>
-<h2 id="C-的库"><a href="#C-的库" class="headerlink" title="C++的库"></a>C++的库</h2><p><a href="https://blog.csdn.net/suningning/article/details/74510591" target="_blank" rel="external">https://blog.csdn.net/suningning/article/details/74510591</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1945,7 +1906,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">49</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
