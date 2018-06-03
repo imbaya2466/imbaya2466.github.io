@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前备知识 gcc是开源编译器，功能强大支持交叉编译 make是项目管理工具，方便自定义源、依赖、与目标 类似于批处理。参考链接：http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile:%E6%A6%82%E8%BF%B0 .so与.a动态与静态链接库 /xxx表示根目录下的xxx，xxx表示当前">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-29T09:49:09.529Z">
+<meta property="og:updated_time" content="2018-06-02T12:39:58.687Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="gcc与make">
 <meta name="twitter:description" content="前备知识 gcc是开源编译器，功能强大支持交叉编译 make是项目管理工具，方便自定义源、依赖、与目标 类似于批处理。参考链接：http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile:%E6%A6%82%E8%BF%B0 .so与.a动态与静态链接库 /xxx表示根目录下的xxx，xxx表示当前">
@@ -383,11 +383,11 @@
 <p>多个文件：gcc -o 目标 1.o 2.o 3.o 一个c对应一个o</p>
 <h4 id="静态库"><a href="#静态库" class="headerlink" title="静态库"></a>静态库</h4><p><strong>编译：</strong><br>为了在编译程序中正确找到库文件，静态库必须按照 lib[name].a 的规则命名，如下例中[name]=pr</p>
 <p>先用gcc -c 编译出 .o文件<br>用ar进行打包：.a就是.o的打包</p>
-<p>ar -rsv libpr.a pr1.o pr2.o<br>ar参数意义：<br>r：在库中插入模块(替换)。当插入的模块名已经在库中存在，则替换同名的模块。<br>s：写入一个目标文件索引到库中，或者更新一个存在的目标文件索引。<br>v：该选项用来显示执行操作选项的附加信息。<br>t：显示库的模块表清单。一般只显示模块名。<br><strong>使用：</strong><br>-l连接<br>gcc -o main main.c -L./ -lpr<br>-L 及 -l 参数放在后面。其中，-L 加载库文件路径，-l 指明库文件名字，-l会对名字加前后缀<br>直接连接<br>gcc main.c libpr.a 将俩文件链接</p>
-<h4 id="动态库"><a href="#动态库" class="headerlink" title="动态库"></a>动态库</h4><p><strong>编译：</strong><br>gcc -fPIC -shared -o xxx.so pr1.c<br>-shared 表示生成动态链接库<br>源需要.c<br>-fPIC表示位置独立的代码，实现完全动态<br><strong>隐式使用：</strong><br>直接连接<br>gcc -o main main.c xxx.so<br>-l连接，同样省略了前后缀，.a与.so同时存在的话默认.so<br>gcc main.c -L. -lmylib</p>
+<p>ar -rsv libpr.a pr1.o pr2.o<br>ar参数意义：<br>r：在库中插入模块(替换)。当插入的模块名已经在库中存在，则替换同名的模块。<br>s：写入一个目标文件索引到库中，或者更新一个存在的目标文件索引。<br>v：该选项用来显示执行操作选项的附加信息。<br>t：显示库的模块表清单。一般只显示模块名。<br><strong>使用：</strong><br>-l连接<br>gcc -o main main.c -L./ -lpr<br>-L 及 -l 参数放在后面。其中，-L 加载库文件路径，-l 指明库文件名字，-l会对名字加前后缀。默认为动态连接找libxx.so，无时静态用.a<br>直接连接<br>gcc main.c libpr.a 将俩文件链接 </p>
+<h4 id="动态库"><a href="#动态库" class="headerlink" title="动态库"></a>动态库</h4><p><strong>编译：</strong><br>gcc -fPIC -shared -o xxx.so pr1.c<br>-shared 表示生成动态链接库  不加默认生成可执行文件<br>源需要.c<br>-fPIC表示位置独立的代码，实现完全动态<br><strong>隐式使用：</strong><br>直接连接<br>gcc -o main main.c xxx.so<br>-l连接，同样省略了前后缀，.a与.so同时存在的话默认.so<br>gcc main.c -L. -lmylib</p>
 <p>如果目录下同时有static与shared library的话，会以shared为主。   使用-static参数可以使用静态连结。注意-Bstatic就是-static，用于直接全部静态连接。但-shared却是生成动态库。</p>
-<p>动态使用so库，静态使用a库，gcc默认使用so，当源中无so时使用静态。</p>
-<p>这种运行main时去哪里寻找.so全看系统设置的查找路径</p>
+<p>默认是动态连接，使用-static是强制为静态连接。是连接方式<br>默认是生成可执行文件，-shared是生成动态连接文件（so)。是生成目的<br>所以这俩不是你字面理解的全针对连接，而是针对文件形态，不代替默认。</p>
+<p>这种运行时去哪里寻找.so全看系统设置的查找路径，当然可自己针对linker连接时设置</p>
 <h2 id="make的使用"><a href="#make的使用" class="headerlink" title="make的使用"></a>make的使用</h2><p>make通过当前目录下的makefile中指定的方式编译项目<br>makefile的名字可以自己设定make -f</p>
 <p>使用时明确<strong>目标</strong>在每个规则中的概念，一开始只有一个目标，后来逐渐检查中产生多目标</p>
 <h3 id="make规则"><a href="#make规则" class="headerlink" title="make规则"></a>make规则</h3><p><strong>基本示例</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">myprog : foo.o bar.o</div><div class="line">	gcc foo.o bar.o -o myprog</div><div class="line"> </div><div class="line">foo.o : foo.c foo.h bar.h</div><div class="line">	gcc -c foo.c -o foo.o</div><div class="line"> </div><div class="line">bar.o : bar.c bar.h</div><div class="line">	gcc -c bar.c -o bar.o</div></pre></td></tr></table></figure></p>
@@ -537,7 +537,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">51</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
