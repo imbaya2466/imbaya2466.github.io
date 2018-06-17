@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="逆向,hook," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="JavaScript API以下介绍的都是对象。 官方功能非常细致：https://www.frida.re/docs/javascript-api/ 这里的回调一般为对象。12345678910111213141516171819202122232425直接声明对象：var person=&amp;#123;    add: function (a, b) &amp;#123;        return a">
+<meta name="keywords" content="逆向,hook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="frida官方文档">
+<meta property="og:url" content="http://yoursite.com/2018/06/15/frida官方文档/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="JavaScript API以下介绍的都是对象。 官方功能非常细致：https://www.frida.re/docs/javascript-api/ 这里的回调一般为对象。12345678910111213141516171819202122232425直接声明对象：var person=&amp;#123;    add: function (a, b) &amp;#123;        return a">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T15:03:41.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="frida官方文档">
+<meta name="twitter:description" content="JavaScript API以下介绍的都是对象。 官方功能非常细致：https://www.frida.re/docs/javascript-api/ 这里的回调一般为对象。12345678910111213141516171819202122232425直接声明对象：var person=&amp;#123;    add: function (a, b) &amp;#123;        return a">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/15/frida官方文档/"/>
+
+
+
+
+
+  <title>frida官方文档 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/15/frida官方文档/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">frida官方文档</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T20:52:12+08:00">
+                2018-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="JavaScript-API"><a href="#JavaScript-API" class="headerlink" title="JavaScript API"></a>JavaScript API</h2><p>以下介绍的都是对象。</p>
+<p>官方功能非常细致：<a href="https://www.frida.re/docs/javascript-api/" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/</a></p>
+<p>这里的回调一般为对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">直接声明对象：</div><div class="line">var person=</div><div class="line">&#123;</div><div class="line">    add: function (a, b) &#123;</div><div class="line">        return a + b;</div><div class="line">    &#125;,</div><div class="line">    sub: function (a, b) &#123;</div><div class="line">        return new Promise(resolve =&gt; &#123;</div><div class="line">            setTimeout(() =&gt; &#123;</div><div class="line">                resolve(a - b);</div><div class="line">            &#125;, 100);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">定义类也只是直接定义构造函数即可：</div><div class="line">function Car(color,door)&#123;</div><div class="line">this.color = color;</div><div class="line">this.doors = door;</div><div class="line">this.showColor = function()&#123;</div><div class="line">alert(this.color)</div><div class="line">&#125;;</div><div class="line">&#125;</div><div class="line">var car1 = new Car(“red”,4);</div><div class="line">var car2 = new Car(“blue”,4);</div></pre></td></tr></table></figure></p>
+<h4 id="Global-全局"><a href="#Global-全局" class="headerlink" title="Global 全局"></a>Global 全局</h4><p>全局api。<br>hexdump(target[, options])从提供的ArrayBuffer或NativePointer 生成一个hexdump  target（转化byte数组方便显示的）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">ar libc = Module.findBaseAddress(&apos;libc.so&apos;);</div><div class="line">var buf = Memory.readByteArray(libc, 64);</div><div class="line">console.log(hexdump(buf, &#123;</div><div class="line">  offset: 0,</div><div class="line">  length: 64,</div><div class="line">  header: true,</div><div class="line">  ansi: true</div><div class="line">&#125;));</div></pre></td></tr></table></figure></p>
+<p>int64(v)为new Int64(v)的简写，化为64位的int值，同理还有uint64。<br>ptr（s）为new NativePointer(s)的简写，表示原生指针，NULL为ptr(“0”)，<strong>以后的address都是指这个</strong>。<br>recv([type, ]callback)异步的用于在js（目标程序中）接收到来自py脚本的type消息后调用callback。只会接收一次，想多次要重复注册，可以用其返回.wait()等待来实现同步。<br>send(message[, data])将JavaScript对象发送message到基于Frida的应用程序py（它必须可序列化为JSON）。如果你还有一些你想要发送的原始二进制数据，例如你使用了一些内存Memory#readByteArray，那么你可以通过可选data参数传递它。这要求它是一个ArrayBuffer或0到255之间的整数数组。<br>setTimeout(fn, delay)：fn在delay毫秒后调用。返回值给clearTimeout可以取消<br>clearTimeout(id)：取消由呼叫返回的ID setTimeout<br>setInterval(fn, delay)：fn每delay毫秒调用一次。返回值同样用于取消<br>clearInterval(id)：取消由呼叫返回的ID setInterval</p>
+<h4 id="console-控制台"><a href="#console-控制台" class="headerlink" title="console 控制台"></a>console 控制台</h4><p>console.log(line)，console.warn(line)，console.error(line)<br>用于直接从js代码中向frida程序中输出结果（js代码输出在py)ArrayBuffer自动化为hexdump()</p>
+<h4 id="RPC-远程执行"><a href="#RPC-远程执行" class="headerlink" title="RPC 远程执行"></a>RPC 远程执行</h4><p>rpc.exports可以在js中开启函数供py远程执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">rpc.exports = &#123;</div><div class="line">    add: function (a, b) &#123;</div><div class="line">        return a + b;</div><div class="line">    &#125;,</div><div class="line">    sub: function (a, b) &#123;</div><div class="line">        return new Promise(resolve =&gt; &#123;</div><div class="line">            setTimeout(() =&gt; &#123;</div><div class="line">                resolve(a - b);</div><div class="line">            &#125;, 100);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>其中promise和reslove都是js的方法，Promise 对象用于表示一个异步操作的最终状态（完成或失败），以及其返回的值。</p>
+<h4 id="Frida-frida信息"><a href="#Frida-frida信息" class="headerlink" title="Frida frida信息"></a>Frida frida信息</h4><p>Frida.version:当前Frida版本<br>Frida.heapSize：包含Frida私有堆的当前大小的动态属性</p>
+<h4 id="Process-进程相关"><a href="#Process-进程相关" class="headerlink" title="Process  进程相关"></a>Process  进程相关</h4><p>Process.arch：cpu架构，字符串ia32，x64，arm 或arm64<br>Process.platform：系统，字符串windows，  darwin，linux或qnx<br>Process.pageSize：虚拟内存页面大小（以字节为单位）<br>Process.pointerSize：指针大小（以字节为单位）<br>Process.isDebuggerAttached()：调试器当前是否连接的布尔值<br>Process.getCurrentThreadId()：线程的id指的是运行脚本的线程，每次运行都不一样<br>Process.enumerateThreads(callbacks)枚举线程，没有成功。<br>线程对象含：<br>id：操作系统特定的ID<br>state：字符串指定是running，stopped，waiting， uninterruptible或halted<br>context：与键对象pc和sp，其是指定EIP / RIP / PC分别和ESP / RSP / SP，用于IA32 / 64 /臂NativePointer对象。其他处理器特定键也可以，例如eax，rax，r0，x0，等。</p>
+<p>Process.findModuleByAddress(address)， Process.getModuleByAddress(address)， Process.findModuleByName(name)，  Process.getModuleByName(name)：按地址、名字找或返回module<br>Process.enumerateModules(callbacks)遍历module</p>
+<p>module对象包含：<br>name：规范模块名称作为字符串<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>path：完整的文件系统路径作为一个字符串</p>
+<p>Process.enumerateRanges(protection|specifier, callbacks)：枚举满足protection给定的内存范围这是什么？<br>用range对象调用包含：<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>protection：保护字符串（见上文）<br>file:(当可用时）文件映射细节作为包含以下内容的对象：<br>path：完整的文件系统路径作为一个字符串<br>offset：磁盘上映射文件的偏移量，以字节为单位<br>size：磁盘上映射文件的大小，以字节为单位</p>
+<h4 id="Module-模块相关"><a href="#Module-模块相关" class="headerlink" title="Module  模块相关"></a>Module  模块相关</h4><p>name都是字串填模块名<br>Module.ensureInitialized(name)：确保指定模块的初始化器已经运行。<br>Module.enumerateImports(name, callbacks)：枚举模块的进口。<br>Module.enumerateExports(name, callbacks)：枚举模块的出口。<br>Module.enumerateSymbols(name, callbacks)：枚举模块的符号。<br>Module.enumerateRanges(name, protection, callbacks)：枚举满足protection给定的内存范围。<br>Module.findBaseAddress(name)：返回name 模块的基地址<br>Module.findExportByName(module|null, exp)：返回名为exp的导出函数地址。可输入在那个模块，若模块写null就是全部搜索。可用于找知道名称的函数！</p>
+<p>module对象包含：<br>name：规范模块名称作为字符串<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>path：完整的文件系统路径作为一个字符串</p>
+<h4 id="ModuleMap-所有模块"><a href="#ModuleMap-所有模块" class="headerlink" title="ModuleMap 所有模块"></a>ModuleMap 所有模块</h4><p>表示所有模块的映射<br>new ModuleMap([filter])：创建模块映射，可以有条件。<br>has(address)：某地址是否在模块表中。<br>find(address)，get(address)：返回一个包含address属于该模块的细节的对象。</p>
+<h4 id="Memory-内存相关"><a href="#Memory-内存相关" class="headerlink" title="Memory 内存相关"></a>Memory 内存相关</h4><p>Memory.scan(address, size, pattern, callbacks):扫描内存，出现pattern。从address开始，size为大小。callback为回调函数。<br>Memory.alloc(size)：在堆上分配内存。<br>Memory.copy(dst, src, n)：就像memcpy一样。<br>Memory.protect(address, size, protection)：更新内存区域的保护<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Memory.protect(ptr(&quot;0x1234&quot;), 4096, &apos;rw-&apos;);</div></pre></td></tr></table></figure></p>
+<p>Memory.patchCode(address, size, apply)：好像很强大….怎么用不清楚。<br>Memory.readPointer(address)：把地址内容化为指针返回。(从内存中读取ptr)<br>Memory.readS8(address)，Memory.readU8(address)， Memory.readS16(address)，Memory.readU16(address)， Memory.readS32(address)，Memory.readU32(address)， Memory.readShort(address)，Memory.readUShort(address)， Memory.readInt(address)，Memory.readUInt(address)， Memory.readFloat(address)，Memory.readDouble(address)：读有符号或无符号的8/16/32 /等。或浮点/双精度值并将其作为数字返回。</p>
+<p>Memory.writeS8(address, value)，Memory.writeU8(address, value)， Memory.writeS16(address, value)，Memory.writeU16(address, value)，  Memory.writeS32(address, value)，Memory.writeU32(address, value)， Memory.writeShort(address, value)，Memory.writeUShort(address, value)， Memory.writeInt(address, value)，Memory.writeUInt(address, value)， Memory.writeFloat(address, value)，Memory.writeDouble(address, value)：写数value到符号或无符号的8/16/32 /等。或浮动/双值在address。</p>
+<p>Memory.readByteArray(address, length):从指定地址读出array<br>Memory.writeByteArray(address, bytes)：写入字节数组</p>
+<p>Memory.readUtf8String(address[, size = -1])，Memory.writeUtf16String(address, str)，Memory.allocUtf8String(str)等针对特定编码字符串的内存处理。</p>
+<h4 id="Thread-线程相关"><a href="#Thread-线程相关" class="headerlink" title="Thread 线程相关"></a>Thread 线程相关</h4><p>Thread.backtrace([context, backtracer])：为当前线程生成回溯，作为NativePointer对象数组返回。</p>
+<h4 id="NativePointer-原生指针"><a href="#NativePointer-原生指针" class="headerlink" title="NativePointer 原生指针"></a>NativePointer 原生指针</h4><p>ptr（s）为new NativePointer(s)的简写<br>new NativePointer(s)：从s 包含内存地址的字符串中创建新的NativePointer，该内存地址为十进制或十六进制（如果前缀为“0x”）<br>isNull()：返回一个布尔值，允许您方便地检查指针是否为NULL。<br>add(rhs)，sub(rhs)，  and(rhs)，or(rhs)，  xor(rhs)：使一个新的NativePointer这个NativePointer正/负/和/或/ XOR  rhs，这可以是一个数字或其他NativePointer<br>equals(rhs)：返回一个布尔值，指示是否rhs等于这个值; 即它具有相同的指针值<br>toInt32()：将此NativePointer强制转换为带符号的32位整数<br>toString([radix = 16])：转换为可选基数的字符串（默认为16）</p>
+<h4 id="NativeFunction-原生函数"><a href="#NativeFunction-原生函数" class="headerlink" title="NativeFunction 原生函数"></a>NativeFunction 原生函数</h4><p>new NativeFunction(address, returnType, argTypes[, abi])：创建一个新的NativeFunction来调用address（用a指定的  NativePointer）函数，其中returnType指定返回类型，  argTypes数组指定参数类型。您也可以选择指定abi是否不是系统默认值。对于可变参数函数，在固定参数和可变参数之间添加一个’…’ 条目argTypes。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">原函数int fun(char* a):</div><div class="line">var f = new NativeFunction(ptr(&quot;%s&quot;), &apos;int&apos;, [&apos;pointer&apos;]);</div></pre></td></tr></table></figure></p>
+<p>详细：<a href="https://www.frida.re/docs/javascript-api/#nativefunction" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/#nativefunction</a></p>
+<h4 id="NativeCallback"><a href="#NativeCallback" class="headerlink" title="NativeCallback"></a>NativeCallback</h4><p>new NativeCallback(func, returnType, argTypes[, abi])：创建一个由JavaScript函数实现的新的NativeCallback func，返回的对象也是a NativePointer，因此可以传递给它Interceptor#replace。</p>
+<h4 id="io，socket，file"><a href="#io，socket，file" class="headerlink" title="io，socket，file"></a>io，socket，file</h4><p>支持js下的io、socket、file等操作</p>
+<h4 id="Interceptor"><a href="#Interceptor" class="headerlink" title="Interceptor"></a>Interceptor</h4><p>Interceptor.attach(target, callbacks)：拦截target处的函数。target可以是NativePointer指定的地址。Module.findExportByName()等api获得的地址可以由frida解决arm一位为1时是thumb指令等问题。callbacks是一个对象，可以有多个包含：<br>onEnter: function (args)：回调函数给出了一个参数  args，可以用来读取或写入参数作为一个NativePointer对象数组 。<br>onLeave: function (retval)：给定一个参数的回调函数，该参数 retval是一个NativePointer包含原始返回值的衍生对象。您可以调用retval.replace(1337)以用整数替换返回值1337，或者retval.replace(ptr(“0x1234”))用指针替换。请注意，该对象在onLeave调用中被回收，因此不要在回调之外存储和使用它。如果需要存储包含的值，请进行深层复制，例如：ptr(retval.toString())。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">nterceptor.attach(Module.findExportByName(&quot;libc.so&quot;, &quot;read&quot;), &#123;</div><div class="line">    onEnter: function (args) &#123;</div><div class="line">        this.fileDescriptor = args[0].toInt32();</div><div class="line">    &#125;,</div><div class="line">    onLeave: function (retval) &#123;</div><div class="line">        if (retval.toInt32() &gt; 0) &#123;</div><div class="line">            /* do something with this.fileDescriptor */</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>Interceptor.replace(target, replacement)：在target 执行时替换函数at replacement。这通常用于完全或部分替换现有函数的实现。用于 在JavaScript中NativeCallback实现一个replacement。请注意，  replacement直到Interceptor#revert被调用时才会保持活动状态。如果你想链接到原始的实现，你可以target通过NativeFunction内部的实现同步调用，这将绕过并直接进入原始实现。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var openPtr = Module.findExportByName(&quot;libc.so&quot;, &quot;open&quot;);</div><div class="line">var open = new NativeFunction(openPtr, &apos;int&apos;, [&apos;pointer&apos;, &apos;int&apos;]);</div><div class="line">Interceptor.replace(openPtr, new NativeCallback(function (pathPtr, flags) &#123;</div><div class="line">    var path = Memory.readUtf8String(pathPtr);</div><div class="line">    log(&quot;Opening &apos;&quot; + path + &quot;&apos;&quot;);</div><div class="line">    var fd = open(pathPtr, flags);</div><div class="line">    log(&quot;Got fd: &quot; + fd);</div><div class="line">    return fd;</div><div class="line">&#125;, &apos;int&apos;, [&apos;pointer&apos;, &apos;int&apos;]));</div></pre></td></tr></table></figure></p>
+<p>Interceptor.revert(target)：将函数恢复target到之前的实现。</p>
+<h4 id="Stalker"><a href="#Stalker" class="headerlink" title="Stalker"></a>Stalker</h4><p>Stalker.follow([threadId, options])：开始跟踪threadId（或省略当前线程），可选地options启用事件。<br>Stalker.unfollow([threadId])：停止跟踪threadId（或省略当前线程）。</p>
+<h4 id="arm-mip"><a href="#arm-mip" class="headerlink" title="arm mip"></a>arm mip</h4><p>有各种针对不同平台的原生读写与结构类型</p>
+<h4 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h4><p>Java.available：一个布尔值，指定当前进程是否加载了Java虚拟机。<br>Java.enumerateLoadedClasses(callbacks)：枚举现在加载的类，其中callbacks是一个对象：<br>onMatch: function (className)：为每个加载的类调用  className可以传递给use()JavaScript封装器的类。<br>onComplete: function ()：当所有类都被枚举时调用。</p>
+<p>Java.perform(fn)：确保当前线程连接到虚拟机并呼叫fn。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Java.perform(function () &#123;</div><div class="line">    var Activity = Java.use(&quot;android.app.Activity&quot;);</div><div class="line">    Activity.onResume.implementation = function () &#123;</div><div class="line">        send(&quot;onResume() got called! Let&apos;s call the original implementation&quot;);</div><div class="line">        this.onResume();</div><div class="line">    &#125;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>Java.use(className)：动态获得一个JavaScript包装程序  className，您可以通过调用$new()它来调用构造函数来实例化对象。调用$dispose()一个实例来显式清理它（或等待JavaScript对象获取垃圾回收，或脚本被卸载）。静态和非静态方法是可用的，你甚至可以替换一个方法实现并抛出一个异常：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Java.perform(function () &#123;</div><div class="line">    var Activity = Java.use(&quot;android.app.Activity&quot;);</div><div class="line">    var Exception = Java.use(&quot;java.lang.Exception&quot;);</div><div class="line">    Activity.onResume.implementation = function () &#123;</div><div class="line">        throw Exception.$new(&quot;Oh noes!&quot;);</div><div class="line">    &#125;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>Java.choose(className, callbacks)：className通过扫描Java堆枚举类的活动实例。用来获得某类java对象。</p>
+<h2 id="任务：使用frida-hook-android系统调用。"><a href="#任务：使用frida-hook-android系统调用。" class="headerlink" title="任务：使用frida hook android系统调用。"></a>任务：使用frida hook android系统调用。</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+            <a href="/tags/hook/" rel="tag"># hook</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/01/frida概观与初步使用/" rel="next" title="frida概观与初步使用">
+                <i class="fa fa-chevron-left"></i> frida概观与初步使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript-API"><span class="nav-number">1.</span> <span class="nav-text">JavaScript API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Global-全局"><span class="nav-number">1.0.1.</span> <span class="nav-text">Global 全局</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#console-控制台"><span class="nav-number">1.0.2.</span> <span class="nav-text">console 控制台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RPC-远程执行"><span class="nav-number">1.0.3.</span> <span class="nav-text">RPC 远程执行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Frida-frida信息"><span class="nav-number">1.0.4.</span> <span class="nav-text">Frida frida信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Process-进程相关"><span class="nav-number">1.0.5.</span> <span class="nav-text">Process  进程相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Module-模块相关"><span class="nav-number">1.0.6.</span> <span class="nav-text">Module  模块相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ModuleMap-所有模块"><span class="nav-number">1.0.7.</span> <span class="nav-text">ModuleMap 所有模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Memory-内存相关"><span class="nav-number">1.0.8.</span> <span class="nav-text">Memory 内存相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Thread-线程相关"><span class="nav-number">1.0.9.</span> <span class="nav-text">Thread 线程相关</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativePointer-原生指针"><span class="nav-number">1.0.10.</span> <span class="nav-text">NativePointer 原生指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeFunction-原生函数"><span class="nav-number">1.0.11.</span> <span class="nav-text">NativeFunction 原生函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NativeCallback"><span class="nav-number">1.0.12.</span> <span class="nav-text">NativeCallback</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#io，socket，file"><span class="nav-number">1.0.13.</span> <span class="nav-text">io，socket，file</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Interceptor"><span class="nav-number">1.0.14.</span> <span class="nav-text">Interceptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Stalker"><span class="nav-number">1.0.15.</span> <span class="nav-text">Stalker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#arm-mip"><span class="nav-number">1.0.16.</span> <span class="nav-text">arm mip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java"><span class="nav-number">1.0.17.</span> <span class="nav-text">Java</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#任务：使用frida-hook-android系统调用。"><span class="nav-number">2.</span> <span class="nav-text">任务：使用frida hook android系统调用。</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
