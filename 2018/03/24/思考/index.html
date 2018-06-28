@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="自己的感悟1 面向对象与面向过程的设计方式，对程序员来说，其实都是在写代码的处理数据的执行流程， 代码与数据（包括对象数据，静态、全局数据等）分别存储在内存的不同区域，由代码控制数据处理。 各种编写代码技巧方式不过是代码复用和代码可操控的数据范围（变量作用范围）的区别， 线程则是分开一部分代码和数据去执行其它操作，其一般处理直到数据处理终结（其返回结果体现在内存中数据的改变上）。（回调只不过是延长">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-24T12:07:08.426Z">
+<meta property="og:updated_time" content="2018-06-20T12:10:15.817Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="思考">
 <meta name="twitter:description" content="自己的感悟1 面向对象与面向过程的设计方式，对程序员来说，其实都是在写代码的处理数据的执行流程， 代码与数据（包括对象数据，静态、全局数据等）分别存储在内存的不同区域，由代码控制数据处理。 各种编写代码技巧方式不过是代码复用和代码可操控的数据范围（变量作用范围）的区别， 线程则是分开一部分代码和数据去执行其它操作，其一般处理直到数据处理终结（其返回结果体现在内存中数据的改变上）。（回调只不过是延长">
@@ -378,6 +378,13 @@
 <li>各种编写代码技巧方式不过是代码复用和代码可操控的数据范围（变量作用范围）的区别，</li>
 <li>线程则是分开一部分代码和数据去执行其它操作，其一般处理直到数据处理终结（其返回结果体现在内存中数据的改变上）。（回调只不过是延长线程代码处理而已）</li>
 </ol>
+<h3 id="2018-6-20"><a href="#2018-6-20" class="headerlink" title="2018.6.20"></a>2018.6.20</h3><ol>
+<li>c/c++需要头文件的原因：代码编译为库发布后符号信息基本只有目标的位置、大小、名字，符号名并不提供自我描述信息(c++提供类等信息)。所以具体的调用方式、参数、返回值以及需要生成的符号由头文件指明。</li>
+<li>java等完全面向对象的语言编译后自带符号信息（参数、返回值、名字等）。因此不用额外加入头文件告诉库使用者怎么用</li>
+<li>此外头文件中宏扩充其代码层面功能，全局变量使用模块外依靠符号引用完成。</li>
+<li>同时由于编译后携带信息少，因此反编译后信息少，从而逆向困难。</li>
+<li>关于逆向工程，逆向的是整个软件工程：二进制-&gt;代码-&gt;设计结构-&gt;需求功能。</li>
+</ol>
 
       
     </div>
@@ -499,7 +506,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -510,7 +517,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -521,7 +528,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -556,7 +563,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#自己的感悟1"><span class="nav-number">1.</span> <span class="nav-text">自己的感悟1</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#自己的感悟1"><span class="nav-number">1.</span> <span class="nav-text">自己的感悟1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2018-6-20"><span class="nav-number">2.</span> <span class="nav-text">2018.6.20</span></a></li></ol></div>
             
 
           </div>

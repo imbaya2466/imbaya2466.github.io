@@ -283,6 +283,499 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/30/gcc与make/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/30/gcc与make/" itemprop="url">gcc与make</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-30T18:54:51+08:00">
+                2018-04-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前备知识"><a href="#前备知识" class="headerlink" title="前备知识"></a>前备知识</h2><ol>
+<li>gcc是开源编译器，功能强大支持交叉编译</li>
+<li>make是项目管理工具，方便自定义源、依赖、与目标 类似于批处理。参考链接：<a href="http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile:%E6%A6%82%E8%BF%B0" target="_blank" rel="external">http://wiki.ubuntu.org.cn/%E8%B7%9F%E6%88%91%E4%B8%80%E8%B5%B7%E5%86%99Makefile:%E6%A6%82%E8%BF%B0</a></li>
+<li>.so与.a动态与静态链接库</li>
+<li>/xxx表示根目录下的xxx，xxx表示当前目录下的xxx,XXX/表示XXX目录下的什么，.表示当前目录</li>
+</ol>
+<h2 id="gcc的使用"><a href="#gcc的使用" class="headerlink" title="gcc的使用"></a>gcc的使用</h2><p>gcc 文件.c -o 目标名<br>直接编译</p>
+<p>分步有4步：<br>预处理：-E   生成.i  .h都在这里处理<br>编译：-S    生成.s汇编代码<br>汇编：-c    生成.o目标文件，一个c文件对应生成一个o<br>链接：      可执行文件    这步导入库，实现所使用函数定义的查找</p>
+<p>多个文件：gcc -o 目标 1.o 2.o 3.o 一个c对应一个o</p>
+<h4 id="静态库"><a href="#静态库" class="headerlink" title="静态库"></a>静态库</h4><p><strong>编译：</strong><br>为了在编译程序中正确找到库文件，静态库必须按照 lib[name].a 的规则命名，如下例中[name]=pr</p>
+<p>先用gcc -c 编译出 .o文件<br>用ar进行打包：.a就是.o的打包</p>
+<p>ar -rsv libpr.a pr1.o pr2.o<br>ar参数意义：<br>r：在库中插入模块(替换)。当插入的模块名已经在库中存在，则替换同名的模块。<br>s：写入一个目标文件索引到库中，或者更新一个存在的目标文件索引。<br>v：该选项用来显示执行操作选项的附加信息。<br>t：显示库的模块表清单。一般只显示模块名。<br><strong>使用：</strong><br>-l连接<br>gcc -o main main.c -L./ -lpr<br>-L 及 -l 参数放在后面。其中，-L 加载库文件路径，-l 指明库文件名字，-l会对名字加前后缀。默认为动态连接找libxx.so，无时静态用.a<br>直接连接<br>gcc main.c libpr.a 将俩文件链接 </p>
+<h4 id="动态库"><a href="#动态库" class="headerlink" title="动态库"></a>动态库</h4><p><strong>编译：</strong><br>gcc -fPIC -shared -o xxx.so pr1.c<br>-shared 表示生成动态链接库  不加默认生成可执行文件<br>源需要.c<br>-fPIC表示位置独立的代码，实现完全动态<br><strong>隐式使用：</strong><br>直接连接<br>gcc -o main main.c xxx.so<br>-l连接，同样省略了前后缀，.a与.so同时存在的话默认.so<br>gcc main.c -L. -lmylib</p>
+<p>如果目录下同时有static与shared library的话，会以shared为主。   使用-static参数可以使用静态连结。注意-Bstatic就是-static，用于直接全部静态连接。但-shared却是生成动态库。</p>
+<p>默认是动态连接，使用-static是强制为静态连接。是连接方式<br>默认是生成可执行文件，-shared是生成动态连接文件（so)。是生成目的<br>所以这俩不是你字面理解的全针对连接，而是针对文件形态，不代替默认。</p>
+<p>这种运行时去哪里寻找.so全看系统设置的查找路径，当然可自己针对linker连接时设置</p>
+<h2 id="make的使用"><a href="#make的使用" class="headerlink" title="make的使用"></a>make的使用</h2><p>make通过当前目录下的makefile中指定的方式编译项目<br>makefile的名字可以自己设定make -f</p>
+<p>使用时明确<strong>目标</strong>在每个规则中的概念，一开始只有一个目标，后来逐渐检查中产生多目标</p>
+<h3 id="make规则"><a href="#make规则" class="headerlink" title="make规则"></a>make规则</h3><p><strong>基本示例</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">myprog : foo.o bar.o</div><div class="line">	gcc foo.o bar.o -o myprog</div><div class="line"> </div><div class="line">foo.o : foo.c foo.h bar.h</div><div class="line">	gcc -c foo.c -o foo.o</div><div class="line"> </div><div class="line">bar.o : bar.c bar.h</div><div class="line">	gcc -c bar.c -o bar.o</div></pre></td></tr></table></figure></p>
+<p>A:B C<br>(注意是tab) 指令<br>A是目标文件，文件中最上层的是最终目标,如果B，C中的任意一个比A新就执行下面的处理语句。在检查B、C时，会往下查找把B、C作为目标的规则。<br>也就是说B、C的检查是必须的，A是基准，检查不断向下，检查结果都是语句是否执行，检查结果再层层返回向上。</p>
+<p>类似树状结构，规则是否被处理全看上层有没有依赖它<br>规则查找时是全文件查找，不是只向下。</p>
+<p><strong>其它用法：</strong><br>all : exec1 exec2<br>下面不加生成all的语句，用于生成多个可执行文件。<br>不论all存不存在，all作为目标时每次都会检查1与2的最新，只不过不存在all时最终结果一定是执行语句，可没有语句所以在不在无所谓</p>
+<p>规则如果不位于文件最开始，能不能被执行全看上层的规则是否依赖这个规则,但如果名确make XXXX 。就会把XXXX作为主目标而不是第一个，可用来提供些命令</p>
+<p>特殊下规则<strong>被需要检查时</strong>：<br>A:B C<br>当A不存在时，一定执行。<br>当A存在时，正常比较<br>A:<br>当A不存在时，一定执行<br>当A存在时，一定不执行</p>
+<p>.PHONY : A用于指定A用于假想不用检查是否存在一定更新</p>
+<h3 id="make命令"><a href="#make命令" class="headerlink" title="make命令"></a>make命令</h3><p>每条规则中的命令和操作系统Shell的命令行是一致的。make会按顺序一条一条的执行命令，每条命令的开头必须以[Tab]键开头，除非，命令是紧跟在依赖规则后面的分号后的。在命令行之间中的空格或是空行会被忽略，但是如果该空格或空行是以Tab键开头的，那么make会认为其是一个空命令。<br>当我们用“@”字符在命令行前，那么，这个命令将不被make显示出来<br>当依赖目标新于目标时，也就是当规则的目标需要被更新时，make会一条一条的执行其后的命令。需要注意的是，如果你要让上一条命令的结果应用在下一条命令时，你应该使用分号分隔这两条命令。比如你的第一条命令是cd命令，你希望第二条命令得在cd之后的基础上运行，那么你就不能把这两条命令写在两行上，而应该把这两条命令写在一行上，用分号分隔</p>
+<h3 id="make变量"><a href="#make变量" class="headerlink" title="make变量"></a>make变量</h3><p>基本可以理解为存了一串字符<br>环境变量在 make 过程中被解释成 make 的变量。这些变量是大小写敏感的<br>声明：A=XXXXXX<br>使用：$(A)</p>
+<p>make与c之间define变量互通的<br>定义好的内部变量：<br>$@:当前规则的目的文件名<br>$&lt;:依靠列表中的第一个依靠文件<br>$^:整个依靠的列表<br>在命令中可替代，比如上面的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">OBJS = foo.o bar.o</div><div class="line">CC = gcc</div><div class="line">CFLAGS = -Wall -O -g</div><div class="line"> </div><div class="line">myprog : $(OBJS)</div><div class="line">	$(CC) $^ -o $@</div><div class="line"> </div><div class="line">foo.o : foo.c foo.h bar.h</div><div class="line">	$(CC) $(CFLAGS) -c $&lt; -o $@</div><div class="line"> </div><div class="line">bar.o : bar.c bar.h</div><div class="line">	$(CC) $(CFLAGS) -c $&lt; -o $@</div></pre></td></tr></table></figure></p>
+<p>同时，可以在使用make命令时指定参数的值:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">AGE = 12</div><div class="line">all:</div><div class="line">    @echo &quot;age=$(AGE)&quot;</div></pre></td></tr></table></figure></p>
+<p>make的时候，打印信息是age=12<br>当你使用make AGE=20时，打印的信息就是:age=20</p>
+<h3 id="make函数"><a href="#make函数" class="headerlink" title="make函数"></a>make函数</h3><p>使用函数：<br>$(函数名 参1,参2,….)<br>常用的：<br>$(wildcard *.c)<br> 返回所有.c结尾的文件</p>
+<p>$(patsubst %.c,%.o,变量X)<br>第一个是一个需要匹配的 式样，第二个表示用什么来替换它，第三个是一个需要被处理的由空格分隔的字列。在这里.o替换.c。注意这里的 % 符号将匹 配一个或多个字符，而它每次所匹配的字串叫做一个‘柄’(stem) 。在第二个参数里， % 被解读成用第一参数所匹配的那个柄。</p>
+<h3 id="make隐含规则"><a href="#make隐含规则" class="headerlink" title="make隐含规则"></a>make隐含规则</h3><p>“隐含规则”会使用一些我们系统变量，我们可以改变这些系统变量的值来定制隐含规则的运行时的参数。<br>当目标规则不存在时，make会在自己的“隐含规则”库中寻找可以用的规则，如果找到，那么就会使用。如果找不到规则且文件存在，就会判断，否则报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">foo.o : foo.c</div><div class="line">	gcc –c foo.c $(CFLAGS)</div><div class="line">bar.o : bar.c</div><div class="line">	gcc –c bar.c $(CFLAGS)</div></pre></td></tr></table></figure>
+<p>这俩句不必要写，自动使用</p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p><strong>include</strong><br>include 文件名<br>用于包含一个文件，同时检查文件（纳入目标）。</p>
+<p><strong>gcc -M</strong><br>gcc -M main.c<br>输出一个用于make的规则，该规则描述了这个源文件的依赖关系。预编译器输出的这个make规则包含名字与原文件相同的目标文件，冒号和自己与所有include文件的名字<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">gcc -M main.c</div><div class="line">main.o: main.c /usr/include/stdc-predef.h /usr/include/stdio.h \</div><div class="line"> /usr/include/features.h /usr/include/i386-linux-gnu/sys/cdefs.h \</div><div class="line"> /usr/include/i386-linux-gnu/bits/wordsize.h \</div><div class="line"> /usr/include/i386-linux-gnu/gnu/stubs.h \</div><div class="line"> /usr/include/i386-linux-gnu/gnu/stubs-32.h \</div><div class="line"> /usr/lib/gcc/i686-linux-gnu/4.8/include/stddef.h \</div><div class="line"> /usr/include/i386-linux-gnu/bits/types.h \</div><div class="line"> /usr/include/i386-linux-gnu/bits/typesizes.h /usr/include/libio.h \</div><div class="line"> /usr/include/_G_config.h /usr/include/wchar.h \</div><div class="line"> /usr/lib/gcc/i686-linux-gnu/4.8/include/stdarg.h \</div><div class="line"> /usr/include/i386-linux-gnu/bits/stdio_lim.h \</div><div class="line"> /usr/include/i386-linux-gnu/bits/sys_errlist.h main.h</div><div class="line"></div><div class="line"></div><div class="line"> gcc -MM main.c</div><div class="line">main.o: main.c main.h</div></pre></td></tr></table></figure></p>
+<p>\用于换行<br>-MM<br>与-M相似，只是不包含系统头文件</p>
+<p><strong>:= </strong><br>A = foo<br>B = $(A)<br> 现在 B 是 $(A) ，而 $(A) 是 ‘foo’ 。<br>A = bar<br> 现在 B 仍然是 $(A) ，但它的值已随着变成 ‘bar’ 了。<br>B := $(A)<br> 现在 B 的值是 ‘bar’ 。<br>A = foo<br> B 的值仍然是 ‘bar’ 。</p>
+<p><strong> # </strong><br>make 会忽略在 # 符号后面直到那一行结束的所有文字。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line">### Customising</div><div class="line"># 用户设定</div><div class="line">#</div><div class="line"># Adjust the following if necessary; EXECUTABLE is the target</div><div class="line"># executable&apos;s filename, and LIBS is a list of libraries to link in</div><div class="line"># (e.g. alleg, stdcx, iostr, etc). You can override these on make&apos;s</div><div class="line"># command line of course, if you prefer to do it that way.</div><div class="line">#</div><div class="line"># 如果需要，调整下面的东西。 EXECUTABLE 是目标的可执行文件名， LIBS</div><div class="line"># 是一个需要连接的程序包列表（例如 alleg, stdcx, iostr 等等）。当然你</div><div class="line"># 可以在 make 的命令行覆盖它们，你愿意就没问题。</div><div class="line">#</div><div class="line"> </div><div class="line">EXECUTABLE := mushroom.exe</div><div class="line">LIBS := alleg</div><div class="line"> </div><div class="line"># Now alter any implicit rules&apos; variables if you like, e.g.:</div><div class="line">#</div><div class="line"># 现在来改变任何你想改动的隐含规则中的变量，例如</div><div class="line"> </div><div class="line">CFLAGS := -g -Wall -O3 -m486</div><div class="line">CXXFLAGS := $(CFLAGS)</div><div class="line"> </div><div class="line"># The next bit checks to see whether rm is in your djgpp bin</div><div class="line"># directory; if not it uses del instead, but this can cause (harmless)</div><div class="line"># `File not found&apos; error messages. If you are not using DOS at all,</div><div class="line"># set the variable to something which will unquestioningly remove</div><div class="line"># files.</div><div class="line">#</div><div class="line"># 下面先检查你的 djgpp 命令目录下有没有 rm 命令，如果没有，我们使用</div><div class="line"># del 命令来代替，但有可能给我们 &apos;File not found&apos; 这个错误信息，这没</div><div class="line"># 什么大碍。如果你不是用 DOS ，把它设定成一个删文件而不废话的命令。</div><div class="line"># （其实这一步在 UNIX 类的系统上是多余的，只是方便 DOS 用户。 UNIX</div><div class="line"># 用户可以删除这５行命令。）</div><div class="line"> </div><div class="line">ifneq ($(wildcard $(DJDIR)/bin/rm.exe),)</div><div class="line">RM-F := rm -f</div><div class="line">else</div><div class="line">RM-F := del</div><div class="line">endif</div><div class="line"> </div><div class="line"># You shouldn&apos;t need to change anything below this point.</div><div class="line">#</div><div class="line"># 从这里开始，你应该不需要改动任何东西。（我是不太相信，太ＮＢ了！）</div><div class="line"> </div><div class="line">SOURCE := $(wildcard *.c) $(wildcard *.cc)</div><div class="line">OBJS := $(patsubst %.c,%.o,$(patsubst %.cc,%.o,$(SOURCE)))</div><div class="line">DEPS := $(patsubst %.o,%.d,$(OBJS))</div><div class="line">MISSING_DEPS := $(filter-out $(wildcard $(DEPS)),$(DEPS))</div><div class="line">MISSING_DEPS_SOURCES := $(wildcard $(patsubst %.d,%.c,$(MISSING_DEPS)) \</div><div class="line">$(patsubst %.d,%.cc,$(MISSING_DEPS)))</div><div class="line">CPPFLAGS += -MD</div><div class="line"> </div><div class="line">.PHONY : everything deps objs clean veryclean rebuild</div><div class="line"> </div><div class="line">everything : $(EXECUTABLE)</div><div class="line"> </div><div class="line">deps : $(DEPS)</div><div class="line"> </div><div class="line">objs : $(OBJS)</div><div class="line"> </div><div class="line">clean :</div><div class="line"> @$(RM-F) *.o</div><div class="line"> @$(RM-F) *.d</div><div class="line"> </div><div class="line">veryclean: clean</div><div class="line"> @$(RM-F) $(EXECUTABLE)</div><div class="line"> </div><div class="line">rebuild: veryclean everything</div><div class="line"> </div><div class="line">ifneq ($(MISSING_DEPS),)</div><div class="line">$(MISSING_DEPS) :</div><div class="line"> @$(RM-F) $(patsubst %.d,%.o,$@)</div><div class="line">endif</div><div class="line"> </div><div class="line">-include $(DEPS)</div><div class="line"> </div><div class="line">$(EXECUTABLE) : $(OBJS)</div><div class="line"> gcc -o $(EXECUTABLE) $(OBJS) $(addprefix -l,$(LIBS))</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/29/android动态调试-java层/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/29/android动态调试-java层/" itemprop="url">android动态调试-java层</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-29T17:19:51+08:00">
+                2018-04-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前备条件"><a href="#前备条件" class="headerlink" title="前备条件"></a>前备条件</h3><ol>
+<li>AS &amp;安装smalidea插件</li>
+<li>device monitor(DDMS)-位于SDK/tool</li>
+<li>android真机/模拟器</li>
+</ol>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
+<li>拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。<br>将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&gt;Generated S R即将smali目录设置为源码根目录(导入前重命名为src)。</li>
+<li>首先运行device moniter与android（测试海马模拟器可行），当dm无法找到android时使用adb connect连接。<br>输入：adb connect 127.0.0.1:26944。如下：<br>海马玩模拟器的端口号是26944。<br>逍遥安卓模拟器的端口号是21503。<br>夜神玩模拟器的端口号是62001。<br>当dm可显示android进程时即可</li>
+<li>android中安装需要调试的apk，<br>adb shell am start -D -n packageName/ActivityName来开启程序进入等待调试状态后面俩个name在AndroidManifest.xml下找，如：<br>adb shell am start -D -n com.example.imbaya.crackme01/com.example.imbaya.crackme01.MainActivity<br>这样就可以让android中该应用处于调试状态<br>在dm中找到选中进程就会开启8700调试端口</li>
+<li>在AS中打开Edit Configuration，添加remote类型的调试，port为8700</li>
+<li>此时随意在smali中添加断点然后开启debug即可进入调试</li>
+</ol>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>因为安卓的应用程序都是Zygote fork自己来快速启动进程进而快速启动程序的，因此不能直接以调试方式打开app，只能先启动app，再依靠android上的虚拟机与gdb调试，将调试信息通过adb发给主机</p>
+<p>关于端口转发：<br>adb forward  本机：  设备：<br>本机的端口转发到设备的端口上</p>
+<p>当一个设备链接上时，DDSM和ADB之间又会建立VM monitoring service用于监控设备上的虚拟机。 对于设备上每个虚拟机的进程， DDMS都会在主机开启一个监听端口。端口从8600开始。将设备中的调试信息通过adb取出转发到主机上的监听端口中。其中选中的额外开一个8700<br>等价于<br>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程</p>
+<p>android进程-&gt;adb映射到主机端口并转化调试协议JDWP-&gt;AS连接pc的端口从而调试android进程</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/27/java知识点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/27/java知识点/" itemprop="url">java知识点</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-27T18:39:07+08:00">
+                2018-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在这里总结些java的知识（以前看的散的很）</p>
+<h2 id="实例化过程"><a href="#实例化过程" class="headerlink" title="实例化过程"></a>实例化过程</h2><h4 id="一般过程"><a href="#一般过程" class="headerlink" title="一般过程"></a>一般过程</h4><ol>
+<li>实现接口</li>
+<li>类new-&gt;实例</li>
+<li>对象传入，使用</li>
+</ol>
+<h4 id="匿名类（匿名内部类）"><a href="#匿名类（匿名内部类）" class="headerlink" title="匿名类（匿名内部类）"></a>匿名类（匿名内部类）</h4><ol>
+<li>接口-&gt;实现+new</li>
+<li>传入使用</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Thread t=new Thread(new Runnable() &#123;  </div><div class="line">      </div><div class="line">    @Override  </div><div class="line">    public void run() &#123;  </div><div class="line">        System.out.println(&quot;hello,dusk!&quot;);  </div><div class="line">          </div><div class="line">    &#125;  </div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>注意new Runnable()的（）。是用来初始化抽象类的。<br>抽象类可以有构造函数，但接口不能有构造函数。</p>
+<p>此外注意编译器生成类的.class时会加.synthetic（合成）修饰的类，字段，方法。作用是通过编译器生成的内容只有jvm可以使用从而实现某些java语法。比如内部类会存一个外部类的引用来使用外部类。</p>
+<h4 id="lambda"><a href="#lambda" class="headerlink" title="lambda"></a>lambda</h4><p>与匿名类同，不过只能针对一个方法的接口，但可以简化过程。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/25/ARM汇编/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1549,531 +2042,7 @@
 <li>与apk存于同一目录，以.odex后缀，多是系统程序。</li>
 </ol>
 <p><img src="https://i.imgur.com/mDOEFRJ.jpg" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/06/硬件与系统安装/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/06/硬件与系统安装/" itemprop="url">硬件与系统安装</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-06T22:56:33+08:00">
-                2018-04-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/计算机组成/" itemprop="url" rel="index">
-                    <span itemprop="name">计算机组成</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>一直以来对计算机组成原理等硬件知识十分不重视，终于是在逆向过程中被些小问题困扰到导致思绪跑偏。在这里时不时整理下</p>
-<h2 id="关于cpu与指令集"><a href="#关于cpu与指令集" class="headerlink" title="关于cpu与指令集"></a>关于cpu与指令集</h2><p>指令集是存储在CPU内部，对CPU运算进行指导和优化的硬程序。拥有这些指令集，CPU就可以更高效地运行。Intel主要有x86，EM64T，MMX，SSE，SSE2，SSE3，SSSE3 (Super SSE3)，SSE4A，SSE4.1，SSE4.2，AVX，AVX2，AVX-512，VMX等指令集。AMD主要是x86，x86-64，3D-Now!指令集。<br>再看cpu：<br>中央处理器主要包括运算器（算术逻辑运算单元，ALU，Arithmetic Logic Unit）和高速缓冲存储器（Cache）及实现它们之间联系的数据（Data）、控制及状态的总线（Bus）。它与内部存储器（Memory）和输入/输出（I/O）设备合称为电子计算机三大核心部件。CPU还包括运算逻辑部件、寄存器部件和控制部件等。<br>工作过程：<br>CPU从存储器或高速缓冲存储器中取出指令，放入指令寄存器，并对指令译码。它把指令分解成一系列的微操作，然后发出各种控制命令，执行微操作系列，结果改变寄存器或内存。从而完成一条指令的执行。并有多线程多核心等技术。其中乱序执行导致了cpu漏洞<br>而指令的助记符就是汇编，基本上就是直接翻译就可<br>Core i5：pc<br>ARM：移动端多，现已全面使用<br>i386：即Intel 80386。其实i386通常被用来作为对Intel（英特尔）32位微处理器的统称。</p>
-<p>由此可见一个cpu可支持多种指令集。cpu其上一层就是指令集。</p>
-<p>这些都是指指令集：<br>与具体cpu无关  大多cpu支持多个<br>X86   庞大的intel早期用的<br>x86-64  AMD推出的兼容x86的64位(AMD64\Intel 64)<br>IA64   intel推出的不兼容86的64位<br>EMT64   intel推出的兼容86的64位</p>
-<p>CISC 复杂指令集   其实它是英特尔生产的x86系列（也就是IA-32架构）CPU及其兼容CPU，如AMD、VIA的。即使是新起的X86-64（也说成AMD64）都是属于CISC的范畴。<br>由于Intel X86系列及其兼容CPU（如AMD Athlon MP、）都使用X86指令集，所以就形成了今天庞大的X86系列及兼容CPU阵容。x86CPU主要有intel的服务器CPU和AMD的服务器CPU两类。为了兼容而一直用，庞大</p>
-<p>RISC 精简指令集   RISC指令系统更加适合高档服务器的操作系统Windows 7，Linux也属于类似Windows OS(UNIX)的操作系统。RISC型CPU与Intel和AMD的CPU在软件和硬件上都不兼容。在中高档服务器中采用RISC指令的CPU主要有以下几类：PowerPC处理器、SPARC处理器、PA-RISC处理器、MIPS处理器、Alpha处理器。</p>
-<h3 id="大小端再次记录（老忘）"><a href="#大小端再次记录（老忘）" class="headerlink" title="大小端再次记录（老忘）"></a>大小端再次记录（老忘）</h3><p>大端模式，是指数据的高字节保存在内存的低地址中，而数据的低字节保存在内存的高地址中，这样的存储模式有点儿类似于把数据当作字符串顺序处理：地址由小向大增加，而数据从高位往低位放；这和我们的阅读习惯一致。<br>小端模式，是指数据的高字节保存在内存的高地址中，而数据的低字节保存在内存的低地址中，这种存储模式将地址的高低和数据位权有效地结合起来，高地址部分权值高，低地址部分权值低。</p>
-<p>目前Intel的80x86系列芯片是唯一还在坚持使用小端的芯片，ARM芯片默认采用小端，但可以切换为大端；而MIPS等芯片要么采用全部大端的方式储存，要么提供选项支持大端——可以在大小端之间切换。另外，对于大小端的处理也和编译器的实现有关，在C语言中，默认是小端（但在一些对于单片机的实现中却是基于大端，比如Keil 51C），Java是平台无关的，默认是大端。在网络上传输数据普遍采用的都是大端。</p>
-<p>注意一般书写16进制数字时都是大到小，不论表示字串还是数字。但硬编码输入是按顺序从小到大输入的<br>具体用大小端由平台决定（cpu或虚拟机）</p>
-<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h2 id="io"><a href="#io" class="headerlink" title="io"></a>io</h2><p>中断:中断分为软中断（cpu内部）与硬中断（cpu外部）<br>中断的过程：因某原因触发了中断（有中断类型码）根据码去中断向量表（位于内存最开始）找到处理中断的程序处理完后可决定是否返回。<br>软中断:除法错误、单步执行、int触发（3号为转到调试器处理<a href="https://blog.csdn.net/trochiluses/article/details/20209593" title="关于int3" target="_blank" rel="external">https://blog.csdn.net/trochiluses/article/details/20209593</a>）<br>硬中断：外设硬件触发，其芯片发给cpu的中断，比如处理io</p>
-<h2 id="硬盘"><a href="#硬盘" class="headerlink" title="硬盘"></a>硬盘</h2><p>磁道：同心圆<br>扇区：分割磁道<br>柱面：多层磁道<br>分区：对应cdef盘<br>第一个扇区提供引导和分区表，主分区+扩充分区表最多4个，扩充分区最多一个，扩充分区中可以再分逻辑分区从而分多个盘。</p>
-<h2 id="显卡"><a href="#显卡" class="headerlink" title="显卡"></a>显卡</h2><h2 id="操作系统一般过程"><a href="#操作系统一般过程" class="headerlink" title="操作系统一般过程"></a>操作系统一般过程</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/02/Dalvik字节码及相关/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/02/Dalvik字节码及相关/" itemprop="url">Dalvik字节码及相关</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-02T22:18:40+08:00">
-                2018-04-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong> 首先建议参考谷歌官方文档<a href="https://source.android.com/devices/tech/dalvik/dex-format" target="_blank" rel="external">https://source.android.com/devices/tech/dalvik/dex-format</a> </strong></p>
-<h3 id="一：前备知识"><a href="#一：前备知识" class="headerlink" title="一：前备知识"></a>一：前备知识</h3><h4 id="1-dex文件"><a href="#1-dex文件" class="headerlink" title="1.dex文件"></a>1.dex文件</h4><p>Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。</p>
-<h4 id="1-1-apk的生成"><a href="#1-1-apk的生成" class="headerlink" title="1.1 apk的生成"></a>1.1 apk的生成</h4><p>具体过程：</p>
-<ol>
-<li>aapt程序将资源标记生成R.java，并生成resources.arsc用来索引，并加密xml将后二者打包为.ap</li>
-<li>aidl程序将.aidl（为了进程通信分割出的描述语言，进程通信需要信息化为系统所需）生成java接口</li>
-<li>javac程序编译源码及上述1.2.的java文件为.class。同时编译native代码</li>
-<li>dx程序转化所有class为dex字节码文件（化为一个dex）</li>
-<li>apkbuilder程序打包1的.ap，向主文件写入依赖库，添加资源，添加native库，添加dex（一个）</li>
-<li>签名</li>
-<li>用zipalign对齐处理（所有偏移均为4字节倍数32位cpu访问快）</li>
-</ol>
-<p>apk目录：</p>
-<ol>
-<li>AndroidManifest：配置文件</li>
-<li>classes.dex:代码文件</li>
-<li>resources.arsc:二进制资源文件，通过加密res/value下的xml生成</li>
-<li>res文件夹:图片，layout等资源</li>
-<li>META-INF文件夹：签名文件</li>
-<li>lib文件夹：native原生文件</li>
-</ol>
-<h4 id="1-2apk的安装"><a href="#1-2apk的安装" class="headerlink" title="1.2apk的安装"></a>1.2apk的安装</h4><p>手机存储分为俩部分：ROM与外部存储（相当于分了俩个盘），其中ROM分为内部存储、系统存储、系统缓存。系统程序（在rom /system/app）下的开机后自动安装，外部来源通过packageinstaller.apk来安装，(这个安装器的源码另分析，用于脱壳？)将外部程序apk复制到date/app date/date放数据  date/dalvik-cache放dex从而安装外部apk</p>
-<h4 id="1-3ROM"><a href="#1-3ROM" class="headerlink" title="1.3ROM"></a>1.3ROM</h4><p>ROM 是 ROM image（只读内存镜像）的简称，常用于手机定制系统玩家的圈子中。<br>智能手机配置中的ROM指的是 EEProm (电擦除可写只读存储器)，类似于计算机的硬盘，一般手机刷机的过程，就是将只读内存镜像（ROM image）写入只读内存（ROM）的过程。智能手机的ROM指的是其存储空间，一般是由UFS等闪存制作，其硬件不是只读的，所谓只读是指软件层面对系统分区的读写权限设置。<br>常见的 ROM image 有 img、zip 等格式，前者通常用fastboot程序通过数据线刷入（线刷），后者通常用 recovery 模式从 sd刷入（卡刷），固 img 镜像也被称为线刷包，zip 镜像也被称为卡刷包。<br>因为 ROM image 是定制系统最常见的发布形式，所以通常玩家会使用 ROM 这个词指代手机的操作系统。<br>国内的定制系统开发者，经常会陷入自己的产品究竟是应该称为OS 还是UI 的争论，为了避免此类争论和表示谦虚，会自称为 ROM。很多定制系统玩家也会统一将定制系统称为 ROM。<br>因为系统源码需要打包才能成为镜像，所以 ROM 也会被称为「包」。</p>
-<h4 id="2-Dalvik虚拟机"><a href="#2-Dalvik虚拟机" class="headerlink" title="2.Dalvik虚拟机"></a>2.Dalvik虚拟机</h4><p>作用：运行dex文件于linux下。<br>每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实现的。<br>所有Android应用的线程都对应一个Linux线程，虚拟机因而可以更多的依赖操作系统的线程调度和管理机制。<br>Zygote是一个虚拟机进程，同时也是一个虚拟机实例的孵化器，每当系统要求执行一个 Android应用程序，Zygote就会FORK出一个子进程来执行该应用程序。这样做的好处显而易见：Zygote进程是在系统启动时产生的，它会完成虚拟机的初始化，库的加载，预置类库的加载和初始化等等操作，而在系统需要一个新的虚拟机实例时。<br>Zygote通过复制自身，最快速的提供个系统。另外，对于一些只读的系统库，所有虚拟机实例都和Zygote共享一块内存区域，大大节省了内存开销。<br>dalvik为每个线程维护一个pc计数器（x86的ip）和调用栈。调用栈负责函数栈及虚拟寄存器（传参，变量使用，计算等用）。<strong> 调用栈具体如何处理函数调用的呢？ </strong><br>dalvik的jit（即时编译）将dex化为可执行机器码于真实cpu上运行(具体dex指令执行方式见dalvik实现)对于ART下，安装后的dex文件会被编译为oat文件，这个oat文件其实是一个ELF文件。<strong> 看dvm源码！ </strong></p>
-<h4 id="3-jvm和dalvik的区别"><a href="#3-jvm和dalvik的区别" class="headerlink" title="3.jvm和dalvik的区别"></a>3.jvm和dalvik的区别</h4><p>jvm基于栈架构。操作都是基于栈的（具体见jvm的实现）。而dalvik基于寄存器的每个寄存器都是32位。（具体见下指令）</p>
-<h4 id="4-smali"><a href="#4-smali" class="headerlink" title="4.smali"></a>4.smali</h4><p>只是dex字节码化为助记符的一种形式。可由它再编译为dex文件 <strong> 具体的编译方法与映射关系？ </strong></p>
-<h3 id="二：Dalvik与dex规则"><a href="#二：Dalvik与dex规则" class="headerlink" title="二：Dalvik与dex规则"></a>二：Dalvik与dex规则</h3><ol>
-<li>Dalvik最多支持65536个寄存器(编号从0~65535)。.registers确定函数用到的寄存器数目。使用m个寄存器(m=局部变量寄存器个数l+参数寄存器个数n)</li>
-<li>参数放在最后的几个寄存器。v字命名法：以小写字母v开头的方式表示方法中使用的局部变量和参数。p字命名法：以小写字母p开头的方式表示参数,参数名称从p0开始,依次增大.局部变量能够使用的寄存器仍然是以v开头.</li>
-<li>#+X表示常量数字，vX表示寄存器，+X表示相对指令地址的偏移，kind@X表示常量池索引（kind可取string字串常量，type类型常量，field字段常量，meth方法常量）</li>
-</ol>
-<h3 id="三：dalvik语法"><a href="#三：dalvik语法" class="headerlink" title="三：dalvik语法"></a>三：dalvik语法</h3><h4 id="1-描述符"><a href="#1-描述符" class="headerlink" title="1.描述符"></a>1.描述符</h4><p>Davilk字节码只有两种类型:基本类型和引用类型.对象和数组都是引用类型,Davilk中对字节码类型的描述和JVM中的描述符规则一致:对于基本类型和无返回值的void类型都是用一个大写字母表示,对象类型则用字母L加对象的全限定名(/代替.)来表示.数组则用[来表示,具体规则如下所示:<br><img src="https://i.imgur.com/Ti7761P.png" alt=""><br>每个寄存器都是32位。J，D使用2个寄存器存<br>L可以表示java类型中的任何类.在java代码中以package.name.ObjectName的方式引用,而在Davilk中其描述则是以Lpackage/name/ObjectName;的形式表示.L即上面定义的java类类型,表示后面跟着的是累的全限定名.比如java中的java.lang.String对应的描述是Ljava/lang/String;  <strong> 注意最后有个分号 </strong><br>[类型用来表示所有基本类型的数组,[后跟着是基本类型的描述符.每一维度使用一个前置的[.<br>比如java中的int[] 用汇编码表示便是[I;.二维数组int[][]为[[I;,三维数组则用[[[I;表示。对于对象数组来说,[后跟着对应类的全限定符.比如java当中的String[]对应的是[java/lang/String;</p>
-<h4 id="2-描述字段-方法"><a href="#2-描述字段-方法" class="headerlink" title="2.描述字段.方法"></a>2.描述字段.方法</h4><h5 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h5><p>Lpackage/name/Objectname;-&gt;FieldName:类型<br>类-&gt;字段名-&gt;字段的类型<br>使用时由汇编指令区分，指令携带寄存器指定对象的引用。</p>
-<p>Davilk中对字段的描述分为两种,对基本类型字段的描述和对引用类型的描述,但两者的描述格式一样:<br>对象类型描述符-&gt;字段名:类型描述符;<br>比如com.sbbic.Test类中存在String类型的name字段及int类型的age字段,那么其描述为:<br>Lcom/sbbic/Test;-&gt;name:Ljava/lang/String;<br>Lcom/sbbic/test;-&gt;age:I</p>
-<h5 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h5><p>Lpackage/name/Objectname;-&gt;MethodName(III)Z<br>那个类的方法-&gt;方法名（参数类型）返回类型<br>注意一般使用方法时第一个参数是使用该方法的对象的引用</p>
-<p>java中方法的签名包括方法名,参数及返回值,在Davilk相应的描述规则为:<br>对象类型描述符-&gt;方法名(参数类型描述符)返回值类型描述符<br>下面我们通过几个例子来说明,以java.lang.String为例:<br>java方法:public char charAt(int index){…}<br>Davilk描述:Ljava/lang/String;-&gt;charAt(I)C<br>java方法:public void getChars(int srcBegin,int srcEnd,char dst[],int dstBegin){…}<br>Davilk描述:Ljava/lang/String;-&gt;getChars(II[CI)V<br>java方法:public boolean equals(Object anObject){…}<br>Davilk描述:Ljava/lang/String;-&gt;equals(Ljava/lang/Object)Z</p>
-<h4 id="3-Dalvik指令集"><a href="#3-Dalvik指令集" class="headerlink" title="3.Dalvik指令集"></a>3.Dalvik指令集</h4><p><strong> 指令集特点：</strong></p>
-<ol>
-<li>模仿了c语言的调用约定</li>
-<li>参数采用目标到源的方式</li>
-<li>-后缀用来区分字节码大小与类型：32位不加，64位加wide，特殊的根据类型加：-boolean -byte -char -short -int -long -object -class等，用来区别数据一般</li>
-<li>/后缀用来区分字节码的布局和选项。表示寄存器的取值范围一般</li>
-<li>每个大写字母表示4位。</li>
-</ol>
-<h5 id="1-空操作指令"><a href="#1-空操作指令" class="headerlink" title="1.空操作指令"></a>1.空操作指令</h5><p>nop，对齐代码用</p>
-<h5 id="2-数据操作指令"><a href="#2-数据操作指令" class="headerlink" title="2.数据操作指令"></a>2.数据操作指令</h5><p><img src="https://i.imgur.com/ET73kFM.png" alt=""><br>move系列指令以及move-result用于处理小于等于 32 位的基本类型。move-wide系列指令和move-result-wide用于处理long和double类型。move-object系列指令和move-result-object用于处理对象引用。<br>另外不同后缀（无、/from16、/16）只影响字节码的位数和寄存器的范围，不影响指令的逻辑。</p>
-<h5 id="3-返回指令"><a href="#3-返回指令" class="headerlink" title="3.返回指令"></a>3.返回指令</h5><p>return-void:返回void<br>return vAA：返回32位非对象类型<br>return-wide vAA ：64位非对象类型<br>retunr-object vAA：返回对象类型的</p>
-<h5 id="4-数据定义指令"><a href="#4-数据定义指令" class="headerlink" title="4.数据定义指令"></a>4.数据定义指令</h5><p><img src="https://i.imgur.com/fJQrNqz.png" alt=""><br>可用来定义常量，字串，类。<br>对于中文字串采用unicode编码。\uxxxx需要转化。</p>
-<h5 id="5-锁指令"><a href="#5-锁指令" class="headerlink" title="5.锁指令"></a>5.锁指令</h5><p>锁指令针对多线程同一对象的<br>monitor-enter vAA获取锁<br>monitor-exit vAA释放锁</p>
-<h5 id="6-对象操作"><a href="#6-对象操作" class="headerlink" title="6.对象操作"></a>6.对象操作</h5><p>与实例相关的操作包括实例的类型转换、检查及新建等<br>check-cast vAA,type@BBBB 将vAA寄存器中的对象引用转换成指定的类型，如果失败会抛出ClassCastException 异常。如果类型B 指定的是基本类型，对于非基本类型的A来说，运行时始终会失败。<br>instance-of vA,vB,type@CCCC 判断vB寄存器中的对象引用是否可以转换成指定的类型，如果可以vA寄存赋值为1，否则vA寄存器为0<br>new-instance vAA,type@BBBB 构造一个指定类型对象的新实例,并将对象引用赋值给vAA寄存器,类型符号type指定的类型不能是数组类。<br>check-cast/jumbo vAAAA,type@BBBBBBBB    instance-of vAAAA, vBBBB, type@CCCCCCCC   new-instance/jumbo vAAAA, type@BBBBBBBB这三个指令功能分别与 上面三个指令分对应 相同，只是寄存器值与指令的索引取值范围坑大（Android4.0中新增的命令）</p>
-<h5 id="7-数组操作"><a href="#7-数组操作" class="headerlink" title="7.数组操作"></a>7.数组操作</h5><p>数组操作包括读取数组长度、新建数组、数组赋值、数组元素取值与赋值等操作。<br>array-length vA,vB 获取给定vB寄存器中数组的长度并将值赋给vA寄存器，数组长度指的是数组的条目个数。<br>new-array vA,vB,type@CCCC 构造指定类型（type@CCCC）与大小（vB）的数组，并将值赋给vA寄存器。<br>new-array/jumbo vAAAA,vBBBB,type@CCCCCCCC 指令功能与上一条指令相同，只是寄存器与指令的索引取值范围更大（Android4.0中新增的指令）<br>filled-new-array {vC,vD,vE,vF,vG},type@BBBB 构造指定类型（type@BBBB）与大小（vA）的数组并填充数组内容。vA寄存器是隐含使用的，除了指定数组的大小外还制订了参数的个数，vC~vG是使用到的参数寄存器序列<br>filled-new-array/range {vCCCC, … ,vNNNN},type@BBBB 指定功能与上一条指令相同，只是参数寄存器使用range字节码后缀指定了取值范围，vC是第一个参数寄存器， N=A+C-1。<br>filled-new-array/jumbo {vCCCC, … ,vNNNN},type@BBBBBBBB 指令功能与上一条指令相同，只是寄存器与指令的索引取值范围更大（Android4.0中新增的指令）<br>fill-array-data vAA, +BBBBBBBB 用指定的数据来填充数组，vAA寄存器为数组引用，引用必须为基础类型的数组，在指令后面会紧跟一个数据表<br>arrayop vAA,vBB,vCC 对vBB寄存器指定的数组元素进入取值与赋值。vCC寄存器指定数组元素索引，vAA寄存器用来寄放读取的或需要设置的数组元素的值。读取元素使用aget类指令，元素赋值使用aput指令，元素赋值使用aput类指令，根据数组中存储的类型指令后面会紧跟不同的指令后缀，指令列表有aget、aget-wide、aget-object、aget-boolean、aget-byte、aget-char、aget-short、aput、aput-wide、aput-boolean、aput-byte、aput-char、aput-short。</p>
-<h5 id="8-异常指令"><a href="#8-异常指令" class="headerlink" title="8.异常指令"></a>8.异常指令</h5><p>throw vAA 抛出vAA寄存器中指定类型的异常。<br>try-catch:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">   :try_start_0</div><div class="line">   invoke-static &#123;p2&#125;, Ljava/lang/Integer;-&gt;parseInt(Ljava/lang/String;)I</div><div class="line">   :try_end_0</div><div class="line">之后跟catch&lt;异常类型&gt;&#123;try开始结束标号&#125;&lt;catch标号&gt;</div><div class="line"> .catch Ljava/lang/NumberFormatException; &#123;:try_start_0 .. :try_end_0&#125; :catch_1</div><div class="line">......</div><div class="line">:catch_0</div><div class="line">......</div><div class="line">:catch_1</div></pre></td></tr></table></figure></p>
-<p>当try中遇到异常跳到后面对应的catch中。有一点注意：当遇到try1中套try2时编译器为了内层catch2中发生的异常能被外层catch1捕捉到会在内层catch2中加一层try1，命名为try3。<br>而try-catch的信息存储在Dexcode结构体中，指令集后面，存了每个try的开始和长度以及对应encoded_catch_handler_list （表示hander的数量及位置）中的encoded_catch_handler[handlers_size]的位置。encoded_catch_handler 中有catch的类型及代码偏移</p>
-<h5 id="9-跳转指令"><a href="#9-跳转指令" class="headerlink" title="9.跳转指令"></a>9.跳转指令</h5><p>跳转指令用于从当前地址跳转到孩子定的偏移处。Dalvik指令集中有三种跳转指令：无条件跳转（goto）、分支跳转（switch）与条件跳转（if）。<br>goto +AA 无条件跳转到指定偏移处，偏移量AA不能为0<br>goto/16 +AAAA 无条件跳转到指定偏移处，偏移量AAAA不能为0。<br>goto/32 +AAAAAAAA 无条件跳转到指定偏移处。<br>packed-switch vAA,+BBBBBBBB 分支跳转指令。vAA寄存器为switch分支中需要判断的值，BBBBBBBB指向一个packed-switch-payload格式的偏移表，表中的值是有规律递增的。<br>sparse-switch vAA,+BBBBBBBB 分支跳转指令。vAA寄存器为switch分支中需要判断的值，BBBBBBBB指向一个sparse-switch-payload格式的偏移表，表中的值是无规律的偏移表，表中的值是无规律的偏移量。<br>if-test vA,vB,+CCCC 条件跳转指令。比较vA寄存器与vB寄存器的值，如果比较结果满足就跳转到CCCC指定的偏移处。偏移量CCCC不能为0。if-test类型的指令有以下几条：</p>
-<pre><code>+ if-eq 如果vA不等于vB则跳转。Java语法表示为 if(vA == vB)
-+ if-ne 如果vA不等于vB则跳转。Java语法表示为 if(vA != vB)
-+ if-lt 如果vA小于vB则跳转。Java语法表示为 if(vA &lt; vB)
-+ if-le 如果vA小于等于vB则跳转。Java语法表示为 if(vA &lt;= vB)
-+ if-gt 如果vA大于vB则跳转。Java语法表示为 if(vA &gt; vB)
-+ if-ge 如果vA大于等于vB则跳转。Java语法表示为 if(vA &gt;= vB)
-</code></pre><p>if-testz vAA,+BBBB 条件跳转指令。拿vAA寄存器与 0 比较，如果比较结果满足或值为0时就跳转到BBBB指定的偏移处。偏移量BBBB不能为0。 if-testz类型的指令有一下几条：</p>
-<pre><code>+ if-nez 如果vAA为 0 则跳转。Java语法表示为 if(vAA == 0)
-+ if-eqz 如果vAA不为 0 则跳转。Java语法表示为 if(vAA != )
-+ if-ltz 如果vAA小于 0 则跳转。Java语法表示为 if(vAA &lt; 0)
-+ if-lez 如果vAA小于等于 0 则跳转。Java语法表示为 if(vAA &lt;= 0)
-+ if-gtz 如果vAA大于 0 则跳转。Java语法表示为 if(vAA &gt; 0)
-+ if-gez 如果vAA大于等于 0 则跳转。Java语法表示为 if(vAA &gt;= 0)
-</code></pre><p>switch-有规律举例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">    packed-switch p1, :pswitch_data_0</div><div class="line">	#紧接着就是defult</div><div class="line">    .line 36</div><div class="line">    const-string v0, &quot;she is a person&quot;</div><div class="line"></div><div class="line">    .line 39</div><div class="line">    :goto_0</div><div class="line">    return-object v0</div><div class="line">......</div><div class="line">:pswitch_data_0   这里就是packed-switch-payload格式的偏移表。存有：第一个case的值，case数目，每个case相对switch的偏移数组。</div><div class="line">.pached-switch 0x0</div><div class="line">	:xxxxx        字节码中直接存的packed-switch的偏移（要*2）通过序号匹对数组中的地址计算并跳转。</div><div class="line">.end packed-switch</div></pre></td></tr></table></figure></p>
-<p>switch-无规律表举例<br>case的值无规律<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">sparse-switch p1, :sswitch_data_0</div><div class="line">#defult处。</div><div class="line">......</div><div class="line"> :sswitch_data_0   sparse-switch-payload格式的偏移表。存有：case数目，每个case的值。每个case相对switch的偏移（与前相对,同*2）</div><div class="line">    .sparse-switch</div><div class="line">        0x5 -&gt; :sswitch_0</div><div class="line">        0xf -&gt; :sswitch_1</div><div class="line">        0x23 -&gt; :sswitch_2</div><div class="line">        0x41 -&gt; :sswitch_3</div><div class="line">    .end sparse-switch</div></pre></td></tr></table></figure></p>
-<p>一般跳转的地方用:XXX标识。在字节码中0x1表示当前位置偏移0x2——计算偏移以俩个字节为单位。</p>
-<h5 id="10-比较指令"><a href="#10-比较指令" class="headerlink" title="10.比较指令"></a>10.比较指令</h5><p>比较指令用于两个寄存器的值（浮点型或长整型）进行比较。它的格式为 cmpkind vAA,vBB,vCC，其中vBB寄存器与vCC寄存器是需要比较的两个寄存器或者两个寄存器对，比较的结果放到vAA寄存器。Dalvik指令集中共有 5 条比较指令。<br>cmpl-float 比较两个单精度浮点数。如果vBB寄存器小于vCC寄存器，则结果为1，相等则结果为0，大于的话结果为-1。<br>cmpg-float 比较两个单精度浮点数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。<br>cmpl-double  比较两个双精度浮点数。如果vBB寄存器小于vCC寄存器，则结果为1，相等则结果为0，大于的话结果为-1。<br>cmpg-double 比较两个双精度浮点数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。<br>cmp-long 比较两个长整型数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。</p>
-<h5 id="11-字段操作指令"><a href="#11-字段操作指令" class="headerlink" title="11.字段操作指令"></a>11.字段操作指令</h5><p><img src="https://i.imgur.com/UuIIhAn.png" alt=""><br><img src="https://i.imgur.com/4rFBjnX.png" alt=""></p>
-<p>对象的子段需要一个对象参数。</p>
-<h5 id="12-方法调用指令"><a href="#12-方法调用指令" class="headerlink" title="12.方法调用指令"></a>12.方法调用指令</h5><p>方法的第一个参数一般为this。<br><img src="https://i.imgur.com/7ReGTLb.png" alt=""><br>调用格式：<br>invoke-* {params}, type-&gt;method(params_type)return_type<br>如果需要传递this引用，将其放置在param的第一个位置。</p>
-<p>那么这些指令有什么不同呢？首先要分辨两个概念，虚方法和直接方法（JVM 里面叫特殊方法）。其实 Java 是没有虚方法这个概念的，但是 DVM 里面有，直接方法是指类的（type为某个类）所有实例构造器和private实例方法。反之protected或者public方法都叫做虚方法。</p>
-<p>invoke-static比较好分辨，当且仅当调用静态方法时，才会使用它。</p>
-<p>invoke-direct（在 JVM 中叫做invokespecial）用于调用直接方法，invoke-virtual用于调用虚方法。除了一种情况，显式使用super调用超类的虚方法时，使用invoke-super（直接方法仍然使用invoke-direct）。</p>
-<p>方法返回的数据通过 move-result指令获取。</p>
-<h5 id="13-数据转化指令"><a href="#13-数据转化指令" class="headerlink" title="13.数据转化指令"></a>13.数据转化指令</h5><p>数据转换指令用于将一种类型的数值转换成另一种类型，它的格式为 unop vA,vB 。 vB寄存器或vB寄存器对存放需要转换的数据，转换后的结果保存在vA寄存器或vA寄存器对中。<br>neg-int 对整型数求补<br>not-int  对整型数求反<br>neg-long 对长整型求补<br>not-long 对长整型求反<br>neg-float 对单精度浮点型数求补<br>neg-double 对双精度浮点型数求补<br>int-to-long 将整型数转换为长整型<br>int-to-float 将整型数转换为单精度浮点型<br>int-to-double 将整型数转换为双精度浮点型<br>long-to-int 将长整型数转换为整型<br>long-to-float 将长整型数转换为单精度浮点型<br>long-to-double 将长整型数转换为双精度浮点型<br>float-to-int 将单精度浮点型数转换为整型<br>float-to-long 将单精度浮点型数转换为长整型<br>float-to-double 将单精度浮点型数转换为双精度浮点型<br>double-to-int 将双精度浮点型数转换为整型<br>double-to-long 将双精度浮点型数转换为长整型<br>double-to-float 将双精度浮点型数转换为单精度浮点型<br>int-to-byte 将整型转换为字节型<br>int-to-char 将整型转换为字符串<br>int-to-short 将整型转换为短整型<br>check-cast v0,L….  强制类型转化</p>
-<h5 id="14-数据运算"><a href="#14-数据运算" class="headerlink" title="14.数据运算"></a>14.数据运算</h5><p>binop vAA,vBB,vCC 将vBB寄存器与vCC寄存器进行运算，结果保存到vAA寄存器<br>binop/2addr vA,vB 将vA寄存器与vB寄存器进行运算，结果保存到vA寄存器<br>binop/lit16 vA,vB,#+CCCC 将vB寄存器与常量CCCC进行运算，结果保存到vA寄存器<br>binop/lit8 vAA,vBB,#+CC 将vBB寄存器与常量CC进行运算，结果保存到vAA寄存器<br>后面3类指令比第1类指令分别多了addr、lit16、lit8等指令后缀。四类指令中基础字节码后面加上数据类型后缀，如-int或-long分别表示操作的数据类型那个为整型与长整型。第1类指令可归类如下：<br>add-type     vBB寄存器与vCC寄存器值进行加法运算（vBB  + vCC）<br>sub-type     vBB寄存器与vCC寄存器值进行减法运算（vBB  - vCC）<br>mul-type     vBB寄存器与vCC寄存器值进行乘法运算（vBB  * vCC）<br>div-type     vBB寄存器与vCC寄存器值进除法运算（vBB  / vCC）<br>rem-type     vBB寄存器与vCC寄存器值进行模运算（vBB  % vCC）<br>and-type     vBB寄存器与vCC寄存器值进行与运算（vBB  &amp; vCC）<br>or-type     vBB寄存器与vCC寄存器值进行或运算（vBB  | vCC）<br>xor-type     vBB寄存器与vCC寄存器值进行异或运算（vBB  ^ vCC）<br>shl-type     vBB寄存器（有符号数）左移vCC位（vBB &lt;&lt; vCC）<br>shr-type     vBB寄存器（有符号数）右移vCC位（vBB &gt;&gt; vCC）<br>ushr-type     vBB寄存器（无符号数）右移vCC位（vBB &gt;&gt; vCC）<br>其中基础字节码后面的-type可以是-int、-long、-float、-double。后面3类指令与之类似。</p>
-<h3 id="四：具体实现"><a href="#四：具体实现" class="headerlink" title="四：具体实现"></a>四：具体实现</h3><p>.XXXX都是辅助信息</p>
-<h4 id="1-类定义"><a href="#1-类定义" class="headerlink" title="1.类定义"></a>1.类定义</h4><p>一个 smali 文件中存放一个类，文件开头保存类的各种信息。类的定义是这样的。<br>.class &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;完全限定名称&gt;<br>.super &lt;超类的完全限定名称&gt;<br>.source &lt;源文件名&gt;<br>例子：MainActivity：<br>.class public Lnet/flygon/myapplication/MainActivity;<br>.super Landroid/app/Activity;<br>.source “MainActivity.java”<br>类可以实现接口，如果类实现了接口，那么这三条语句下面会出现.implements &lt;接口的完全限定名称&gt;。比如通常用于回调的匿名类中会出现.implements Landroid/view/View$OnClickListener;。<br>类还可以拥有注解<br>.annotation &lt;完全限定名称&gt;<br>    键 = 值<br>    …<br>.end annotation</p>
-<p>.synthetic 表示由编译器合成的，用于jvm内部调用的字段，方法，类等<br>比如内部类为了能调用外面类的方法会自动含一个指向外部的this$x<br>不用存自己的，因为自己的都是在方法调用时自动传过来，（一个存有数据的结构体）而该结构体内存有指向外部的this指针。<br>内部类构造过程：保存外部类对象的引用，调用父构造，调用自己的构造。注意是内部类，匿名类没有自己的构造函数（不知道名字）</p>
-<p>R与BuildConfig都是自动生成的类<br>前者将名称与int对应。后者只是标志发布的类型</p>
-<h4 id="2-字段定义"><a href="#2-字段定义" class="headerlink" title="2.字段定义"></a>2.字段定义</h4><p>.field &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;名称&gt;:&lt;类型&gt;<br>非权限修饰符可以为final或者abstract<br>比如我在MainActivity中定义一个按钮：<br>.field private button1:Landroid/widget/Button;</p>
-<h4 id="3-方法定义"><a href="#3-方法定义" class="headerlink" title="3.方法定义"></a>3.方法定义</h4><p>.method &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;名称&gt;(&lt;参数类型&gt;)&lt;返回值类型&gt;<br>    …<br>.end method</p>
-<p>可以含有：<br>.parameter指定参数<br>.registers指定使用的寄存器个数或者.locals<br>.prologue开启代码<br>.line用来标识java代码的行</p>
-<p>.local用与方法内局部变量的范围定义与命名(如for内的int i)</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/31/jvm的-class文件格式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/31/jvm的-class文件格式/" itemprop="url">jvm的.class文件格式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-31T15:18:56+08:00">
-                2018-03-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>先上个出处<a href="https://www.cnblogs.com/chenyangyao/p/5240079.html的图：" target="_blank" rel="external">https://www.cnblogs.com/chenyangyao/p/5240079.html的图：</a><br><img src="https://i.imgur.com/IJXpXwG.jpg" alt=""></p>
-<p>2018.3.31待续…(看完.java虚拟机规范.再详细写下java文件到.class到jar到执行的详细过程)</p>
-<p>源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码文件的兼容性，因为所有的JVM全部遵守Java虚拟机规范，也就是说所有的JVM环境都是一样的，这样一来字节码文件可以在各种JVM上运行。 当然也包括KVM。<br>每一个线程都有一个保存帧的栈。在每一个方法调用的时候创建一个帧。一个帧包括了三个部分：操作栈，局部变量数组，和一个对当前方法所属类的常量池的引用。<br>局部变量数组也被称之为局部变量表，它包含了方法的参数，也用于保存一些局部变量的值。参数值得存放总是在局部变量数组的index0开始的。如果当前帧是由构造函数或者实例方法创建的，那么该对象引用将会存放在location0处，然后才开始存放其余的参数。<br>局部变量表的大小由编译时决定，同时也依赖于局部变量的数量和一些方法的大小。操作栈是一个（LIFO）栈，用于压入和取出值，其大小也在编译时决定。某些opcode指令将值压入操作栈，其余的opcode指令将操作数取出栈。使用它们后再把结果压入栈。操作栈也用于接收从方法中返回的值。</p>
+<p>还有一张看雪的：<br><img src="https://i.imgur.com/YsIRrma.png" alt=""></p>
 
           
         
@@ -2159,7 +2128,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2170,7 +2139,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2181,7 +2150,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
