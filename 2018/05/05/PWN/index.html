@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="逆向,安全,linux,CTF," />
+  <meta name="keywords" content="安全,逆向,linux,CTF," />
 
 
 
@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。12char s[5];scanf(&amp;quot;%s&amp;quot;,s);">
-<meta name="keywords" content="逆向,安全,linux,CTF">
+<meta name="description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。123char s[5];scanf(&amp;quot;%s&amp;quot;,s);参数个数无所谓，从高向低压，不会逆向增长。 当可以自由执行时，就可以让函数跳到任意地址并通过栈构造参数来执行任意函数。即使是一般权限的shell拿到后也可以查看许多数据，获得这个程序">
+<meta name="keywords" content="安全,逆向,linux,CTF">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PWN">
 <meta property="og:url" content="http://yoursite.com/2018/05/05/PWN/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。12char s[5];scanf(&amp;quot;%s&amp;quot;,s);">
+<meta property="og:description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。123char s[5];scanf(&amp;quot;%s&amp;quot;,s);参数个数无所谓，从高向低压，不会逆向增长。 当可以自由执行时，就可以让函数跳到任意地址并通过栈构造参数来执行任意函数。即使是一般权限的shell拿到后也可以查看许多数据，获得这个程序">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-05T10:52:24.517Z">
+<meta property="og:updated_time" content="2018-07-03T08:40:00.694Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PWN">
-<meta name="twitter:description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。12char s[5];scanf(&amp;quot;%s&amp;quot;,s);">
+<meta name="twitter:description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。123char s[5];scanf(&amp;quot;%s&amp;quot;,s);参数个数无所谓，从高向低压，不会逆向增长。 当可以自由执行时，就可以让函数跳到任意地址并通过栈构造参数来执行任意函数。即使是一般权限的shell拿到后也可以查看许多数据，获得这个程序">
 
 
 
@@ -372,7 +372,10 @@
       
 
       
-        <h2 id="自我思考"><a href="#自我思考" class="headerlink" title="自我思考"></a>自我思考</h2><p>操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">char s[5];</div><div class="line">scanf(&quot;%s&quot;,s);</div></pre></td></tr></table></figure></p>
+        <h2 id="自我思考"><a href="#自我思考" class="headerlink" title="自我思考"></a>自我思考</h2><p>操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">char s[5];</div><div class="line">scanf(&quot;%s&quot;,s);</div><div class="line">参数个数无所谓，从高向低压，不会逆向增长。</div></pre></td></tr></table></figure></p>
+<p>当可以自由执行时，就可以让函数跳到任意地址并通过栈构造参数来执行任意函数。即使是一般权限的shell拿到后也可以查看许多数据，获得这个程序的相关权限，扩大可执行任务。如果这个程序属于高权限用户并且有suid运行时权限提升的话，那么将会使低权限用户获得高权限。</p>
+<p>若该程序对外提供服务，则可以用网络攻击。</p>
+<p>软件层漏洞。</p>
 
       
     </div>
@@ -390,9 +393,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/逆向/" rel="tag"># 逆向</a>
-          
             <a href="/tags/安全/" rel="tag"># 安全</a>
+          
+            <a href="/tags/逆向/" rel="tag"># 逆向</a>
           
             <a href="/tags/linux/" rel="tag"># linux</a>
           
@@ -498,7 +501,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-count">56</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

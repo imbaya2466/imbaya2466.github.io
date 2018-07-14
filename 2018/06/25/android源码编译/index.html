@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="本次基于google官方文档下载编译：https://source.android.com/setup/build/requirements 相关准备master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。master 分支事最少，带有预编译版">
+<meta name="description" content="本次基于google官方文档下载编译：https://source.android.com/setup/build/requirements还有一篇详细的博客：https://blog.csdn.net/dd864140130/article/details/51718187 相关准备master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，">
 <meta name="keywords" content="android系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android源码编译">
 <meta property="og:url" content="http://yoursite.com/2018/06/25/android源码编译/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="本次基于google官方文档下载编译：https://source.android.com/setup/build/requirements 相关准备master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。master 分支事最少，带有预编译版">
+<meta property="og:description" content="本次基于google官方文档下载编译：https://source.android.com/setup/build/requirements还有一篇详细的博客：https://blog.csdn.net/dd864140130/article/details/51718187 相关准备master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-27T16:28:39.478Z">
+<meta property="og:updated_time" content="2018-06-30T16:49:38.844Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android源码编译">
-<meta name="twitter:description" content="本次基于google官方文档下载编译：https://source.android.com/setup/build/requirements 相关准备master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。master 分支事最少，带有预编译版">
+<meta name="twitter:description" content="本次基于google官方文档下载编译：https://source.android.com/setup/build/requirements还有一篇详细的博客：https://blog.csdn.net/dd864140130/article/details/51718187 相关准备master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，">
 
 
 
@@ -372,15 +372,20 @@
       
 
       
-        <p>本次基于google官方文档下载编译：<br><a href="https://source.android.com/setup/build/requirements" target="_blank" rel="external">https://source.android.com/setup/build/requirements</a></p>
+        <p>本次基于google官方文档下载编译：<br><a href="https://source.android.com/setup/build/requirements" target="_blank" rel="external">https://source.android.com/setup/build/requirements</a><br>还有一篇详细的博客：<br><a href="https://blog.csdn.net/dd864140130/article/details/51718187" target="_blank" rel="external">https://blog.csdn.net/dd864140130/article/details/51718187</a></p>
 <h2 id="相关准备"><a href="#相关准备" class="headerlink" title="相关准备"></a>相关准备</h2><p>master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。<br>master 分支事最少，带有预编译版本的 OpenJDK；因此无需另行安装。较低的版本则需要单独进行安装。</p>
 <h3 id="vpn"><a href="#vpn" class="headerlink" title="vpn"></a>vpn</h3><p>因为要下载的是谷歌官方的，所以必不可少。采用购买ssr。<br>先用shadowsocks启动：<a href="https://blog.csdn.net/u011774239/article/details/53905702" target="_blank" rel="external">https://blog.csdn.net/u011774239/article/details/53905702</a><br>在应用中使用：<a href="https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md" target="_blank" rel="external">https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md</a></p>
 <p>此后需要外网的指令加前缀</p>
 <h3 id="putty-telnet"><a href="#putty-telnet" class="headerlink" title="putty+telnet"></a>putty+telnet</h3><p>远程操控：<br>telnet在linux的设置：<a href="https://blog.csdn.net/linux_ever/article/details/50519028" target="_blank" rel="external">https://blog.csdn.net/linux_ever/article/details/50519028</a></p>
 <h2 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h2><p>python 2.7<br>make3.81<br>git<br>java环境1.8对于ubuntu14.04特殊，参考官方安装：<br><a href="https://source.android.com/setup/build/initializing#installing-the-jdk" target="_blank" rel="external">https://source.android.com/setup/build/initializing#installing-the-jdk</a><br>安装所需的软件包 (Ubuntu 14.04)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc unzip</div></pre></td></tr></table></figure></p>
 <h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><p><a href="https://source.android.com/setup/build/downloading" target="_blank" rel="external">https://source.android.com/setup/build/downloading</a><br>用Repo管理git指定要下载的分支。<br>android-8.1.0_r1支持机型较多而且较新。目前下了这个，61G</p>
-<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><a href="https://source.android.com/setup/build/building" target="_blank" rel="external">https://source.android.com/setup/build/building</a><br>先找到对应版本设备的二进制文件：<a href="https://developers.google.com/android/drivers" target="_blank" rel="external">https://developers.google.com/android/drivers</a><br>俩个都下载按说明添加到源代码树的 vendor/ 层次结构中。<br>之后步骤按照官方。</p>
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2>
+<p>可以用shell脚本错误时自动sync<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#FileName source_asyn.sh</div><div class="line">PATH=~/bin:$PATH</div><div class="line"># 注意修改成你要编译的版本，比如这里我在mac上编译的是Android-7.1.1——r6</div><div class="line">repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-7.1.1_r6</div><div class="line">repo sync</div><div class="line">while [$? = 1]: do</div><div class="line">echo &quot;=========download failed,again============&quot;</div><div class="line">sleep 5</div><div class="line">repo sync</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>学习linux脚本！</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><a href="https://source.android.com/setup/build/building" target="_blank" rel="external">https://source.android.com/setup/build/building</a><br>先找到对应版本设备的二进制文件：<a href="https://developers.google.com/android/drivers" target="_blank" rel="external">https://developers.google.com/android/drivers</a><br><strong>俩个都</strong>下载按说明添加到源代码树的 vendor/ 层次结构中。<br>之后步骤按照官方。<br>遇到的错误：<br>jack未启动错误：jack-admin start-server再接着make<br>Out of memory error：<br>输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m&quot;</div><div class="line">out/host/linux-x86/bin/jack-admin kill-server</div><div class="line">out/host/linux-x86/bin/jack-admin start-server</div></pre></td></tr></table></figure></p>
+<h2 id="虚拟机运行"><a href="#虚拟机运行" class="headerlink" title="虚拟机运行"></a>虚拟机运行</h2><p>source build/envsetup.sh这句就是在配置环境变量，可以使用jack、emulator等<br>编译完成后直接emulator等较长时间即可在虚拟机中运行android了</p>
+<h2 id="fastboot刷机"><a href="#fastboot刷机" class="headerlink" title="fastboot刷机"></a>fastboot刷机</h2><p>编译后配置好的fastboot直接刷到实体机</p>
+<h2 id="打包rom"><a href="#打包rom" class="headerlink" title="打包rom"></a>打包rom</h2><p><a href="https://blog.csdn.net/wu070815/article/details/8220533" target="_blank" rel="external">https://blog.csdn.net/wu070815/article/details/8220533</a><br>线刷包一般是分区镜像，一般需要在下载模式，直接访问闪存。这个状态下闪存上的内容都可以改动，甚至包括软件层的bootloader，比方说android的通用下载模式fastboot。<br>当然下载模式不止fastboot，设备在出厂时会有更低级的下载模式(新出厂的闪存里什么都没有，所以芯片组必须要有向完全空白的闪存写入数据的能力)，比如我们已知的三星挖煤，苹果dfu等<br>而卡刷包一般是指代ota格式的更新包，它需要拥有差分更新的能力(在某些场合，卡刷包只包含新旧文件的差别以节省空间。如果不使用这个特性，ota格式的包也可以接近成为完整的刷机包)，因此需要一个能操作单个文件的平台上才能执行，这个平台就是recovery。</p>
+
       
     </div>
     
@@ -410,8 +415,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/15/frida官方文档/" rel="next" title="frida官方文档">
-                <i class="fa fa-chevron-left"></i> frida官方文档
+              <a href="/2018/06/25/看雪2018ctf/" rel="next" title="看雪2018ctf">
+                <i class="fa fa-chevron-left"></i> 看雪2018ctf
               </a>
             
           </div>
@@ -420,8 +425,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/25/看雪2018ctf/" rel="prev" title="看雪2018ctf">
-                看雪2018ctf <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/29/android应用加固2/" rel="prev" title="android应用加固2">
+                android应用加固2 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -499,7 +504,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-count">56</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -556,7 +561,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#相关准备"><span class="nav-number">1.</span> <span class="nav-text">相关准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vpn"><span class="nav-number">1.1.</span> <span class="nav-text">vpn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#putty-telnet"><span class="nav-number">1.2.</span> <span class="nav-text">putty+telnet</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译环境"><span class="nav-number">2.</span> <span class="nav-text">编译环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载源码"><span class="nav-number">3.</span> <span class="nav-text">下载源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译"><span class="nav-number">4.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行"><span class="nav-number">5.</span> <span class="nav-text">运行</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#相关准备"><span class="nav-number">1.</span> <span class="nav-text">相关准备</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vpn"><span class="nav-number">1.1.</span> <span class="nav-text">vpn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#putty-telnet"><span class="nav-number">1.2.</span> <span class="nav-text">putty+telnet</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译环境"><span class="nav-number">2.</span> <span class="nav-text">编译环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载源码"><span class="nav-number">3.</span> <span class="nav-text">下载源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译"><span class="nav-number">4.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟机运行"><span class="nav-number">5.</span> <span class="nav-text">虚拟机运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fastboot刷机"><span class="nav-number">6.</span> <span class="nav-text">fastboot刷机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#打包rom"><span class="nav-number">7.</span> <span class="nav-text">打包rom</span></a></li></ol></div>
             
 
           </div>
