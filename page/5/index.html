@@ -283,6 +283,302 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/15/c-类的内存存储/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/15/c-类的内存存储/" itemprop="url">c++类的内存存储</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-15T18:24:28+08:00">
+                2018-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编译原理/" itemprop="url" rel="index">
+                    <span itemprop="name">编译原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="所有函数都存放在代码区，静态函数也不例外"><a href="#所有函数都存放在代码区，静态函数也不例外" class="headerlink" title="所有函数都存放在代码区，静态函数也不例外"></a>所有函数都存放在代码区，静态函数也不例外</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">Class A</div><div class="line"></div><div class="line">&#123;</div><div class="line"></div><div class="line">  Public:</div><div class="line"></div><div class="line">       Int a;</div><div class="line"></div><div class="line">       Int b;</div><div class="line"></div><div class="line">Int sun(int a1,int b1)</div><div class="line"></div><div class="line">&#123;</div><div class="line"></div><div class="line">       Result a1+b1;</div><div class="line"></div><div class="line">&#125;</div><div class="line">vritual int max(int a1,int b1)</div><div class="line"></div><div class="line">&#125;;</div><div class="line"></div><div class="line">Class A1 Public A</div><div class="line"></div><div class="line">&#123;</div><div class="line"></div><div class="line">  Public:</div><div class="line"></div><div class="line">       Int c;</div><div class="line"></div><div class="line">       int xianjian(int a1,int b1)//2 个数相减 ;</div><div class="line"></div><div class="line">       &#123; result a1-b1;&#125;</div><div class="line">vritual int max(int a1,int b1)</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>new 一个A一个A1<br>共用sun函数地址，对象分配的空间中不含函数的空间，只有虚函数的地址表-继承的变量，自己的变量，因为虚函数每层都不一样所以每层都有各自的虚函数表，<br>表内是各个虚函数的地址，先父后自己，当自己继承了父的虚但仍是虚是父的虚地址改为自己的，若新加虚函数就接着父往后排<br>多重继承时仍只有一个虚函数表，内存中的对象一层一层表示，<br>但c++支持同时继承多个类，此时有多个虚地址表<br><img src="https://i.imgur.com/f5M23IK.jpg" alt=""></p>
+<p>面向对象编程语言中的多重继承指的是一个类可以同时继承多个父类的行为和特征功能。单一继承是指：一个子类只继承一个父类。<br>多重继承指代可以导致某些令人混淆的情况，所以关于它的好处与风险之间孰轻孰重常常受人争论。Java使用了一个折衷的办法：Java允许一个类别继承自多于一个父接口（可以指定某一个类别，它继承了所有父类的类型，并必须拥有所有父类别接口的外部可见方法的具体实现，并允许编译器强制以上要求），但只可以从一个父类别继承实现（方法与数据）。微软的.NET编程语言，例如C#和Visual Basic .NET和REAL Software的REALbasic也使用了这种类接口的做法。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/11/虚拟地址/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/11/虚拟地址/" itemprop="url">虚拟地址</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-11T16:06:58+08:00">
+                2018-03-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><h3 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h3><p>物理地址 (physical address): 放在寻址总线上的地址。放在寻址总线上，如果是读，电路根据这个地址每位的值就将相应地址的物理内存中的数据放到数据总线中传输。如果是写，电路根据这个地址每位的值就在相应地址的物理内存中放入数据总线上的内容。物理内存是以字节(8位)为单位编址的。<br><strong>物理地址就是cpu寻址总线读取内存设备的地址</strong></p>
+<h3 id="虚拟地址"><a href="#虚拟地址" class="headerlink" title="虚拟地址"></a>虚拟地址</h3><p>虚拟地址 (virtual address): CPU启动保护模式后，程序运行在虚拟地址空间中。注意，并不是所有的“程序”都是运行在虚拟地址中。CPU在启动的时候是运行在实模式的，Bootloader以及内核在初始化页表之前并不使用虚拟地址，而是直接使用物理地址的。<br><strong>虚拟地址是程序机器码中的地址</strong>，cpu寄存器中分页标志开启时，执行内存操作的机器指令时，cpu的内存管理单元会根据页目录和页表的信息把虚拟地址化为物理地址从而完成指令<br>例子：mov eax，[00400000h]这个值就是虚拟地址，cpu转换该值去实际物理地址中取值</p>
+<h3 id="页表"><a href="#页表" class="headerlink" title="页表"></a>页表</h3><p>页表，一个页表的大小为4K字节，放在一个物理页中。由1024个4字节的页表项组成。页表项的大小为4个字节(32bit)，所以一个页表中有1024个页表项。页表中的每一项的内容（每项4个字节,32bit）高20bit用来放一个物理页的物理地址，低12bit放着一些标志。<br><strong>页表项可以锁定一个物理页</strong></p>
+<h3 id="物理页"><a href="#物理页" class="headerlink" title="物理页"></a>物理页</h3><p>物理内存也被分页，来映射地址空间——为了对应虚拟地址分页4k将物理内存分为4k大小的页<br>第0个物理页从物理地址 0x00000000 处开始。由于页的大小为4KB，就是0x1000字节，所以第1页从物理地址0x00001000 处开始。第2页从物理地址 0x00002000 处开始。可以看到由于页的大小是4KB，所以只需要32bit的地址中高20bit来寻址物理页。</p>
+<h3 id="页目录"><a href="#页目录" class="headerlink" title="页目录"></a>页目录</h3><p>一个页目录有1024项，<br>对于x86系统，页目录的物理地址放在CPU的CR3寄存器中。<strong>页目录中存的是页表的物理位置</strong></p>
+<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>Windows 2000 使用基于分页机制的虚拟内存。<strong>每个进程有4GB的虚拟地址空间</strong>。基于分页机制，这4GB地址空间的一些部分被映射了物理内存，一些部分映射硬盘上的交换文件，一些部分什么也没有映射。程序中使用的都是4GB地址空间中的虚拟地址。<br>使用了分页标志，4g地址被分成固定大小的页。每一页或者被映射到物理内存，或者被映射到硬盘上的交换文件中，或者没有映射任何东西。对于一般程序来说，4G的地址空间，只有一小部分映射了物理内存，大片大片的部分是没有映射任何东西。<br>CPU用来把虚拟地址转换成物理地址的信息存放在叫做页目录和页表的结构里。对于32bit的Win2k，页的大小是4K字节。</p>
+<h4 id="具体做法："><a href="#具体做法：" class="headerlink" title="具体做法："></a>具体做法：</h4><p>一个虚拟地址，大小4个字节(32bit)，包含着找到物理地址的信息，分为3个部分：<br>第22位到第31位这10位（最高10位）是页目录中的索引，<br>第12位到第21位这10位是页表中的索引，<br>第0位到第11位这12位（低12位）是页内偏移。</p>
+<h3 id="cpu具体做法："><a href="#cpu具体做法：" class="headerlink" title="cpu具体做法："></a>cpu具体做法：</h3><p>对于一个要转换成物理地址的虚拟地址，CPU首先根据CR3中的值，找到页目录所在的物理页。然后根据虚拟地址的第22位到第31位这10位（最高的10bit)的值作为索引，找到相应的页目录项(PDE,page directory entry),页目录项中有这个虚拟地址所对应页表的物理地址。有了页表的物理地址，根据虚拟地址的第12位到第21位这10位的值作为索引，找到该页表中相应的页表项(PTE,page table entry),页表项中就有这个虚拟地址所对应物理页的物理地址。最后用虚拟地址的最低12位，也就是页内偏移，加上这个物理页的物理地址，就得到了该虚拟地址所对应的物理地址。<br>计算：<br>一个虚拟地址转换成物理地址的计算过程就是，处理器通过CR3找到当前页目录所在物理页，取虚拟地址的高10bit,然后把这10bit左移2bit（因为每个页目录项4个字节长，左移2bit相当于乘4）得到在该页中的地址，取出该地址处PDE（4个字节），就找到了该虚拟地址对应页表所在物理页，取虚拟地址第12位到第21位这10位，然后把这10bit左移2bit（因为每个页表项4个字节长，左移2bit相当于乘4）得到在该页中的地址，取出该地址处的PTE（4个字节），就找到了该虚拟地址对应物理页的地址，最后加上12bit的页内偏移得到了物理地址。</p>
+<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p>32bit的一个指针，可以寻址范围0x00000000-0xFFFFFFFF,4GB大小。也就是说一个32bit的指针可以寻址整个4GB地址空间的每一个字节。一个页表项负责4K的地址空间和物理内存的映射，一个页表1024项，也就是负责1024<em>4k=4M的地址空间的映射。一个页目录项，对应一个页表。一个页目录有1024项，也就对应着1024个页表，每个页表负责4M地址空间的映射。1024个页表负责1024</em>4M=4G的地址空间映射。一个进程有一个页目录。所以以页为单位，页目录和页表可以保证4G的地址空间中的每页和物理内存的映射。</p>
+<p>每个进程都有自己的4G地址空间，从 0x00000000-0xFFFFFFFF 。通过每个进程自己的一套页目录和页表来实现。由于每个进程有自己的页目录和页表，所以每个进程的地址空间映射的物理内存是不一样的。两个进程的同一个虚拟地址处（如果都有物理内存映射）的值一般是不同的，因为他们往往对应不同的物理页。</p>
+<p>在windows下4G地址空间中低2G，0x00000000-0x7FFFFFFF 是用户地址空间，4G地址空间中高2G，<br>0x80000000-0xFFFFFFFF 是系统地址空间。访问系统地址空间需要程序有ring0的权限。而Linux对4G空间的划分不同与windows。linux将最高的1G 字节（从虚拟地址0xC0000000 到0xFFFFFFFF），供内核使用，称为“内核空间”。而将较低的3G 字节（从虚拟地址0x00000000 到0xBFFFFFFF），供各个进程使用，称为“用户空间”。<br>每个4g空间都分用户与系统权限，系统地址空间被所有系统进程共享</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/08/anima2D使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1456,331 +1752,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/25/服务器突破内网/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/25/服务器突破内网/" itemprop="url">服务器突破内网</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-25T23:48:43+08:00">
-                2017-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java服务器/" itemprop="url" rel="index">
-                    <span itemprop="name">java服务器</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p> 用putty的ssh端口映射，将连接到的云服务器中指定端口映射到本地服务器监听的端口上，并修改服务器文件编辑/etc/ssh/sshd_config 然后把GatewayPorts 改成yes（去掉注释#并重启）即可</p>
-<h3 id="具体步骤："><a href="#具体步骤：" class="headerlink" title="具体步骤："></a>具体步骤：</h3><h4 id="我们称云服务器为中继服务器，我的pc为服务器"><a href="#我们称云服务器为中继服务器，我的pc为服务器" class="headerlink" title="我们称云服务器为中继服务器，我的pc为服务器"></a>我们称云服务器为中继服务器，我的pc为服务器</h4><ol>
-<li>服务器中安装putty点开ssh端口映射</li>
-<li>源端口填中继服务器希望客户连接的端口</li>
-<li>目的地填127.0.0.1:服务器程序监听的端口</li>
-<li>选远程</li>
-<li>add</li>
-<li>用putty连接（先保存）云服务器</li>
-<li>服务器上vim /etc/ssh/sshd_config 后把GatewayPorts 改成yes（去掉注释#并重启）</li>
-<li>完成，保持putty。中继。本地的开启即可用公网ip访问服务器了</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/01/unity示例学习2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/01/unity示例学习2/" itemprop="url">unity示例学习2</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-01T14:26:21+08:00">
-                2017-10-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/unity/" itemprop="url" rel="index">
-                    <span itemprop="name">unity</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="飞行射击游戏3D中发现的问题"><a href="#飞行射击游戏3D中发现的问题" class="headerlink" title="飞行射击游戏3D中发现的问题"></a>飞行射击游戏3D中发现的问题</h3><ol>
-<li>c#的字串==为直接判断值而java的字串==对于new俩个一样的是不等！为比地址</li>
-<li>旋转基于中心!赋予上层对象时小心中心不一定在子对象中心</li>
-<li>物理的velocity表速度，在start给予一次时一直保持</li>
-</ol>
-<hr>
-<h3 id="关于yield-return-XXXX-的原理："><a href="#关于yield-return-XXXX-的原理：" class="headerlink" title="关于yield return XXXX 的原理："></a>关于yield return XXXX 的原理：</h3><p><strong> 划重点：IEnumerale和IEnumerator 枚举器和迭代器 </strong></p>
-<h4 id="一-首先明白c-中的foreach遍历枚举器"><a href="#一-首先明白c-中的foreach遍历枚举器" class="headerlink" title="一. 首先明白c#中的foreach遍历枚举器"></a>一. 首先明白c#中的foreach遍历枚举器</h4><p> 这个东西初见源自枚举集合————为了自己实现的数据结构类能使用foreach遍历。而实现foreach首先需要本类实现IEnumerable接(其实现等同于可枚举集合)查看该接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">using System.Runtime.CompilerServices;</div><div class="line"></div><div class="line">namespace System.Collections.Generic</div><div class="line">&#123;</div><div class="line">    //</div><div class="line">    // 摘要:</div><div class="line">    //     公开枚举数，该枚举数支持在指定类型的集合上进行简单迭代。若要浏览此类型的.NET Framework 源代码，请参阅参考源。</div><div class="line">    //</div><div class="line">    // 类型参数:</div><div class="line">    //   T:</div><div class="line">    //     要枚举的对象的类型。此类型参数是协变。即可以使用指定的类型或派生程度更高的类型。有关协变和逆变的详细信息，请参阅 泛型中的协变和逆变。</div><div class="line">    [TypeDependencyAttribute(&quot;System.SZArrayHelper&quot;)]</div><div class="line">    public interface IEnumerable&lt;out T&gt; : IEnumerable</div><div class="line">    &#123;</div><div class="line">        //</div><div class="line">        // 摘要:</div><div class="line">        //     返回一个循环访问集合的枚举器。</div><div class="line">        //</div><div class="line">        // 返回结果:</div><div class="line">        //     用于循环访问集合的枚举数。</div><div class="line">        IEnumerator&lt;T&gt; GetEnumerator();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>PS:针对类前加[]语法还没深究，估计和UI显示有关</p>
-<p>好的，就一个方法IEnumerator<t> GetEnumerator();这个方法用来返回一个实现了IEnumerator<t><em> 枚举器 </em>（自建类） 在自己的类中该枚举器需要自己创建一个类继承接口以实现。直接放个示例代码演示一般方法：</t></t></p>
-<ol>
-<li>创建Tree(一个自己写的树数据结构类)的枚举器：</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">class TreeEnumerator&lt;TItem&gt; : IEnumerator&lt;TItem&gt; where TItem : IComparable&lt;TItem&gt;</div><div class="line">&#123;</div><div class="line">    private Tree&lt;TItem&gt; currentData = null;</div><div class="line">    private TItem currentItem = default(TItem);</div><div class="line">    private Queue&lt;TItem&gt; enumData = null;</div><div class="line"></div><div class="line">    public TreeEnumerator(Tree&lt;TItem&gt; data)</div><div class="line">    &#123;</div><div class="line">        this.currentData = data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    object IEnumerator.Current</div><div class="line">    &#123;</div><div class="line">        get</div><div class="line">        &#123;</div><div class="line">            throw new NotImplementedException();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    TItem IEnumerator&lt;TItem&gt;.Current</div><div class="line">    &#123;</div><div class="line">        get</div><div class="line">        &#123;</div><div class="line">            if(this.enumData == null)</div><div class="line">            &#123;</div><div class="line">                throw new InvalidOperationException(&quot;Use MoveNext before calling Current&quot;);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            return this.currentItem;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    void IDisposable.Dispose()</div><div class="line">    &#123;</div><div class="line">        // throw new NotImplementedException();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    bool IEnumerator.MoveNext()</div><div class="line">    &#123;</div><div class="line">        if(this.enumData == null)</div><div class="line">        &#123;</div><div class="line">            this.enumData = new Queue&lt;TItem&gt;();</div><div class="line">            populate(this.enumData, this.currentData);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if(this.enumData.Count &gt; 0)</div><div class="line">        &#123;</div><div class="line">            this.currentItem = this.enumData.Dequeue();</div><div class="line">            return true;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void populate(Queue&lt;TItem&gt; enumQueue, Tree&lt;TItem&gt; tree)</div><div class="line">    &#123;</div><div class="line">        if (tree.LeftTree != null)</div><div class="line">        &#123;</div><div class="line">            populate(enumQueue, tree.LeftTree);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        enumQueue.Enqueue(tree.NodeData);</div><div class="line"></div><div class="line">        if (tree.RightTree != null)</div><div class="line">        &#123;</div><div class="line">            populate(enumQueue, tree.RightTree);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    void IEnumerator.Reset()</div><div class="line">    &#123;</div><div class="line">        throw new NotImplementedException();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ol>
-<li><p>在Tree中使用：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line">public class Tree&lt;TItem&gt; : IEnumerable&lt;TItem&gt; where TItem : IComparable&lt;TItem&gt;</div><div class="line">&#123;</div><div class="line">    public TItem NodeData &#123; get; set; &#125;</div><div class="line">    public Tree&lt;TItem&gt; LeftTree &#123; get; set; &#125;</div><div class="line">    public Tree&lt;TItem&gt; RightTree &#123; get; set; &#125;</div><div class="line"></div><div class="line">    public Tree(TItem nodeValue)</div><div class="line">    &#123;</div><div class="line">        this.NodeData = nodeValue;</div><div class="line">        this.LeftTree = null;</div><div class="line">        this.RightTree = null;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void Insert(TItem newItem)</div><div class="line">    &#123;</div><div class="line">        TItem currentNodeValue = this.NodeData;</div><div class="line">        if (currentNodeValue.CompareTo(newItem) &gt; 0)</div><div class="line">        &#123;</div><div class="line">            // Insert the item into the left subtree</div><div class="line">            if (this.LeftTree == null)</div><div class="line">            &#123;</div><div class="line">                this.LeftTree = new Tree&lt;TItem&gt;(newItem);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                this.LeftTree.Insert(newItem);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        else</div><div class="line">        &#123;</div><div class="line">            // Insert the new item into the right subtree</div><div class="line">            if (this.RightTree == null)</div><div class="line">            &#123;</div><div class="line">                this.RightTree = new Tree&lt;TItem&gt;(newItem);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                this.RightTree.Insert(newItem);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public string WalkTree()</div><div class="line">    &#123;</div><div class="line">        string result = &quot;&quot;;</div><div class="line"></div><div class="line">        if (this.LeftTree != null)</div><div class="line">        &#123;</div><div class="line">            result = this.LeftTree.WalkTree();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        result += String.Format($&quot; &#123;this.NodeData.ToString()&#125; &quot;);</div><div class="line"></div><div class="line">        if (this.RightTree != null)</div><div class="line">        &#123;</div><div class="line">            result += this.RightTree.WalkTree();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        return result;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    IEnumerator&lt;TItem&gt; IEnumerable&lt;TItem&gt;.GetEnumerator()</div><div class="line">    &#123;</div><div class="line">        return new TreeEnumerator&lt;TItem&gt;(this);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    IEnumerator IEnumerable.GetEnumerator()</div><div class="line">    &#123;</div><div class="line">        throw new NotImplementedException();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>这样就可以用了</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Tree&lt;int&gt; tree1 = new Tree&lt;int&gt;(10);        </div><div class="line">foreach(int item in tree1)</div><div class="line">&#123;</div><div class="line">    Console.WriteLine(item);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>以上就是实现foreach遍历可枚举集合的创建方法，但是…..太复杂了！所以有了一种<em> 迭代器 </em>实现IEnumerator<t>GetEnumerator()的简便方法，而迭代器就和<strong> yield </strong>关系大了！</t></p>
-<h4 id="二-迭代器与yield"><a href="#二-迭代器与yield" class="headerlink" title="二.迭代器与yield"></a>二.迭代器与yield</h4><p>官方定义：迭代器是能生成已排序值序列的代码块。也就是说，迭代器是对序列的一种描述C#用它自动生成枚举器<br>实现方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">IEnumerator&lt;TItem&gt; IEnumerable&lt;TItem&gt;.GetEnumerator()</div><div class="line">&#123;</div><div class="line">    if(this.LeftTree!=null)</div><div class="line">    &#123;</div><div class="line">        foreach(TItem item in this.LeftTree)</div><div class="line">        &#123;</div><div class="line">            yield return item;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    yield return this.NodeData;</div><div class="line"></div><div class="line">    if(this.RightTree!=null)</div><div class="line">    &#123;</div><div class="line">        foreach(TItem item in this.RightTree)</div><div class="line">        &#123;</div><div class="line">            yield return item;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这段代码是对上面提到的一般枚举器实现方式的重写，只需关注yield即可：它不反回IEnumerator对象，而是<strong> 每次将方法叫停，讲一个值传回调用者，当调用者需要下一个值时，就从上次停止处继续，数据耗尽时停止 </strong></p>
-<h4 id="三-unity中的用法"><a href="#三-unity中的用法" class="headerlink" title="三.unity中的用法"></a>三.unity中的用法</h4><ol>
-<li>WWW - after Updates happen for all game objects; check the isDone flag. If true, call the IEnumerator’s MoveNext() function;</li>
-<li>WaitForSeconds - after Updates happen for all game objects; check if the time has elapsed, if it has, call MoveNext();</li>
-<li>null or some unknown value - after Updates happen for all game objects; Call MoveNext();</li>
-<li>WaitForEndOfFrame - after Render happens for all cameras; Call MoveNext().<br>有一篇博客写的很实践：<a href="http://www.cnblogs.com/hammerc/p/4432969.html" target="_blank" rel="external">点这里</a><br>在这里我简单总结本示例需要用到的：<br>Unity使用 StartCoroutine(routine: IEnumerator): Coroutine 启动协程，参数必须是 IEnumerator 对象。在函数内使用前面介绍 yield 关键字返回 IEnumerator 对象，Unity 中实现了 YieldInstruction 作为 yield 返回的基类，有 Cortoutine, WaitForSecondes, WaitForEndOfFrame, WaitForFixedUpdate, WWW 几个子类实现。StartCoroutine 将 传入的 IEnumerator 封装为 Coroutine 返回，引擎会对 Corountines 存储和检查 IEnumerator 的 Current值。</li>
-</ol>
-<p><strong> 总之，使用是就是用StartCoroutine调用一个带yield返回的函数，这个函数会按照yield后的规定慢慢一段一段执行完，该过程位于Update之后，永远产生一波波敌人时只用在start调用StartCoroutine启动迭代器让其在update后面默默运行就好了</strong></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1831,7 +1802,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1842,7 +1813,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1853,7 +1824,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-count">56</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

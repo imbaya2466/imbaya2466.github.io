@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android应用加固," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="so中节加密c语言处理文件格式写好写点：注意点：  加密时遍历节找到名字（存的是相对于字串节的地址偏移）加密，并将节偏移存到头的节偏移处，节大小和页数存到头的入口点处，为了方便解密时查找，同时这俩项对so加载无用。破坏section，但可从p节读出结构。 解密函数在init中解密，用属性声明为特殊段，init执行时文件已经加载，可以修改。 linker等native的加载源码需要熟 头、节等都是基">
+<meta name="keywords" content="android应用加固">
+<meta property="og:type" content="article">
+<meta property="og:title" content="apk加固-加密so-native层解密">
+<meta property="og:url" content="http://yoursite.com/2018/07/19/apk加固-加密so-native层解密/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="so中节加密c语言处理文件格式写好写点：注意点：  加密时遍历节找到名字（存的是相对于字串节的地址偏移）加密，并将节偏移存到头的节偏移处，节大小和页数存到头的入口点处，为了方便解密时查找，同时这俩项对so加载无用。破坏section，但可从p节读出结构。 解密函数在init中解密，用属性声明为特殊段，init执行时文件已经加载，可以修改。 linker等native的加载源码需要熟 头、节等都是基">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-20T03:32:56.910Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="apk加固-加密so-native层解密">
+<meta name="twitter:description" content="so中节加密c语言处理文件格式写好写点：注意点：  加密时遍历节找到名字（存的是相对于字串节的地址偏移）加密，并将节偏移存到头的节偏移处，节大小和页数存到头的入口点处，为了方便解密时查找，同时这俩项对so加载无用。破坏section，但可从p节读出结构。 解密函数在init中解密，用属性声明为特殊段，init执行时文件已经加载，可以修改。 linker等native的加载源码需要熟 头、节等都是基">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/07/19/apk加固-加密so-native层解密/"/>
+
+
+
+
+
+  <title>apk加固-加密so-native层解密 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/19/apk加固-加密so-native层解密/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">apk加固-加密so-native层解密</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-19T21:14:04+08:00">
+                2018-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android应用加固/" itemprop="url" rel="index">
+                    <span itemprop="name">android应用加固</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="so中节加密"><a href="#so中节加密" class="headerlink" title="so中节加密"></a>so中节加密</h2><p>c语言处理文件格式写好写点：<br>注意点：</p>
+<ol>
+<li>加密时遍历节找到名字（存的是相对于字串节的地址偏移）加密，并将节偏移存到头的节偏移处，节大小和页数存到头的入口点处，为了方便解密时查找，同时这俩项对so加载无用。破坏section，但可从p节读出结构。</li>
+<li>解密函数在init中解密，用属性声明为特殊段，init执行时文件已经加载，可以修改。</li>
+<li>linker等native的加载源码需要熟</li>
+<li>头、节等都是基于装载地址映射的，节等按头加载，代码和数据用重定位定位。因此修改节内数据、节数据、头数据只要文件偏移+装载地址即可。</li>
+<li>c语言对文件格式读取与细节处理比java来的方便。清晰</li>
+<li>操作步骤：写好so与解密函数，编译后用加密程序处理。</li>
+</ol>
+<a id="more"></a>
+<p>加密代码c：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;fcntl.h&gt;</div><div class="line">#include &quot;elf.h&quot;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char** argv)&#123;</div><div class="line">  char *encodeSoName = &quot;libdemo.so&quot;;</div><div class="line">  char target_section[] = &quot;.mytext&quot;;</div><div class="line">  char *shstr = NULL;</div><div class="line">  char *content = NULL;</div><div class="line">  Elf32_Ehdr ehdr;</div><div class="line">  Elf32_Shdr shdr;</div><div class="line">  int i;</div><div class="line">  unsigned int base, length;</div><div class="line">  unsigned short nsize;</div><div class="line">  unsigned char block_size = 16;</div><div class="line">  </div><div class="line">  int fd;</div><div class="line">  </div><div class="line">  fd = open(encodeSoName, O_RDWR);</div><div class="line">  if(fd &lt; 0)&#123;</div><div class="line">    printf(&quot;open %s failed\n&quot;, argv[1]);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //读文件头，结构体不用声明为不对齐？</div><div class="line">  if(read(fd, &amp;ehdr, sizeof(Elf32_Ehdr)) != sizeof(Elf32_Ehdr))&#123;</div><div class="line">    puts(&quot;Read ELF header error&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //String Section头</div><div class="line">  lseek(fd, ehdr.e_shoff + sizeof(Elf32_Shdr) * ehdr.e_shstrndx, SEEK_SET);</div><div class="line">  </div><div class="line">  if(read(fd, &amp;shdr, sizeof(Elf32_Shdr)) != sizeof(Elf32_Shdr))&#123;</div><div class="line">    puts(&quot;Read ELF section string table error&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //分配字符串空间</div><div class="line">  if((shstr = (char *) malloc(shdr.sh_size)) == NULL)&#123;</div><div class="line">    puts(&quot;Malloc space for section string table failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //读string section</div><div class="line">  lseek(fd, shdr.sh_offset, SEEK_SET);</div><div class="line">  if(read(fd, shstr, shdr.sh_size) != shdr.sh_size)&#123;</div><div class="line">    puts(&quot;Read string table failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //遍历Section</div><div class="line">  lseek(fd, ehdr.e_shoff, SEEK_SET);</div><div class="line">  for(i = 0; i &lt; ehdr.e_shnum; i++)&#123;</div><div class="line">    if(read(fd, &amp;shdr, sizeof(Elf32_Shdr)) != sizeof(Elf32_Shdr))&#123;</div><div class="line">      puts(&quot;Find section .text procedure failed&quot;);</div><div class="line">      goto _error;</div><div class="line">    &#125;</div><div class="line">    if(strcmp(shstr + shdr.sh_name, target_section) == 0)&#123;</div><div class="line">      base = shdr.sh_offset;</div><div class="line">      length = shdr.sh_size;</div><div class="line">      printf(&quot;Find section %s\n&quot;, target_section);</div><div class="line">      break;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //读取指定节</div><div class="line">  lseek(fd, base, SEEK_SET);</div><div class="line">  content = (char*) malloc(length);</div><div class="line">  if(content == NULL)&#123;</div><div class="line">    puts(&quot;Malloc space for content failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  if(read(fd, content, length) != length)&#123;</div><div class="line">    puts(&quot;Read section .text failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //将Section的size和base写入到Elf的header中的e_entry和e_shoff</div><div class="line">  //这里是计算Section占用内存的几页用原来申请权限，一个页的大小是:0x1000=4096</div><div class="line">  nsize = length / 4096 + (length % 4096 == 0 ? 0 : 1);</div><div class="line">  printf(&quot;base = %x, length = %x\n&quot;, base, length);</div><div class="line">  printf(&quot;entry:%x\n&quot;,((length &lt;&lt; 16) + nsize));</div><div class="line">  //节长&lt;&lt;16+页数</div><div class="line">  ehdr.e_entry = (length &lt;&lt; 16) + nsize;</div><div class="line">  ehdr.e_shoff = base;//加密节偏移相对装载地址</div><div class="line">  </div><div class="line">  //对内容进行加密</div><div class="line">  for(i=0;i&lt;length;i++)&#123;</div><div class="line">    content[i] = ~content[i];</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //重写Elf的头部信息</div><div class="line">  lseek(fd, 0, SEEK_SET);</div><div class="line">  if(write(fd, &amp;ehdr, sizeof(Elf32_Ehdr)) != sizeof(Elf32_Ehdr))&#123;</div><div class="line">    puts(&quot;Write ELFhead to .so failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //将加密之后的section回写</div><div class="line">  lseek(fd, base, SEEK_SET);</div><div class="line">  if(write(fd, content, length) != length)&#123;</div><div class="line">    puts(&quot;Write modified content to .so failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //释放资源</div><div class="line">  puts(&quot;Completed&quot;);</div><div class="line">_error:</div><div class="line">  free(content);</div><div class="line">  free(shstr);</div><div class="line">  close(fd);</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>解密代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div></pre></td><td class="code"><pre><div class="line">#include &lt;jni.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;android/log.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;sys/types.h&gt;</div><div class="line">#include &lt;elf.h&gt;</div><div class="line">#include &lt;sys/mman.h&gt;</div><div class="line"></div><div class="line">//要保护函数  声明时属性可放于后面</div><div class="line">jstring getString(JNIEnv*) __attribute__((section (&quot;.mytext&quot;)));</div><div class="line">jstring getString(JNIEnv* env)&#123;</div><div class="line">	return (*env)-&gt;NewStringUTF(env, &quot;Native method return!&quot;);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">//解密函数</div><div class="line">void init_getString() __attribute__((constructor));</div><div class="line">unsigned long getLibAddr();</div><div class="line"></div><div class="line">void init_getString()&#123;</div><div class="line">  char name[15];</div><div class="line">  unsigned int nblock;</div><div class="line">  unsigned int nsize;</div><div class="line">  unsigned long base;</div><div class="line">  unsigned long text_addr;</div><div class="line">  unsigned int i;</div><div class="line">  Elf32_Ehdr *ehdr;</div><div class="line">  Elf32_Shdr *shdr;</div><div class="line">  </div><div class="line">  //获取so的起始地址</div><div class="line">  base = getLibAddr();</div><div class="line">  </div><div class="line">  //获取指定section的偏移值和size</div><div class="line">  ehdr = (Elf32_Ehdr *)base;</div><div class="line">  text_addr = ehdr-&gt;e_shoff + base;</div><div class="line">  </div><div class="line">  nblock = ehdr-&gt;e_entry &gt;&gt; 16;</div><div class="line">  nsize = ehdr-&gt;e_entry &amp; 0xffff;</div><div class="line"></div><div class="line">  __android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;nblock =  0x%x,nsize:%d&quot;, nblock,nsize);</div><div class="line">  __android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;base =  0x%x&quot;, text_addr);</div><div class="line">  printf(&quot;nblock = %d\n&quot;, nblock);</div><div class="line">  </div><div class="line">  //修改内存的操作权限</div><div class="line">  if(mprotect((void *) (text_addr / PAGE_SIZE * PAGE_SIZE), 4096 * nsize, PROT_READ | PROT_EXEC | PROT_WRITE) != 0)&#123;</div><div class="line">    puts(&quot;mem privilege change failed&quot;);</div><div class="line">     __android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;mem privilege change failed&quot;);</div><div class="line">  &#125;</div><div class="line">  //解密</div><div class="line">  for(i=0;i&lt; nblock; i++)&#123;  </div><div class="line">    char *addr = (char*)(text_addr + i);</div><div class="line">    *addr = ~(*addr);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  if(mprotect((void *) (text_addr / PAGE_SIZE * PAGE_SIZE), 4096 * nsize, PROT_READ | PROT_EXEC) != 0)&#123;</div><div class="line">    puts(&quot;mem privilege change failed&quot;);</div><div class="line">  &#125;</div><div class="line">  puts(&quot;Decrypt success&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">unsigned long getLibAddr()&#123;</div><div class="line">  unsigned long ret = 0;</div><div class="line">  char name[] = &quot;libdemo.so&quot;;</div><div class="line">  char buf[4096], *temp;</div><div class="line">  int pid;</div><div class="line">  FILE *fp;</div><div class="line">  pid = getpid();</div><div class="line">  sprintf(buf, &quot;/proc/%d/maps&quot;, pid);</div><div class="line">  fp = fopen(buf, &quot;r&quot;);</div><div class="line">  if(fp == NULL)</div><div class="line">  &#123;</div><div class="line">    puts(&quot;open failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  while(fgets(buf, sizeof(buf), fp))&#123;</div><div class="line">    if(strstr(buf, name))&#123;</div><div class="line">      temp = strtok(buf, &quot;-&quot;);</div><div class="line">      ret = strtoul(temp, NULL, 16);</div><div class="line">      break;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">_error:</div><div class="line">  fclose(fp);</div><div class="line">  return ret;</div><div class="line">&#125;</div><div class="line"></div><div class="line">JNIEXPORT jstring JNICALL</div><div class="line">Java_com_example_shelldemo_MainActivity_getString( JNIEnv* env,</div><div class="line">                                                  jobject thiz )</div><div class="line">&#123;</div><div class="line">#if defined(__arm__)</div><div class="line">  #if defined(__ARM_ARCH_7A__)</div><div class="line">    #if defined(__ARM_NEON__)</div><div class="line">      #define ABI &quot;armeabi-v7a/NEON&quot;</div><div class="line">    #else</div><div class="line">      #define ABI &quot;armeabi-v7a&quot;</div><div class="line">    #endif</div><div class="line">  #else</div><div class="line">   #define ABI &quot;armeabi&quot;</div><div class="line">  #endif</div><div class="line">#elif defined(__i386__)</div><div class="line">   #define ABI &quot;x86&quot;</div><div class="line">#elif defined(__mips__)</div><div class="line">   #define ABI &quot;mips&quot;</div><div class="line">#else</div><div class="line">   #define ABI &quot;unknown&quot;</div><div class="line">#endif</div><div class="line"></div><div class="line">    return getString(env);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="so中函数加密"><a href="#so中函数加密" class="headerlink" title="so中函数加密"></a>so中函数加密</h2><p>so函数：（被用）<br>过程：符号表导出-&gt;函数代码<br>保护：导出符号不可改-&gt;hook-&gt;加密代码<br>看下linker过程，有漏洞可以更强加密说不定</p>
+<p>思路1：根据dynsym与dynstr定位到需要的函数地址，加密，解密时直接用指针函数就行。指针函数引用的地方会被重定位到dynsym指定地点（已经加载好的符号），所以解密方便。全局符号表先收集符号再重定位。</p>
+<p>书中思路：根据dyn中的hash（用于快速导出）找到指定函数加密。</p>
+<p>加密：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;fcntl.h&gt;</div><div class="line">#include &quot;elf.h&quot;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line"></div><div class="line">typedef struct _funcInfo&#123;</div><div class="line">  Elf32_Addr st_value;</div><div class="line">  Elf32_Word st_size;</div><div class="line">&#125;funcInfo;</div><div class="line"></div><div class="line">Elf32_Ehdr ehdr;</div><div class="line"></div><div class="line">//For Test</div><div class="line">static void print_all(char *str, int len)&#123;</div><div class="line">  int i;</div><div class="line">  for(i=0;i&lt;len;i++)</div><div class="line">  &#123;</div><div class="line">    if(str[i] == 0)</div><div class="line">      puts(&quot;&quot;);</div><div class="line">    else</div><div class="line">      printf(&quot;%c&quot;, str[i]);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//标准的hash函数</div><div class="line">static unsigned elfhash(const char *_name)</div><div class="line">&#123;</div><div class="line">    const unsigned char *name = (const unsigned char *) _name;</div><div class="line">    unsigned h = 0, g;</div><div class="line"></div><div class="line">    while(*name) &#123;</div><div class="line">        h = (h &lt;&lt; 4) + *name++;</div><div class="line">        g = h &amp; 0xf0000000;</div><div class="line">        h ^= g;</div><div class="line">        h ^= g &gt;&gt; 24;</div><div class="line">    &#125;</div><div class="line">    return h;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//寻找到目标的段</div><div class="line">static Elf32_Off findTargetSectionAddr(const int fd, const char *secName)&#123;</div><div class="line">  Elf32_Shdr shdr;</div><div class="line">  char *shstr = NULL;</div><div class="line">  int i;</div><div class="line">  </div><div class="line">  lseek(fd, 0, SEEK_SET);</div><div class="line">  if(read(fd, &amp;ehdr, sizeof(Elf32_Ehdr)) != sizeof(Elf32_Ehdr))&#123;</div><div class="line">    puts(&quot;Read ELF header error&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  lseek(fd, ehdr.e_shoff + sizeof(Elf32_Shdr) * ehdr.e_shstrndx, SEEK_SET);</div><div class="line">  </div><div class="line">  if(read(fd, &amp;shdr, sizeof(Elf32_Shdr)) != sizeof(Elf32_Shdr))&#123;</div><div class="line">    puts(&quot;Read ELF section string table error&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  if((shstr = (char *) malloc(shdr.sh_size)) == NULL)&#123;</div><div class="line">    puts(&quot;Malloc space for section string table failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  lseek(fd, shdr.sh_offset, SEEK_SET);</div><div class="line">  if(read(fd, shstr, shdr.sh_size) != shdr.sh_size)&#123;</div><div class="line">    puts(shstr);</div><div class="line">    puts(&quot;Read string table failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  lseek(fd, ehdr.e_shoff, SEEK_SET);</div><div class="line">  for(i = 0; i &lt; ehdr.e_shnum; i++)&#123;</div><div class="line">    if(read(fd, &amp;shdr, sizeof(Elf32_Shdr)) != sizeof(Elf32_Shdr))&#123;</div><div class="line">      puts(&quot;Find section .text procedure failed&quot;);</div><div class="line">      goto _error;</div><div class="line">    &#125;</div><div class="line">    if(strcmp(shstr + shdr.sh_name, secName) == 0)&#123;</div><div class="line">      printf(&quot;Find section %s, addr = 0x%x\n&quot;, secName, shdr.sh_offset);</div><div class="line">      break;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  free(shstr);</div><div class="line">  return shdr.sh_offset;</div><div class="line">_error:</div><div class="line">  return -1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//找到指定的函数的基地址和大小存入到info结构体中</div><div class="line">static char getTargetFuncInfo(int fd, const char *funcName, funcInfo *info)&#123;</div><div class="line">  char flag = -1, *dynstr;</div><div class="line">  int i;</div><div class="line">  Elf32_Sym funSym;</div><div class="line">  Elf32_Phdr phdr;</div><div class="line">  Elf32_Off dyn_off;</div><div class="line">  Elf32_Word dyn_size, dyn_strsz;</div><div class="line">  Elf32_Dyn dyn;</div><div class="line">  Elf32_Addr dyn_symtab, dyn_strtab, dyn_hash;</div><div class="line">  unsigned funHash, nbucket, nchain, funIndex;</div><div class="line">  </div><div class="line">  //从程序头中查找类型为PT_DYNAMIC的Segment</div><div class="line">  lseek(fd, ehdr.e_phoff, SEEK_SET);</div><div class="line">  for(i=0;i &lt; ehdr.e_phnum; i++)&#123;</div><div class="line">    if(read(fd, &amp;phdr, sizeof(Elf32_Phdr)) != sizeof(Elf32_Phdr))&#123;</div><div class="line">      puts(&quot;Read segment failed&quot;);</div><div class="line">      goto _error;</div><div class="line">    &#125;</div><div class="line">    if(phdr.p_type ==  PT_DYNAMIC)&#123;</div><div class="line">      dyn_size = phdr.p_filesz;</div><div class="line">      dyn_off = phdr.p_offset;</div><div class="line">      flag = 0;</div><div class="line">      printf(&quot;Find section %s, size = 0x%x, addr = 0x%x\n&quot;, &quot;.dynamic&quot;, dyn_size, dyn_off);</div><div class="line">      break;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  if(flag)&#123;</div><div class="line">    puts(&quot;Find .dynamic failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  flag = 0;</div><div class="line"></div><div class="line">  printf(&quot;dyn_size:%d\n&quot;,dyn_size);</div><div class="line">  printf(&quot;count:%d\n&quot;,(dyn_size/sizeof(Elf32_Dyn)));</div><div class="line">  printf(&quot;off:%x\n&quot;,dyn_off);</div><div class="line">  </div><div class="line">  //在动态段中找到对应的section</div><div class="line">  lseek(fd, dyn_off, SEEK_SET);</div><div class="line">  for(i=0;i &lt; dyn_size / sizeof(Elf32_Dyn); i++)&#123;</div><div class="line">	int sizes = read(fd, &amp;dyn, sizeof(Elf32_Dyn));</div><div class="line">    if(sizes != sizeof(Elf32_Dyn))&#123;</div><div class="line">      puts(&quot;Read .dynamic information failed&quot;);</div><div class="line">      //goto _error;</div><div class="line">	  break;</div><div class="line">    &#125;    </div><div class="line">    if(dyn.d_tag == DT_SYMTAB)&#123;</div><div class="line">      dyn_symtab = dyn.d_un.d_ptr;</div><div class="line">      flag += 1;</div><div class="line">      printf(&quot;Find .dynsym, addr = 0x%x, val = 0x%x\n&quot;, dyn_symtab, dyn.d_un.d_val);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if(dyn.d_tag == DT_HASH)&#123;</div><div class="line">      dyn_hash = dyn.d_un.d_ptr;</div><div class="line">      flag += 2;</div><div class="line">      printf(&quot;Find .hash, addr = 0x%x\n&quot;, dyn_hash);</div><div class="line">    &#125;</div><div class="line">    if(dyn.d_tag == DT_STRTAB)&#123;</div><div class="line">      dyn_strtab = dyn.d_un.d_ptr;</div><div class="line">      flag += 4;</div><div class="line">      printf(&quot;Find .dynstr, addr = 0x%x\n&quot;, dyn_strtab);</div><div class="line">    &#125;</div><div class="line">    if(dyn.d_tag == DT_STRSZ)&#123;</div><div class="line">      dyn_strsz = dyn.d_un.d_val;</div><div class="line">      flag += 8;</div><div class="line">      printf(&quot;Find .dynstr size, size = 0x%x\n&quot;, dyn_strsz);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if((flag &amp; 0x0f) != 0x0f)&#123;</div><div class="line">    puts(&quot;Find needed .section failed\n&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  dynstr = (char*) malloc(dyn_strsz);</div><div class="line">  if(dynstr == NULL)&#123;</div><div class="line">    puts(&quot;Malloc .dynstr space failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  lseek(fd, dyn_strtab, SEEK_SET);</div><div class="line">  if(read(fd, dynstr, dyn_strsz) != dyn_strsz)&#123;</div><div class="line">    puts(&quot;Read .dynstr failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  funHash = elfhash(funcName);</div><div class="line">  printf(&quot;Function %s hashVal = 0x%x\n&quot;, funcName, funHash);</div><div class="line">  </div><div class="line">  lseek(fd, dyn_hash, SEEK_SET);</div><div class="line">  if(read(fd, &amp;nbucket, 4) != 4)&#123;</div><div class="line">    puts(&quot;Read hash nbucket failed\n&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  printf(&quot;nbucket = %d\n&quot;, nbucket);</div><div class="line">  </div><div class="line">  if(read(fd, &amp;nchain, 4) != 4)&#123;</div><div class="line">    puts(&quot;Read hash nchain failed\n&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  printf(&quot;nchain = %d\n&quot;, nchain);</div><div class="line">  </div><div class="line">  funHash = funHash % nbucket;</div><div class="line">  printf(&quot;funHash mod nbucket = %d \n&quot;, funHash);</div><div class="line">  </div><div class="line">  lseek(fd, funHash * 4, SEEK_CUR);</div><div class="line">  if(read(fd, &amp;funIndex, 4) != 4)&#123;</div><div class="line">    puts(&quot;Read funIndex failed\n&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  printf(&quot;funcIndex:%d\n&quot;, funIndex);</div><div class="line">  </div><div class="line">  lseek(fd, dyn_symtab + funIndex * sizeof(Elf32_Sym), SEEK_SET);</div><div class="line">  if(read(fd, &amp;funSym, sizeof(Elf32_Sym)) != sizeof(Elf32_Sym))&#123;</div><div class="line">    puts(&quot;Read funSym failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //这里开始查找hash中目标函数的idnex</div><div class="line">  if(strcmp(dynstr + funSym.st_name, funcName) != 0)&#123;</div><div class="line">    while(1)&#123;</div><div class="line">		printf(&quot;hash:%x,nbucket:%d,funIndex:%d\n&quot;,dyn_hash,nbucket,funIndex);</div><div class="line">		lseek(fd, dyn_hash + 4 * (2 + nbucket + funIndex), SEEK_SET);</div><div class="line">		if(read(fd, &amp;funIndex, 4) != 4)&#123;</div><div class="line">		  puts(&quot;Read funIndex failed\n&quot;);</div><div class="line">		  goto _error;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		printf(&quot;funcIndex:%d\n&quot;, funIndex);</div><div class="line">		</div><div class="line">		if(funIndex == 0)&#123;</div><div class="line">		  puts(&quot;Cannot find funtion!\n&quot;);</div><div class="line">		  goto _error;</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		lseek(fd, dyn_symtab + funIndex * sizeof(Elf32_Sym), SEEK_SET);</div><div class="line">		if(read(fd, &amp;funSym, sizeof(Elf32_Sym)) != sizeof(Elf32_Sym))&#123;</div><div class="line">		  puts(&quot;In FOR loop, Read funSym failed&quot;);</div><div class="line">		  goto _error;</div><div class="line">		&#125;</div><div class="line">		</div><div class="line">		if(strcmp(dynstr + funSym.st_name, funcName) == 0)&#123;</div><div class="line">		  break;</div><div class="line">		&#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  printf(&quot;Find: %s, offset = 0x%x, size = 0x%x\n&quot;, funcName, funSym.st_value, funSym.st_size);</div><div class="line">  info-&gt;st_value = funSym.st_value;</div><div class="line">  info-&gt;st_size = funSym.st_size;</div><div class="line">  free(dynstr);</div><div class="line">  return 0;</div><div class="line">  </div><div class="line">_error:</div><div class="line">  free(dynstr);</div><div class="line">  return -1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char **argv)&#123;</div><div class="line">  char secName[] = &quot;.text&quot;;</div><div class="line">  char funcName[] = &quot;Java_com_example_shelldemo2_MainActivity_getString&quot;;</div><div class="line">  char *soName = &quot;libdemo.so&quot;;</div><div class="line">  char *content = NULL;</div><div class="line">  int fd, i;</div><div class="line">  Elf32_Off secOff;</div><div class="line">  funcInfo info;</div><div class="line"></div><div class="line">  unsigned a = elfhash(funcName);</div><div class="line">  printf(&quot;a:%d\n&quot;, a);</div><div class="line">  </div><div class="line">  fd = open(soName, O_RDWR);</div><div class="line">  if(fd &lt; 0)&#123;</div><div class="line">    printf(&quot;open %s failed\n&quot;, argv[1]);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  secOff = findTargetSectionAddr(fd, secName);</div><div class="line">  if(secOff == -1)&#123;</div><div class="line">    printf(&quot;Find section %s failed\n&quot;, secName);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  if(getTargetFuncInfo(fd, funcName, &amp;info) == -1)&#123;</div><div class="line">    printf(&quot;Find function %s failed\n&quot;, funcName);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  content = (char*) malloc(info.st_size);</div><div class="line">  if(content == NULL)&#123;</div><div class="line">    puts(&quot;Malloc space failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  //这里需要注意的info.st_value-1</div><div class="line">  lseek(fd, info.st_value - 1, SEEK_SET);</div><div class="line">  if(read(fd, content, info.st_size) != info.st_size)&#123;</div><div class="line">    puts(&quot;Malloc space failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  for(i=0;i&lt;info.st_size -1;i++)&#123;</div><div class="line">    content[i] = ~content[i];</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  lseek(fd, info.st_value-1, SEEK_SET);</div><div class="line">  if(write(fd, content, info.st_size) != info.st_size)&#123;</div><div class="line">    puts(&quot;Write modified content to .so failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  puts(&quot;Complete!&quot;);</div><div class="line">  </div><div class="line">_error:</div><div class="line">  free(content);</div><div class="line">  close(fd);</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>解密：书中的麻烦了，直接用指针函数就行。<br>参考<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/06/29/android%E5%BA%94%E7%94%A8%E5%8A%A0%E5%9B%BA2/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/06/29/android%E5%BA%94%E7%94%A8%E5%8A%A0%E5%9B%BA2/</a><br>修改导出：加载后，用符号表找到导出符号，修改其value。外部引用是先查符号表的。（不是看全局符号表？用时才加？如果查的是加载好的全局表应该改节无用）<br>修改导入：是改got表内的值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div></pre></td><td class="code"><pre><div class="line">#include &lt;jni.h&gt;</div><div class="line">#include &lt;android/log.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;sys/types.h&gt;</div><div class="line">#include &lt;elf.h&gt;</div><div class="line">#include &lt;sys/mman.h&gt;</div><div class="line"></div><div class="line">#define DEBUG</div><div class="line"></div><div class="line">typedef struct _funcInfo&#123;</div><div class="line">  Elf32_Addr st_value;</div><div class="line">  Elf32_Word st_size;</div><div class="line">&#125;funcInfo;</div><div class="line"></div><div class="line"></div><div class="line">void init_getString() __attribute__((constructor));</div><div class="line"></div><div class="line">static void print_debug(const char *msg)&#123;</div><div class="line">#ifdef DEBUG</div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;%s&quot;, msg);</div><div class="line">#endif</div><div class="line">&#125;</div><div class="line"></div><div class="line">static unsigned elfhash(const char *_name)</div><div class="line">&#123;</div><div class="line">    const unsigned char *name = (const unsigned char *) _name;</div><div class="line">    unsigned h = 0, g;</div><div class="line"></div><div class="line">    while(*name) &#123;</div><div class="line">        h = (h &lt;&lt; 4) + *name++;</div><div class="line">        g = h &amp; 0xf0000000;</div><div class="line">        h ^= g;</div><div class="line">        h ^= g &gt;&gt; 24;</div><div class="line">    &#125;</div><div class="line">    return h;</div><div class="line">&#125;</div><div class="line"></div><div class="line">static unsigned int getLibAddr()&#123;</div><div class="line">  unsigned int ret = 0;</div><div class="line">  char name[] = &quot;libdemo.so&quot;;</div><div class="line">  char buf[4096], *temp;</div><div class="line">  int pid;</div><div class="line">  FILE *fp;</div><div class="line">  pid = getpid();</div><div class="line">  sprintf(buf, &quot;/proc/%d/maps&quot;, pid);</div><div class="line">  fp = fopen(buf, &quot;r&quot;);</div><div class="line">  if(fp == NULL)</div><div class="line">  &#123;</div><div class="line">    puts(&quot;open failed&quot;);</div><div class="line">    goto _error;</div><div class="line">  &#125;</div><div class="line">  while(fgets(buf, sizeof(buf), fp))&#123;</div><div class="line">    if(strstr(buf, name))&#123;</div><div class="line">      temp = strtok(buf, &quot;-&quot;);</div><div class="line">      ret = strtoul(temp, NULL, 16);</div><div class="line">      break;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">_error:</div><div class="line">  fclose(fp);</div><div class="line">  return ret;</div><div class="line">&#125;</div><div class="line"></div><div class="line">static char getTargetFuncInfo(unsigned long base, const char *funcName, funcInfo *info)&#123;</div><div class="line">	char flag = -1, *dynstr;</div><div class="line">	int i;</div><div class="line">	Elf32_Ehdr *ehdr;</div><div class="line">	Elf32_Phdr *phdr;</div><div class="line">	Elf32_Off dyn_vaddr;</div><div class="line">	Elf32_Word dyn_size, dyn_strsz;</div><div class="line">	Elf32_Dyn *dyn;</div><div class="line">    Elf32_Addr dyn_symtab, dyn_strtab, dyn_hash;</div><div class="line">	Elf32_Sym *funSym;</div><div class="line">	unsigned funHash, nbucket;</div><div class="line">	unsigned *bucket, *chain;</div><div class="line"></div><div class="line">    ehdr = (Elf32_Ehdr *)base;</div><div class="line">	phdr = (Elf32_Phdr *)(base + ehdr-&gt;e_phoff);</div><div class="line">//    __android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;phdr =  0x%p, size = 0x%x\n&quot;, phdr, ehdr-&gt;e_phnum);</div><div class="line">	for (i = 0; i &lt; ehdr-&gt;e_phnum; ++i) &#123;</div><div class="line">//		__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;phdr =  0x%p\n&quot;, phdr);</div><div class="line">		if(phdr-&gt;p_type ==  PT_DYNAMIC)&#123;</div><div class="line">			flag = 0;</div><div class="line">			print_debug(&quot;Find .dynamic segment&quot;);</div><div class="line">			break;</div><div class="line">		&#125;</div><div class="line">		phdr ++;</div><div class="line">	&#125;</div><div class="line">	if(flag)</div><div class="line">		goto _error;</div><div class="line">	dyn_vaddr = phdr-&gt;p_vaddr + base;</div><div class="line">	dyn_size = phdr-&gt;p_filesz;</div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;dyn_vadd =  0x%x, dyn_size =  0x%x&quot;, dyn_vaddr, dyn_size);</div><div class="line">	flag = 0;</div><div class="line">	for (i = 0; i &lt; dyn_size / sizeof(Elf32_Dyn); ++i) &#123;</div><div class="line">		dyn = (Elf32_Dyn *)(dyn_vaddr + i * sizeof(Elf32_Dyn));</div><div class="line">		if(dyn-&gt;d_tag == DT_SYMTAB)&#123;</div><div class="line">			dyn_symtab = (dyn-&gt;d_un).d_ptr;</div><div class="line">			flag += 1;</div><div class="line">			__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;Find .dynsym section, addr = 0x%x\n&quot;, dyn_symtab);</div><div class="line">		&#125;</div><div class="line">		if(dyn-&gt;d_tag == DT_HASH)&#123;</div><div class="line">			dyn_hash = (dyn-&gt;d_un).d_ptr;</div><div class="line">			flag += 2;</div><div class="line">			__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;Find .hash section, addr = 0x%x\n&quot;, dyn_hash);</div><div class="line">		&#125;</div><div class="line">		if(dyn-&gt;d_tag == DT_STRTAB)&#123;</div><div class="line">			dyn_strtab = (dyn-&gt;d_un).d_ptr;</div><div class="line">			flag += 4;</div><div class="line">			__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;Find .dynstr section, addr = 0x%x\n&quot;, dyn_strtab);</div><div class="line">		&#125;</div><div class="line">		if(dyn-&gt;d_tag == DT_STRSZ)&#123;</div><div class="line">			dyn_strsz = (dyn-&gt;d_un).d_val;</div><div class="line">			flag += 8;</div><div class="line">			__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;Find strsz size = 0x%x\n&quot;, dyn_strsz);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	if((flag &amp; 0x0f) != 0x0f)&#123;</div><div class="line">		print_debug(&quot;Find needed .section failed\n&quot;);</div><div class="line">		goto _error;</div><div class="line">	&#125;</div><div class="line">	dyn_symtab += base;</div><div class="line">	dyn_hash += base;</div><div class="line">	dyn_strtab += base;</div><div class="line">	dyn_strsz += base;</div><div class="line"></div><div class="line">	funHash = elfhash(funcName);</div><div class="line">	funSym = (Elf32_Sym *) dyn_symtab;</div><div class="line">	dynstr = (char*) dyn_strtab;</div><div class="line">	nbucket = *((int *) dyn_hash);</div><div class="line">	bucket = (int *)(dyn_hash + 8);</div><div class="line">	chain = (unsigned int *)(dyn_hash + 4 * (2 + nbucket));</div><div class="line"></div><div class="line">	flag = -1;</div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;hash = 0x%x, nbucket = 0x%x\n&quot;, funHash, nbucket);</div><div class="line">	int mod = (funHash % nbucket);</div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;mod = %d\n&quot;, mod);</div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;i = 0x%d\n&quot;, bucket[mod]);</div><div class="line"></div><div class="line">	for(i = bucket[mod]; i != 0; i = chain[i])&#123;</div><div class="line">		__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;Find index = %d\n&quot;, i);</div><div class="line">		if(strcmp(dynstr + (funSym + i)-&gt;st_name, funcName) == 0)&#123;</div><div class="line">			flag = 0;</div><div class="line">			__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;Find %s\n&quot;, funcName);</div><div class="line">			break;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	if(flag) goto _error;</div><div class="line">	info-&gt;st_value = (funSym + i)-&gt;st_value;</div><div class="line">	info-&gt;st_size = (funSym + i)-&gt;st_size;</div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;st_value = %d, st_size = %d&quot;, info-&gt;st_value, info-&gt;st_size);</div><div class="line">	return 0;</div><div class="line">_error:</div><div class="line">	return -1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void init_getString()&#123;</div><div class="line">	const char target_fun[] = &quot;Java_com_example_shelldemo2_MainActivity_getString&quot;;</div><div class="line">	funcInfo info;</div><div class="line">	int i;</div><div class="line">	unsigned int npage, base = getLibAddr();</div><div class="line"></div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;base addr =  0x%x&quot;, base);</div><div class="line">	if(getTargetFuncInfo(base, target_fun, &amp;info) == -1)&#123;</div><div class="line">	  print_debug(&quot;Find Java_com_example_shelldemo2_MainActivity_getString failed&quot;);</div><div class="line">	  return ;</div><div class="line">	&#125;</div><div class="line">	npage = info.st_size / PAGE_SIZE + ((info.st_size % PAGE_SIZE == 0) ? 0 : 1);</div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;npage =  0x%d&quot;, npage);</div><div class="line">	__android_log_print(ANDROID_LOG_INFO, &quot;JNITag&quot;, &quot;npage =  0x%d&quot;, PAGE_SIZE);</div><div class="line"></div><div class="line">	if(mprotect((void *) ((base + info.st_value) / PAGE_SIZE * PAGE_SIZE), 4096*npage, PROT_READ | PROT_EXEC | PROT_WRITE) != 0)&#123;</div><div class="line">		print_debug(&quot;mem privilege change failed&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	for(i=0;i&lt; info.st_size - 1; i++)&#123;</div><div class="line">		char *addr = (char*)(base + info.st_value -1 + i);</div><div class="line">		*addr = ~(*addr);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	if(mprotect((void *) ((base + info.st_value) / PAGE_SIZE * PAGE_SIZE), 4096*npage, PROT_READ | PROT_EXEC) != 0)&#123;</div><div class="line">		print_debug(&quot;mem privilege change failed&quot;);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">JNIEXPORT jstring JNICALL</div><div class="line">Java_com_example_shelldemo2_MainActivity_getString( JNIEnv* env,</div><div class="line">                                                  jobject thiz )</div><div class="line">&#123;</div><div class="line">#if defined(__arm__)</div><div class="line">  #if defined(__ARM_ARCH_7A__)</div><div class="line">    #if defined(__ARM_NEON__)</div><div class="line">      #define ABI &quot;armeabi-v7a/NEON&quot;</div><div class="line">    #else</div><div class="line">      #define ABI &quot;armeabi-v7a&quot;</div><div class="line">    #endif</div><div class="line">  #else</div><div class="line">   #define ABI &quot;armeabi&quot;</div><div class="line">  #endif</div><div class="line">#elif defined(__i386__)</div><div class="line">   #define ABI &quot;x86&quot;</div><div class="line">#elif defined(__mips__)</div><div class="line">   #define ABI &quot;mips&quot;</div><div class="line">#else</div><div class="line">   #define ABI &quot;unknown&quot;</div><div class="line">#endif</div><div class="line">	return (*env)-&gt;NewStringUTF(env, &quot;Native method return!&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android应用加固/" rel="tag"># android应用加固</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/19/apk加固-dex中子apk-java层加载/" rel="next" title="apk加固-dex中子apk-java层加载">
+                <i class="fa fa-chevron-left"></i> apk加固-dex中子apk-java层加载
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#so中节加密"><span class="nav-number">1.</span> <span class="nav-text">so中节加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#so中函数加密"><span class="nav-number">2.</span> <span class="nav-text">so中函数加密</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
