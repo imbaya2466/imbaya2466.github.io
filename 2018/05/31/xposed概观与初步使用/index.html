@@ -103,7 +103,7 @@
 <meta property="og:description" content="前言最近先后尝试了各种手写nativehook，开始还好，写到后面越发艰难，最后参看2011年的古河代码后无果，于是决定先使用好常用的hook框架，再针对开源的代码去研究轮子。hook的好处十分多，如可以不修改不重打包逆向程序，而且可以避免反调试和各种壳，但hook时需要详细知道目标函数的符号等信息。 目前认准有三：1、XPOSED 开源优点：1）、代码编写方便，开发速度较快。2）、有许多现成的模">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/nhQbI7d.png">
-<meta property="og:updated_time" content="2018-05-31T15:51:46.628Z">
+<meta property="og:updated_time" content="2018-07-22T03:58:46.768Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="xposed概观与初步使用">
 <meta name="twitter:description" content="前言最近先后尝试了各种手写nativehook，开始还好，写到后面越发艰难，最后参看2011年的古河代码后无果，于是决定先使用好常用的hook框架，再针对开源的代码去研究轮子。hook的好处十分多，如可以不修改不重打包逆向程序，而且可以避免反调试和各种壳，但hook时需要详细知道目标函数的符号等信息。 目前认准有三：1、XPOSED 开源优点：1）、代码编写方便，开发速度较快。2）、有许多现成的模">
@@ -391,18 +391,19 @@
 <li>把下好的api-82.jar放到lib下，并添加到build.gradle路径中</li>
 <li>由于以传至jcenter()库所以在build.gradle的dependencies下直接写compileOnly ‘de.robv.android.xposed:api:82’</li>
 </ol>
+<p>注意接口包不能包含到插件项目的生成包中。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])</div><div class="line">    implementation &apos;com.android.support:appcompat-v7:27.1.1&apos;</div><div class="line">    testImplementation &apos;junit:junit:4.12&apos;</div><div class="line">    androidTestImplementation &apos;com.android.support.test:runner:1.0.2&apos;</div><div class="line">    androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.2&apos;</div><div class="line">    compileOnly &apos;de.robv.android.xposed:api:82&apos;</div><div class="line">	compileOnly &apos;de.robv.android.xposed:api:82:sources&apos; 方便Ctrl+Q快速查阅</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>注意为compileOnly，区别：<br>2.x（3.x）</p>
 <ol>
 <li>（implementation）：只能在内部使用此模块,会参与打包，比如我在一个libiary中使用implementation依赖了gson库，然后我的主项目依赖了libiary，那么，我的主项目就无法访问gson库中的方法。</li>
-<li>compile（api）：使用该方式依赖的库将会参与编译和打包。 也就是全部包含进dex中。</li>
-<li>provided（compileOnly）：只在编译时有效，不会参与打包 。运行时寻找android平台上的</li>
-<li>apk（runtimeOnly）：只在生成apk的时候参与打包，编译时不会参与</li>
-<li>testCompile（testImplementation）：estCompile 只在单元测试代码的编译以及最终打包测试apk时有效。</li>
+<li>compile（api）：使用该方式依赖的库将会参与编译和打包。 也就是全部包含进dex中。又打包又用</li>
+<li>provided（compileOnly）：只在编译时有效，不会参与打包 。运行时寻找android平台上的，只用不打包</li>
+<li>apk（runtimeOnly）：只在生成apk的时候参与打包，编译时不会参与。不用只打包。</li>
+<li>testCompile（testImplementation）：testCompile 只在单元测试代码的编译以及最终打包测试apk时有效。</li>
 <li>debugCompile（debugImplementation）:debugCompile 只在debug模式的编译和最终的debug apk打包时有效</li>
 <li>releaseCompile:Release compile 仅仅针对Release 模式的编译和最终的Release apk打包。</li>
 </ol>
-<p>API 类真正的实现则在 Xposed FramWork中（？为何）。所以选择compileOnly</p>
+<p>API 类真正的实现则在 Xposed FramWork中。所以选择compileOnly<br>jar为.class集合。</p>
 <h3 id="2改manifest"><a href="#2改manifest" class="headerlink" title="2改manifest"></a>2改manifest</h3><p>AndroidManifest.xml中添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;application</div><div class="line">    android:allowBackup=&quot;true&quot;</div><div class="line">    android:icon=&quot;@mipmap/ic_launcher&quot;</div><div class="line">    android:label=&quot;@string/app_name&quot;</div><div class="line">    android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;</div><div class="line">    android:supportsRtl=&quot;true&quot;</div><div class="line">    android:theme=&quot;@style/AppTheme&quot;&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposedmodule&quot;</div><div class="line">    android:value=&quot;true&quot;/&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposeddescription&quot;</div><div class="line">    android:value=&quot;Easy example&quot;/&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposedminversion&quot;</div><div class="line">    android:value=&quot;54&quot;/&gt;</div><div class="line">&lt;/application&gt;</div></pre></td></tr></table></figure></p>
 <p>xposedmodule：代表的是Android程序作为Xposed中的一个模块，所以值为true；<br>xposeddescription：代表的是对本模块的功能的描述，可以自己简单叙述下就可以了；项目名是插件名，这是底下的描述<br>xposedminversion：代表的是本模块开发时用到的xposed的jar包的最低版本号；</p>
 <h3 id="3java中写类"><a href="#3java中写类" class="headerlink" title="3java中写类"></a>3java中写类</h3><p>只要新建一个实现IXposedHookLoadPackage接口的类，然后在handleLoadPackage回调方法中进行拦截操作即可，详细见下文。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import de.robv.android.xposed.IXposedHookLoadPackage;</div><div class="line">import de.robv.android.xposed.XposedBridge;</div><div class="line">import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;</div><div class="line"></div><div class="line">public class main implements IXposedHookLoadPackage &#123;</div><div class="line">    public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable &#123;</div><div class="line">        XposedBridge.log(&quot;Loaded app: &quot; + lpparam.packageName);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -571,7 +572,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-count">57</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

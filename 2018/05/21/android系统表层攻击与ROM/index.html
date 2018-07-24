@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="本章记录安卓逆向看雪白皮书11章，另附12章 root通过su与superuser应用协作管理root权限，root后可访问全部数据文件，对数据安全影响大 权限攻击android应用权限分为底层与高层，每个应用都有自己的用户与用户组，底层权限通过把用户添加到相应的权限组从而可使用，高层权限是通过Framework层的检查代码来进行权限检查，然后决定程序是否可使用相应函数。android程序中的资源">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-22T14:52:21.690Z">
+<meta property="og:updated_time" content="2018-07-21T13:33:08.650Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android系统表层攻击与ROM">
 <meta name="twitter:description" content="本章记录安卓逆向看雪白皮书11章，另附12章 root通过su与superuser应用协作管理root权限，root后可访问全部数据文件，对数据安全影响大 权限攻击android应用权限分为底层与高层，每个应用都有自己的用户与用户组，底层权限通过把用户添加到相应的权限组从而可使用，高层权限是通过Framework层的检查代码来进行权限检查，然后决定程序是否可使用相应函数。android程序中的资源">
@@ -387,7 +387,7 @@
 <p>没啥特殊需求最好用大厂官方的，不要用第三方rom。最好用google的机器驱动加官方的android源码编译系统。自己改改毕竟系统所做的一切你都可以不知道。<br>直接编译的android由于缺少驱动无法直接刷入，所以一般基于CM的改改<br>线刷的权限更高点但不同厂格式不同，卡刷就是更改system文件夹内容。<br>img(可压缩全部盘)是ios(只能用于压缩CDDVD)的超集</p>
 <p>关于Recovery升级原理好文：<a href="https://blog.csdn.net/luzhenrong45/article/details/60968458" target="_blank" rel="external">https://blog.csdn.net/luzhenrong45/article/details/60968458</a><br>Recovery是启动另一个小型操作系统</p>
 <p>android系统计划：android源码编译，项目过程理解，安装系统，系统运行过程理解，读源码，改源码自己用。</p>
-<h2 id="白皮12章"><a href="#白皮12章" class="headerlink" title="白皮12章"></a>白皮12章</h2><p>移动沙箱十分有用，建议理解原理自己建一个。可以快速了解apk所使用的api与参数，访问的网络与数据包分析，创建的文件，原生函数的使用情况等等有用信息。书中使用的-&gt;<a href="https://github.com/mspreitz/MobileSandbox" target="_blank" rel="external">https://github.com/mspreitz/MobileSandbox</a></p>
+<h2 id="白皮12章"><a href="#白皮12章" class="headerlink" title="白皮12章"></a>白皮12章</h2><p><strong>移动沙箱十分有用，建议理解原理自己建一个</strong>。可以快速了解apk所使用的api与参数，访问的网络与数据包分析，创建的文件，原生函数的使用情况等等有用信息。书中使用的-&gt;<a href="https://github.com/mspreitz/MobileSandbox" target="_blank" rel="external">https://github.com/mspreitz/MobileSandbox</a></p>
 <p>想要分析好native层，需要熟悉arm指令与<strong>linux系统api</strong><br>native层常见的_stack_chk_guard是gcc用来防止栈溢出的一种方式，通过调用函数头尾对比栈中保存的_stack_chk_guard是否变化。</p>
 <p>ida可以使用脚本来实现解密代码等功能，分析时更加聚集，十分强大！（ida权威指南）</p>
 <p>strace是linux下用来捕获程序执行时调用的所有系统api工具，可以查看敏感操作，同时可查看传的参数与返回值。android下有移植。</p>
@@ -535,7 +535,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-count">57</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

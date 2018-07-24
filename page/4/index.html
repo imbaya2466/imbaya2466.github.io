@@ -283,6 +283,227 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/20/android-NDK开发/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/20/android-NDK开发/" itemprop="url">android NDK开发</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-20T20:50:41+08:00">
+                2018-04-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前景补充："><a href="#前景补充：" class="headerlink" title="前景补充："></a>前景补充：</h3><ol>
+<li>GUN是自由操作系统计划–GNU is Not Unix  </li>
+<li>1990有了GCC-GNU Compiler Collection和大部分UNIX系统的程序库和工具</li>
+<li>1991年Linus Torvalds编写出了与UNIX兼容的Linux操作系统内核并在GPL条款下发布。</li>
+<li>GUN MAKE也是其中之一</li>
+<li>操作系统屏蔽硬件差异（cpu架构等），软件只对应不同操作系统(再分个位数)</li>
+</ol>
+<p>任务？：linux下写下.out.elf.a.so各种文件格式</p>
+<h3 id="关于ABI"><a href="#关于ABI" class="headerlink" title="关于ABI"></a>关于ABI</h3><p>ABI（Application Binary Interface）: 应用程序二进制接口 描述了应用程序和操作系统之间，一个应用和它的库之间，或者应用的组成部分之间的低接口。<br>ABI涵盖了各种细节：</p>
+<ol>
+<li>数据类型的大小、布局和对齐;</li>
+<li>调用约定（控制着函数的参数如何传送以及如何接受返回值），例如，是所有的参数都通过栈传递，还是部分参数通过寄存器传递；哪个寄存器用于哪个函数参数；通过栈传递的第一个函数参数是最先push到栈上还是最后；</li>
+<li>系统调用的编码和一个应用如何向操作系统进行系统调用；</li>
+<li>以及在一个完整的操作系统ABI中，目标文件的二进制格式、程序库等等。</li>
+</ol>
+<p>ABI不同于API ，API定义了源代码和库之间的接口，因此同样的代码可以在支持这个API的任何系统中编译 ，然而ABI允许编译好的目标代码在使用兼容ABI的系统中无需改动就能运行。 ABI掩盖了各种细节，例如:调用约定控制着函数的参数如何传送以及如何接受返回值；系统调用的编码和一个应用如何向操作系统进行系统调用；以及在一个完整的操作系统ABI中，对象文件的二进制格式、程序库等等。一个完整的ABI，像 Intel二进制兼容标准 (iBCS) ，允许支持它的操作系统上的程序不经修改在其他支持此ABI的操作系统上运行。其他的 ABI 标准化细节包括C++ name decoration和同一个平台上的编译器之间的调用约定，但是不包括跨平台的兼容性。在Unix的操作系统中，存在很多运行在同一件平台上互相相关但是不兼容的操作系统（尤其是80386兼容系统）。有一些努力尝试标准化A I，以减少销售商将程序移植到其他系统时所需的工作。然而，直到现在还没有很成功的例子，虽然LSB正在为Linux做这方面的努力。<br>一套完整的ABI（比如：Intel Binary Compatibility Standard (iBCS)），可以让程序在所有支持该ABI的系统上运行，而无需对程序进行修改。</p>
+<p>也就是说，操作系统屏蔽硬件差异，但是程序执行除了api外还有许多其他约定：数据对齐，调用约定等。所以直接复制程序仍不一定能够执行。ABI是为了统一这些的。</p>
+<p><strong> api是系统屏蔽底层硬件的。使程序可以编辑一次多平台编译。abi是屏蔽运行环境的，使程序编译一次可以多平台运行 </strong></p>
+<h3 id="关于java-jni"><a href="#关于java-jni" class="headerlink" title="关于java-jni"></a>关于java-jni</h3><p>JNI是Java Native Interface的缩写，它提供了若干的API实现了Java和其他语言的通信（主要是C&amp;C++）。从Java1.1开始，JNI标准成为java平台的一部分，它允许Java代码和其他语言写的代码进行交互。JNI一开始是为了本地已编译语言，尤其是C和C++而设计的，但是它并不妨碍你使用其他编程语言，只要调用约定受支持就可以了。使用java与本地已编译的代码交互，通常会丧失平台可移植性。<br>思考：关于jvm的实现过程。java命令在win下是exe。那么具体到那些函数是交给本地代码呢？已知有loadclass</p>
+<h4 id="jni步骤-win"><a href="#jni步骤-win" class="headerlink" title="jni步骤-win"></a>jni步骤-win</h4><ol>
+<li><p>编写native方法的类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">package a;</div><div class="line">public class b&#123;</div><div class="line"></div><div class="line">    public native void testHello();</div><div class="line">    </div><div class="line">    public static void main(String[] args)&#123;</div><div class="line"></div><div class="line">        System.loadLibrary(&quot;B&quot;);</div><div class="line">        b jniDemo = new b();</div><div class="line">        jniDemo.testHello();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>javac生成.class文件（java的一系列命令都在与包同目录下，而java的包已文件形式表示）具体命令为javac a/b.java   包下用/后加.java</p>
+</li>
+<li><p>javah -classpath . -jni a.b  生成.h头文件用于实现(此处坑较多，网上一般的直接javah a.b在我这里都不好用后来这样全部指明才可以)<br>javah -classpath . -jni a.b 解决。-classpath是加载类的路径，jni是生成的标准。（加载什么）注意包下用.且不加后缀。生成：a_b.h其只与包、类和方法名有关</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">/* DO NOT EDIT THIS FILE - it is machine generated */</div><div class="line">#include &quot;jni.h&quot;</div><div class="line">/* Header for class a_b */</div><div class="line"></div><div class="line">#ifndef _Included_a_b</div><div class="line">#define _Included_a_b</div><div class="line">#ifdef __cplusplus</div><div class="line">extern &quot;C&quot; &#123;</div><div class="line">#endif</div><div class="line">/*</div><div class="line"> * Class:     a_b</div><div class="line"> * Method:    testHello</div><div class="line"> * Signature: ()V</div><div class="line"> */</div><div class="line">JNIEXPORT void JNICALL Java_a_b_testHello</div><div class="line">  (JNIEnv *, jobject);</div><div class="line"></div><div class="line">#ifdef __cplusplus</div><div class="line">&#125;</div><div class="line">#endif</div><div class="line">#endif</div></pre></td></tr></table></figure>
+</li>
+<li><p>%JAVA_HOME%/include下的jni.h放于其下</p>
+</li>
+<li><p>编写随意名字的dll文件（java类中System.loadLibrary(“”);同名即可）：B.cpp:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#include &quot;a_b.h&quot;</div><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">JNIEXPORT void JNICALL Java_a_b_testHello</div><div class="line">(JNIEnv *, jobject) &#123;</div><div class="line">    printf(&quot;this is C++ print&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>编译该dll，生成时指定平台为64位的（因为下的java是64的）</p>
+</li>
+<li>将dll置于.class同目录下。最终结果为俩文件：b.class与B.dll  由此可见.h文件其实可以不用自动生成，只是方便知道函数名字而已。</li>
+<li>java a.b成功</li>
+</ol>
+<h3 id="NDK"><a href="#NDK" class="headerlink" title="NDK"></a>NDK</h3><h4 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h4><ol>
+<li>native-原生：指的是用原生代码编写android程序</li>
+<li>NDK中对应于不同cpu框架的固定平台c/c++代码，执行格式为linux下的.so与.a与.elf，采用的是交叉编译，生成运行于其它平台的代码</li>
+<li>使用 NativeActivity 的 Android 应用仍会在其自己的虚拟机中运行，与其他应用以沙盒分隔。（android应用运行.so的过程？依靠虚拟机加载调用本地动态库.so？）</li>
+<li>以前编写原生程序一般用的是ndk提供的NDK-build。当然也可以单纯使用gcc（了解项目管理工具与gcc的使用？android是make）AS使用构建原生库的默认工具是CMake,也可以用ndk-build</li>
+<li>通过ABI指定生成的平台，默认下在lib中会生成多平台的.so（操作系统屏蔽底层的疑问见ABI说明)</li>
+<li>与原生的jni不同的是，as中没有生成.h头文件，但仍需jni.h可见仍使用的是jni调用，但是省略了繁杂的步骤，交给编译器as直接确定.so</li>
+</ol>
+<h4 id="AS下编辑native—较新方法-使用cmake（常用！）"><a href="#AS下编辑native—较新方法-使用cmake（常用！）" class="headerlink" title="AS下编辑native—较新方法-使用cmake（常用！）"></a>AS下编辑native—较新方法-使用cmake（常用！）</h4><p>官方AS的文档十分详细。。<br>AS可以先写好java类，然后点击错误修正可以自动生成对应c文件与原生函数头。<br><strong> AS生成的：注意as下如果是cpp文件extern “C” 必加 </strong><br>当你使用错误修正时是生成c版本的时自动不加，当是cpp文件中错误修正时自动加<br>CMake快速上手：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">#添加一个库，可用于目标</div><div class="line">add_library( # 指定库的名称。生成后会加前后缀根据下面的设置</div><div class="line">             native-lib</div><div class="line"></div><div class="line">             # 将库设置为共享库。</div><div class="line">             SHARED</div><div class="line"></div><div class="line">             # 提供源文件的相对路径。可以多个文件编译为一个库</div><div class="line">             src/main/jni/native-lib.cpp )</div><div class="line">#添加头文件</div><div class="line">include_directories(src/main/cpp/include/)</div><div class="line">#构建一个给自己用的库，从部分库是源码形式：</div><div class="line">add_library( app-glue</div><div class="line">             STATIC</div><div class="line">             $&#123;ANDROID_NDK&#125;/sources/android/native_app_glue/android_native_app_glue.c )</div><div class="line">#添加一个已有的库</div><div class="line">add_library( imported-lib</div><div class="line">             SHARED</div><div class="line">			 #表示这个已经存在，只要导入就可以，set_target_properties()指定路径</div><div class="line">             IMPORTED )</div><div class="line">#指定目标库的位置</div><div class="line">set_target_properties( # Specifies the target library.</div><div class="line">                       imported-lib</div><div class="line"></div><div class="line">                       # Specifies the parameter you want to define.</div><div class="line">                       PROPERTIES IMPORTED_LOCATION</div><div class="line"></div><div class="line">                       # Provides the path to the library you want to import.</div><div class="line">                       imported-lib/src/$&#123;ANDROID_ABI&#125;/libimported-lib.so )</div><div class="line">#编译时定位标头文件</div><div class="line">include_directories( imported-lib/include/ )</div><div class="line">#使用NDKapi 部分库是源码形式包含</div><div class="line">find_library( # find用来找到库，这个变量被赋予要找的库的路径</div><div class="line">              log-lib</div><div class="line"></div><div class="line">              # 这里是你要找的库的名字，该库已存在于android中</div><div class="line">              log )</div><div class="line">#第一个参数是最终要生成的，其它都是需要连接进去的</div><div class="line">target_link_libraries( # 指定目标库</div><div class="line">                       native-lib</div><div class="line"></div><div class="line">					   #连接已有的库</div><div class="line">					   imported-lib</div><div class="line">					   #连接自己建的库 </div><div class="line">                       app-glue</div><div class="line">                       # 连接的android ndk平台已存在目标，将找到的路径传入即可</div><div class="line">                       $&#123;log-lib&#125; )</div></pre></td></tr></table></figure></p>
+<h5 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h5><p>创建支持原生代码的项目与创建任何其他 Android Studio 项目类似，不过前者还需要额外几个步骤：</p>
+<ol>
+<li>在向导的 Configure your new project 部分，选中 Include C++ Support 复选框。点击 Next。</li>
+<li>正常填写所有其他字段并完成向导接下来的几个部分。</li>
+<li>在向导的 Customize C++ Support 部分，您可以使用下列选项自定义项目：<br>C++ Standard：使用下拉列表选择您希望使用哪种 C++ 标准。选择 Toolchain Default 会使用默认的 CMake 设置。<br>Exceptions Support：如果您希望启用对 C++ 异常处理的支持，请选中此复选框。如果启用此复选框，Android Studio 会将 -fexceptions 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>Runtime Type Information Support：如果您希望支持 RTTI，请选中此复选框。如果启用此复选框，Android Studio 会将 -frtti 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>点击 Finish。</li>
+</ol>
+<h5 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h5><ol>
+<li>在 cpp 组中，您可以找到属于项目的所有原生源文件、标头和预构建库。对于新项目，Android Studio 会创建一个示例 C++ 源文件 native-lib.cpp，并将其置于应用模块的 src/main/cpp/ 目录中。本示例代码提供了一个简单的 C++ 函数 stringFromJNI()，此函数可以返回字符串“Hello from C++”。</li>
+<li>在 External Build Files 组中，您可以找到 CMake 或 ndk-build 的构建脚本。与 build.gradle 文件指示 Gradle 如何构建应用一样，CMake 和 ndk-build 需要一个构建脚本来了解如何构建您的原生库。对于新项目，Android Studio 会创建一个 CMake 构建脚本 CMakeLists.txt，并将其置于模块的根目录中。且必须叫这个名字。</li>
+<li>cmake与ndk-build的配置都在build.gradle的管理配置下。</li>
+</ol>
+<h5 id="运行过程"><a href="#运行过程" class="headerlink" title="运行过程"></a>运行过程</h5><ol>
+<li>Gradle 调用您的外部构建脚本 CMakeLists.txt。</li>
+<li>CMake 按照构建脚本中的命令将 C++ 源文件 native-lib.cpp 编译到共享的对象库中，并命名为 libnative-lib.so，Gradle 随后会将其打包到 APK 中。</li>
+<li>运行时，应用的 MainActivity 会使用 System.loadLibrary() 加载原生库。现在，应用可以使用库的原生函数 stringFromJNI()。</li>
+<li>MainActivity.onCreate() 调用 stringFromJNI()，这将返回“Hello from C++”并使用这些文字更新 TextView。</li>
+</ol>
+<h5 id="CMakeLists-txt"><a href="#CMakeLists-txt" class="headerlink" title="CMakeLists.txt"></a>CMakeLists.txt</h5><h6 id="使用ndk库"><a href="#使用ndk库" class="headerlink" title="使用ndk库"></a>使用ndk库</h6><p>Android NDK 提供了一套实用的原生 API 和库。通过将 NDK 库包含到项目的 CMakeLists.txt 脚本文件中，您可以使用这些 API 中的任意一种。</p>
+<p>预构建的 NDK 库已经存在于 Android 平台上，因此，您无需再构建或将其打包到 APK 中。由于 NDK 库已经是 CMake 搜索路径的一部分，您甚至不需要在您的本地 NDK 安装中指定库的位置 - 只需要向 CMake 提供您希望使用的库的名称，并将其关联到您自己的原生库。</p>
+<p>将 find_library() 命令添加到您的 CMake 构建脚本中以定位 NDK 库，并将其路径存储为一个变量。您可以使用此变量在构建脚本的其他部分引用 NDK 库。<br>动态加载：为了确保您的原生库可以在 log 库中调用函数，您需要使用 CMake 构建脚本中的 target_link_libraries() 命令关联库。让你的.cpp文件可用ndk库<br>静态加载：NDK 还以源代码的形式包含一些库，您在构建和关联到您的原生库时需要使用这些代码。您可以使用 CMake 构建脚本中的 add_library() 命令，将源代码编译到原生库中。要提供本地 NDK 库的路径，您可以使用 ANDROID_NDK 路径变量，Android Studio 会自动为您定义此变量。</p>
+<h6 id="添加自己的文件"><a href="#添加自己的文件" class="headerlink" title="添加自己的文件"></a>添加自己的文件</h6><p>用 add_library() 向您的 CMake 构建脚本添加源文件或库<br>CMake 使用以下规范来为库文件命名：<br>lib库名称.so<br>例如，如果您在构建脚本中指定“native-lib”作为共享库的名称，CMake 将创建一个名称为 libnative-lib.so 的文件。不过，在 Java 代码中加载此库时，请使用您在 CMake 构建脚本中指定的名称：</p>
+<h4 id="AS下编辑native—过去的方法使用ndk-build"><a href="#AS下编辑native—过去的方法使用ndk-build" class="headerlink" title="AS下编辑native—过去的方法使用ndk-build"></a>AS下编辑native—过去的方法使用ndk-build</h4><p>ndk-build使用的是众多make文件其中大部分在ndk\build\core中，我们需要提供俩个：Android.mk与Application.mk<br>ndk-build通过这些确定生成so</p>
+<h5 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h5><ol>
+<li>创建一个新的project，一定要勾选“include C++ support”<br>注： 项目默认是用的是CMake，并不会自动生成Android.mk</li>
+<li><p>在cpp目录下新建Android.mk示例代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">LOCAL_PATH := $(call my-dir)</div><div class="line">include $(CLEAR_VARS)</div><div class="line">LOCAL_MODULE := xxxx注意这里是生成.so的名字，会自动生成lib前缀</div><div class="line">LOCAL_SRC_FILES := native-lib.cpp</div><div class="line">include $(BUILD_SHARED_LIBRARY)</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改build.gradle文件，设置使用ndk-build，而不是cmake（在这里改变编译c++部分的工具）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">defaultConfig &#123;</div><div class="line"></div><div class="line">...</div><div class="line"></div><div class="line">externalNativeBuild &#123;</div><div class="line">ndk &#123;</div><div class="line">ldLibs &quot;log&quot;</div><div class="line">abiFilters &quot;armeabi&quot;, &quot;armeabi-v7a&quot;, &quot;x86&quot;, &quot;x86_64&quot;, &quot;mips&quot;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">...</div><div class="line"></div><div class="line">externalNativeBuild &#123;</div><div class="line">ndkBuild &#123;</div><div class="line">path &quot;src/main/cpp/Android.mk&quot;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>如果要使用C++的库，则创建Application.mk文件（同样置于cpp目录），添加如下代码<br>APP_STL := stlport_static</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/11/android系统架构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1031,8 +1252,8 @@
 <ol>
 <li>AndroidManifest：配置文件</li>
 <li>classes.dex:代码文件</li>
-<li>resources.arsc:二进制资源文件，通过加密res/value下的xml生成</li>
-<li>res文件夹:图片，layout等资源</li>
+<li>resources.arsc:二进制资源文件，通过加密res/value下的xml生成，其用id对应各种字串，字串可能是string等value文件夹下的存其本身；或者layout、图片的路径，按value区分。简单来讲就是id对应资源。</li>
+<li>res文件夹:图片，layout，图片等资源</li>
 <li>META-INF文件夹：签名文件</li>
 <li>lib文件夹：native原生文件</li>
 </ol>
@@ -1739,163 +1960,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/15/android-context/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/15/android-context/" itemprop="url">android:context</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-15T18:31:52+08:00">
-                2018-03-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="Context的类型"><a href="#Context的类型" class="headerlink" title="Context的类型"></a>Context的类型</h3><p>并不是所有的context实例都是等价的。根据Android应用的组件不同，你访问的context推向有些细微的差别。</p>
-<p>在doc中简介如下：<br>与应用程序环境的全局信息的接口。这是一个抽象类，其实现由Android系统提供。它允许访问特定于应用程序的资源和类，以及对应用程序级操作（如启动活动，广播和接收意图等）的最新调用。</p>
-<h4 id="1-Application"><a href="#1-Application" class="headerlink" title="1.Application"></a>1.Application</h4><p>Application － 是一个运行在你的应用进程中的单例。在Activity或者Service中，它可以通过getApplication()函数获得，或者人和继承于context的对象中，通过getApplicationContext()方法获得。不管你是通过何种方法在哪里获得的，在一个进程内，你总是获得到同一个实例。</p>
-<h4 id="2-Activity-Service"><a href="#2-Activity-Service" class="headerlink" title="2.Activity/Service"></a>2.Activity/Service</h4><p>Activity/Service － 继承于ContextWrapper，它实现了与context同样API，但是代理这些方法调用到内部隐藏的Context实例，即我们所知道的基础context。任何时候当系统创建一个新的Activity或者Service实例的时候，它也创建一个新的ContextImpl实例来做所有的繁重的工作。每一个Activity和Service以及其对应的基础context，对每个实例来说都是唯一的。</p>
-<h4 id="3-BroadcastReciver"><a href="#3-BroadcastReciver" class="headerlink" title="3.BroadcastReciver"></a>3.BroadcastReciver</h4><p>BroadcastReciver － 它本身不是context，也没有context在它里面，但是每当一个新的广播到达的时候，框架都传递一个context对象到onReceive()。这个context是一个ReceiverRestrictedContext实例，它有两个主要函数被禁掉：registerReceiver()和bindService()。这两个函数在BroadcastReceiver.onReceive()不允许调用。每次Receiver处理一个广播，传递进来的context都是一个新的实例。</p>
-<h4 id="4-ContentProvider"><a href="#4-ContentProvider" class="headerlink" title="4.ContentProvider"></a>4.ContentProvider</h4><p>ContentProvider － 它本身也不是一个Context，但是它可以通过getContext()函数给你一个Context对象。如果ContentProvider是在调用者的的本地（例如，在同一个应用进程），getContext()将返回的是Application单例。然而，如果调用这和ContentProvider在不同的进程的时候，它将返回一个新创建的实例代表这个Provider(提供商)所运行的包。</p>
-<h3 id="防止内存泄漏"><a href="#防止内存泄漏" class="headerlink" title="防止内存泄漏"></a>防止内存泄漏</h3><p>保存application context最好</p>
-<h3 id="context的能力"><a href="#context的能力" class="headerlink" title="context的能力"></a>context的能力</h3><p>好图：<br><img src="https://i.imgur.com/EHTf6pH.png" alt=""></p>
-<p>注：NO1 表示Application context的确可以开始一个Activity，但是它需要创建一个新的task。这可能会满足一些特定的需求，但是在你的应用中会创建一个不标准的回退栈（back stack），这通常是不推荐的或者不是是好的实践。</p>
-<p>NO2 表示这是非法的，但是这个填充（inflation）的确可以完成，但是是使用所运行的系统默认的主题（theme），而不是你app定义的主题。</p>
-<p>NO3 在Android4.2以上，如果Receiver是null的话（这是用来获取一个sticky broadcast的当前 值的），这是允许的。</p>
-<p>关键点：只有activity可以控制界面相关其它的权限都差不多，但广播收到的context最垃圾</p>
-<h3 id="用户界面UI"><a href="#用户界面UI" class="headerlink" title="用户界面UI"></a>用户界面UI</h3><p>从前面的表格中可以看到，application context有很多功能并不是合适去做，而这些功能都与UI相关。实际上，只有Activity能够处理所有与UI相关的任务。其他类别的context实例功能都差不多。</p>
-<p>幸运的是，在应用中这三种操作基本上都不需要在Activity范围之外进行，这很可能是android框架故意这么设计的。尝试显示一个使用Aplication context创建的Dialog，或者使用Application context开始一个Activity，系统会抛出一个异常，让你的application崩溃，非常强的告诉你某些地方出了问题。</p>
-<p>一个并不明显的问题是填充布局（inflating layout）使用正确的context关系到其中的一个行为。当你使用Application context来inflate一个布局的时候，框架并不会报错，并返回一个使用系统默认的主题创建一个完美的view给你，而没有考虑你的applicaiton自定义的theme和style。这是因为Acitivity是唯一的绑定了在manifast文件种定义主题的Context。其他的Context实例将会使用系统默认的主题来inflater你的view。导致显示的结果并不是你所希望的。</p>
-<h3 id="经验法则"><a href="#经验法则" class="headerlink" title="经验法则"></a>经验法则</h3><p>绝大多数情况下，使用在你的所工作的组建内部能够直接获取的Context。只要这个引用没有超过这个组建的生命周期，你可以安全的保存这个引用。一旦你要保存一个context的引用，它超过了你的Activity或者Service的生命周期范围，甚至是暂时的，你就需要转换你的引用为Application context。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1968,7 +2032,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-count">57</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

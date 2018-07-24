@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://i.imgur.com/UuIIhAn.png">
 <meta property="og:image" content="https://i.imgur.com/4rFBjnX.png">
 <meta property="og:image" content="https://i.imgur.com/7ReGTLb.png">
-<meta property="og:updated_time" content="2018-06-05T14:16:11.246Z">
+<meta property="og:updated_time" content="2018-07-21T13:46:35.222Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dalvik字节码及相关">
 <meta name="twitter:description" content="首先建议参考谷歌官方文档https://source.android.com/devices/tech/dalvik/dex-format  一：前备知识1.dex文件Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。 1.1 apk的生成具体过程：  aapt程序将资源标记生成R.java，并生成resou">
@@ -395,8 +395,8 @@
 <ol>
 <li>AndroidManifest：配置文件</li>
 <li>classes.dex:代码文件</li>
-<li>resources.arsc:二进制资源文件，通过加密res/value下的xml生成</li>
-<li>res文件夹:图片，layout等资源</li>
+<li>resources.arsc:二进制资源文件，通过加密res/value下的xml生成，其用id对应各种字串，字串可能是string等value文件夹下的存其本身；或者layout、图片的路径，按value区分。简单来讲就是id对应资源。</li>
+<li>res文件夹:图片，layout，图片等资源</li>
 <li>META-INF文件夹：签名文件</li>
 <li>lib文件夹：native原生文件</li>
 </ol>
@@ -612,7 +612,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-count">57</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
