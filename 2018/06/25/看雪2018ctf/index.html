@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="出题人博客：https://blog.csdn.net/u011247544  cygwin可运行linux程序如readlef来查看elf文件。 还配置了开源项目LIEF用py解析elf  出题人写的got表hook：https://blog.csdn.net/u011247544/article/details/78564564有续1int __attribute__((constructor">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-03T14:35:56.974Z">
+<meta property="og:updated_time" content="2018-07-25T12:52:04.269Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="看雪2018ctf">
 <meta name="twitter:description" content="出题人博客：https://blog.csdn.net/u011247544  cygwin可运行linux程序如readlef来查看elf文件。 还配置了开源项目LIEF用py解析elf  出题人写的got表hook：https://blog.csdn.net/u011247544/article/details/78564564有续1int __attribute__((constructor">
@@ -385,7 +385,7 @@
 <p> _dl_ZL13call_functionPKcPFviPPcS2<em>ES0</em>((int)”function”, <em>(char **)(v4 + 4 </em> i), v5)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">int __fastcall _dl__ZL13call_functionPKcPFviPPcS2_ES0_(int a1, char *a2, int a3)</div><div class="line">&#123;</div><div class="line">  char *v3; // r6</div><div class="line">  int v4; // r4</div><div class="line">  int result; // r0</div><div class="line">  int v6; // r5</div><div class="line"></div><div class="line">  v3 = a2;</div><div class="line">  v4 = a1;</div><div class="line">  result = (int)(a2 + 1);</div><div class="line">  v6 = a3;</div><div class="line">  if ( (unsigned int)(a2 + 1) &gt;= 2 )</div><div class="line">  &#123;</div><div class="line">    if ( _dl_g_ld_debug_verbosity &gt;= 2 )</div><div class="line">      ((void (*)(signed int, const char *, const char *, ...))_dl_async_safe_format_log)(</div><div class="line">        4,</div><div class="line">        &quot;linker&quot;,</div><div class="line">        &quot;[ Calling c-tor %s @ %p for &apos;%s&apos; ]&quot;,</div><div class="line">        v4,</div><div class="line">        a2,</div><div class="line">        a3);</div><div class="line">    ((void (__fastcall *)(int, int, int))v3)(_dl_g_argc, _dl_g_argv, _dl_g_envp);</div><div class="line">    result = _dl_g_ld_debug_verbosity;</div><div class="line">    if ( _dl_g_ld_debug_verbosity &gt;= 2 )</div><div class="line">      result = ((int (*)(signed int, const char *, const char *, ...))_dl_async_safe_format_log)(</div><div class="line">                 4,</div><div class="line">                 &quot;linker&quot;,</div><div class="line">                 &quot;[ Done calling c-tor %s @ %p for &apos;%s&apos; ]&quot;,</div><div class="line">                 v4,</div><div class="line">                 v3,</div><div class="line">                 v6);</div><div class="line">  &#125;</div><div class="line">  return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>((void (__fastcall *)(int, int, int))v3)(_dl_g_argc, _dl_g_argv, _dl_g_envp);就是调用init_array init_proc<br>的地方。</p>
 <p>其中的函数开启线程检测/proc/self/status反调试。hook jni_load函数。<br>mprotect调用了两次，第一次修改JNI_OnLoad的偏移，由0x8205修改为0xA260 ，jni_onload中FindClass与RegisterNatives注册native函数0xAC98。<br>第二次mprotect调用就是解密0xAC98处的验证函数。分析验证即可。</p>
-<p>不要随意在jni_load直接下断点，可能会检测是否更改这俩处。而且hook got了后不会走jni_onload符号处的函数。</p>
+<p>不要随意在jni_load直接下断点，可能会检测是否更改这俩处。而且hook 符号表了后不会走jni_onload符号处的函数？不是一次性读取完符号表的么？还是init之后读？。</p>
 <p>2018.6.28：<br>由于无法断在jni_load处，(没找到libdvm.so，经询问得知5.0后全是art执行….)无法得知真正的jni_onload内容。<br>5.0后在libart.so中调用，这里变动较大，需要<strong>分析8.0源码</strong>。</p>
 <p>只能动调init那几个函数分析关键调用了，因为hook与解密，反调试等操作肯定会用到几个系统调用：pthread_create，mprotect与_NR_openat。在这里作者存了几个关键函数（各种非正常调用系统调用的方式？）：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">//proc_4</div><div class="line">  v8 = (struc_table *)operator new(0x20u);</div><div class="line">  sub_C8A0(v8);</div><div class="line"> </div><div class="line">//sub_C8A0</div><div class="line">struc_table *__fastcall sub_C8A0(struc_table *result)</div><div class="line">&#123;</div><div class="line">  result-&gt;dlopen = (int)off_35D08;</div><div class="line">  result-&gt;sscanf = (int)off_35D0C;</div><div class="line">  result-&gt;__NR_read = (int)off_35D10[0];</div><div class="line">  result-&gt;__NR_close = (int)off_35D14[0];</div><div class="line">  result-&gt;__NR_mprotect = (int)off_35D18;</div><div class="line">  result-&gt;__NR_openat = (int)sub_C874;</div><div class="line">  result-&gt;sleep = (int)off_35D1C;</div><div class="line">  result-&gt;pthread_create = (int)off_35D20;</div><div class="line">  return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -432,8 +432,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/29/android应用加固2/" rel="prev" title="android应用加固2">
-                android应用加固2 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/25/android应用加固1/" rel="prev" title="android应用加固1">
+                android应用加固1 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -502,7 +502,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-count">59</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -513,7 +513,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -524,7 +524,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">57</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -283,6 +283,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/24/root与adb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/24/root与adb/" itemprop="url">root与adb</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-24T22:58:43+08:00">
+                2018-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="root"><a href="#root" class="headerlink" title="root"></a>root</h2><p>root就是指linux内核中的最高权限，与linux下完全同<br>我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行<br>adb需要root，但是adb没有root权限<br>无法一般获取原因：<br>su负责获取root权限；但是该程序位于/system/bin下。android为了安全去掉了linux这个命令。而想要将su拷贝到Android手机底层命令的执行目录（/system/bin）下并赋予执行权限。但是这里有一个问题，拷贝到系统目录下的操作，和在系统目录下更改权限的操作，只有root权限才可以做这个操作。这就是一个死锁。</p>
+<p>因此。需要漏洞。系统漏洞<br>计划于linux系统熟实后解决rop，看漏洞战争与安卓那本漏洞书进入漏洞研究。</p>
+<p>有俩方案：</p>
+<ol>
+<li>系统漏洞方案<br>主旨思想是查找系统漏洞，让本身具有root权限的进程执行打开root权限的操作。</li>
+<li>重烧eng boot.img方案<br>Android版本有user版本和eng版本的区别，其中eng版本可以用于开发调试，所以本身可以开启root权限。通过重烧eng boot.img版本来获取root权限。</li>
+</ol>
+<h2 id="adb"><a href="#adb" class="headerlink" title="adb"></a>adb</h2><p><a href="https://www.jianshu.com/p/3bacaeab06b2" target="_blank" rel="external">https://www.jianshu.com/p/3bacaeab06b2</a></p>
+<ol>
+<li>adb devices  获取手机设备序列号和连接状态</li>
+<li>adb get-serialno 获得设备序列号</li>
+<li>如果有多个模拟器或者Android设备同时连接上adb，那么可以通过命令来选择指定的目标设备。在执行adb命令时 在一般命令前再加入 –s &lt;序列号&gt;即可。adb -s XXXX shell（命令）</li>
+<li>只有一个设备时命令任意执行</li>
+<li>adb shell为进入shell模式</li>
+<li>adb install APK路径  安装apk<br>adb install -r APK路径  保留数据和缓存文件，重新安装APK<br>adb install -s APK路径  安装apk到sd卡<br>adb root 以root权限重启adb服务</li>
+<li>adb tcpip 5555让设备在 5555 端口监听 TCP/IP 连接</li>
+<li>adb connect device-ip-address 通过ip adb </li>
+<li>aadb pull sdcard/pull.txt d:\导出</li>
+<li>adb push d:\push.txt sdcard/导入</li>
+<li>adb forward tcp:主机端口 tcp:androd端口 转发主机端口到android端口<br>…</li>
+</ol>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>1)adb client（客户端）<br>client是运行在PC端的，该组件发送命令，可以通过发出adb命令从命令行终端调用客户端。每当我们发起一个adb命令的时候，就会开启一个client程序。当然，当我们开启DDMS或者ADT的时候，也会自动创建client。当我们开启一个client的时候，它首先会去检测后台是否已经有一个server程序在运行着，否则会开启一个adb-server进程。所有的client都是通过5037端口与adb-server进行通信的。</p>
+<p>2）adb daemon（adbd后台程序）<br>Daemon，该组件作为一个后台进程运行在模拟器/真实Android设备中，在设备上运行命令。daemon使用端口的范围是5554-5585，每个模拟器/设备连接到PC端时，总会开启这样一个后台进程，并且为其分配了两个连续的端口，比如：<br>Emulator1, console: 5554<br>Emulator1, adb: 5555<br>因为每个设备都分一组两个端口，所以adb连接手机的最大数量为16。<br>端口的作用，在这两个端口中，其中偶数端口是用于server与设备进行交互的，可以让server直接从设备中读取数据，而奇数端口是用来与设备的adbd进行连接通信的。</p>
+<p>3)adb server（服务器）<br>Server，该组件管理客户端和后台程序之间的通信，作为一个后台的程序运行在PC端。当一个server开启的时候，会自动绑定并且监听5037端口，接收client通过该端口发送过来的命令。同时server还会对5555-5585间的奇数端口进行扫描，进行对已连接设备的定位。<br><img src="https://i.imgur.com/6oOlqBe.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/20/android-NDK开发/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1806,160 +1971,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/24/思考/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/24/思考/" itemprop="url">思考</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-24T20:04:53+08:00">
-                2018-03-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="自己的感悟1"><a href="#自己的感悟1" class="headerlink" title="自己的感悟1"></a>自己的感悟1</h3><ol>
-<li>面向对象与面向过程的设计方式，对程序员来说，其实都是在写代码的处理数据的执行流程，</li>
-<li>代码与数据（包括对象数据，静态、全局数据等）分别存储在内存的不同区域，由代码控制数据处理。</li>
-<li>各种编写代码技巧方式不过是代码复用和代码可操控的数据范围（变量作用范围）的区别，</li>
-<li>线程则是分开一部分代码和数据去执行其它操作，其一般处理直到数据处理终结（其返回结果体现在内存中数据的改变上）。（回调只不过是延长线程代码处理而已）</li>
-</ol>
-<h3 id="2018-6-20"><a href="#2018-6-20" class="headerlink" title="2018.6.20"></a>2018.6.20</h3><ol>
-<li>c/c++需要头文件的原因：代码编译为库发布后符号信息基本只有目标的位置、大小、名字，符号名并不提供自我描述信息(c++提供类等信息)。所以具体的调用方式、参数、返回值以及需要生成的符号由头文件指明。</li>
-<li>java等完全面向对象的语言编译后自带符号信息（参数、返回值、名字等）。因此不用额外加入头文件告诉库使用者怎么用</li>
-<li>此外头文件中宏扩充其代码层面功能，全局变量使用模块外依靠符号引用完成。</li>
-<li>同时由于编译后携带信息少，因此反编译后信息少，从而逆向困难。</li>
-<li>关于逆向工程，逆向的是整个软件工程：二进制-&gt;代码-&gt;设计结构-&gt;需求功能。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2010,7 +2021,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-count">59</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2021,7 +2032,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2032,7 +2043,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">57</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

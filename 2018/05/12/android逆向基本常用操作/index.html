@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 mali/baksmali 针对单个dex文件更好。 拆包后含有smail代码及资">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-24T14:12:48.050Z">
+<meta property="og:updated_time" content="2018-07-25T12:29:19.193Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android逆向基本常用操作">
 <meta name="twitter:description" content="本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章 adb用法：http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/ 静态分析手动分析apk拆包一般使用官方的apktool即可指令：apktool d apk名 -o 输出文件名 mali/baksmali 针对单个dex文件更好。 拆包后含有smail代码及资">
@@ -397,7 +397,7 @@
 <li>前提完成，apk安装</li>
 <li>adb shell am start -D -n packageName/ActivityName开启android进程调试状态</li>
 <li>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程(这就是DDMS的功能之一)</li>
-<li>ida-&gt;debugger-&gt;attach-&gt;localhost(此时可设置debug options设置ida断点位置，比如在加载so时停下，可分析一个app的所有过程)-&gt;指定目标进程附加,此时该进程会处于ida调试之中。</li>
+<li>ida-&gt;debugger-&gt;attach-&gt;localhost(此时可设置debug options设置ida断点位置，比如在加载so时停下，可分析一个app的所有过程<strong>经测试不管用，要在进入调试窗口后的debugger-&gt;debugger options中设置有用</strong>，加载so时会直接断在linker中)-&gt;指定目标进程附加,此时该进程会处于ida调试之中。</li>
 <li>jdb -connect com.sun.jdi.SocketAttach:hostname=localhost,port=8700（jdb进行附加）这个就是java层的调试原理，通过java调试协议JDWP运行该应用，此时jdb调试与应用一起被ida中断</li>
 <li>此时ida中就可以使用od调试方法了。</li>
 </ol>
@@ -536,7 +536,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-count">59</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -547,7 +547,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -558,7 +558,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">57</span>
+                <span class="site-state-item-count">58</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

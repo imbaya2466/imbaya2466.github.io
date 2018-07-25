@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android," />
+  <meta name="keywords" content="android,黄皮," />
 
 
 
@@ -94,20 +94,18 @@
 
 
 
-<meta name="description" content="Context的类型并不是所有的context实例都是等价的。根据Android应用的组件不同，你访问的context推向有些细微的差别。 在doc中简介如下：与应用程序环境的全局信息的接口。这是一个抽象类，其实现由Android系统提供。它允许访问特定于应用程序的资源和类，以及对应用程序级操作（如启动活动，广播和接收意图等）的最新调用。 1.ApplicationApplication － 是一">
-<meta name="keywords" content="android">
+<meta name="description" content="逆向加固应用 四大组件如果想要使用，必须在androidmanifest.xml中声明。因此不论如何加固，四大组件名字都会摆出来（如何加固？要知道为何四大组件名字必须写在xml中），但application可以改，并动态加载application。 libdvm加载dex用的dvmDexFileOpenPartial，360加固自己实现了这个函数，art如何加载的？art也能调用360实现的这个函">
+<meta name="keywords" content="android,黄皮">
 <meta property="og:type" content="article">
-<meta property="og:title" content="android:context">
-<meta property="og:url" content="http://yoursite.com/2018/03/15/android-context/index.html">
+<meta property="og:title" content="黄皮23-25章简记">
+<meta property="og:url" content="http://yoursite.com/2018/07/25/黄皮23-25章简记/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="Context的类型并不是所有的context实例都是等价的。根据Android应用的组件不同，你访问的context推向有些细微的差别。 在doc中简介如下：与应用程序环境的全局信息的接口。这是一个抽象类，其实现由Android系统提供。它允许访问特定于应用程序的资源和类，以及对应用程序级操作（如启动活动，广播和接收意图等）的最新调用。 1.ApplicationApplication － 是一">
+<meta property="og:description" content="逆向加固应用 四大组件如果想要使用，必须在androidmanifest.xml中声明。因此不论如何加固，四大组件名字都会摆出来（如何加固？要知道为何四大组件名字必须写在xml中），但application可以改，并动态加载application。 libdvm加载dex用的dvmDexFileOpenPartial，360加固自己实现了这个函数，art如何加载的？art也能调用360实现的这个函">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.imgur.com/EHTf6pH.png">
-<meta property="og:updated_time" content="2018-03-15T12:09:36.378Z">
+<meta property="og:updated_time" content="2018-07-25T16:04:12.807Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="android:context">
-<meta name="twitter:description" content="Context的类型并不是所有的context实例都是等价的。根据Android应用的组件不同，你访问的context推向有些细微的差别。 在doc中简介如下：与应用程序环境的全局信息的接口。这是一个抽象类，其实现由Android系统提供。它允许访问特定于应用程序的资源和类，以及对应用程序级操作（如启动活动，广播和接收意图等）的最新调用。 1.ApplicationApplication － 是一">
-<meta name="twitter:image" content="https://i.imgur.com/EHTf6pH.png">
+<meta name="twitter:title" content="黄皮23-25章简记">
+<meta name="twitter:description" content="逆向加固应用 四大组件如果想要使用，必须在androidmanifest.xml中声明。因此不论如何加固，四大组件名字都会摆出来（如何加固？要知道为何四大组件名字必须写在xml中），但application可以改，并动态加载application。 libdvm加载dex用的dvmDexFileOpenPartial，360加固自己实现了这个函数，art如何加载的？art也能调用360实现的这个函">
 
 
 
@@ -136,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/03/15/android-context/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/25/黄皮23-25章简记/"/>
 
 
 
 
 
-  <title>android:context | GGWP</title>
+  <title>黄皮23-25章简记 | GGWP</title>
   
 
 
@@ -285,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/15/android-context/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/25/黄皮23-25章简记/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="imbaya">
@@ -302,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">android:context</h1>
+          <h1 class="post-title" itemprop="name headline">黄皮23-25章简记</h1>
         
 
         <div class="post-meta">
@@ -314,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-15T18:31:52+08:00">
-                2018-03-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-25T21:25:34+08:00">
+                2018-07-25
               </time>
             
 
@@ -337,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
                   </a>
                 </span>
 
@@ -374,22 +372,17 @@
       
 
       
-        <h3 id="Context的类型"><a href="#Context的类型" class="headerlink" title="Context的类型"></a>Context的类型</h3><p>并不是所有的context实例都是等价的。根据Android应用的组件不同，你访问的context推向有些细微的差别。</p>
-<p>在doc中简介如下：<br>与应用程序环境的全局信息的接口。这是一个抽象类，其实现由Android系统提供。它允许访问特定于应用程序的资源和类，以及对应用程序级操作（如启动活动，广播和接收意图等）的最新调用。</p>
-<h4 id="1-Application"><a href="#1-Application" class="headerlink" title="1.Application"></a>1.Application</h4><p>Application － 是一个运行在你的应用进程中的单例。在Activity或者Service中，它可以通过getApplication()函数获得，或者人和继承于context的对象中，通过getApplicationContext()方法获得。不管你是通过何种方法在哪里获得的，在一个进程内，你总是获得到同一个实例。</p>
-<h4 id="2-Activity-Service"><a href="#2-Activity-Service" class="headerlink" title="2.Activity/Service"></a>2.Activity/Service</h4><p>Activity/Service － 继承于ContextWrapper，它实现了与context同样API，但是代理这些方法调用到内部隐藏的Context实例，即我们所知道的基础context。任何时候当系统创建一个新的Activity或者Service实例的时候，它也创建一个新的ContextImpl实例来做所有的繁重的工作。每一个Activity和Service以及其对应的基础context，对每个实例来说都是唯一的。</p>
-<h4 id="3-BroadcastReciver"><a href="#3-BroadcastReciver" class="headerlink" title="3.BroadcastReciver"></a>3.BroadcastReciver</h4><p>BroadcastReciver － 它本身不是context，也没有context在它里面，但是每当一个新的广播到达的时候，框架都传递一个context对象到onReceive()。这个context是一个ReceiverRestrictedContext实例，它有两个主要函数被禁掉：registerReceiver()和bindService()。这两个函数在BroadcastReceiver.onReceive()不允许调用。每次Receiver处理一个广播，传递进来的context都是一个新的实例。</p>
-<h4 id="4-ContentProvider"><a href="#4-ContentProvider" class="headerlink" title="4.ContentProvider"></a>4.ContentProvider</h4><p>ContentProvider － 它本身也不是一个Context，但是它可以通过getContext()函数给你一个Context对象。如果ContentProvider是在调用者的的本地（例如，在同一个应用进程），getContext()将返回的是Application单例。然而，如果调用这和ContentProvider在不同的进程的时候，它将返回一个新创建的实例代表这个Provider(提供商)所运行的包。</p>
-<h3 id="防止内存泄漏"><a href="#防止内存泄漏" class="headerlink" title="防止内存泄漏"></a>防止内存泄漏</h3><p>保存application context最好</p>
-<h3 id="context的能力"><a href="#context的能力" class="headerlink" title="context的能力"></a>context的能力</h3><p>好图：<br><img src="https://i.imgur.com/EHTf6pH.png" alt=""></p>
-<p>注：NO1 表示Application context的确可以开始一个Activity，但是它需要创建一个新的task。这可能会满足一些特定的需求，但是在你的应用中会创建一个不标准的回退栈（back stack），这通常是不推荐的或者不是是好的实践。</p>
-<p>NO2 表示这是非法的，但是这个填充（inflation）的确可以完成，但是是使用所运行的系统默认的主题（theme），而不是你app定义的主题。</p>
-<p>NO3 在Android4.2以上，如果Receiver是null的话（这是用来获取一个sticky broadcast的当前 值的），这是允许的。</p>
-<p>关键点：只有activity可以控制界面相关其它的权限都差不多，但广播收到的context最垃圾</p>
-<h3 id="用户界面UI"><a href="#用户界面UI" class="headerlink" title="用户界面UI"></a>用户界面UI</h3><p>从前面的表格中可以看到，application context有很多功能并不是合适去做，而这些功能都与UI相关。实际上，只有Activity能够处理所有与UI相关的任务。其他类别的context实例功能都差不多。</p>
-<p>幸运的是，在应用中这三种操作基本上都不需要在Activity范围之外进行，这很可能是android框架故意这么设计的。尝试显示一个使用Aplication context创建的Dialog，或者使用Application context开始一个Activity，系统会抛出一个异常，让你的application崩溃，非常强的告诉你某些地方出了问题。</p>
-<p>一个并不明显的问题是填充布局（inflating layout）使用正确的context关系到其中的一个行为。当你使用Application context来inflate一个布局的时候，框架并不会报错，并返回一个使用系统默认的主题创建一个完美的view给你，而没有考虑你的applicaiton自定义的theme和style。这是因为Acitivity是唯一的绑定了在manifast文件种定义主题的Context。其他的Context实例将会使用系统默认的主题来inflater你的view。导致显示的结果并不是你所希望的。</p>
-<h3 id="经验法则"><a href="#经验法则" class="headerlink" title="经验法则"></a>经验法则</h3><p>绝大多数情况下，使用在你的所工作的组建内部能够直接获取的Context。只要这个引用没有超过这个组建的生命周期，你可以安全的保存这个引用。一旦你要保存一个context的引用，它超过了你的Activity或者Service的生命周期范围，甚至是暂时的，你就需要转换你的引用为Application context。</p>
+        <h2 id="逆向加固应用"><a href="#逆向加固应用" class="headerlink" title="逆向加固应用"></a>逆向加固应用</h2><ol>
+<li>四大组件如果想要使用，必须在androidmanifest.xml中声明。因此不论如何加固，四大组件名字都会摆出来（如何加固？要知道为何四大组件名字必须写在xml中），但application可以改，并动态加载application。</li>
+<li>libdvm加载dex用的dvmDexFileOpenPartial，360加固自己实现了这个函数，art如何加载的？art也能调用360实现的这个函数？art与dvm开放的接口相同。相同又是如何做到完整替换的？-针对的是java字节码。需要阅读双方源码。</li>
+<li>ida导入头是用读取文件，执行脚本用shift+F2</li>
+<li>最好的过一般反调试的方法是改系统源码。</li>
+<li>webview的js可访问自定义的java对象，用来提供前端操控本机app的内部行为，相当于自定义了一个浏览器接口。同时带来了很多安全问题，注册js对象名时一般要加密-获取该名称即可调用内部接口，加密后是知道开放的对象是什么但不知道用什么名字调用。获取该字串：java层调试需要从头附加不容易过壳。（java如何附加到运行一半的app中调试？）修改smali前面的壳容易检测出来，前端js遍历全部对象挨个调用可以不获取字串调用，仿造java层加载so调用加密方法可以获取字串。反正要求是给定字串加密后为所需，固定的数据，不用分析加密过程取得结果就行。</li>
+<li>adb可以帮助输入内容等与屏幕交互，点击输入框后用adb shell input text “”即可。</li>
+<li>书中例题就是考一个提供给js接口的安全性。</li>
+<li>最好的dump dex也是修改android源码。</li>
+<li>现在的app都是做成了浏览器开放接口给js调用，所以需要研究webview或是自定义view的详细用法与原理！！！</li>
+</ol>
 
       
     </div>
@@ -409,6 +402,8 @@
           
             <a href="/tags/android/" rel="tag"># android</a>
           
+            <a href="/tags/黄皮/" rel="tag"># 黄皮</a>
+          
         </div>
       
 
@@ -420,8 +415,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/03/15/c-类的内存存储/" rel="next" title="c++类的内存存储">
-                <i class="fa fa-chevron-left"></i> c++类的内存存储
+              <a href="/2018/07/23/android分析利器DDMS/" rel="next" title="android分析利器DDMS">
+                <i class="fa fa-chevron-left"></i> android分析利器DDMS
               </a>
             
           </div>
@@ -429,10 +424,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/03/24/思考/" rel="prev" title="思考">
-                思考 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -566,7 +557,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Context的类型"><span class="nav-number">1.</span> <span class="nav-text">Context的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Application"><span class="nav-number">1.1.</span> <span class="nav-text">1.Application</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Activity-Service"><span class="nav-number">1.2.</span> <span class="nav-text">2.Activity/Service</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-BroadcastReciver"><span class="nav-number">1.3.</span> <span class="nav-text">3.BroadcastReciver</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-ContentProvider"><span class="nav-number">1.4.</span> <span class="nav-text">4.ContentProvider</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#防止内存泄漏"><span class="nav-number">2.</span> <span class="nav-text">防止内存泄漏</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#context的能力"><span class="nav-number">3.</span> <span class="nav-text">context的能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户界面UI"><span class="nav-number">4.</span> <span class="nav-text">用户界面UI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#经验法则"><span class="nav-number">5.</span> <span class="nav-text">经验法则</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#逆向加固应用"><span class="nav-number">1.</span> <span class="nav-text">逆向加固应用</span></a></li></ol></div>
             
 
           </div>
