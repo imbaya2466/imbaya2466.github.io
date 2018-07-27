@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android,逆向,动态调试," />
+  <meta name="keywords" content="android逆向,脱壳," />
 
 
 
@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
-<meta name="keywords" content="android,逆向,动态调试">
+<meta name="description" content="前言自制rom才是通杀adb shell ps可看全部进程。adb shell 后ps却不行….adb shell dumpsys activity top |more 可以直接显示最上层应用的详细信息，包名、id、pid都可以查看到。（less和more在前是打开文件用的，想用其功能显示输出要用管道）">
+<meta name="keywords" content="android逆向,脱壳">
 <meta property="og:type" content="article">
-<meta property="og:title" content="android动态调试-java层">
-<meta property="og:url" content="http://yoursite.com/2018/04/29/android动态调试-java层/index.html">
+<meta property="og:title" content="android脱壳机使用">
+<meta property="og:url" content="http://yoursite.com/2018/07/27/android脱壳机使用/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
+<meta property="og:description" content="前言自制rom才是通杀adb shell ps可看全部进程。adb shell 后ps却不行….adb shell dumpsys activity top |more 可以直接显示最上层应用的详细信息，包名、id、pid都可以查看到。（less和more在前是打开文件用的，想用其功能显示输出要用管道）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-14T17:02:38.759Z">
+<meta property="og:updated_time" content="2018-07-27T17:27:15.443Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="android动态调试-java层">
-<meta name="twitter:description" content="前备条件 AS &amp;amp;安装smalidea插件 device monitor(DDMS)-位于SDK/tool android真机/模拟器  步骤 拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&amp;g">
+<meta name="twitter:title" content="android脱壳机使用">
+<meta name="twitter:description" content="前言自制rom才是通杀adb shell ps可看全部进程。adb shell 后ps却不行….adb shell dumpsys activity top |more 可以直接显示最上层应用的详细信息，包名、id、pid都可以查看到。（less和more在前是打开文件用的，想用其功能显示输出要用管道）">
 
 
 
@@ -134,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/29/android动态调试-java层/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/27/android脱壳机使用/"/>
 
 
 
 
 
-  <title>android动态调试-java层 | GGWP</title>
+  <title>android脱壳机使用 | GGWP</title>
   
 
 
@@ -283,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/29/android动态调试-java层/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/27/android脱壳机使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="imbaya">
@@ -300,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">android动态调试-java层</h1>
+          <h1 class="post-title" itemprop="name headline">android脱壳机使用</h1>
         
 
         <div class="post-meta">
@@ -312,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-29T17:19:51+08:00">
-                2018-04-29
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-27T19:33:30+08:00">
+                2018-07-27
               </time>
             
 
@@ -372,23 +372,31 @@
       
 
       
-        <h3 id="前备条件"><a href="#前备条件" class="headerlink" title="前备条件"></a>前备条件</h3><ol>
-<li>AS &amp;安装smalidea插件</li>
-<li>device monitor(DDMS)-位于SDK/tool</li>
-<li>android真机/模拟器</li>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>自制rom才是通杀<br>adb shell ps可看全部进程。adb shell 后ps却不行….<br>adb shell dumpsys activity top |more 可以直接显示最上层应用的详细信息，包名、id、pid都可以查看到。（less和more在前是打开文件用的，想用其功能显示输出要用管道）</p>
+<a id="more"></a>
+<h2 id="drizzleDump"><a href="#drizzleDump" class="headerlink" title="drizzleDump"></a>drizzleDump</h2><p>一个基于内存搜索的android脱壳工具，开源<br>主页：<a href="https://github.com/DrizzleRisk/drizzleDumper#drizzledumper" target="_blank" rel="external">https://github.com/DrizzleRisk/drizzleDumper#drizzledumper</a></p>
+<p><strong>命令</strong><br>./drizzleDumper package_name wait_times(s)<br><strong>使用</strong></p>
+<ol>
+<li>这个工具就是ndk程序，所以要在Root后的Android环境下运行（虚拟机和实体机都可以）</li>
+<li>一般来说，先让工具跑起来等着，第一个参数是包名，第二个参数是等待时间。</li>
+<li>等待时间有两重含义，第一是当工具发现APP进程后，等待多久才开始第一次Scan；第二是每次Scan的时间间隔。（因为每种壳机制都不太一样，所以dex在内存中出现和留存的时间也不同，所以这个wait_time可以灵活配置）</li>
+<li>打开应用</li>
+<li>dump下来的存在data/local/tmp中</li>
+<li>觉得差不多了就ctrl+c终止</li>
 </ol>
-<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><ol>
-<li>拆包apk在AndroidMainfest.xml中添加debuggable=“true”，打包签名。<br>将反编译后的文件夹导入Android Studio，import Project。可以右键smali文件夹Mark Direcotry as-&gt;Generated S R即将smali目录设置为源码根目录(导入前重命名为src)。</li>
-<li>首先运行device moniter与android（测试海马模拟器可行），当dm无法找到android时使用adb connect连接。<br>输入：adb connect 127.0.0.1:26944。如下：<br>海马玩模拟器的端口号是26944。<br>逍遥安卓模拟器的端口号是21503。<br>夜神玩模拟器的端口号是62001。<br>当dm可显示android进程时即可</li>
-<li>android中安装需要调试的apk，<br>adb shell am start -D -n packageName/ActivityName来开启程序进入等待调试状态后面俩个name在AndroidManifest.xml下找，如：<br>adb shell am start -D -n com.example.imbaya.crackme01/com.example.imbaya.crackme01.MainActivity<br>这样就可以让android中该应用处于调试状态<br>在dm中找到选中进程就会开启8700调试端口</li>
-<li>在AS中打开Edit Configuration，添加remote类型的调试，port为8700</li>
-<li>此时随意在smali中添加断点然后开启debug即可进入调试</li>
+<p><strong>原理</strong><br>./drizzleDumper package_name wait_times(s)<br>基本就是自己定何时开始暴力搜索内存，搜到后就dump。</p>
+<p><strong>测试</strong><br>360：<br> ./drizzleDumper com.example.imbaya.a360<br>之后打开加固应用<br>等一会ctrl+c<br>脱下来了，dex中被加了不少java层的类，oncreat也被native化了</p>
+<h2 id="zjdroid"><a href="#zjdroid" class="headerlink" title="zjdroid"></a>zjdroid</h2><p>基于基于Xposed Framewrok的动态逆向分析模块。半开源<br>主页：<a href="https://github.com/halfkiss/ZjDroid" target="_blank" rel="external">https://github.com/halfkiss/ZjDroid</a><br><strong>命令</strong>：<br>1、获取APK当前加载DEX文件信息：<br>adb shell am broadcast -a com.zjdroid.invoke –ei target pid –es cmd ‘{“action”:”dump_dexinfo”}’<br>2、获取指定DEX文件包含可加载类名：<br>adb shell am broadcast -a com.zjdroid.invoke –ei target pid –es cmd ‘{“action”:”dump_class”,”dexpath”:”<strong>*</strong>“}’<br>4、根据Dalvik相关内存指针动态反编译指定DEX，并以文件形式保存。<br>adb shell am broadcast -a com.zjdroid.invoke –ei target pid –es cmd ‘{“action”:”backsmali”,”dexpath”:”<strong>*</strong>“}’<br>该方式可以脱壳目前大部分流行的加固防护。<br>例外情况：<br>由于ApkProtect特定防修改检测，需要做如下修改即可解固该保护：</p>
+<p>（1）在设备上创建特定目录（如/data/local）并 chmod 为777<br>（2）复制zjdroid.apk到该目录，并修改文件名为zjdroid.jar<br>（3）修改/data/data/de.robv.android.xposed.installer/conf/modules.list，模块代码文件修改为zjdroid.jar，然后重启设备即可。<br>5、Dump指定DEX内存中的数据并保存到文件（数据为odex格式，可在pc上反编译）。<br>adb shell am broadcast -a com.zjdroid.invoke –ei target pid –es cmd ‘{“action”:”dump_dexfile”,”dexpath”:”<strong>*</strong>“}’<br>6、Dump指定内存空间区域数据到文件<br>adb shell am broadcast -a com.zjdroid.invoke –ei target pid –es cmd ‘{“action”:”dump_mem”,”start”:1234567,”length”:123}’<br>7、Dump Dalvik堆栈信息到文件，文件可以通过java heap分析工具分析处理。<br>adb shell am broadcast -a com.zjdroid.invoke –ei target pid –es cmd ‘{“action”:”dump_heap”}’ </p>
+<p><strong>使用</strong></p>
+<ol>
+<li>打开ddms logcat加tag限制：zjdroid-shell-应用包名</li>
+<li>am broadcast -a com.zjdroid.invoke –ei target <em>pid</em> –es cmd ‘{action:dump_dexinfo}’ 从log中找到apk路径</li>
+<li>am broadcast -a com.zjdroid.invoke –ei target <em>pid</em> –es cmd ‘{action:backsmali, “dexpath”:”<em>apk路径</em>“}’从log中看到dump路径。</li>
 </ol>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>因为安卓的应用程序都是Zygote fork自己来快速启动进程进而快速启动程序的，因此不能直接以调试方式打开app，只能先启动app，再依靠android上的虚拟机与gdb调试，将调试信息通过adb发给主机</p>
-<p>关于端口转发：<br>adb forward  本机：  设备：<br>本机的端口转发到设备的端口上</p>
-<p>当一个设备链接上时，DDSM和ADB之间又会建立VM monitoring service用于监控设备上的虚拟机。 对于设备上每个虚拟机的进程， DDMS都会在主机开启一个监听端口。端口从8600开始。将设备中的调试信息通过adb取出转发到主机上的监听端口中。其中选中的额外开一个8700<br>等价于<br>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程</p>
-<p>android进程-&gt;adb映射到主机端口并转化调试协议JDWP-&gt;AS连接pc的端口从而调试android进程</p>
-
+<p><strong>原理</strong><br>底层应该是采用了libdvm.so或者是libart.so库来得到具体的函数，然后通过dex对应的cookie值获取信息。</p>
+<p><strong>测试</strong><br>腾讯和360的壳均失败，而且应用停止，应该针对的做了反脱壳处理。</p>
+<h2 id="DexHunter"><a href="#DexHunter" class="headerlink" title="DexHunter"></a>DexHunter</h2><h2 id="dumpDex"><a href="#dumpDex" class="headerlink" title="dumpDex"></a>dumpDex</h2>
       
     </div>
     
@@ -405,11 +413,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/android/" rel="tag"># android</a>
+            <a href="/tags/android逆向/" rel="tag"># android逆向</a>
           
-            <a href="/tags/逆向/" rel="tag"># 逆向</a>
-          
-            <a href="/tags/动态调试/" rel="tag"># 动态调试</a>
+            <a href="/tags/脱壳/" rel="tag"># 脱壳</a>
           
         </div>
       
@@ -422,8 +428,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/27/java知识点/" rel="next" title="java知识点">
-                <i class="fa fa-chevron-left"></i> java知识点
+              <a href="/2018/07/25/黄皮23-25章简记/" rel="next" title="黄皮23-25章简记">
+                <i class="fa fa-chevron-left"></i> 黄皮23-25章简记
               </a>
             
           </div>
@@ -431,10 +437,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/30/gcc与make/" rel="prev" title="gcc与make">
-                gcc与make <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -568,7 +570,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前备条件"><span class="nav-number">1.</span> <span class="nav-text">前备条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤"><span class="nav-number">2.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">3.</span> <span class="nav-text">原理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#drizzleDump"><span class="nav-number">2.</span> <span class="nav-text">drizzleDump</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#zjdroid"><span class="nav-number">3.</span> <span class="nav-text">zjdroid</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DexHunter"><span class="nav-number">4.</span> <span class="nav-text">DexHunter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dumpDex"><span class="nav-number">5.</span> <span class="nav-text">dumpDex</span></a></li></ol></div>
             
 
           </div>

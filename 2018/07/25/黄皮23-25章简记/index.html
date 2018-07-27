@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android,黄皮," />
+  <meta name="keywords" content="android逆向,黄皮," />
 
 
 
@@ -95,14 +95,14 @@
 
 
 <meta name="description" content="逆向加固应用 四大组件如果想要使用，必须在androidmanifest.xml中声明。因此不论如何加固，四大组件名字都会摆出来（如何加固？要知道为何四大组件名字必须写在xml中），但application可以改，并动态加载application。 libdvm加载dex用的dvmDexFileOpenPartial，360加固自己实现了这个函数，art如何加载的？art也能调用360实现的这个函">
-<meta name="keywords" content="android,黄皮">
+<meta name="keywords" content="android逆向,黄皮">
 <meta property="og:type" content="article">
 <meta property="og:title" content="黄皮23-25章简记">
 <meta property="og:url" content="http://yoursite.com/2018/07/25/黄皮23-25章简记/index.html">
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="逆向加固应用 四大组件如果想要使用，必须在androidmanifest.xml中声明。因此不论如何加固，四大组件名字都会摆出来（如何加固？要知道为何四大组件名字必须写在xml中），但application可以改，并动态加载application。 libdvm加载dex用的dvmDexFileOpenPartial，360加固自己实现了这个函数，art如何加载的？art也能调用360实现的这个函">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-25T16:04:12.807Z">
+<meta property="og:updated_time" content="2018-07-27T11:34:18.361Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="黄皮23-25章简记">
 <meta name="twitter:description" content="逆向加固应用 四大组件如果想要使用，必须在androidmanifest.xml中声明。因此不论如何加固，四大组件名字都会摆出来（如何加固？要知道为何四大组件名字必须写在xml中），但application可以改，并动态加载application。 libdvm加载dex用的dvmDexFileOpenPartial，360加固自己实现了这个函数，art如何加载的？art也能调用360实现的这个函">
@@ -383,6 +383,23 @@
 <li>最好的dump dex也是修改android源码。</li>
 <li>现在的app都是做成了浏览器开放接口给js调用，所以需要研究webview或是自定义view的详细用法与原理！！！</li>
 </ol>
+<h2 id="爱加密"><a href="#爱加密" class="headerlink" title="爱加密"></a>爱加密</h2><ol>
+<li>反调试一般为了阻止你一步dump关键函数，可以通过在常见反调试点下断的方式绕过，比如fopen，gets等。当然最好的dump和过反调试方式还是改android内核源码。（做一个必须-简直无敌）</li>
+<li>ida可以用G直接搜索全局符号表找到指定函数</li>
+<li>ida的hex-view可以改内存空间，edit改完记得点apply change。</li>
+<li>ida也可以修改寄存器等</li>
+<li>还原apk：把manifest中的application name还原，assets不需要的删除，apktool回编译，把dex换成dump出来的，签名。</li>
+<li>dvm加载so用的dvmloadnativecode函数</li>
+</ol>
+<h2 id="android漏洞"><a href="#android漏洞" class="headerlink" title="android漏洞"></a>android漏洞</h2><ol>
+<li>文件解压漏洞，解压的文件名可以含任意字符，所以可以用../进入data/data（此目录下各应用用户为各应用本身，所以有7权，此外data/app下各文件属于system用户，但其他用户有执行和阅读权，所以可打开并执行）覆盖/自定义文件</li>
+<li>屏幕录取权限不易发现漏洞，可加windowmanager.layoutparams.FLAG_SECURE使自己应用安全防录制与截屏</li>
+</ol>
+<h2 id="Wannacry加密病毒"><a href="#Wannacry加密病毒" class="headerlink" title="Wannacry加密病毒"></a>Wannacry加密病毒</h2><ol>
+<li>通过获取windowmanager获取权限建立浮窗为顶层造成勒索，同时用DeviceAdminReceiver修改锁屏密码使其重启也不知密码</li>
+<li>可怕的是sd卡权限，sd卡权限默认直接就对应用开放了，因此该应用把sd卡内的数据全部加密。经测试我的模拟器在完全没有提醒的情况下虚拟sd卡被破坏。</li>
+</ol>
+<p>对于所有平台，一般公共数据都是开放的，sd卡、硬盘等，所有软件都可以使用api访问这部分内容，因此任意软件都可以修改加密其内容形成勒索，执行软件时一定要注意。</p>
 
       
     </div>
@@ -400,7 +417,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/android/" rel="tag"># android</a>
+            <a href="/tags/android逆向/" rel="tag"># android逆向</a>
           
             <a href="/tags/黄皮/" rel="tag"># 黄皮</a>
           
@@ -424,6 +441,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/27/android脱壳机使用/" rel="prev" title="android脱壳机使用">
+                android脱壳机使用 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -500,7 +521,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -522,7 +543,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">58</span>
+                <span class="site-state-item-count">59</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -557,7 +578,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#逆向加固应用"><span class="nav-number">1.</span> <span class="nav-text">逆向加固应用</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#逆向加固应用"><span class="nav-number">1.</span> <span class="nav-text">逆向加固应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#爱加密"><span class="nav-number">2.</span> <span class="nav-text">爱加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android漏洞"><span class="nav-number">3.</span> <span class="nav-text">android漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Wannacry加密病毒"><span class="nav-number">4.</span> <span class="nav-text">Wannacry加密病毒</span></a></li></ol></div>
             
 
           </div>
