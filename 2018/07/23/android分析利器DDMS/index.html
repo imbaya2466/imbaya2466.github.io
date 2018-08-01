@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="DDMS提供了强大的应用监控能力https://blog.csdn.net/songyi160/article/details/53107245 有关逆向方面可用的： 应用信息只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。调试服务端在pc，用来与被调试端（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用">
+<meta name="description" content="DDMS提供了强大的应用监控能力https://blog.csdn.net/songyi160/article/details/53107245 有关逆向方面可用的： 应用信息只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。调试端在pc，用来与被调试服务端（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用">
 <meta name="keywords" content="android应用分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android分析利器DDMS">
 <meta property="og:url" content="http://yoursite.com/2018/07/23/android分析利器DDMS/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="DDMS提供了强大的应用监控能力https://blog.csdn.net/songyi160/article/details/53107245 有关逆向方面可用的： 应用信息只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。调试服务端在pc，用来与被调试端（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用">
+<meta property="og:description" content="DDMS提供了强大的应用监控能力https://blog.csdn.net/songyi160/article/details/53107245 有关逆向方面可用的： 应用信息只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。调试端在pc，用来与被调试服务端（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-23T15:13:02.976Z">
+<meta property="og:updated_time" content="2018-07-29T11:49:06.011Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android分析利器DDMS">
-<meta name="twitter:description" content="DDMS提供了强大的应用监控能力https://blog.csdn.net/songyi160/article/details/53107245 有关逆向方面可用的： 应用信息只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。调试服务端在pc，用来与被调试端（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用">
+<meta name="twitter:description" content="DDMS提供了强大的应用监控能力https://blog.csdn.net/songyi160/article/details/53107245 有关逆向方面可用的： 应用信息只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。调试端在pc，用来与被调试服务端（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用">
 
 
 
@@ -374,7 +374,7 @@
       
         <p>DDMS提供了强大的应用监控能力<br><a href="https://blog.csdn.net/songyi160/article/details/53107245" target="_blank" rel="external">https://blog.csdn.net/songyi160/article/details/53107245</a></p>
 <p>有关逆向方面可用的：</p>
-<h2 id="应用信息"><a href="#应用信息" class="headerlink" title="应用信息"></a>应用信息</h2><p>只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。<br><strong>调试服务端</strong>在pc，用来与被<strong>调试端</strong>（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用公共的。</p>
+<h2 id="应用信息"><a href="#应用信息" class="headerlink" title="应用信息"></a>应用信息</h2><p>只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。<br><strong>调试端</strong>在pc，用来与被<strong>调试服务端</strong>（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用公共的。可以用adb或ddms将这个端口转发到pc端</p>
 <h2 id="控件"><a href="#控件" class="headerlink" title="控件"></a>控件</h2><p>加载layout时id名标记，用R.id数字在资源中查找对应名称，用名称找到控件。读资源时应该直接分析成id。混淆可改名。<br>通过代码定位控件：可以通过id在public或R中对应名字，后用名字在layout中对应。<br>通过控件定位代码：layout找到名字public找到id，再在代码中找id</p>
 <p>通过DDMS的Dump View可以直观查看当前页面layout布局，并可以查看控件信息，名字。</p>
 <h2 id="logcat"><a href="#logcat" class="headerlink" title="logcat"></a>logcat</h2><p>完整的logcat输出，完整的筛选功能。</p>

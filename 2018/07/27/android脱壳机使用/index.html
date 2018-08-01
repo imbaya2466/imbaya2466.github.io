@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言自制rom才是通杀adb shell ps可看全部进程。adb shell 后ps却不行….adb shell dumpsys activity top |more 可以直接显示最上层应用的详细信息，包名、id、pid都可以查看到。（less和more在前是打开文件用的，想用其功能显示输出要用管道）">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-27T17:27:15.443Z">
+<meta property="og:updated_time" content="2018-07-28T12:52:48.925Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android脱壳机使用">
 <meta name="twitter:description" content="前言自制rom才是通杀adb shell ps可看全部进程。adb shell 后ps却不行….adb shell dumpsys activity top |more 可以直接显示最上层应用的详细信息，包名、id、pid都可以查看到。（less和more在前是打开文件用的，想用其功能显示输出要用管道）">
@@ -396,7 +396,10 @@
 </ol>
 <p><strong>原理</strong><br>底层应该是采用了libdvm.so或者是libart.so库来得到具体的函数，然后通过dex对应的cookie值获取信息。</p>
 <p><strong>测试</strong><br>腾讯和360的壳均失败，而且应用停止，应该针对的做了反脱壳处理。</p>
-<h2 id="DexHunter"><a href="#DexHunter" class="headerlink" title="DexHunter"></a>DexHunter</h2><h2 id="dumpDex"><a href="#dumpDex" class="headerlink" title="dumpDex"></a>dumpDex</h2>
+<h2 id="DexHunter"><a href="#DexHunter" class="headerlink" title="DexHunter"></a>DexHunter</h2><p>修改android源码进行脱壳，开源<a href="https://github.com/zyq8709/DexHunter/" target="_blank" rel="external">https://github.com/zyq8709/DexHunter/</a><br>有很专业的官方android加固分析文章在其中。</p>
+<p>未测试</p>
+<h2 id="dumpDex"><a href="#dumpDex" class="headerlink" title="dumpDex"></a>dumpDex</h2><p>基于xposed的。开源<br><a href="https://www.52pojie.cn/thread-714353-1-1.html" target="_blank" rel="external">https://www.52pojie.cn/thread-714353-1-1.html</a><br><a href="https://github.com/WrBug/dumpDex" target="_blank" rel="external">https://github.com/WrBug/dumpDex</a><br>源码编译不成功</p>
+
       
     </div>
     
