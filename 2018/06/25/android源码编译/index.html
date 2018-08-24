@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="本次基于google官方文档下载编译：https://source.android.com/setup/build/requirements还有一篇详细的博客：https://blog.csdn.net/dd864140130/article/details/51718187 相关准备master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-01T15:56:04.227Z">
+<meta property="og:updated_time" content="2018-08-24T10:02:55.528Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android源码编译">
 <meta name="twitter:description" content="本次基于google官方文档下载编译：https://source.android.com/setup/build/requirements还有一篇详细的博客：https://blog.csdn.net/dd864140130/article/details/51718187 相关准备master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，">
@@ -383,7 +383,7 @@
 <p>学习linux脚本！</p>
 <h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><a href="https://source.android.com/setup/build/building" target="_blank" rel="external">https://source.android.com/setup/build/building</a><br>先找到对应版本设备的二进制文件：<a href="https://developers.google.com/android/drivers" target="_blank" rel="external">https://developers.google.com/android/drivers</a><br><strong>俩个都</strong>下载按说明添加到源代码树的 vendor/ 层次结构中。<br>之后步骤按照官方。<br>遇到的错误：<br>jack未启动错误：jack-admin start-server再接着make<br>Out of memory error：<br>输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m&quot;</div><div class="line">out/host/linux-x86/bin/jack-admin kill-server</div><div class="line">out/host/linux-x86/bin/jack-admin start-server</div></pre></td></tr></table></figure></p>
 <h2 id="虚拟机运行"><a href="#虚拟机运行" class="headerlink" title="虚拟机运行"></a>虚拟机运行</h2><p>source build/envsetup.sh这句就是在配置环境变量，可以使用jack、emulator等<br>编译完成后直接emulator等较长时间即可在虚拟机中运行android了</p>
-<h2 id="fastboot刷机"><a href="#fastboot刷机" class="headerlink" title="fastboot刷机"></a>fastboot刷机</h2><p>编译后配置好的fastboot直接刷到实体机（因此购买谷歌官方机十分方便测试cm的mi3编译时失败…..买个google垃圾机吧…）</p>
+<h2 id="fastboot刷机"><a href="#fastboot刷机" class="headerlink" title="fastboot刷机"></a>fastboot刷机</h2><p>编译后配置好的fastboot直接刷到实体机（因此购买谷歌官方机十分方便测试cm的mi3编译时失败…..买个google垃圾机吧…）<br>google机开启设备锁编译完成后使用astboot flashall -w直接刷机成功。</p>
 <h2 id="打包rom"><a href="#打包rom" class="headerlink" title="打包rom"></a>打包rom</h2><h3 id="几个补充知识"><a href="#几个补充知识" class="headerlink" title="几个补充知识"></a>几个补充知识</h3><p><strong>Android基于Permission的安全机制</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/17131835" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/17131835</a><br>简记：系统文件与目录被用uid、gid划分，进程持有uid/gid，从而决定进程能否使用api或者访问文件等操作，android root后所有的root操作一定要用su提权，所以在su时检测是否给权。<br>system/build.prop:系统信息<br>default.prop：系统配置.debugger选项所在<br>当你获得了android的应用shell时，可以用run-as变成开了debugger权限进程的uid shell。从而越权。</p>
 <p><strong>android开源项目的管理</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18195205" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18195205</a><br>未看完</p>
 <p><strong>android编译系统</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18466779" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18466779</a><br>android的make由一个mk文件，include其它mk文件组成。只执行一个。</p>
@@ -426,8 +426,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/25/android应用加固1/" rel="next" title="android应用加固1">
-                <i class="fa fa-chevron-left"></i> android应用加固1
+              <a href="/2018/06/15/frida官方文档/" rel="next" title="frida官方文档">
+                <i class="fa fa-chevron-left"></i> frida官方文档
               </a>
             
           </div>
@@ -436,8 +436,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/06/29/android应用加固2/" rel="prev" title="android应用加固2">
-                android应用加固2 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/06/25/看雪2018ctf/" rel="prev" title="看雪2018ctf">
+                看雪2018ctf <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -515,7 +515,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-count">61</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -526,7 +526,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -537,7 +537,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

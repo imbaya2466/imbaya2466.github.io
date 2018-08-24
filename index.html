@@ -283,6 +283,157 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/04/java层动态加载dex-apk实践与源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/04/java层动态加载dex-apk实践与源码分析/" itemprop="url">java层动态加载dex-apk实践与源码分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-04T01:30:57+08:00">
+                2018-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android加固/" itemprop="url" rel="index">
+                    <span itemprop="name">android加固</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>基本都是使用DexClassLoader进行加载，构造函数的参数分别是：apk/dex/jar路径、缓存oat的路径（已无效）、lib路径、父类加载器。只是加载dex和lib，其它资源不会加载。dex中全部java类载入。</li>
+<li>加载时注意权限，api23以后权限写在清单里是没有效果的（如sd卡读写权，只是能开启但不会自动开启），开启需要写代码询问或者手动去设置中开启清单申请的。没有权限会直接抛出一般错误</li>
+<li>查看错误原因时要逐层向父类找，比如找不到加载类错误的父类可能抛出的是未加载dex</li>
+</ol>
+<p><strong>壳加载方案：</strong><br>因为需要原apk的各种manifest声明、资源、lib、以及权限问题，所以一般在原apk中进行修改，在manifest中加入最早运行的类application的自定义声明，并将原application名保存，将原apk的资源、dex加密。放入自己的dex（一般包含原dex）、so到apk中。在自己的dex-application中加载so。so内解密资源、解密dex、加载dex。之后替换运行原本application即可。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/04/java层动态加载dex-apk实践与源码分析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/27/android脱壳机使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1210,171 +1361,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/android源码编译/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/25/android源码编译/" itemprop="url">android源码编译</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T20:09:35+08:00">
-                2018-06-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android系统/" itemprop="url" rel="index">
-                    <span itemprop="name">android系统</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本次基于google官方文档下载编译：<br><a href="https://source.android.com/setup/build/requirements" target="_blank" rel="external">https://source.android.com/setup/build/requirements</a><br>还有一篇详细的博客：<br><a href="https://blog.csdn.net/dd864140130/article/details/51718187" target="_blank" rel="external">https://blog.csdn.net/dd864140130/article/details/51718187</a></p>
-<h2 id="相关准备"><a href="#相关准备" class="headerlink" title="相关准备"></a>相关准备</h2><p>master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。<br>master 分支事最少，带有预编译版本的 OpenJDK；因此无需另行安装。较低的版本则需要单独进行安装。</p>
-<h3 id="vpn"><a href="#vpn" class="headerlink" title="vpn"></a>vpn</h3><p>因为要下载的是谷歌官方的，所以必不可少。采用购买ssr。<br>先用shadowsocks启动：<a href="https://blog.csdn.net/u011774239/article/details/53905702" target="_blank" rel="external">https://blog.csdn.net/u011774239/article/details/53905702</a><br>在应用中使用：<a href="https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md" target="_blank" rel="external">https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md</a></p>
-<p>此后需要外网的指令加前缀</p>
-<h3 id="putty-telnet"><a href="#putty-telnet" class="headerlink" title="putty+telnet"></a>putty+telnet</h3><p>远程操控：<br>telnet在linux的设置：<a href="https://blog.csdn.net/linux_ever/article/details/50519028" target="_blank" rel="external">https://blog.csdn.net/linux_ever/article/details/50519028</a></p>
-<h2 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h2><p>python 2.7<br>make3.81<br>git<br>java环境1.8对于ubuntu14.04特殊，参考官方安装：<br><a href="https://source.android.com/setup/build/initializing#installing-the-jdk" target="_blank" rel="external">https://source.android.com/setup/build/initializing#installing-the-jdk</a><br>安装所需的软件包 (Ubuntu 14.04)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc unzip</div></pre></td></tr></table></figure></p>
-<h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><p><a href="https://source.android.com/setup/build/downloading" target="_blank" rel="external">https://source.android.com/setup/build/downloading</a><br>用Repo管理git指定要下载的分支。<br>android-8.1.0_r1支持机型较多而且较新。目前下了这个，61G</p>
-<p>可以用shell脚本错误时自动sync<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#FileName source_asyn.sh</div><div class="line">PATH=~/bin:$PATH</div><div class="line"># 注意修改成你要编译的版本，比如这里我在mac上编译的是Android-7.1.1——r6</div><div class="line">repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-7.1.1_r6</div><div class="line">repo sync</div><div class="line">while [$? = 1]: do</div><div class="line">echo &quot;=========download failed,again============&quot;</div><div class="line">sleep 5</div><div class="line">repo sync</div><div class="line">done</div></pre></td></tr></table></figure></p>
-<p>学习linux脚本！</p>
-<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><a href="https://source.android.com/setup/build/building" target="_blank" rel="external">https://source.android.com/setup/build/building</a><br>先找到对应版本设备的二进制文件：<a href="https://developers.google.com/android/drivers" target="_blank" rel="external">https://developers.google.com/android/drivers</a><br><strong>俩个都</strong>下载按说明添加到源代码树的 vendor/ 层次结构中。<br>之后步骤按照官方。<br>遇到的错误：<br>jack未启动错误：jack-admin start-server再接着make<br>Out of memory error：<br>输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m&quot;</div><div class="line">out/host/linux-x86/bin/jack-admin kill-server</div><div class="line">out/host/linux-x86/bin/jack-admin start-server</div></pre></td></tr></table></figure></p>
-<h2 id="虚拟机运行"><a href="#虚拟机运行" class="headerlink" title="虚拟机运行"></a>虚拟机运行</h2><p>source build/envsetup.sh这句就是在配置环境变量，可以使用jack、emulator等<br>编译完成后直接emulator等较长时间即可在虚拟机中运行android了</p>
-<h2 id="fastboot刷机"><a href="#fastboot刷机" class="headerlink" title="fastboot刷机"></a>fastboot刷机</h2><p>编译后配置好的fastboot直接刷到实体机（因此购买谷歌官方机十分方便测试cm的mi3编译时失败…..买个google垃圾机吧…）</p>
-<h2 id="打包rom"><a href="#打包rom" class="headerlink" title="打包rom"></a>打包rom</h2><h3 id="几个补充知识"><a href="#几个补充知识" class="headerlink" title="几个补充知识"></a>几个补充知识</h3><p><strong>Android基于Permission的安全机制</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/17131835" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/17131835</a><br>简记：系统文件与目录被用uid、gid划分，进程持有uid/gid，从而决定进程能否使用api或者访问文件等操作，android root后所有的root操作一定要用su提权，所以在su时检测是否给权。<br>system/build.prop:系统信息<br>default.prop：系统配置.debugger选项所在<br>当你获得了android的应用shell时，可以用run-as变成开了debugger权限进程的uid shell。从而越权。</p>
-<p><strong>android开源项目的管理</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18195205" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18195205</a><br>未看完</p>
-<p><strong>android编译系统</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18466779" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18466779</a><br>android的make由一个mk文件，include其它mk文件组成。只执行一个。</p>
-<p><strong>android系统的各镜像分析</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/20501657" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/20501657</a><br>一个是正常的系统，它由boot.img、system.img、ramdisk.img和userdata.img等组成，另外一个就是recovery系统，由recovery.img组成。<br>boot.img启动其它几个，另一个系统是由recovery启动全部。<br>通过对比Android正常使用时的系统和进行升级时使用的Recovery系统，我们就可以对运行Linux系统的移动设备（或者说嵌入式设备）世界窥一斑而知全豹，实际上我们只需要有一个BootLoader、一个Linux Kernel，以及一个Ramdisk，就可以将它们运行起来。Ramdisk属于用户空间的范畴，它里面主要包含了Linux Kernel启动完成时所要加载的根文件系统。这个根文件系统的作用就是为整个系统提供一个init程序，以便Linux Kernel可以将控制权从内核空间转移到用户空间。系统提供什么样的功能给用户使用主要取决于在用户空间层运行了哪些服务和守护进程。这些服务守护进程都是直接或者间接地由init进程启动的。例如，对于recovery系统来说，它最主要提供的功能就是让用户升级系统，也就是它的主要用户空间服务就是负责执行长级任务的recovery程序。又如，我们正常使用的Android系统，它的主要用户空间服务和守护进程都是由system.img镜像提供的，此外，我们还可以通过userdata.img镜像来安装第三方应用来丰富手机的功能。因此，我们也可以说，init进程启动的服务决定了系统的功能。当然 ，这些功能是建立是硬件的基础之上的。</p>
-<h3 id="CM-ROM"><a href="#CM-ROM" class="headerlink" title="CM ROM"></a>CM ROM</h3><p><strong>androidROM刷机</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/29688041" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/29688041</a><br>下载编译需要前几篇的知识：repo和编译系统<br>用户正常使用Android设备时的系统，主要是包含有两个分区：System分区和Boot分区。System分区包含有Android运行时框架、系统APP以及预装的第三方APP等，而Boot分区包含有Kernel和Rootfs<br>fastboot为bootloader的一种交互启动方式，可以刷recover和普通模式，recovery则是可以刷普通模式。<br>recover与普通模式则是俩个系统。<br>关于cm：<br>2016年12月23日，Cyanogen公司宣布他们关闭CyanogenMod的服务器<br>CyanogenMod随即宣布会进行转移，并更名为LineageOS</p>
-<p>于是编译小米3的lineageos</p>
-<p>Cancro是mi3/4  ：小米3的电信版和小米4移动版，刷机包前缀都是cancro<br><a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a>  好的下载编译教程<br><a href="https://github.com/LineageOS" target="_blank" rel="external">https://github.com/LineageOS</a>  其git仓库<br><a href="https://www.lineageos.org/" target="_blank" rel="external">https://www.lineageos.org/</a>   其官网<br><a href="https://download.lineageos.org/cancro" target="_blank" rel="external">https://download.lineageos.org/cancro</a>  lineageos对小米的支持<br><a href="https://wiki.lineageos.org/devices/cancro" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro</a> lineageos对mi3的信息<br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a> 官方构建方法<br><a href="https://wiki.lineageos.org/devices/cancro/install" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/install</a> 官方刷机方法</p>
-<p>一：找到目标测试：<br>在官网的支持<a href="https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源" target="_blank" rel="external">https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源</a><br>刷机-adb可以在Android和恢复模式下工作<br>因为这个机子只能支持到14.1也就是android7.0.想测试更高版本的源代码请买google官方机<br>测试刷机成功</p>
-<p>二：下载源代码<br>参考：<a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a><br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a><br>远程连接telent<br>下载构建包，注意和官方的环境有所不同，不要重用<br>sudo apt-get install bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libwxgtk2.8-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev<br>由于需要vpn所以一直用root权操作，注意PATH配置，环变与变量是和shell绑定的，不是用户。<br>其它步骤一样。直到repo sync</p>
-<p>三：编译<br>获取设备文件除了breakfast。还有单独的项目提供各设备的文件<br><a href="https://github.com/TheMuppets" target="_blank" rel="external">https://github.com/TheMuppets</a><br>  在.repo/loccal_mainifest/roomsevice.xml 文件中新增一行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;project name=&quot;TheMuppets/proprietary_vendor_xiaomi&quot; path=&quot;vendor/xiaomi&quot; remote=&quot;github&quot; revision=&quot;cm-14.1&quot;/&gt;</div></pre></td></tr></table></figure></p>
-<p>  然后执行repo sync 同步</p>
-<p>编译失败，java-doc:错误找不到okhttp.connectionpool的类文件。<br>未找到解决方法。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/android应用加固1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1733,7 +1719,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/15/frida官方文档/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/android源码编译/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="imbaya">
@@ -1752,7 +1738,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/06/15/frida官方文档/" itemprop="url">frida官方文档</a></h1>
+                <a class="post-title-link" href="/2018/06/25/android源码编译/" itemprop="url">android源码编译</a></h1>
         
 
         <div class="post-meta">
@@ -1764,8 +1750,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T20:52:12+08:00">
-                2018-06-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T20:09:35+08:00">
+                2018-06-25
               </time>
             
 
@@ -1787,8 +1773,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">逆向</span>
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
                   </a>
                 </span>
 
@@ -1826,43 +1812,31 @@
       
         
           
-            <h2 id="JavaScript-API"><a href="#JavaScript-API" class="headerlink" title="JavaScript API"></a>JavaScript API</h2><p>以下介绍的都是对象。</p>
-<p>官方功能非常细致：<a href="https://www.frida.re/docs/javascript-api/" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/</a></p>
-<p>这里的回调一般为对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">直接声明对象：</div><div class="line">var person=</div><div class="line">&#123;</div><div class="line">    add: function (a, b) &#123;</div><div class="line">        return a + b;</div><div class="line">    &#125;,</div><div class="line">    sub: function (a, b) &#123;</div><div class="line">        return new Promise(resolve =&gt; &#123;</div><div class="line">            setTimeout(() =&gt; &#123;</div><div class="line">                resolve(a - b);</div><div class="line">            &#125;, 100);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">定义类也只是直接定义构造函数即可：</div><div class="line">function Car(color,door)&#123;</div><div class="line">this.color = color;</div><div class="line">this.doors = door;</div><div class="line">this.showColor = function()&#123;</div><div class="line">alert(this.color)</div><div class="line">&#125;;</div><div class="line">&#125;</div><div class="line">var car1 = new Car(“red”,4);</div><div class="line">var car2 = new Car(“blue”,4);</div></pre></td></tr></table></figure></p>
-<h4 id="Global-全局"><a href="#Global-全局" class="headerlink" title="Global 全局"></a>Global 全局</h4><p>全局api。<br>hexdump(target[, options])从提供的ArrayBuffer或NativePointer 生成一个hexdump  target（转化byte数组方便显示的）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">ar libc = Module.findBaseAddress(&apos;libc.so&apos;);</div><div class="line">var buf = Memory.readByteArray(libc, 64);</div><div class="line">console.log(hexdump(buf, &#123;</div><div class="line">  offset: 0,</div><div class="line">  length: 64,</div><div class="line">  header: true,</div><div class="line">  ansi: true</div><div class="line">&#125;));</div></pre></td></tr></table></figure></p>
-<p>int64(v)为new Int64(v)的简写，化为64位的int值，同理还有uint64。<br>ptr（s）为new NativePointer(s)的简写，表示原生指针，NULL为ptr(“0”)，<strong>以后的address都是指这个</strong>。<br>recv([type, ]callback)异步的用于在js（目标程序中）接收到来自py脚本的type消息后调用callback。只会接收一次，想多次要重复注册，可以用其返回.wait()等待来实现同步。<br>send(message[, data])将JavaScript对象发送message到基于Frida的应用程序py（它必须可序列化为JSON）。如果你还有一些你想要发送的原始二进制数据，例如你使用了一些内存Memory#readByteArray，那么你可以通过可选data参数传递它。这要求它是一个ArrayBuffer或0到255之间的整数数组。<br>setTimeout(fn, delay)：fn在delay毫秒后调用。返回值给clearTimeout可以取消<br>clearTimeout(id)：取消由呼叫返回的ID setTimeout<br>setInterval(fn, delay)：fn每delay毫秒调用一次。返回值同样用于取消<br>clearInterval(id)：取消由呼叫返回的ID setInterval</p>
-<h4 id="console-控制台"><a href="#console-控制台" class="headerlink" title="console 控制台"></a>console 控制台</h4><p>console.log(line)，console.warn(line)，console.error(line)<br>用于直接从js代码中向frida程序中输出结果（js代码输出在py)ArrayBuffer自动化为hexdump()</p>
-<h4 id="RPC-远程执行"><a href="#RPC-远程执行" class="headerlink" title="RPC 远程执行"></a>RPC 远程执行</h4><p>rpc.exports可以在js中开启函数供py远程执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">rpc.exports = &#123;</div><div class="line">    add: function (a, b) &#123;</div><div class="line">        return a + b;</div><div class="line">    &#125;,</div><div class="line">    sub: function (a, b) &#123;</div><div class="line">        return new Promise(resolve =&gt; &#123;</div><div class="line">            setTimeout(() =&gt; &#123;</div><div class="line">                resolve(a - b);</div><div class="line">            &#125;, 100);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<p>其中promise和reslove都是js的方法，Promise 对象用于表示一个异步操作的最终状态（完成或失败），以及其返回的值。</p>
-<h4 id="Frida-frida信息"><a href="#Frida-frida信息" class="headerlink" title="Frida frida信息"></a>Frida frida信息</h4><p>Frida.version:当前Frida版本<br>Frida.heapSize：包含Frida私有堆的当前大小的动态属性</p>
-<h4 id="Process-进程相关"><a href="#Process-进程相关" class="headerlink" title="Process  进程相关"></a>Process  进程相关</h4><p>Process.arch：cpu架构，字符串ia32，x64，arm 或arm64<br>Process.platform：系统，字符串windows，  darwin，linux或qnx<br>Process.pageSize：虚拟内存页面大小（以字节为单位）<br>Process.pointerSize：指针大小（以字节为单位）<br>Process.isDebuggerAttached()：调试器当前是否连接的布尔值<br>Process.getCurrentThreadId()：线程的id指的是运行脚本的线程，每次运行都不一样<br>Process.enumerateThreads(callbacks)枚举线程，没有成功。<br>线程对象含：<br>id：操作系统特定的ID<br>state：字符串指定是running，stopped，waiting， uninterruptible或halted<br>context：与键对象pc和sp，其是指定EIP / RIP / PC分别和ESP / RSP / SP，用于IA32 / 64 /臂NativePointer对象。其他处理器特定键也可以，例如eax，rax，r0，x0，等。</p>
-<p>Process.findModuleByAddress(address)， Process.getModuleByAddress(address)， Process.findModuleByName(name)，  Process.getModuleByName(name)：按地址、名字找或返回module<br>Process.enumerateModules(callbacks)遍历module</p>
-<p>module对象包含：<br>name：规范模块名称作为字符串<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>path：完整的文件系统路径作为一个字符串</p>
-<p>Process.enumerateRanges(protection|specifier, callbacks)：枚举满足protection给定的内存范围这是什么？<br>用range对象调用包含：<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>protection：保护字符串（见上文）<br>file:(当可用时）文件映射细节作为包含以下内容的对象：<br>path：完整的文件系统路径作为一个字符串<br>offset：磁盘上映射文件的偏移量，以字节为单位<br>size：磁盘上映射文件的大小，以字节为单位</p>
-<h4 id="Module-模块相关"><a href="#Module-模块相关" class="headerlink" title="Module  模块相关"></a>Module  模块相关</h4><p>name都是字串填模块名<br>Module.ensureInitialized(name)：确保指定模块的初始化器已经运行。<br>Module.enumerateImports(name, callbacks)：枚举模块的进口。<br>Module.enumerateExports(name, callbacks)：枚举模块的出口。<br>Module.enumerateSymbols(name, callbacks)：枚举模块的符号。<br>Module.enumerateRanges(name, protection, callbacks)：枚举满足protection给定的内存范围。<br>Module.findBaseAddress(name)：返回name 模块的基地址<br>Module.findExportByName(module|null, exp)：返回名为exp的导出函数地址。可输入在那个模块，若模块写null就是全部搜索。可用于找知道名称的函数！</p>
-<p>module对象包含：<br>name：规范模块名称作为字符串<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>path：完整的文件系统路径作为一个字符串</p>
-<h4 id="ModuleMap-所有模块"><a href="#ModuleMap-所有模块" class="headerlink" title="ModuleMap 所有模块"></a>ModuleMap 所有模块</h4><p>表示所有模块的映射<br>new ModuleMap([filter])：创建模块映射，可以有条件。<br>has(address)：某地址是否在模块表中。<br>find(address)，get(address)：返回一个包含address属于该模块的细节的对象。</p>
-<h4 id="Memory-内存相关"><a href="#Memory-内存相关" class="headerlink" title="Memory 内存相关"></a>Memory 内存相关</h4><p>Memory.scan(address, size, pattern, callbacks):扫描内存，出现pattern。从address开始，size为大小。callback为回调函数。<br>Memory.alloc(size)：在堆上分配内存。<br>Memory.copy(dst, src, n)：就像memcpy一样。<br>Memory.protect(address, size, protection)：更新内存区域的保护<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Memory.protect(ptr(&quot;0x1234&quot;), 4096, &apos;rw-&apos;);</div></pre></td></tr></table></figure></p>
-<p>Memory.patchCode(address, size, apply)：好像很强大….怎么用不清楚。<br>Memory.readPointer(address)：把地址内容化为指针返回。(从内存中读取ptr)<br>Memory.readS8(address)，Memory.readU8(address)， Memory.readS16(address)，Memory.readU16(address)， Memory.readS32(address)，Memory.readU32(address)， Memory.readShort(address)，Memory.readUShort(address)， Memory.readInt(address)，Memory.readUInt(address)， Memory.readFloat(address)，Memory.readDouble(address)：读有符号或无符号的8/16/32 /等。或浮点/双精度值并将其作为数字返回。</p>
-<p>Memory.writeS8(address, value)，Memory.writeU8(address, value)， Memory.writeS16(address, value)，Memory.writeU16(address, value)，  Memory.writeS32(address, value)，Memory.writeU32(address, value)， Memory.writeShort(address, value)，Memory.writeUShort(address, value)， Memory.writeInt(address, value)，Memory.writeUInt(address, value)， Memory.writeFloat(address, value)，Memory.writeDouble(address, value)：写数value到符号或无符号的8/16/32 /等。或浮动/双值在address。</p>
-<p>Memory.readByteArray(address, length):从指定地址读出array<br>Memory.writeByteArray(address, bytes)：写入字节数组</p>
-<p>Memory.readUtf8String(address[, size = -1])，Memory.writeUtf16String(address, str)，Memory.allocUtf8String(str)等针对特定编码字符串的内存处理。</p>
-<h4 id="Thread-线程相关"><a href="#Thread-线程相关" class="headerlink" title="Thread 线程相关"></a>Thread 线程相关</h4><p>Thread.backtrace([context, backtracer])：为当前线程生成回溯，作为NativePointer对象数组返回。</p>
-<h4 id="NativePointer-原生指针"><a href="#NativePointer-原生指针" class="headerlink" title="NativePointer 原生指针"></a>NativePointer 原生指针</h4><p>ptr（s）为new NativePointer(s)的简写<br>new NativePointer(s)：从s 包含内存地址的字符串中创建新的NativePointer，该内存地址为十进制或十六进制（如果前缀为“0x”）<br>isNull()：返回一个布尔值，允许您方便地检查指针是否为NULL。<br>add(rhs)，sub(rhs)，  and(rhs)，or(rhs)，  xor(rhs)：使一个新的NativePointer这个NativePointer正/负/和/或/ XOR  rhs，这可以是一个数字或其他NativePointer<br>equals(rhs)：返回一个布尔值，指示是否rhs等于这个值; 即它具有相同的指针值<br>toInt32()：将此NativePointer强制转换为带符号的32位整数<br>toString([radix = 16])：转换为可选基数的字符串（默认为16）</p>
-<h4 id="NativeFunction-原生函数"><a href="#NativeFunction-原生函数" class="headerlink" title="NativeFunction 原生函数"></a>NativeFunction 原生函数</h4><p>new NativeFunction(address, returnType, argTypes[, abi])：创建一个新的NativeFunction来调用address（用a指定的  NativePointer）函数，其中returnType指定返回类型，  argTypes数组指定参数类型。您也可以选择指定abi是否不是系统默认值。对于可变参数函数，在固定参数和可变参数之间添加一个’…’ 条目argTypes。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">原函数int fun(char* a):</div><div class="line">var f = new NativeFunction(ptr(&quot;%s&quot;), &apos;int&apos;, [&apos;pointer&apos;]);</div></pre></td></tr></table></figure></p>
-<p>详细：<a href="https://www.frida.re/docs/javascript-api/#nativefunction" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/#nativefunction</a></p>
-<h4 id="NativeCallback"><a href="#NativeCallback" class="headerlink" title="NativeCallback"></a>NativeCallback</h4><p>new NativeCallback(func, returnType, argTypes[, abi])：创建一个由JavaScript函数实现的新的NativeCallback func，返回的对象也是a NativePointer，因此可以传递给它Interceptor#replace。</p>
-<h4 id="io，socket，file"><a href="#io，socket，file" class="headerlink" title="io，socket，file"></a>io，socket，file</h4><p>支持js下的io、socket、file等操作</p>
-<h4 id="Interceptor"><a href="#Interceptor" class="headerlink" title="Interceptor"></a>Interceptor</h4><p>Interceptor.attach(target, callbacks)：拦截target处的函数。target可以是NativePointer指定的地址。Module.findExportByName()等api获得的地址可以由frida解决arm一位为1时是thumb指令等问题。callbacks是一个对象，可以有多个包含：<br>onEnter: function (args)：回调函数给出了一个参数  args，可以用来读取或写入参数作为一个NativePointer对象数组 。<br>onLeave: function (retval)：给定一个参数的回调函数，该参数 retval是一个NativePointer包含原始返回值的衍生对象。您可以调用retval.replace(1337)以用整数替换返回值1337，或者retval.replace(ptr(“0x1234”))用指针替换。请注意，该对象在onLeave调用中被回收，因此不要在回调之外存储和使用它。如果需要存储包含的值，请进行深层复制，例如：ptr(retval.toString())。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">nterceptor.attach(Module.findExportByName(&quot;libc.so&quot;, &quot;read&quot;), &#123;</div><div class="line">    onEnter: function (args) &#123;</div><div class="line">        this.fileDescriptor = args[0].toInt32();</div><div class="line">    &#125;,</div><div class="line">    onLeave: function (retval) &#123;</div><div class="line">        if (retval.toInt32() &gt; 0) &#123;</div><div class="line">            /* do something with this.fileDescriptor */</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>Interceptor.replace(target, replacement)：在target 执行时替换函数at replacement。这通常用于完全或部分替换现有函数的实现。用于 在JavaScript中NativeCallback实现一个replacement。请注意，  replacement直到Interceptor#revert被调用时才会保持活动状态。如果你想链接到原始的实现，你可以target通过NativeFunction内部的实现同步调用，这将绕过并直接进入原始实现。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var openPtr = Module.findExportByName(&quot;libc.so&quot;, &quot;open&quot;);</div><div class="line">var open = new NativeFunction(openPtr, &apos;int&apos;, [&apos;pointer&apos;, &apos;int&apos;]);</div><div class="line">Interceptor.replace(openPtr, new NativeCallback(function (pathPtr, flags) &#123;</div><div class="line">    var path = Memory.readUtf8String(pathPtr);</div><div class="line">    log(&quot;Opening &apos;&quot; + path + &quot;&apos;&quot;);</div><div class="line">    var fd = open(pathPtr, flags);</div><div class="line">    log(&quot;Got fd: &quot; + fd);</div><div class="line">    return fd;</div><div class="line">&#125;, &apos;int&apos;, [&apos;pointer&apos;, &apos;int&apos;]));</div></pre></td></tr></table></figure></p>
-<p>Interceptor.revert(target)：将函数恢复target到之前的实现。</p>
-<h4 id="Stalker"><a href="#Stalker" class="headerlink" title="Stalker"></a>Stalker</h4><p>Stalker.follow([threadId, options])：开始跟踪threadId（或省略当前线程），可选地options启用事件。<br>Stalker.unfollow([threadId])：停止跟踪threadId（或省略当前线程）。</p>
-<h4 id="arm-mip"><a href="#arm-mip" class="headerlink" title="arm mip"></a>arm mip</h4><p>有各种针对不同平台的原生读写与结构类型</p>
-<h4 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h4><p>Java.available：一个布尔值，指定当前进程是否加载了Java虚拟机。<br>Java.enumerateLoadedClasses(callbacks)：枚举现在加载的类，其中callbacks是一个对象：<br>onMatch: function (className)：为每个加载的类调用  className可以传递给use()JavaScript封装器的类。<br>onComplete: function ()：当所有类都被枚举时调用。</p>
-<p>Java.perform(fn)：确保当前线程连接到虚拟机并呼叫fn。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Java.perform(function () &#123;</div><div class="line">    var Activity = Java.use(&quot;android.app.Activity&quot;);</div><div class="line">    Activity.onResume.implementation = function () &#123;</div><div class="line">        send(&quot;onResume() got called! Let&apos;s call the original implementation&quot;);</div><div class="line">        this.onResume();</div><div class="line">    &#125;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>Java.use(className)：动态获得一个JavaScript包装程序  className，您可以通过调用$new()它来调用构造函数来实例化对象。调用$dispose()一个实例来显式清理它（或等待JavaScript对象获取垃圾回收，或脚本被卸载）。静态和非静态方法是可用的，你甚至可以替换一个方法实现并抛出一个异常：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Java.perform(function () &#123;</div><div class="line">    var Activity = Java.use(&quot;android.app.Activity&quot;);</div><div class="line">    var Exception = Java.use(&quot;java.lang.Exception&quot;);</div><div class="line">    Activity.onResume.implementation = function () &#123;</div><div class="line">        throw Exception.$new(&quot;Oh noes!&quot;);</div><div class="line">    &#125;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
-<p>Java.choose(className, callbacks)：className通过扫描Java堆枚举类的活动实例。用来获得某类java对象。</p>
-<h2 id="任务：使用frida-hook-android系统调用。"><a href="#任务：使用frida-hook-android系统调用。" class="headerlink" title="任务：使用frida hook android系统调用。"></a>任务：使用frida hook android系统调用。</h2>
+            <p>本次基于google官方文档下载编译：<br><a href="https://source.android.com/setup/build/requirements" target="_blank" rel="external">https://source.android.com/setup/build/requirements</a><br>还有一篇详细的博客：<br><a href="https://blog.csdn.net/dd864140130/article/details/51718187" target="_blank" rel="external">https://blog.csdn.net/dd864140130/article/details/51718187</a></p>
+<h2 id="相关准备"><a href="#相关准备" class="headerlink" title="相关准备"></a>相关准备</h2><p>master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。<br>master 分支事最少，带有预编译版本的 OpenJDK；因此无需另行安装。较低的版本则需要单独进行安装。</p>
+<h3 id="vpn"><a href="#vpn" class="headerlink" title="vpn"></a>vpn</h3><p>因为要下载的是谷歌官方的，所以必不可少。采用购买ssr。<br>先用shadowsocks启动：<a href="https://blog.csdn.net/u011774239/article/details/53905702" target="_blank" rel="external">https://blog.csdn.net/u011774239/article/details/53905702</a><br>在应用中使用：<a href="https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md" target="_blank" rel="external">https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md</a></p>
+<p>此后需要外网的指令加前缀</p>
+<h3 id="putty-telnet"><a href="#putty-telnet" class="headerlink" title="putty+telnet"></a>putty+telnet</h3><p>远程操控：<br>telnet在linux的设置：<a href="https://blog.csdn.net/linux_ever/article/details/50519028" target="_blank" rel="external">https://blog.csdn.net/linux_ever/article/details/50519028</a></p>
+<h2 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h2><p>python 2.7<br>make3.81<br>git<br>java环境1.8对于ubuntu14.04特殊，参考官方安装：<br><a href="https://source.android.com/setup/build/initializing#installing-the-jdk" target="_blank" rel="external">https://source.android.com/setup/build/initializing#installing-the-jdk</a><br>安装所需的软件包 (Ubuntu 14.04)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc unzip</div></pre></td></tr></table></figure></p>
+<h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><p><a href="https://source.android.com/setup/build/downloading" target="_blank" rel="external">https://source.android.com/setup/build/downloading</a><br>用Repo管理git指定要下载的分支。<br>android-8.1.0_r1支持机型较多而且较新。目前下了这个，61G</p>
+<p>可以用shell脚本错误时自动sync<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#FileName source_asyn.sh</div><div class="line">PATH=~/bin:$PATH</div><div class="line"># 注意修改成你要编译的版本，比如这里我在mac上编译的是Android-7.1.1——r6</div><div class="line">repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-7.1.1_r6</div><div class="line">repo sync</div><div class="line">while [$? = 1]: do</div><div class="line">echo &quot;=========download failed,again============&quot;</div><div class="line">sleep 5</div><div class="line">repo sync</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>学习linux脚本！</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><a href="https://source.android.com/setup/build/building" target="_blank" rel="external">https://source.android.com/setup/build/building</a><br>先找到对应版本设备的二进制文件：<a href="https://developers.google.com/android/drivers" target="_blank" rel="external">https://developers.google.com/android/drivers</a><br><strong>俩个都</strong>下载按说明添加到源代码树的 vendor/ 层次结构中。<br>之后步骤按照官方。<br>遇到的错误：<br>jack未启动错误：jack-admin start-server再接着make<br>Out of memory error：<br>输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m&quot;</div><div class="line">out/host/linux-x86/bin/jack-admin kill-server</div><div class="line">out/host/linux-x86/bin/jack-admin start-server</div></pre></td></tr></table></figure></p>
+<h2 id="虚拟机运行"><a href="#虚拟机运行" class="headerlink" title="虚拟机运行"></a>虚拟机运行</h2><p>source build/envsetup.sh这句就是在配置环境变量，可以使用jack、emulator等<br>编译完成后直接emulator等较长时间即可在虚拟机中运行android了</p>
+<h2 id="fastboot刷机"><a href="#fastboot刷机" class="headerlink" title="fastboot刷机"></a>fastboot刷机</h2><p>编译后配置好的fastboot直接刷到实体机（因此购买谷歌官方机十分方便测试cm的mi3编译时失败…..买个google垃圾机吧…）<br>google机开启设备锁编译完成后使用astboot flashall -w直接刷机成功。</p>
+<h2 id="打包rom"><a href="#打包rom" class="headerlink" title="打包rom"></a>打包rom</h2><h3 id="几个补充知识"><a href="#几个补充知识" class="headerlink" title="几个补充知识"></a>几个补充知识</h3><p><strong>Android基于Permission的安全机制</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/17131835" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/17131835</a><br>简记：系统文件与目录被用uid、gid划分，进程持有uid/gid，从而决定进程能否使用api或者访问文件等操作，android root后所有的root操作一定要用su提权，所以在su时检测是否给权。<br>system/build.prop:系统信息<br>default.prop：系统配置.debugger选项所在<br>当你获得了android的应用shell时，可以用run-as变成开了debugger权限进程的uid shell。从而越权。</p>
+<p><strong>android开源项目的管理</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18195205" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18195205</a><br>未看完</p>
+<p><strong>android编译系统</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18466779" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18466779</a><br>android的make由一个mk文件，include其它mk文件组成。只执行一个。</p>
+<p><strong>android系统的各镜像分析</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/20501657" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/20501657</a><br>一个是正常的系统，它由boot.img、system.img、ramdisk.img和userdata.img等组成，另外一个就是recovery系统，由recovery.img组成。<br>boot.img启动其它几个，另一个系统是由recovery启动全部。<br>通过对比Android正常使用时的系统和进行升级时使用的Recovery系统，我们就可以对运行Linux系统的移动设备（或者说嵌入式设备）世界窥一斑而知全豹，实际上我们只需要有一个BootLoader、一个Linux Kernel，以及一个Ramdisk，就可以将它们运行起来。Ramdisk属于用户空间的范畴，它里面主要包含了Linux Kernel启动完成时所要加载的根文件系统。这个根文件系统的作用就是为整个系统提供一个init程序，以便Linux Kernel可以将控制权从内核空间转移到用户空间。系统提供什么样的功能给用户使用主要取决于在用户空间层运行了哪些服务和守护进程。这些服务守护进程都是直接或者间接地由init进程启动的。例如，对于recovery系统来说，它最主要提供的功能就是让用户升级系统，也就是它的主要用户空间服务就是负责执行长级任务的recovery程序。又如，我们正常使用的Android系统，它的主要用户空间服务和守护进程都是由system.img镜像提供的，此外，我们还可以通过userdata.img镜像来安装第三方应用来丰富手机的功能。因此，我们也可以说，init进程启动的服务决定了系统的功能。当然 ，这些功能是建立是硬件的基础之上的。</p>
+<h3 id="CM-ROM"><a href="#CM-ROM" class="headerlink" title="CM ROM"></a>CM ROM</h3><p><strong>androidROM刷机</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/29688041" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/29688041</a><br>下载编译需要前几篇的知识：repo和编译系统<br>用户正常使用Android设备时的系统，主要是包含有两个分区：System分区和Boot分区。System分区包含有Android运行时框架、系统APP以及预装的第三方APP等，而Boot分区包含有Kernel和Rootfs<br>fastboot为bootloader的一种交互启动方式，可以刷recover和普通模式，recovery则是可以刷普通模式。<br>recover与普通模式则是俩个系统。<br>关于cm：<br>2016年12月23日，Cyanogen公司宣布他们关闭CyanogenMod的服务器<br>CyanogenMod随即宣布会进行转移，并更名为LineageOS</p>
+<p>于是编译小米3的lineageos</p>
+<p>Cancro是mi3/4  ：小米3的电信版和小米4移动版，刷机包前缀都是cancro<br><a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a>  好的下载编译教程<br><a href="https://github.com/LineageOS" target="_blank" rel="external">https://github.com/LineageOS</a>  其git仓库<br><a href="https://www.lineageos.org/" target="_blank" rel="external">https://www.lineageos.org/</a>   其官网<br><a href="https://download.lineageos.org/cancro" target="_blank" rel="external">https://download.lineageos.org/cancro</a>  lineageos对小米的支持<br><a href="https://wiki.lineageos.org/devices/cancro" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro</a> lineageos对mi3的信息<br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a> 官方构建方法<br><a href="https://wiki.lineageos.org/devices/cancro/install" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/install</a> 官方刷机方法</p>
+<p>一：找到目标测试：<br>在官网的支持<a href="https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源" target="_blank" rel="external">https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源</a><br>刷机-adb可以在Android和恢复模式下工作<br>因为这个机子只能支持到14.1也就是android7.0.想测试更高版本的源代码请买google官方机<br>测试刷机成功</p>
+<p>二：下载源代码<br>参考：<a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a><br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a><br>远程连接telent<br>下载构建包，注意和官方的环境有所不同，不要重用<br>sudo apt-get install bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libwxgtk2.8-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev<br>由于需要vpn所以一直用root权操作，注意PATH配置，环变与变量是和shell绑定的，不是用户。<br>其它步骤一样。直到repo sync</p>
+<p>三：编译<br>获取设备文件除了breakfast。还有单独的项目提供各设备的文件<br><a href="https://github.com/TheMuppets" target="_blank" rel="external">https://github.com/TheMuppets</a><br>  在.repo/loccal_mainifest/roomsevice.xml 文件中新增一行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;project name=&quot;TheMuppets/proprietary_vendor_xiaomi&quot; path=&quot;vendor/xiaomi&quot; remote=&quot;github&quot; revision=&quot;cm-14.1&quot;/&gt;</div></pre></td></tr></table></figure></p>
+<p>  然后执行repo sync 同步</p>
+<p>编译失败，java-doc:错误找不到okhttp.connectionpool的类文件。<br>未找到解决方法。</p>
+
           
         
       
@@ -1901,7 +1875,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1947,7 +1921,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-count">61</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1958,7 +1932,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1969,7 +1943,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">59</span>
+                <span class="site-state-item-count">60</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
