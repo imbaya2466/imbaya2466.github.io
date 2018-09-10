@@ -103,7 +103,7 @@
 <meta property="og:description" content="数据摘要消息摘要算法（Message Digest Algorithm）是一种能产生特殊输出格式的算法，其原理是根据一定的运算规则对原始数据进行某种形式的信息提取，被提取出的信息就被称作原始数据的消息摘要。著名的摘要算法有RSA公司的MD5算法和SHA-1算法及其大量的变体。特点：  无论输入的消息有多长，计算出来的消息摘要的长度总是固定的。 一般来说（不考虑碰撞的情况下），只要输入的原始数据不同">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/lzrjA7X.png">
-<meta property="og:updated_time" content="2018-05-15T17:29:29.170Z">
+<meta property="og:updated_time" content="2018-09-02T13:21:15.607Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="apk签名">
 <meta name="twitter:description" content="数据摘要消息摘要算法（Message Digest Algorithm）是一种能产生特殊输出格式的算法，其原理是根据一定的运算规则对原始数据进行某种形式的信息提取，被提取出的信息就被称作原始数据的消息摘要。著名的摘要算法有RSA公司的MD5算法和SHA-1算法及其大量的变体。特点：  无论输入的消息有多长，计算出来的消息摘要的长度总是固定的。 一般来说（不考虑碰撞的情况下），只要输入的原始数据不同">
@@ -392,6 +392,7 @@
 <p>pk8是私钥文件<br>x509.pem是含有公钥的文件</p>
 <h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>只要修改了Apk中的任何内容，就必须重新签名，不然会提示安装失败，保证了apk未修改。且旧软件与新软件签名使用签名文件不同不可安装，即只有签名文件拥有者可以更新自己的软件<br><strong>签名标明了软件作者和软件内容</strong></p>
 <p>连接：<br><a href="https://blog.csdn.net/jiangwei0910410003/article/details/50402000" title="详解" target="_blank" rel="external">https://blog.csdn.net/jiangwei0910410003/article/details/50402000</a></p>
+<p>2018.9.2更新学习密码学后的理解：<br>对app进行散列，base64编码后字节化为字符，再用数字签名加密，公匙以证书形式发放。<br>效果：app与某个私匙绑定。<br>RSA之所以成立可解密用了欧拉函数的性质。之所以保密用了离散下幂与底难求（不连续无法逼近求解）</p>
 
       
     </div>
@@ -515,7 +516,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">61</span>
+                <span class="site-state-item-count">63</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

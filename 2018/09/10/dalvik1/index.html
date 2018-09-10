@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="dalvik,android系统," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="概述基于https://blog.csdn.net/luoshengyang/article/details/8852432的分析整理。涉及dalvik启动过程，运行过程 目标为搞懂虚拟机native中的本质。现在基本都不用dalvik了，在我的8.0机子下persist.sys.dalvik.vm.lib.2=libart.so 表示用art虚拟机，dalvik已经完全不见踪影。 前提杂记lin">
+<meta name="keywords" content="dalvik,android系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dalvik1">
+<meta property="og:url" content="http://yoursite.com/2018/09/10/dalvik1/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="概述基于https://blog.csdn.net/luoshengyang/article/details/8852432的分析整理。涉及dalvik启动过程，运行过程 目标为搞懂虚拟机native中的本质。现在基本都不用dalvik了，在我的8.0机子下persist.sys.dalvik.vm.lib.2=libart.so 表示用art虚拟机，dalvik已经完全不见踪影。 前提杂记lin">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/9IIaAV1.png">
+<meta property="og:updated_time" content="2018-09-10T15:13:12.761Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="dalvik1">
+<meta name="twitter:description" content="概述基于https://blog.csdn.net/luoshengyang/article/details/8852432的分析整理。涉及dalvik启动过程，运行过程 目标为搞懂虚拟机native中的本质。现在基本都不用dalvik了，在我的8.0机子下persist.sys.dalvik.vm.lib.2=libart.so 表示用art虚拟机，dalvik已经完全不见踪影。 前提杂记lin">
+<meta name="twitter:image" content="https://i.imgur.com/9IIaAV1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/10/dalvik1/"/>
+
+
+
+
+
+  <title>dalvik1 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/10/dalvik1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">dalvik1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-10T20:01:18+08:00">
+                2018-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>基于<a href="https://blog.csdn.net/luoshengyang/article/details/8852432的分析整理。" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/8852432的分析整理。</a><br>涉及dalvik启动过程，运行过程</p>
+<p>目标为搞懂虚拟机native中的本质。现在基本都不用dalvik了，在我的8.0机子下persist.sys.dalvik.vm.lib.2=libart.so 表示用art虚拟机，dalvik已经完全不见踪影。</p>
+<h2 id="前提杂记"><a href="#前提杂记" class="headerlink" title="前提杂记"></a>前提杂记</h2><p>linux下分析：<br>vim:<br>:sp可直接分屏，ctrl+w切换分屏，ctrl+w+o只留选中的<br>:/用来搜索  按n下一个、N上一个   光标选中单词shift+*直接搜索该单词</p>
+<p>基于栈的虚拟机字节更小，指令所需多；基于寄存器的字节更长，缓存命中小<br>RISC精简指令集操作更原子，CISC复杂指令集操作更大，二者都是栈与寄存器运行结构。</p>
+<p>android内部C++代码大量使用智能指针管理对象声明周期，防止内存释放问题。开发使用java自动回收</p>
+<p>每个进程都有dalvik实例，每个应用进程由Zygote fork出，Zygote进程是由init进程启动，在系统启动时加载所需。<br>这些被fork出来的Android应用程序进程，一方面是复制了Zygote进程中的虚拟机实例，另一方面是与Zygote进程共享了同一套Java核心库。这样不仅Android应用程序进程的创建过程很快，而且由于所有的Android应用程序进程都共享同一套Java核心库而节省了内存空间。<br><a id="more"></a></p>
+<h2 id="dalvik启动过程"><a href="#dalvik启动过程" class="headerlink" title="dalvik启动过程"></a>dalvik启动过程</h2><p>Linux中所有进程基于init进程，android中init创建名为zygote的进程，这个zygote进程要执行的程序是/system/bin/app_process。其主函数为frameworks/base/cmds/app_process/app_main.cpp中的main<br>之后的调用栈：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">App_main.main</div><div class="line">      AndroidRuntime.start</div><div class="line">		   JniInvocation.Init</div><div class="line">           startVm    在这里启动虚拟机</div><div class="line">				JNI_CreateJavaVM       dalvik/vm/Jni.c中</div><div class="line">					dvmCreateJNIEnv</div><div class="line">					dvmStartup     dalvik/vm/Init.c中</div><div class="line">						dvmInitZygote  </div><div class="line">           startReg</div><div class="line">           ZygoteInit.main    java类，在这里进入java层     env-&gt;CallStaticVoidMethod(startClass, startMeth, strArray)</div><div class="line">                 registerZygoteSocket</div><div class="line">                 preload</div><div class="line">                 startSystemServer</div><div class="line">                 runSelectLoop</div></pre></td></tr></table></figure></p>
+<p>注意这个是按函数划分的，只能表现调用栈，方法实现的位置与该图无关。而uml的时序图可以表现出方法的实现位置（对象、类、所属文件），在同类内的方法调用上镶嵌一个条即可表现出调用栈。</p>
+<p><strong>开始说明源码：</strong></p>
+<p>startVm前用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">JniInvocation jni_invocation;</div><div class="line">//load libart.so  初始化JniInvocation::JNI_CreateJavaVM_接口调用的指针</div><div class="line">jni_invocation.Init(NULL);</div></pre></td></tr></table></figure></p>
+<p>JniInvocation统一三个接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">jint JniInvocation::JNI_GetDefaultJavaVMInitArgs(void* vmargs) &#123;</div><div class="line">  return JNI_GetDefaultJavaVMInitArgs_(vmargs);</div><div class="line">&#125;</div><div class="line"> </div><div class="line">jint JniInvocation::JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) &#123;</div><div class="line">  return JNI_CreateJavaVM_(p_vm, p_env, vm_args);</div><div class="line">&#125;</div><div class="line"> </div><div class="line">jint JniInvocation::JNI_GetCreatedJavaVMs(JavaVM** vms, jsize size, jsize* vm_count) &#123;</div><div class="line">  return JNI_GetCreatedJavaVMs_(vms, size, vm_count);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这三个都是调用函数指针，函数指针正是初始化在JniInvocation::Init()：<br>其用dlopen加载默认的虚拟机so（libart.so或libdvm.so），并用dlsym加载函数的实现</p>
+<p>AndroidRuntime::startVm 设置参数，调用JNI_CreateJavaVM(pJavaVM, pEnv, &amp;initArgs)</p>
+<p>dalvik的JNI_CreateJavaVM在dalvik/vm/Jni.cpp中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">    pVM = (JavaVMExt*) malloc(sizeof(JavaVMExt));</div><div class="line">    memset(pVM, 0, sizeof(JavaVMExt));</div><div class="line">    pVM-&gt;funcTable = &amp;gInvokeInterface; 给予函数表</div><div class="line">    pVM-&gt;envList = pEnv;  给予jni环境</div><div class="line"> 将参数vm_args所描述的Dalvik虚拟机启动选项拷贝到变量argv所描述的一个字符串数组中去，并且调用函数dvmStartup来初始化前面所创建的Dalvik虚拟机实例。</div><div class="line">    </div><div class="line">    gDvm.vmList = (JavaVM*) pVM;将pvm传入全局，这个属于进程的全局</div><div class="line"></div><div class="line"></div><div class="line">    pEnv = (JNIEnvExt*) dvmCreateJNIEnv(NULL);  为当前线程创建和初始化一个JNI环境，即一个JNIEnvExt对象，这个属于线程，用于接下来执行使用</div><div class="line"></div><div class="line">    gDvm.initializing = true;  dvmStartup(argc, argv, args-&gt;ignoreUnrecognized, (JNIEnv*)pEnv)	 初始化前面所创建的Dalvik虚拟机实例，功能正式启用？？？</div><div class="line">    </div><div class="line">    dvmChangeStatus(NULL, THREAD_NATIVE);改变虚拟机状态为native</div><div class="line">输出参数p_vm和p_env返回给调用者</div></pre></td></tr></table></figure>
+<p>每一个Dalvik虚拟机实例还有一个JNI环境列表，保存在对应的JavaVMExt对象的成员变量envList中。注意，JavaVMExt对象的成员变量envList描述的是一个JNIEnvExt列表，其中，每一个Attach到Dalvik虚拟机中去的线程都有一个对应的JNIEnvExt，用来描述它的JNI环境。有了这个JNI环境之后，我们才可以在Java函数和C/C++函数之间互相调用。</p>
+<p> dvmCreateJNIEnv在 dalvik/vm/Jni.c    中<br>注意这里的JavaVM  与    JNIEnv  都是ndk编程中的，Ext表示拓展，可以强制转化为ndk中的。一般是拓展的父类。在c中实现为同结构体内存布局强转。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">    JavaVMExt* vm = (JavaVMExt*) gDvm.vmList;</div><div class="line">    JNIEnvExt* newEnv;</div><div class="line"> </div><div class="line">    ......</div><div class="line"> </div><div class="line">    newEnv = (JNIEnvExt*) calloc(1, sizeof(JNIEnvExt));</div><div class="line">    newEnv-&gt;funcTable = &amp;gNativeInterface;    jni环境的本地接口表</div><div class="line">    newEnv-&gt;vm = vm;        jni的宿主机</div><div class="line"> </div><div class="line">    ......</div><div class="line"> </div><div class="line">    if (self != NULL) &#123;</div><div class="line">        dvmSetJniEnvThreadId((JNIEnv*) newEnv, self);  参数self描述的是前面创建的JNIEnvExt对象要关联的线程</div><div class="line">        assert(newEnv-&gt;envThreadId != 0);</div><div class="line">    &#125; else &#123;</div><div class="line">        /* make it obvious if we fail to initialize these later */</div><div class="line">当参数self的值等于NULL的时候，就表示前面的JNIEnvExt对象是要与主线程关联的，但是要等到后面再关联，因为现在用来描述主线程的Thread对象还没有准备好。通过将一个JNIEnvExt对象的成员变量envThreadId和self的值分别设置为0x77777775和0x77777779来表示它还没有与线程关联。</div><div class="line"></div><div class="line">        newEnv-&gt;envThreadId = 0x77777775;</div><div class="line">        newEnv-&gt;self = (Thread*) 0x77777779;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    ......</div><div class="line"> </div><div class="line">    /* insert at head of list */</div><div class="line">在一个Dalvik虚拟机里面，可以运行多个线程。所有关联有JNI环境的线程都有一个对应的JNIEnvExt对象，这些JNIEnvExt对象相互连接在一起保存在用来描述其宿主Dalvik虚拟机的一个JavaVMExt对象的成员变量envList中。因此，前面创建的JNIEnvExt对象需要连接到其宿主Dalvik虚拟机的JavaVMExt链表中去。</div><div class="line">一个dalvik有多个线程，每个线程一个jnienv，并用链表加到javavm中记录。</div><div class="line">    newEnv-&gt;next = vm-&gt;envList;</div><div class="line">    assert(newEnv-&gt;prev == NULL);</div><div class="line">    if (vm-&gt;envList == NULL)            // rare, but possible</div><div class="line">        vm-&gt;envList = newEnv;</div><div class="line">    else</div><div class="line">        vm-&gt;envList-&gt;prev = newEnv;</div><div class="line">    vm-&gt;envList = newEnv;</div><div class="line"> </div><div class="line">    ......</div><div class="line"> </div><div class="line">    return (JNIEnv*) newEnv;</div></pre></td></tr></table></figure>
+<p>在dalvik\libnativehelper\include\nativehelper\jni.h文件中的定义了JNINativeInterface接口，<br>在这个文件中static const struct JNINativeInterface gNativeInterface = {…}将函数指针传入JNINativeInterface结构体的实例，该结构体中都是函数指针如<code>jclass      (*FindClass)(JNIEnv*, const char*);</code><br> jclass  类型就是一个空类<code>*</code>  其变量表示空类的对象的指针。<br>举一个<code>static jclass FindClass(JNIEnv* env, const char* name)</code> 的实现，在dalvik/vm/Jni.c    中，调用了dvmFindClassNoInit获取jvm的<code>ClassObject*</code>  同时传入的还有classLoader，这些函数的实现是统一在此的。</p>
+<p>javaVM的定义:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">struct JNIInvokeInterface &#123;</div><div class="line">    void*       reserved0;</div><div class="line">    void*       reserved1;</div><div class="line">    void*       reserved2;</div><div class="line"></div><div class="line">    jint        (*DestroyJavaVM)(JavaVM*);</div><div class="line">    jint        (*AttachCurrentThread)(JavaVM*, JNIEnv**, void*);</div><div class="line">    jint        (*DetachCurrentThread)(JavaVM*);</div><div class="line">    jint        (*GetEnv)(JavaVM*, void**, jint);</div><div class="line">    jint        (*AttachCurrentThreadAsDaemon)(JavaVM*, JNIEnv**, void*);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">typedef _JavaVM JavaVM;</div><div class="line"></div><div class="line">struct _JavaVM &#123;</div><div class="line">    const struct JNIInvokeInterface* functions;  ////JNI接口</div><div class="line"></div><div class="line">    jint DestroyJavaVM()</div><div class="line">    &#123; return functions-&gt;DestroyJavaVM(this); &#125;</div><div class="line">    jint AttachCurrentThread(JNIEnv** p_env, void* thr_args)</div><div class="line">    &#123; return functions-&gt;AttachCurrentThread(this, p_env, thr_args); &#125;</div><div class="line">    jint DetachCurrentThread()</div><div class="line">    &#123; return functions-&gt;DetachCurrentThread(this); &#125;</div><div class="line">    jint GetEnv(void** env, jint version)</div><div class="line">    &#123; return functions-&gt;GetEnv(this, env, version); &#125;</div><div class="line">    jint AttachCurrentThreadAsDaemon(JNIEnv** p_env, void* thr_args)</div><div class="line">    &#123; return functions-&gt;AttachCurrentThreadAsDaemon(this, p_env, thr_args); &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">static const struct JNIInvokeInterface gInvokeInterface = &#123;</div><div class="line">    NULL,</div><div class="line">    NULL,</div><div class="line">    NULL,</div><div class="line"></div><div class="line">    DestroyJavaVM,</div><div class="line">    AttachCurrentThread,</div><div class="line">    DetachCurrentThread,</div><div class="line"></div><div class="line">    GetEnv,</div><div class="line"></div><div class="line">    AttachCurrentThreadAsDaemon,</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p><code>pVM-&gt;funcTable = &amp;gInvokeInterface;</code>   填入函数指针<br>所以<code>gDvmJni.jniVm = (JavaVM*) pVM</code>;<br>所以JavaVM就是函数表…Ext是其拓展</p>
+<p>dvmStartup:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div></pre></td><td class="code"><pre><div class="line">std::string dvmStartup(int argc, const char* const argv[],</div><div class="line">        bool ignoreUnrecognized, JNIEnv* pEnv)</div><div class="line">		</div><div class="line">		</div><div class="line">    setCommandLineDefaults();设置默认参数</div><div class="line">	cc = dvmProcessOptions(argc, argv, ignoreUnrecognized);根据这些选项值来设置Dalvik虚拟机的属性</div><div class="line">	</div><div class="line">	    /*</div><div class="line">     * Initialize components.</div><div class="line">     */</div><div class="line">    if (!dvmAllocTrackerStartup())   初始化Davlik虚拟机的对象分配记录子模块</div><div class="line">        goto fail;</div><div class="line">    if (!dvmGcStartup())             初始化Davlik虚拟机的垃圾收集（ GC）子模块</div><div class="line">        goto fail;</div><div class="line">    if (!dvmThreadStartup())         用来初始化Davlik虚拟机的线程列表、为主线程创建一个Thread对象以及为主线程初始化执行环境。  这个对象的C++层的</div><div class="line">        goto fail;                 //Davlik虚拟机中的每一个线程均用一个Thread结构体来描述，这些Thread结构体组织在一个列表中，因此，这里要先对它进行初始化。</div><div class="line">    if (!dvmInlineNativeStartup())   用来初始化Davlik虚拟机的内建Native函数表。这些内建Native函数主要是针对java.Lang.String、java.Lang.Math、java.Lang.Float和java.Lang.Double类的，用来替换这些类的某些成员函数原来的实现（包括Java实现和Native实现）。</div><div class="line">        goto fail;</div><div class="line">    if (!dvmVerificationStartup())  用来初始化Dex文件验证器。</div><div class="line">        goto fail;</div><div class="line">    if (!dvmRegisterMapStartup())    用来初始化寄存器映射集（Register Map）子模块</div><div class="line">        goto fail;</div><div class="line">    if (!dvmInstanceofStartup())    用来初始化instanceof操作符子模块。</div><div class="line">        goto fail;</div><div class="line">    if (!dvmClassStartup())       用来初始化启动类加载器（Bootstrap Class Loader），同时还会初始化java.lang.Class类。!!开始java类加载</div><div class="line">        goto fail;</div><div class="line">    if (!dvmThreadObjStartup())  用来加载与线程相关的类，即java.lang.Thread、java.lang.VMThread和java.lang.ThreadGroup。</div><div class="line">        goto fail;</div><div class="line">    if (!dvmExceptionStartup())   用来加载与异常相关的类，即java.lang.Throwable、java.lang.RuntimeException、java.lang.StackOverflowError...</div><div class="line">        goto fail;</div><div class="line">    if (!dvmStringInternStartup())  用来初始化java.lang.String类内部私有一个字符串池，这样当Dalvik虚拟机运行起来之后，我们就可以调用java.lang.String类的成员函数intern来访问这个字符串池里面的字符串</div><div class="line">        goto fail;</div><div class="line">    if (!dvmNativeStartup())        用来初始化Native Shared Object库加载表，也就是SO库加载表。这个加载表是用来描述当前进程有哪些SO文件已经被加载过了。</div><div class="line">        goto fail;</div><div class="line">    if (!dvmInternalNativeStartup())   用来初始化一个内部Native函数表。所有需要直接访问Dalvik虚拟机内部函数或者数据结构的Native函数都定义在这张表中，因为它们如果定义在外部的其它SO文件中，就无法直接访问Dalvik虚拟机的内部函数或者数据结构。</div><div class="line">        goto fail;</div><div class="line">    if (!dvmJniStartup())            用来初始化全局引用表，以及加载一些与Direct Buffer相关的类</div><div class="line">        goto fail;</div><div class="line">    if (!dvmReflectStartup())      用来加载反射相关的类</div><div class="line">        goto fail;</div><div class="line">    if (!dvmProfilingStartup())    用来初始化Dalvik虚拟机的性能分析子模块</div><div class="line">        goto fail;</div><div class="line">		</div><div class="line">	</div><div class="line">    /*</div><div class="line">     * Miscellaneous class library validation.</div><div class="line">     */</div><div class="line">    if (!dvmValidateBoxClasses())  用来验证Dalvik虚拟机中存在相应的装箱类</div><div class="line">        goto fail;</div><div class="line"> </div><div class="line">    /*</div><div class="line">     * Do the last bits of Thread struct initialization we need to allow</div><div class="line">     * JNI calls to work.</div><div class="line">     */</div><div class="line">    if (!dvmPrepMainForJni(pEnv))   用来准备主线程的JNI环境，即将在dvmThreadStartup中为主线程创建的Thread对象与在前面创建的JNI环境关联起来。</div><div class="line">        goto fail;</div><div class="line"> </div><div class="line">    /*</div><div class="line">     * Register the system native methods, which are registered through JNI.</div><div class="line">     */</div><div class="line">    if (!registerSystemNatives(pEnv)) 调用另外一个函数jniRegisterSystemMethods，后者接着又调用了函数registerCoreLibrariesJni来为Java核心类注册JNI方法</div><div class="line">        goto fail;</div><div class="line"> </div><div class="line">    /*</div><div class="line">     * Do some &quot;late&quot; initialization for the memory allocator.  This may</div><div class="line">     * allocate storage and initialize classes.</div><div class="line">     */</div><div class="line">    if (!dvmCreateStockExceptions())   用来预创建一些与内存分配有关的异常对象</div><div class="line">        goto fail;</div><div class="line"> </div><div class="line">    /*</div><div class="line">     * At this point, the VM is in a pretty good state.  Finish prep on</div><div class="line">     * the main thread (specifically, create a java.lang.Thread object to go</div><div class="line">     * along with our Thread struct).  Note we will probably be executing</div><div class="line">     * some interpreted class initializer code in here.</div><div class="line">     */</div><div class="line">    if (!dvmPrepMainThread())   用来为主线程创建一个java.lang.ThreadGroup对象、一个java.lang.Thread对角和java.lang.VMThread对象。这些Java对象和在前面创建的C++层Thread对象关联一起，共同用来描述Dalvik虚拟机的主线程。</div><div class="line">        goto fail;</div><div class="line"> </div><div class="line">    /*</div><div class="line">     * Make sure we haven&apos;t accumulated any tracked references.  The main</div><div class="line">     * thread should be starting with a clean slate.</div><div class="line">     */</div><div class="line">    if (dvmReferenceTableEntries(&amp;dvmThreadSelf()-&gt;internalLocalRefTable) != 0)  用来确保主线程当前不引用有任何Java对象，这是为了保证主线程接下来以干净的方式来执行程序入口。</div><div class="line">    &#123;</div><div class="line">        LOGW(&quot;Warning: tracked references remain post-initialization\n&quot;);</div><div class="line">        dvmDumpReferenceTable(&amp;dvmThreadSelf()-&gt;internalLocalRefTable, &quot;MAIN&quot;);</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    /* general debugging setup */</div><div class="line">    if (!dvmDebuggerStartup())  用来初始化Dalvik虚拟机的调试环境</div><div class="line">        goto fail</div><div class="line"></div><div class="line">	</div><div class="line">    /*</div><div class="line">     * Init for either zygote mode or non-zygote mode.  The key difference</div><div class="line">     * is that we don&apos;t start any additional threads in Zygote mode.</div><div class="line">     */</div><div class="line">    if (gDvm.zygote) &#123;               检查Dalvik虚拟机是否指定了-Xzygote启动选项。如果指定了的话，那么就说明当前是在Zygote进程中启动Dalvik虚拟机，因此，接下来就会调用函数dvmInitZygote来执行最后一步初始化工作</div><div class="line">        if (!dvmInitZygote())</div><div class="line">            goto fail;</div><div class="line">    &#125; else &#123;</div><div class="line">        if (!dvmInitAfterZygote())</div><div class="line">            goto fail;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    ......</div><div class="line"> </div><div class="line">    return 0;</div><div class="line"> </div><div class="line">fail:</div><div class="line">    dvmShutdown();</div><div class="line">    return 1;</div></pre></td></tr></table></figure></p>
+<p>static bool dvmInitZygote(void)：在dalvik/vm/Init.c中<br>setpgid(0,0);<br>调用了系统调用setpgid来设置当前进程，即Zygote进程的进程组ID。注意，在调用setpgid的时候，传递进去的两个参数均为0，这意味着Zygote进程的进程组ID与进程ID是相同的，也就是说，Zygote进程运行在一个单独的进程组里面。</p>
+<p>AndroidRuntime.startReg :</p>
+<p>函数startReg来注册一些Android核心类的JNI方法。</p>
+<p>总结：</p>
+<pre><code>1. 创建了一个Dalvik虚拟机实例；
+
+2. 加载了Java核心类及其JNI方法；
+
+3. 为主线程的设置了一个JNI环境；
+
+4. 注册了Android核心类的JNI方法。
+</code></pre><p>Zygote进程为Android系统准备好了一个Dalvik虚拟机实例，以后Zygote进程在创建Android应用程序进程的时候，就可以将它自身的Dalvik虚拟机实例复制到新创建Android应用程序进程中去<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">struct JNIEnvExt &#123;</div><div class="line">    const struct JNINativeInterface* funcTable;     /* must be first */</div><div class="line"></div><div class="line">    const struct JNINativeInterface* baseFuncTable;</div><div class="line"></div><div class="line">    u4      envThreadId;</div><div class="line">    Thread* self;</div><div class="line"></div><div class="line">    /* if nonzero, we are in a &quot;critical&quot; JNI call */</div><div class="line">    int     critical;</div><div class="line"></div><div class="line">    struct JNIEnvExt* prev;</div><div class="line">    struct JNIEnvExt* next;</div><div class="line">&#125;;</div><div class="line">虚拟机</div><div class="line">struct JavaVMExt &#123;</div><div class="line">    const struct JNIInvokeInterface* funcTable;     /* must be first */</div><div class="line"></div><div class="line">    const struct JNIInvokeInterface* baseFuncTable;</div><div class="line"></div><div class="line">    /* head of list of JNIEnvs associated with this VM */</div><div class="line">    JNIEnvExt*      envList;</div><div class="line">    pthread_mutex_t envListLock;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>可以转化为一般的JavaVM和JNIEnv是因为那俩个类（C++）或直接就是JNIInvokeInterface指针（C）都是第一个元素就是函数表指针。方法为代码不占struct的对象存储。</p>
+<h2 id="运行过程"><a href="#运行过程" class="headerlink" title="运行过程"></a>运行过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">调用java类：</div><div class="line">	JNIEnv.CallStaticVoidMethod	</div><div class="line">		functions-&gt;CallStaticVoidMethodV(this, clazz, methodID, args);   这个是函数表指针之一，函数表指针的实现当然在Jni.cpp。 c++的类包装中会转化下参数再调用V版c在原版中再转化</div><div class="line">			CallStaticVoidMethodV   （定义在jni.c中的实现）</div><div class="line">				dvmCallMethodV      dalvik/vm/interp/Stack.c  </div><div class="line">					dvmInterpret(self, method, pResult);       dalvik/vm/interp/Interp.c</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div></pre></td><td class="code"><pre><div class="line">		</div><div class="line">static _ctype CallStaticVoidMethodV(JNIEnv* env, jclass jclazz,</div><div class="line">    jmethodID methodID, va_list args)                                   </div><div class="line">&#123;                                                                       </div><div class="line">    UNUSED_PARAMETER(jclazz);                                           </div><div class="line">    JNI_ENTER();                                                        </div><div class="line">    JValue result;                                                      </div><div class="line">    dvmCallMethodV(_self, (Method*)methodID, NULL, true, &amp;result, args);</div><div class="line">    if (_isref &amp;&amp; !dvmCheckException(_self))                            </div><div class="line">        result.l = addLocalReference(env, result.l);                    </div><div class="line">    JNI_EXIT();                                                         </div><div class="line">    return _retok;                                                      </div><div class="line">&#125;</div><div class="line">		</div><div class="line"></div><div class="line">void dvmCallMethodV(Thread* self, const Method* method, Object* obj,</div><div class="line">    bool fromJni, JValue* pResult, va_list args)</div><div class="line">&#123;</div><div class="line">    ......</div><div class="line"> </div><div class="line">    if (dvmIsNativeMethod(method)) &#123;</div><div class="line">        TRACE_METHOD_ENTER(self, method);</div><div class="line">        /*</div><div class="line">         * Because we leave no space for local variables, &quot;curFrame&quot; points</div><div class="line">         * directly at the method arguments.</div><div class="line">         */</div><div class="line">        (*method-&gt;nativeFunc)(self-&gt;curFrame, pResult, method, self);</div><div class="line">        TRACE_METHOD_EXIT(self, method);</div><div class="line">    &#125; else &#123;</div><div class="line">        dvmInterpret(self, method, pResult);</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    ......</div><div class="line"></div><div class="line">&#125;</div><div class="line">void dvmInterpret(Thread* self, const Method* method, JValue* pResult)</div><div class="line">&#123;</div><div class="line">    InterpState interpState;</div><div class="line">    ......</div><div class="line"> </div><div class="line">    /*</div><div class="line">     * Initialize working state.</div><div class="line">     *</div><div class="line">     * No need to initialize &quot;retval&quot;.</div><div class="line">     */</div><div class="line">    interpState.method = method;</div><div class="line">    interpState.fp = (u4*) self-&gt;curFrame;</div><div class="line">    interpState.pc = method-&gt;insns;</div><div class="line">    ......</div><div class="line"> </div><div class="line">    typedef bool (*Interpreter)(Thread*, InterpState*);</div><div class="line">    Interpreter stdInterp;</div><div class="line">    if (gDvm.executionMode == kExecutionModeInterpFast)</div><div class="line">        stdInterp = dvmMterpStd;</div><div class="line">#if defined(WITH_JIT)</div><div class="line">    else if (gDvm.executionMode == kExecutionModeJit)</div><div class="line">/* If profiling overhead can be kept low enough, we can use a profiling</div><div class="line"> * mterp fast for both Jit and &quot;fast&quot; modes.  If overhead is too high,</div><div class="line"> * create a specialized profiling interpreter.</div><div class="line"> */</div><div class="line">        stdInterp = dvmMterpStd;</div><div class="line">#endif</div><div class="line">    else</div><div class="line">        stdInterp = dvmInterpretStd;</div><div class="line"> </div><div class="line">    change = true;</div><div class="line">    while (change) &#123;</div><div class="line">        switch (interpState.nextMode) &#123;</div><div class="line">        case INTERP_STD:</div><div class="line">            LOGVV(&quot;threadid=%d: interp STD\n&quot;, self-&gt;threadId);</div><div class="line">            change = (*stdInterp)(self, &amp;interpState);</div><div class="line">            break;</div><div class="line">        case INTERP_DBG:</div><div class="line">            LOGVV(&quot;threadid=%d: interp DBG\n&quot;, self-&gt;threadId);</div><div class="line">            change = dvmInterpretDbg(self, &amp;interpState);</div><div class="line">            break;</div><div class="line">        default:</div><div class="line">            dvmAbort();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">    *pResult = interpState.retval;</div><div class="line"> </div><div class="line">    ......</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>选择dalvik解释器，函数dvmInterpretStd在执行之前，需要知道解释器的当前状态，也就是它所要执行的Java函数及其指令入口，以及当前要执行的线程的堆栈。这些信息都用一个InterpState结构体来描述。其中，这个InterpState结构体的成员变量method描述的是要执行的Java函数，成员变量fp描述的是要执行的线程的当前堆栈帧，成员变量pc描述的是要执行的Java函数的入口点。</p>
+<p>之后到了指令执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#define INTERP_FUNC_NAME dvmInterpretStd</div><div class="line">......</div><div class="line"> </div><div class="line">bool INTERP_FUNC_NAME(Thread* self, InterpState* interpState)</div><div class="line">&#123;</div><div class="line">    ......</div><div class="line"> </div><div class="line">    DvmDex* methodClassDex;     // curMethod-&gt;clazz-&gt;pDvmDex</div><div class="line">    JValue retval;</div><div class="line"> </div><div class="line">    /* core state */</div><div class="line">    const Method* curMethod;    // method we&apos;re interpreting</div><div class="line">    const u2* pc;               // program counter</div><div class="line">    u4* fp;                     // frame pointer</div><div class="line">    u2 inst;                    // current instruction</div><div class="line">    ......</div><div class="line"> </div><div class="line">    /* copy state in */</div><div class="line">    curMethod = interpState-&gt;method;</div><div class="line">    pc = interpState-&gt;pc;</div><div class="line">    fp = interpState-&gt;fp;</div><div class="line">    retval = interpState-&gt;retval;   /* only need for kInterpEntryReturn? */</div><div class="line"> </div><div class="line">    methodClassDex = curMethod-&gt;clazz-&gt;pDvmDex;</div><div class="line">    ......</div><div class="line"> </div><div class="line">    while (1) &#123;</div><div class="line">        ......</div><div class="line"> </div><div class="line">        /* fetch the next 16 bits from the instruction stream */</div><div class="line">        inst = FETCH(0);</div><div class="line"> </div><div class="line">        switch (INST_INST(inst)) &#123;</div><div class="line">......</div><div class="line"> </div><div class="line">HANDLE_OPCODE(OP_INVOKE_DIRECT /*vB, &#123;vD, vE, vF, vG, vA&#125;, meth@CCCC*/)</div><div class="line">    GOTO_invoke(invokeDirect, false);</div><div class="line">OP_END</div><div class="line"> </div><div class="line">......</div><div class="line"> </div><div class="line">HANDLE_OPCODE(OP_RETURN /*vAA*/)</div><div class="line">    vsrc1 = INST_AA(inst);</div><div class="line">    ......</div><div class="line">    retval.i = GET_REGISTER(vsrc1);</div><div class="line">    GOTO_returnFromMethod();</div><div class="line">OP_END</div><div class="line"> </div><div class="line">......</div><div class="line">     </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    ......</div><div class="line"> </div><div class="line">    /* export state changes */</div><div class="line">    interpState-&gt;method = curMethod;</div><div class="line">    interpState-&gt;pc = pc;</div><div class="line">    interpState-&gt;fp = fp;   成员变量fp描述的是要执行的线程的当前堆栈帧</div><div class="line">    /* debugTrackedRefStart doesn&apos;t change */</div><div class="line">    interpState-&gt;retval = retval;   /* need for _entryPoint=ret */</div><div class="line">    interpState-&gt;nextMode =</div><div class="line">        (INTERP_TYPE == INTERP_STD) ? INTERP_DBG : INTERP_STD;</div><div class="line">    ......</div><div class="line"> </div><div class="line">    return true;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>与想象中一致，使用while switch逐个执行指令<br>smali语法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"># direct methods</div><div class="line">.method public constructor &lt;init&gt;()V</div><div class="line">    .locals 1</div><div class="line"></div><div class="line">    .prologue</div><div class="line">    .line 25</div><div class="line">    invoke-direct &#123;p0&#125;, Landroid/os/Binder;-&gt;&lt;init&gt;()V</div><div class="line"></div><div class="line">    .line 20</div><div class="line">    const/4 v0, 0x0</div><div class="line"></div><div class="line">    iput-object v0, p0, Lcom/qihoo360/replugin/Entry$Stub;-&gt;mRemote:Landroid/os/IBinder;</div><div class="line"></div><div class="line">    .line 26</div><div class="line">    const-string v0, &quot;com.qihoo360.loader2.IPlugin&quot;</div><div class="line"></div><div class="line">    invoke-virtual &#123;p0, p0, v0&#125;, Lcom/qihoo360/replugin/Entry$Stub;-&gt;attachInterface(Landroid/os/IInterface;Ljava/lang/String;)V</div><div class="line"></div><div class="line">    .line 27</div><div class="line">    return-void</div><div class="line">.end method</div></pre></td></tr></table></figure></p>
+<p>注意参数、变量都是用寄存器存储使用的，调用函数没有显示的栈帧，在虚拟机中每个函数都对使用到的变量进行分配与回收，对每个线程保存自己的环境比如函数返回：<br>        fp = saveArea-&gt;prevFrame<br>        pc = saveArea-&gt;savedPc;</p>
+<p>可见基本等同于模仿了一个cpu，不过一个指令的功能更为强大，native代码加载于内存中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jmethodID methodID 看jni.h头文件的定义中jmethodID就是一个指针:</div><div class="line"></div><div class="line">struct _jmethodID;                      /* opaque structure */</div><div class="line">typedef struct _jmethodID* jmethodID;   /* method IDs */</div></pre></td></tr></table></figure></p>
+<p>相当于一个<code>void *</code>。之后被强制化为<code>(Method*)methodID</code>    可见这个指针应该指向的是一个dex方法描述，内有其运行地址，应该是解析dex后保存在某处的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">interpState.method = method;</div><div class="line">interpState.fp = (u4*) self-&gt;curFrame;</div><div class="line">interpState.pc = method-&gt;insns;</div><div class="line">		</div><div class="line"></div><div class="line">		</div><div class="line">/* core state */</div><div class="line">const Method* curMethod;    // method we&apos;re interpreting</div><div class="line">const u2* pc;               // program counter</div><div class="line">u4* fp;                     // frame pointer</div><div class="line">u2 inst;                    // current instruction</div><div class="line">......</div><div class="line"> </div><div class="line">/* copy state in */</div><div class="line">curMethod = interpState-&gt;method;</div><div class="line">pc = interpState-&gt;pc;</div><div class="line">fp = interpState-&gt;fp;</div><div class="line">retval = interpState-&gt;retval;</div></pre></td></tr></table></figure>
+<p>执行。</p>
+<p>System.loadLibrary<br>Dalvik虚拟机在调用一个成员函数的时候，如果发现该成员函数是一个JNI方法，那么就会直接跳到它的地址去执行。也就是说，JNI方法是直接在本地操作系统上执行的</p>
+<p>在Dalvik虚拟机中，类加载器除了知道它要加载的类所在的文件路径之外，还知道该类所属的APK用来保存so文件的路径。因此，给定一个so文件名称，一个类加载器可以判断它是否存在自己的so文件目录中。</p>
+<p>因此dex的解析加载过程十分重要，为逆向重点。<br>再来看下dvmClassStartup<br><img src="https://i.imgur.com/9IIaAV1.png" alt=""><br><a href="https://www.jianshu.com/p/92c2f732d2d6?from=timeline" target="_blank" rel="external">https://www.jianshu.com/p/92c2f732d2d6?from=timeline</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/dalvik/" rel="tag"># dalvik</a>
+          
+            <a href="/tags/android系统/" rel="tag"># android系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/09/android系统源码初探/" rel="next" title="android系统源码初探">
+                <i class="fa fa-chevron-left"></i> android系统源码初探
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前提杂记"><span class="nav-number">2.</span> <span class="nav-text">前提杂记</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dalvik启动过程"><span class="nav-number">3.</span> <span class="nav-text">dalvik启动过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行过程"><span class="nav-number">4.</span> <span class="nav-text">运行过程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
