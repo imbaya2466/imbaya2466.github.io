@@ -283,6 +283,155 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/26/栈-算法1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/26/栈-算法1/" itemprop="url">栈 算法1</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-26T22:48:46+08:00">
+                2017-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="迷宫问题"><a href="#迷宫问题" class="headerlink" title="迷宫问题"></a>迷宫问题</h3><p>可扩展为：带路径，求最短，带权，等多种，基本思路如下</p>
+<h4 id="该实例要求："><a href="#该实例要求：" class="headerlink" title="该实例要求："></a>该实例要求：</h4><p>用一个m×n的矩阵表示迷宫，0和1分别表示迷宫中的通路和障碍。设计一个程序，对给定的迷宫，求出找到的第一条从入口到出口的通路，或得到没有通路的结论。</p>
+<p>我们指定:</p>
+<p>(1) 迷宫的入口为矩阵的左上角（1,1），迷宫的出口为右下角（m,n）;</p>
+<p>(2) 路径的探索顺序依次为”东南西北”（即：右下左上）。</p>
+<h4 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h4><p>9 8<br>00100010<br>00100010<br>00001101<br>01110010<br>00010000<br>01000101<br>01111001<br>11000101<br>11000000</p>
+<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h4><p>(1,1,1)(1,2,2)(2,2,2)(3,2,3)(3,1,2)(4,1,2)(5,1,1)(5,2,1)(5,3,2)(6,3,1)(6,4,1)(6,5,4)(5,5,1)(5,6,1)(5,7,2)(6,7,2)(7,7,2)(8,7,2)(9,7,1)(9,8,0)</p>
+<h3 id="AC代码："><a href="#AC代码：" class="headerlink" title="AC代码："></a>AC代码：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#pragma warning(disable:4996)；</div><div class="line">int n,m,p,q,min=99999999;</div><div class="line">int a[1000][1000], book[1000][1000] = &#123;0&#125;;</div><div class="line"></div><div class="line">int flag=0;</div><div class="line">int p1[10000];</div><div class="line">int p2[10000];</div><div class="line">int p3[10000];</div><div class="line">int top;</div><div class="line"></div><div class="line">void dfs(int x,int y,int step)</div><div class="line">&#123;</div><div class="line">	int next[4][2]=&#123;&#123;0,1&#125;,&#123;1,0&#125;,&#123;0,-1&#125;,&#123;-1,0&#125;&#125;;</div><div class="line">	int tx,ty,k;</div><div class="line">	if(flag==1)</div><div class="line">	&#123;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	if(x==n&amp;&amp;y==m)</div><div class="line">	&#123;</div><div class="line">		flag=1;</div><div class="line">		top=step;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	for(k=0;k&lt;4;k++)</div><div class="line">	&#123;</div><div class="line">		tx=x+next[k][0];</div><div class="line">		ty=y+next[k][1];</div><div class="line">		if(tx&lt;1||tx&gt;n||ty&lt;1||ty&gt;m)</div><div class="line">		continue;</div><div class="line">		</div><div class="line">		if(a[tx][ty]==0&amp;&amp;book[tx][ty]==0)</div><div class="line">		&#123;</div><div class="line">			book[tx][ty]=1;</div><div class="line">			p1[step]=x;</div><div class="line">			p2[step]=y;</div><div class="line">			p3[step]=k+1;</div><div class="line">			dfs(tx,ty,step+1);</div><div class="line">			if (flag == 1)</div><div class="line">			&#123;</div><div class="line">				return;</div><div class="line">			&#125;</div><div class="line">			</div><div class="line">			book[tx][ty]=0;</div><div class="line">		&#125;</div><div class="line">			</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return;</div><div class="line"> &#125;</div><div class="line"></div><div class="line">  int main(void)</div><div class="line">&#123;</div><div class="line">	int i,j;</div><div class="line">	scanf(&quot;%d%d\n&quot;,&amp;n,&amp;m);</div><div class="line">	char ls[1000];</div><div class="line">	for(i=1;i&lt;=n;i++)</div><div class="line">	&#123;</div><div class="line"></div><div class="line">		gets(ls);</div><div class="line">		for(j=1;j&lt;=m;j++)</div><div class="line">		&#123;</div><div class="line">			a[i][j]=ls[j-1]-&apos;0&apos;;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	book[1][1]=1;</div><div class="line">	p1[top]=1;</div><div class="line">	p2[top]=1;</div><div class="line">	p3[top]=1;</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">	dfs(1,1,1);</div><div class="line">	</div><div class="line">	if (flag == 1)</div><div class="line">	&#123;</div><div class="line">		for (i = 1; i &lt; top; i++)</div><div class="line">		&#123;</div><div class="line">			printf(&quot;(%d,%d,%d)&quot;, p1[i], p2[i], p3[i]);</div><div class="line">			</div><div class="line">		&#125;</div><div class="line">		printf(&quot;(%d,%d,%d)&quot;, n, m, 0);</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">	&#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="另附中缀表达式转后缀代码"><a href="#另附中缀表达式转后缀代码" class="headerlink" title="另附中缀表达式转后缀代码"></a>另附中缀表达式转后缀代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line">#pragma warning(disable:4996)；</div><div class="line">int cmp(char a, char b)</div><div class="line">&#123;</div><div class="line">	if (a == &apos;*&apos; || a == &apos;/&apos;)</div><div class="line">	&#123;</div><div class="line">		if (b == &apos;+&apos; || b == &apos;-&apos;)</div><div class="line">		&#123;</div><div class="line">			return 1;</div><div class="line">		&#125;</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			return 0;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	else if(a== &apos;+&apos; || a == &apos;-&apos;)</div><div class="line">	&#123;</div><div class="line">		if (b == &apos;+&apos; || b == &apos;-&apos;)</div><div class="line">		&#123;</div><div class="line">			return 0;</div><div class="line">		&#125;</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			return -1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">	&#123;</div><div class="line">		return -1;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">int isnum(char a)</div><div class="line">&#123;</div><div class="line">	if (a &gt;= &apos;a&apos;&amp;&amp;a &lt;= &apos;z&apos;)</div><div class="line">	&#123;</div><div class="line">		return 1;</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">		return 0;</div><div class="line">&#125;</div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">	char q1[1000] = &#123;0&#125;;</div><div class="line">	char q2[1000] = &#123;0&#125;;</div><div class="line">	int t1=1, t2=0;</div><div class="line">	char o[1000] = &#123;0&#125;;</div><div class="line">	int t3=0;</div><div class="line">	scanf(&quot;%s&quot;, q2);</div><div class="line">	char ch = q2[t2];</div><div class="line">	t2++;</div><div class="line">	while (ch != &apos;\0&apos;)</div><div class="line">	&#123;</div><div class="line">		if (isnum(ch))</div><div class="line">		&#123;</div><div class="line">			o[t3] = ch;</div><div class="line">			t3++;</div><div class="line"></div><div class="line">			ch = q2[t2];</div><div class="line">			t2++;</div><div class="line">		&#125;</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			if (ch == &apos;)&apos;)</div><div class="line">			&#123;</div><div class="line">				</div><div class="line">				while (q1[t1-1] != &apos;(&apos;) &#123;</div><div class="line">					</div><div class="line">					t1--;</div><div class="line">					o[t3] = q1[t1];</div><div class="line">					t3++;</div><div class="line">				&#125; </div><div class="line">				t1--;</div><div class="line">				ch = q2[t2];</div><div class="line">				t2++;</div><div class="line">			&#125;</div><div class="line">			else if (ch == &apos;(&apos;)</div><div class="line">			&#123;</div><div class="line">				q1[t1] = ch;</div><div class="line">				t1++;</div><div class="line">				ch = q2[t2];</div><div class="line">				t2++;</div><div class="line">			&#125;</div><div class="line">			else</div><div class="line">			&#123;</div><div class="line">				if (cmp(q1[t1 - 1], ch) &lt; 0)</div><div class="line">				&#123;</div><div class="line">					q1[t1] = ch;</div><div class="line">					t1++;</div><div class="line"></div><div class="line"></div><div class="line">					ch = q2[t2];</div><div class="line">					t2++;</div><div class="line">				&#125;</div><div class="line">				else if (cmp(q1[t1 - 1], ch) &gt; 0)</div><div class="line">				&#123;</div><div class="line">					t1--;</div><div class="line">					o[t3] = q1[t1];</div><div class="line">					t3++;</div><div class="line">				&#125;</div><div class="line">				else</div><div class="line">				&#123;</div><div class="line">					t1--;</div><div class="line">					o[t3] = q1[t1];</div><div class="line">					t3++;</div><div class="line"></div><div class="line"></div><div class="line">				&#125;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">			</div><div class="line">		</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	while (t1 != -1)</div><div class="line">	&#123;</div><div class="line">		t1--;</div><div class="line">		o[t3] = q1[t1];</div><div class="line">		t3++;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	o[t3] = 0;</div><div class="line">	printf(&quot;%s&quot;, o);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/25/unity官方视屏1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -745,7 +894,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">63</span>
+                <span class="site-state-item-count">64</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -767,7 +916,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">60</span>
+                <span class="site-state-item-count">61</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
