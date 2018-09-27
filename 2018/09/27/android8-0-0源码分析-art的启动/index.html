@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android系统,art," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言2014年6月25日，Android L-5.0 正式亮相于召开的谷歌I/O大会，Android L 改动幅度较大，谷歌将直接删除Dalvik，代替它的是传闻已久的ART。 安装后：data/data放应用私有数据，data/app放apk、lib、oat(vdex\odex\art 文件魔数为vdex、elf、art)date/dalvik-cache放虚拟机执行码的(vdex\oat\ar">
+<meta name="keywords" content="android系统,art">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android8-0-0源码分析-art的启动">
+<meta property="og:url" content="http://yoursite.com/2018/09/27/android8-0-0源码分析-art的启动/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言2014年6月25日，Android L-5.0 正式亮相于召开的谷歌I/O大会，Android L 改动幅度较大，谷歌将直接删除Dalvik，代替它的是传闻已久的ART。 安装后：data/data放应用私有数据，data/app放apk、lib、oat(vdex\odex\art 文件魔数为vdex、elf、art)date/dalvik-cache放虚拟机执行码的(vdex\oat\ar">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/CWhsU0Q.jpg">
+<meta property="og:image" content="https://i.imgur.com/vRZYBse.png">
+<meta property="og:updated_time" content="2018-09-27T14:24:37.118Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android8-0-0源码分析-art的启动">
+<meta name="twitter:description" content="前言2014年6月25日，Android L-5.0 正式亮相于召开的谷歌I/O大会，Android L 改动幅度较大，谷歌将直接删除Dalvik，代替它的是传闻已久的ART。 安装后：data/data放应用私有数据，data/app放apk、lib、oat(vdex\odex\art 文件魔数为vdex、elf、art)date/dalvik-cache放虚拟机执行码的(vdex\oat\ar">
+<meta name="twitter:image" content="https://i.imgur.com/CWhsU0Q.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/27/android8-0-0源码分析-art的启动/"/>
+
+
+
+
+
+  <title>android8-0-0源码分析-art的启动 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/27/android8-0-0源码分析-art的启动/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android8-0-0源码分析-art的启动</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-27T21:03:31+08:00">
+                2018-09-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>2014年6月25日，Android L-5.0 正式亮相于召开的谷歌I/O大会，Android L 改动幅度较大，谷歌将直接删除Dalvik，代替它的是传闻已久的ART。</p>
+<p>安装后：data/data放应用私有数据，data/app放apk、lib、oat(vdex\odex\art 文件魔数为vdex、elf、art)<br>date/dalvik-cache放虚拟机执行码的(vdex\oat\art)</p>
+<p>旧的优化叫dexopt,现安装时调用/system/bin/dex2oat（8.1.0下存在）编译</p>
+<p>无论是对dex字节码进行优化，还是将dex字节码翻译成本地机器码，最终得到的结果都是保存在相同名称的一个odex文件里面的，但是前者对应的是一个dey文件（表示这是一个优化过的dex），后者对应的是一个oat文件（实际上是一个自定义的elf文件，里面包含的都是本地机器指令）。</p>
+<p>应用程序的安装发生在两个时机，第一个时机是系统启动的时候，第二个时机系统启动完成后用户自行安装的时候。在第一个时机中，系统除了会对/system/app和/data/app目录下的所有APK进行dex字节码到本地机器码的翻译之外，还会对/system/framework目录下的APK或者JAR文件，以及这些APK所引用的外部JAR，进行dex字节码到本地机器码的翻译。这些都挂载在存储中了。</p>
+<p>在ART中，打包在APK里面的Dex字节码是通过LLVM翻译成本地机器指令的–现在的加固也需要研究这个。</p>
+<p>oat结构：<br><img src="https://i.imgur.com/CWhsU0Q.jpg" alt=""><br>加了俩个段oatdata和oatexec，分别用来储存原来打包在APK里面的dex文件和翻译这个dex文件里面的类方法得到本地机器指令。<br>动态段（dymanic section，用于以数组指向动态连接器所需信息，该段在程序头表与节头表中都有指向）中添加了三个符号oatdata、oatexec和oatlastword分别用来描述oatdata和oatexec段加段到内存后的起止地址。<br>在oatdata段中，包含了两个重要的信息，一个信息是原来的classes.dex文件的完整内容，另一个信息引导ART找到classes.dex文件里面的类方法所对应的本地机器指令，这些本地机器指令就保存在oatexec段中。<br>可见oat中含有完整的dex文件。</p>
+<p>我们在classes.dex文件中有一个类A，那么当我们知道类A的名字后，就可以通过保存在oatdata段的dex文件得到类A的所有信息，比如它的父类、成员变量和成员函数等。另一方面，类A在oatdata段中有一个对应的OatClass结构体。这个OatClass结构体描述了类A的每一个方法所对应的本地机器指令在oatexec段的位置。也就是说，当我们知道一个类及其某一个方法的名字（签名）之后，就可以通过oatdata段的dex文件内容和OatClass结构体找到其在oatexec段的本地机器指令，这样就可以执行这个类方法了。</p>
+<p>art加载运行壳时是加载优化后的oat代码，但壳用classloader加载dex时会为其生成oat文件，可能会破坏处理的dex，hook掉可以运行dex但会慢，所以为了提升速度不会阻止dex优化为oat，也就是说原dex尽力保留了，因此采用大块的native化进行加固！</p>
+<a id="more"></a>
+<h2 id="art虚拟机的启动"><a href="#art虚拟机的启动" class="headerlink" title="art虚拟机的启动"></a>art虚拟机的启动</h2><p>先记住一张图…要不然看代码经常会忘了在哪…..<br><img src="https://i.imgur.com/vRZYBse.png" alt=""><br>接下来按着这个图上的标号分析</p>
+<h3 id="1-main"><a href="#1-main" class="headerlink" title="1.main"></a>1.main</h3><p>这个就是之前分析过的<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/09/21/android8-0-0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-zygote%E7%9A%84%E5%90%AF%E5%8A%A8/" title="android8.0.0源码分析-zygote的启动" target="_blank" rel="external">http://xn–74q78i15hxv3arigm4e.cn/2018/09/21/android8-0-0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-zygote%E7%9A%84%E5%90%AF%E5%8A%A8/</a><br>中init进程所调用的android启动函数</p>
+<h3 id="2-start"><a href="#2-start" class="headerlink" title="2.start"></a>2.start</h3><p>之前的runtime.start</p>
+<h3 id="3-jni-invocation-Init"><a href="#3-jni-invocation-Init" class="headerlink" title="3.jni_invocation.Init"></a>3.jni_invocation.Init</h3><p>加载libart.so导出其接口</p>
+<h3 id="4-AppRuntime-startVm"><a href="#4-AppRuntime-startVm" class="headerlink" title="4.AppRuntime.startVm"></a>4.AppRuntime.startVm</h3><p>startVm(&amp;mJavaVM, &amp;env, zygote)<br>经过参数设置调用<code>JNI_CreateJavaVM(pJavaVM, pEnv, &amp;initArgs)</code><br><code>JNI_CreateJavaVM</code>就是之前虚拟机导出的三个接口之一</p>
+<h3 id="5-6-JNI-CreateJavaVM"><a href="#5-6-JNI-CreateJavaVM" class="headerlink" title="5/6.JNI_CreateJavaVM"></a>5/6.JNI_CreateJavaVM</h3><p>经过一层JniInvocation类内调用后，8.0的实现位于<code>art\runtime\java_vm_ext.cc</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">// JNI Invocation interface.</div><div class="line"></div><div class="line">extern &quot;C&quot; jint JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) &#123;</div><div class="line">  ScopedTrace trace(__FUNCTION__);</div><div class="line">  const JavaVMInitArgs* args = static_cast&lt;JavaVMInitArgs*&gt;(vm_args);//vm_args转换为一个JavaVMInitArgs对象</div><div class="line">  if (JavaVMExt::IsBadJniVersion(args-&gt;version)) &#123;</div><div class="line">    LOG(ERROR) &lt;&lt; &quot;Bad JNI version passed to CreateJavaVM: &quot; &lt;&lt; args-&gt;version;</div><div class="line">    return JNI_EVERSION;</div><div class="line">  &#125;</div><div class="line">  RuntimeOptions options; //按照Key-Value的组织形式保存一个Options向量</div><div class="line">  for (int i = 0; i &lt; args-&gt;nOptions; ++i) &#123;</div><div class="line">    JavaVMOption* option = &amp;args-&gt;options[i];</div><div class="line">    options.push_back(std::make_pair(std::string(option-&gt;optionString), option-&gt;extraInfo));</div><div class="line">  &#125;</div><div class="line">  bool ignore_unrecognized = args-&gt;ignoreUnrecognized;</div><div class="line">  //Runtime静态函数create在进程中创建一个虚拟机，c++对静态属性、函数用类名操作用的是::</div><div class="line">  if (!Runtime::Create(options, ignore_unrecognized)) &#123;</div><div class="line">    return JNI_ERR;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Initialize native loader. This step makes sure we have</div><div class="line">  // everything set up before we start using JNI.</div><div class="line">  android::InitializeNativeLoader();</div><div class="line"></div><div class="line">  Runtime* runtime = Runtime::Current(); //获取当前Runtime，Current：当前</div><div class="line">  bool started = runtime-&gt;Start();//启动虚拟机</div><div class="line">  if (!started) &#123;</div><div class="line">    delete Thread::Current()-&gt;GetJniEnv();</div><div class="line">    delete runtime-&gt;GetJavaVM();</div><div class="line">    LOG(WARNING) &lt;&lt; &quot;CreateJavaVM failed&quot;;</div><div class="line">    return JNI_ERR;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  *p_env = Thread::Current()-&gt;GetJniEnv();</div><div class="line">  *p_vm = runtime-&gt;GetJavaVM();</div><div class="line">  return JNI_OK;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>作用：</p>
+<ol>
+<li>参数以key-value形式保存于options向量</li>
+<li>用Runtime类的静态成员函数create创建art虚拟机，属于该进程</li>
+<li>获取当前Runtime对象实例，并调用start启动</li>
+<li>获取JNIEnv与JavaVm返回。</li>
+</ol>
+<h3 id="7-Runtime-Create"><a href="#7-Runtime-Create" class="headerlink" title="7.Runtime.Create"></a>7.Runtime.Create</h3><p>Runtime::Create(options, ignore_unrecognized)<br>Runtime类的静态成员函数Create<br>在art\runtime\runtime.cc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">bool Runtime::Create(RuntimeArgumentMap&amp;&amp; runtime_options) &#123;</div><div class="line">  // TODO: acquire a static mutex on Runtime to avoid racing.</div><div class="line">  if (Runtime::instance_ != nullptr) &#123;</div><div class="line">    return false;</div><div class="line">  &#125;</div><div class="line">  instance_ = new Runtime;//instance为Runtime单例静态变量，描述art虚拟机实例-进程的</div><div class="line">  Locks::SetClientCallback(IsSafeToCallAbort);</div><div class="line">  if (!instance_-&gt;Init(std::move(runtime_options))) &#123;//初始化instance</div><div class="line">    // TODO: Currently deleting the instance will abort the runtime on destruction. Now This will</div><div class="line">    // leak memory, instead. Fix the destructor. b/19100793.</div><div class="line">    // delete instance_;</div><div class="line">    instance_ = nullptr;</div><div class="line">    return false;</div><div class="line">  &#125;</div><div class="line">  return true;</div><div class="line">&#125;</div><div class="line"></div><div class="line">bool Runtime::Create(const RuntimeOptions&amp; raw_options, bool ignore_unrecognized) &#123;</div><div class="line">  RuntimeArgumentMap runtime_options;//吧设置和忽略无法识别都输入</div><div class="line">  return ParseOptions(raw_options, ignore_unrecognized, &amp;runtime_options) &amp;&amp;</div><div class="line">      Create(std::move(runtime_options));//std::move语句可以将左值变为右值避免拷贝构造</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>创建唯一的Runtime对象：Runtime::instance_实例，进行初始化。<br>注意该对象属于进程，线程私有空间有限：栈以及系统提供的线程信息区域TLS，代码以及堆是共享的，因此类中指向的全局变量进程唯一。</p>
+<p>Runtime构造函数:在art\runtime\runtime.cc   </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Runtime::Runtime()</div><div class="line">    : resolution_method_(nullptr),</div><div class="line">      imt_conflict_method_(nullptr),</div><div class="line">      imt_unimplemented_method_(nullptr),</div><div class="line">      instruction_set_(kNone),</div><div class="line">      compiler_callbacks_(nullptr),</div><div class="line">	......</div><div class="line">      zygote_no_threads_(false),</div><div class="line">      cha_(nullptr) &#123;</div><div class="line">  CheckAsmSupportOffsetsAndSizes();</div><div class="line">  std::fill(callee_save_methods_, callee_save_methods_ + arraysize(callee_save_methods_), 0u);</div><div class="line">  interpreter::CheckInterpreterAsmConstants();</div><div class="line">  callbacks_.reset(new RuntimeCallbacks());</div><div class="line">  for (size_t i = 0; i &lt;= static_cast&lt;size_t&gt;(DeoptimizationKind::kLast); ++i) &#123;</div><div class="line">    deoptimization_counts_[i] = 0u;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>为基本属性的初始化</p>
+<h3 id="8-Runtime-init"><a href="#8-Runtime-init" class="headerlink" title="8.Runtime.init"></a>8.Runtime.init</h3><p>instance_-&gt;Init(std::move(runtime_options))<br>在art\runtime\runtime.cc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bool Runtime::Init(RuntimeArgumentMap&amp;&amp; runtime_options_in) &#123;</div><div class="line"></div><div class="line">	......</div><div class="line"></div><div class="line">  RuntimeArgumentMap runtime_options(std::move(runtime_options_in));//参数map</div><div class="line">  using Opt = RuntimeArgumentMap;</div><div class="line">  </div><div class="line">  </div><div class="line">  	...... 一堆参数设置</div><div class="line">    boot_class_path_string_ = runtime_options.ReleaseOrDefault(Opt::BootClassPath);//启动类路径</div><div class="line">	image_location_ = runtime_options.GetOrDefault(Opt::Image);;//art所使用image文件</div><div class="line">	compiler_executable_ = runtime_options.ReleaseOrDefault(Opt::Compiler);//art是执行还是编译dex的</div><div class="line">	</div><div class="line"></div><div class="line">  //创建虚拟机堆</div><div class="line">  heap_ = new gc::Heap(runtime_options.GetOrDefault(Opt::MemoryInitialSize),</div><div class="line">                       runtime_options.GetOrDefault(Opt::HeapGrowthLimit),</div><div class="line">                       runtime_options.GetOrDefault(Opt::HeapMinFree),</div><div class="line">                       runtime_options.GetOrDefault(Opt::HeapMaxFree),</div><div class="line">                       runtime_options.GetOrDefault(Opt::HeapTargetUtilization),</div><div class="line">                       runtime_options.GetOrDefault(Opt::ForegroundHeapGrowthMultiplier),</div><div class="line">                       runtime_options.GetOrDefault(Opt::MemoryMaximumSize),</div><div class="line">                       runtime_options.GetOrDefault(Opt::NonMovingSpaceCapacity),</div><div class="line">                       runtime_options.GetOrDefault(Opt::Image),</div><div class="line">                       runtime_options.GetOrDefault(Opt::ImageInstructionSet),</div><div class="line">                       // Override the collector type to CC if the read barrier config.</div><div class="line">                       kUseReadBarrier ? gc::kCollectorTypeCC : xgc_option.collector_type_,</div><div class="line">                       kUseReadBarrier ? BackgroundGcOption(gc::kCollectorTypeCCBackground)</div><div class="line">                                       : runtime_options.GetOrDefault(Opt::BackgroundGc),</div><div class="line">                       runtime_options.GetOrDefault(Opt::LargeObjectSpace),</div><div class="line">                       runtime_options.GetOrDefault(Opt::LargeObjectThreshold),</div><div class="line">                       runtime_options.GetOrDefault(Opt::ParallelGCThreads),</div><div class="line">                       runtime_options.GetOrDefault(Opt::ConcGCThreads),</div><div class="line">                       runtime_options.Exists(Opt::LowMemoryMode),</div><div class="line">                       runtime_options.GetOrDefault(Opt::LongPauseLogThreshold),</div><div class="line">                       runtime_options.GetOrDefault(Opt::LongGCLogThreshold),</div><div class="line">                       runtime_options.Exists(Opt::IgnoreMaxFootprint),</div><div class="line">                       runtime_options.GetOrDefault(Opt::UseTLAB),</div><div class="line">                       xgc_option.verify_pre_gc_heap_,</div><div class="line">                       xgc_option.verify_pre_sweeping_heap_,</div><div class="line">                       xgc_option.verify_post_gc_heap_,</div><div class="line">                       xgc_option.verify_pre_gc_rosalloc_,</div><div class="line">                       xgc_option.verify_pre_sweeping_rosalloc_,</div><div class="line">                       xgc_option.verify_post_gc_rosalloc_,</div><div class="line">                       xgc_option.gcstress_,</div><div class="line">                       xgc_option.measure_,</div><div class="line">                       runtime_options.GetOrDefault(Opt::EnableHSpaceCompactForOOM),</div><div class="line">                       runtime_options.GetOrDefault(Opt::HSpaceCompactForOOMMinIntervalsMs));</div><div class="line"></div><div class="line"></div><div class="line">					   </div><div class="line">	......</div><div class="line"></div><div class="line">  //创建java_vm_实例  </div><div class="line">  java_vm_ = JavaVMExt::Create(this, runtime_options, &amp;error_msg);</div><div class="line"></div><div class="line">  </div><div class="line">	......</div><div class="line">  Thread::Startup();//线程类启动</div><div class="line"></div><div class="line">  // ClassLinker needs an attached thread, but we can&apos;t fully attach a thread without creating</div><div class="line">  // objects. We can&apos;t supply(供应) a thread group yet; it will be fixed later. Since we are the main</div><div class="line">  // thread, we do not get a java peer(同辈).</div><div class="line">  Thread* self = Thread::Attach(&quot;main&quot;, false, nullptr, false);//将当前作为主线程。使当前可以调用jni</div><div class="line"></div><div class="line">	......</div><div class="line"></div><div class="line">  //获取当前的堆，GetContinuousSpaces可以获得堆里面的连续空间列表</div><div class="line">  CHECK_GE(GetHeap()-&gt;GetContinuousSpaces().size(), 1U);</div><div class="line">  //创建ClassLinker对象  加载java类用</div><div class="line">  class_linker_ = new ClassLinker(intern_table_);</div><div class="line"></div><div class="line">	......</div><div class="line">  return true;</div><div class="line">&#125;</div><div class="line"></div><div class="line">```  </div><div class="line"></div><div class="line"> ` class_linker_ = new ClassLinker(intern_table_);`</div><div class="line">  </div><div class="line">  `class_linker`主要是解析一些系统java类，比如classloader等系统资源load到内存，作为之后加载其他java类的基础，这里只是简单说明下，涉及到art的几个很重要的结构，Class和ArtMethod，DexCache，在boot.oat可执行文件的结构中，每一个Java Class对应一个OatClass，OatClass中保存分别有dex class和本地机器码的地址，在解释执行模式下，每一个方法的调用是通过DexCache来中转的，DexCache，根据method找到指定的ArtMethod，这里`class_link`主要负责协调管理。</div><div class="line"></div><div class="line">  此处实现在分析art运行时再开</div><div class="line"></div><div class="line">### 9.Heap.Heap</div><div class="line"></div><div class="line"></div><div class="line">看一下堆的构造Heap类——art虚拟机的堆</div><div class="line">位于：art\runtime\gc\heap.cc</div></pre></td></tr></table></figure>
+<p>Heap::Heap(size_t initial_size,<br>           size_t growth_limit,<br>           size_t min_free,<br>           size_t max_free,<br>           double target_utilization,<br>           double foreground_heap_growth_multiplier,<br>           size_t capacity,<br>           size_t non_moving_space_capacity,<br>           const std::string&amp; image_file_name,//虚拟机镜像文件<br>           const InstructionSet image_instruction_set,<br>           CollectorType foreground_collector_type,<br>           CollectorType background_collector_type,<br>           space::LargeObjectSpaceType large_object_space_type,<br>           size_t large_object_threshold,<br>           size_t parallel_gc_threads,<br>           size_t conc_gc_threads,<br>           bool low_memory_mode,<br>           size_t long_pause_log_threshold,<br>           size_t long_gc_log_threshold,<br>           bool ignore_max_footprint,<br>           bool use_tlab,<br>           bool verify_pre_gc_heap,<br>           bool verify_pre_sweeping_heap,<br>           bool verify_post_gc_heap,<br>           bool verify_pre_gc_rosalloc,<br>           bool verify_pre_sweeping_rosalloc,<br>           bool verify_post_gc_rosalloc,<br>           bool gc_stress_mode,<br>           bool measure_gc_performance,<br>           bool use_homogeneous_space_compaction_for_oom,<br>           uint64_t min_interval_homogeneous_space_compaction_by_oom)<br>    :<br>    ……<br>      // Load image space(s).    加载镜像空间<br>  if (space::ImageSpace::LoadBootImage(image_file_name,<br>                                       image_instruction_set,<br>                                       &amp;boot_image<em>spaces</em>,<br>                                       &amp;requested_alloc_space_begin)) {<br>    for (auto space : boot_image<em>spaces</em>) {<br>      AddSpace(space);<br>    }<br>  }<br>    ……</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">image_file_name描述image文件路径  默认为/system/framework/arm64/boot.art</div><div class="line">用space::ImageSpace::LoadBootImage加载到boot_image_spaces_中，之后用Heap类的成员函数AddSpace加入堆空间</div><div class="line">注意android7之后被分为多个文件:boot-&lt;packagename&gt;.oat/art，因此这里用for加入。art中的内容为类对象映像，包含了所有framework/base/preloaded-classes文件列出的所有类。这些类会被一次性的载入到内存中，并可以被直接使用</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">LoadBootImage在\art\runtime\gc\space\image_space.cc</div></pre></td></tr></table></figure>
+<p>bool ImageSpace::LoadBootImage(const std::string&amp; image_file_name,<br>                               const InstructionSet image_instruction_set,<br>                               std::vector<space::imagespace*><em> boot_image_spaces,<br>                               uint8_t*</em> oat_file_end) {<br>  DCHECK(boot_image_spaces != nullptr);<br>  DCHECK(boot_image_spaces-&gt;empty());<br>  DCHECK(oat_file_end != nullptr);<br>  DCHECK_NE(image_instruction_set, InstructionSet::kNone);</space::imagespace*></p>
+<p>  if (image_file_name.empty()) {<br>    return false;<br>  }</p>
+<p>  // For code reuse, handle this like a work queue.<br>  std::vector<std::string> image_file_names;<br>  image_file_names.push_back(image_file_name);</std::string></p>
+<p>  bool error = false;<br>  uint8_t<em> oat_file_end_tmp = </em>oat_file_end;</p>
+<p>  for (size_t index = 0; index &lt; image_file_names.size(); ++index) {<br>    std::string&amp; image_name = image_file_names[index];<br>    std::string error_msg;<br>    std::unique_ptr<space::imagespace> boot_image_space_uptr = CreateBootImage(<br>        image_name.c_str(),<br>        image_instruction_set,<br>        index &gt; 0,<br>        &amp;error_msg);<br>    if (boot_image_space_uptr != nullptr) {<br>      space::ImageSpace<em> boot_image_space = boot_image_space_uptr.release();<br>      boot_image_spaces-&gt;push_back(boot_image_space);<br>      // Oat files referenced by image files immediately follow them in memory, ensure alloc space<br>      // isn’t going to get in the middle<br>      uint8_t</em> oat_file_end_addr = boot_image_space-&gt;GetImageHeader().GetOatFileEnd();<br>      CHECK_GT(oat_file_end_addr, boot_image_space-&gt;End());<br>      oat_file_end_tmp = AlignUp(oat_file_end_addr, kPageSize);</space::imagespace></p>
+<pre><code>  if (index == 0) {
+    // If this was the first space, check whether there are more images to load.
+    const OatFile* boot_oat_file = boot_image_space-&gt;GetOatFile();
+    if (boot_oat_file == nullptr) {
+      continue;
+    }
+
+    const OatHeader&amp; boot_oat_header = boot_oat_file-&gt;GetOatHeader();
+    const char* boot_classpath =
+        boot_oat_header.GetStoreValueByKey(OatHeader::kBootClassPathKey);
+    if (boot_classpath == nullptr) {
+      continue;
+    }
+
+    ExtractMultiImageLocations(image_file_name, boot_classpath, &amp;image_file_names);
+  }
+} else {
+  error = true;
+  LOG(ERROR) &lt;&lt; &quot;Could not create image space with image file &apos;&quot; &lt;&lt; image_file_name &lt;&lt; &quot;&apos;. &quot;
+      &lt;&lt; &quot;Attempting to fall back to imageless running. Error was: &quot; &lt;&lt; error_msg
+      &lt;&lt; &quot;\nAttempted image: &quot; &lt;&lt; image_name;
+  break;
+}
+</code></pre><p>  }</p>
+<p>  if (error) {<br>    // Remove already loaded spaces.<br>    for (space::Space<em> loaded_space : </em>boot_image_spaces) {<br>      delete loaded_space;<br>    }<br>    boot_image_spaces-&gt;clear();<br>    return false;<br>  }</p>
+<p>  *oat_file_end = oat_file_end_tmp;<br>  return true;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">检查：boot.art、dalvik-cache是否存在该镜像文件，没有就创建。最后加载进boot_image_spaces中</div><div class="line"></div><div class="line"></div><div class="line">Heap::AddSpace</div><div class="line">位于art\runtime\gc\heap.cc</div></pre></td></tr></table></figure>
+<p>void Heap::AddSpace(space::Space<em> space) {<br>  CHECK(space != nullptr);<br>  WriterMutexLock mu(Thread::Current(), </em>Locks::heap_bitmap<em>lock</em>);<br>  if (space-&gt;IsContinuousSpace()) {//是连续的space<br>    DCHECK(!space-&gt;IsDiscontinuousSpace());<br>    space::ContinuousSpace<em> continuous_space = space-&gt;AsContinuousSpace();   //作为连续的空间<br>    // Continuous spaces don’t necessarily have bitmaps.<br>    accounting::ContinuousSpaceBitmap</em> live_bitmap = continuous_space-&gt;GetLiveBitmap();<br>    accounting::ContinuousSpaceBitmap<em> mark_bitmap = continuous_space-&gt;GetMarkBitmap();<br>    // The region space bitmap is not added since VisitObjects visits the region space objects with<br>    // special handling.<br>    if (live_bitmap != nullptr &amp;&amp; !space-&gt;IsRegionSpace()) {<br>      CHECK(mark_bitmap != nullptr);<br>      live<em>bitmap</em>-&gt;AddContinuousSpaceBitmap(live_bitmap);<br>      mark<em>bitmap</em>-&gt;AddContinuousSpaceBitmap(mark_bitmap);<br>    }<br>    continuous<em>spaces</em>.push_back(continuous_space);    //加入堆中的连续空间<br>    // Ensure that spaces remain sorted in increasing order of start address.<br>    std::sort(continuous<em>spaces</em>.begin(), continuous<em>spaces</em>.end(),<br>              [](const space::ContinuousSpace</em> a, const space::ContinuousSpace<em> b) {<br>      return a-&gt;Begin() &lt; b-&gt;Begin();<br>    });<br>  } else {<br>    CHECK(space-&gt;IsDiscontinuousSpace());<br>    space::DiscontinuousSpace</em> discontinuous_space = space-&gt;AsDiscontinuousSpace();<br>    live<em>bitmap</em>-&gt;AddLargeObjectBitmap(discontinuous_space-&gt;GetLiveBitmap());<br>    mark<em>bitmap</em>-&gt;AddLargeObjectBitmap(discontinuous_space-&gt;GetMarkBitmap());<br>    discontinuous<em>spaces</em>.push_back(discontinuous_space);<br>  }<br>  if (space-&gt;IsAllocSpace()) {  //是否允许分配<br>    alloc<em>spaces</em>.push_back(space-&gt;AsAllocSpace());<br>  }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Heap类中分别用成员变量continuous_spaces_和discontinuous_spaces_分别保存整个堆中的连续空间和非连续空间，这里讲space加载进heap</div><div class="line"></div><div class="line"></div><div class="line">### 10.JavaVMExt.Create</div><div class="line">Runtime::Init的JavaVMExt::Create</div><div class="line">实现在art\runtime\java_vm_ext.cc</div></pre></td></tr></table></figure></p>
+<p>class JavaVMExt : public JavaVM<br>……</p>
+<p>// Checking “globals” and “weak_globals” usually requires locks, but we<br>// don’t need the locks to check for validity when constructing the<br>// object. Use NO_THREAD_SAFETY_ANALYSIS for this.<br>std::unique_ptr<javavmext> JavaVMExt::Create(Runtime<em> runtime,<br>                                             const RuntimeArgumentMap&amp; runtime_options,<br>                                             std::string</em> error_msg) NO_THREAD_SAFETY_ANALYSIS {<br>  std::unique_ptr<javavmext> java_vm(new JavaVMExt(runtime, runtime_options, error_msg));<br>  if (java_vm &amp;&amp; java<em>vm-&gt;globals</em>.IsValid() &amp;&amp; java_vm-&gt;weak<em>globals</em>.IsValid()) {<br>    return java_vm;<br>  }<br>  return nullptr;<br>}</javavmext></javavmext></p>
+<p>JavaVMExt::JavaVMExt(Runtime<em> runtime,<br>                     const RuntimeArgumentMap&amp; runtime_options,<br>                     std::string</em> error<em>msg)<br>    : runtime</em>(runtime),<br>      check_jni_abort<em>hook</em>(nullptr),<br>      check_jni_abort_hook<em>data</em>(nullptr),<br>      check<em>jni</em>(false),  // Initialized properly in the constructor body below.<br>      force<em>copy</em>(runtime_options.Exists(RuntimeArgumentMap::JniOptsForceCopy)),<br>      tracing<em>enabled</em>(runtime_options.Exists(RuntimeArgumentMap::JniTrace)<br>                       || VLOG_IS_ON(third_party<em>jni)),<br>      trace</em>(runtime<em>options.GetOrDefault(RuntimeArgumentMap::JniTrace)),<br>      globals</em>(kGlobalsMax, kGlobal, IndirectReferenceTable::ResizableCapacity::kNo, error<em>msg),<br>      libraries</em>(new Libraries),<br>      unchecked<em>functions</em>(&amp;gJniInvokeInterface),<br>      weak<em>globals</em>(kWeakGlobalsMax,<br>                    kWeakGlobal,<br>                    IndirectReferenceTable::ResizableCapacity::kNo,<br>                    error_msg),<br>      allow_accessing_weak<em>globals</em>(true),<br>      weak_globals_add<em>condition</em>(“weak globals add condition”,<br>                                  (CHECK(Locks::jni_weak_globals<em>lock</em> != nullptr),<br>                                   *Locks::jni_weak_globals<em>lock</em>)),<br>      env<em>hooks</em>() {<br>  functions = unchecked<em>functions</em>;<br>  SetCheckJniEnabled(runtime_options.Exists(RuntimeArgumentMap::CheckJni));<br>}</p>
+<p>const JNIInvokeInterface gJniInvokeInterface = {<br>  nullptr,  // reserved0<br>  nullptr,  // reserved1<br>  nullptr,  // reserved2<br>  JII::DestroyJavaVM,<br>  JII::AttachCurrentThread,<br>  JII::DetachCurrentThread,<br>  JII::GetEnv,<br>  JII::AttachCurrentThreadAsDaemon<br>};<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">初始化JavaVMExt继承自JavaVM,functions为一函数指针结构体，存有JavaVM的进程相关方法。</div><div class="line">该对象存有Runtime并唯一。</div><div class="line"></div><div class="line">### 11.Thread.Startup</div><div class="line">Thread::Startup()</div><div class="line">在/art/runtime/thread.cc</div></pre></td></tr></table></figure></p>
+<p>void Thread::Startup() {<br>  CHECK(!is<em>started</em>);<br>  is<em>started</em> = true;<br>  {<br>    // MutexLock to keep annotalysis happy.<br>    //<br>    // Note we use null for the thread because Thread::Current can<br>    // return garbage since (is<em>started</em> == true) and<br>    // Thread::pthread_key<em>self</em> is not yet initialized.<br>    // This was seen on glibc.<br>    MutexLock mu(nullptr, <em>Locks::thread_suspend_count<em>lock</em>);<br>    resume<em>cond</em> = new ConditionVariable(“Thread resumption condition variable”,
+                                         </em>Locks::thread_suspend_count<em>lock</em>);<br>  }</p>
+<p>  // Allocate a TLS slot.<br>  CHECK_PTHREAD_CALL(pthread_key_create, (&amp;Thread::pthread_key<em>self</em>, Thread::ThreadExitCallback),<br>                     “self key”);</p>
+<p>  // Double-check the TLS slot allocation.<br>  if (pthread_getspecific(pthread_key<em>self</em>) != nullptr) {<br>    LOG(FATAL) &lt;&lt; “Newly-created pthread TLS slot is not nullptr”;<br>  }<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">Thread类是art虚拟机管理线程的类，里面jvm创建与native创建的线程都有表示，是一一对应的。因为jvm的线程调度是由操作系统实现的</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">### 12.Thread.Attach</div><div class="line">Thread* self = Thread::Attach(&quot;main&quot;, false, nullptr, false);</div><div class="line">位于art/runtime/thread.cc</div></pre></td></tr></table></figure>
+<p>Thread<em> Thread::Attach(const char</em> thread_name,<br>                       bool as_daemon,   //daemon：守护进程<br>                       jobject thread_group,<br>                       bool create_peer) {<br>  auto create_peer_action = <a href="Thread* self">&amp;</a> {<br>    // If we’re the main thread, ClassLinker won’t be created until after we’re attached,<br>    // so that thread needs a two-stage attach. Regular threads don’t need this hack.<br>    // In the compiler, all threads need this hack, because no-one’s going to be getting<br>    // a native peer!<br>    //如果我们在主线程，ClassLinker还没创建，因此我们需要俩步来附上jvm与本地的线程。<br>    //规则的线程不需要<br>    if (create_peer) {<br>      self-&gt;CreatePeer(thread_name, as_daemon, thread_group);<br>      if (self-&gt;IsExceptionPending()) {<br>        // We cannot keep the exception around, as we’re deleting self. Try to be helpful and log it.<br>        {<br>          ScopedObjectAccess soa(self);<br>          LOG(ERROR) &lt;&lt; “Exception creating thread peer:”;<br>          LOG(ERROR) &lt;&lt; self-&gt;GetException()-&gt;Dump();<br>          self-&gt;ClearException();<br>        }<br>        return false;<br>      }<br>    } else {<br>      // These aren’t necessary, but they improve diagnostics for unit tests &amp; command-line tools.<br>      if (thread<em>name != nullptr) {<br>        self-&gt;tlsPtr</em>.name-&gt;assign(thread_name);<br>        ::art::SetThreadName(thread_name);<br>      } else if (self-&gt;GetJniEnv()-&gt;check_jni) {<br>        LOG(WARNING) &lt;&lt; *Thread::Current() &lt;&lt; “ attached without supplying a name”;<br>      }<br>    }<br>    return true;<br>  };<br>  return Attach(thread_name, as_daemon, create_peer_action);//调用的是下面那个，第三个是一个lambda表达式生成的函数指针<br>}</p>
+<p>template <typename peeraction=""><br>Thread<em> Thread::Attach(const char</em> thread_name, bool as_daemon, PeerAction peer_action) {<br>  Runtime<em> runtime = Runtime::Current();<br>  if (runtime == nullptr) {<br>    LOG(ERROR) &lt;&lt; “Thread attaching to non-existent runtime: “ &lt;&lt; thread_name;<br>    return nullptr;<br>  }<br>  Thread</em> self;<br>  {<br>    MutexLock mu(nullptr, *Locks::runtime_shutdown<em>lock</em>);<br>    if (runtime-&gt;IsShuttingDownLocked()) {<br>      LOG(WARNING) &lt;&lt; “Thread attaching while runtime is shutting down: “ &lt;&lt; thread_name;<br>      return nullptr;<br>    } else {<br>      Runtime::Current()-&gt;StartThreadBirth();<br>      self = new Thread(as_daemon);<br>      bool init_success = self-&gt;Init(runtime-&gt;GetThreadList(), runtime-&gt;GetJavaVM()); //init线程传入ThreadList和JavaVM<br>      //</typename></p>
+<pre><code>  Runtime::Current()-&gt;EndThreadBirth();
+  if (!init_success) {
+    delete self;
+    return nullptr;
+  }
+}
+</code></pre><p>  }</p>
+<p>  self-&gt;InitStringEntryPoints();</p>
+<p>  CHECK_NE(self-&gt;GetState(), kRunnable);<br>  self-&gt;SetState(kNative);</p>
+<p>  // Run the action that is acting on the peer.<br>  if (!peer_action(self)) {<br>    runtime-&gt;GetThreadList()-&gt;Unregister(self);<br>    // Unregister deletes self, no need to do this here.<br>    return nullptr;<br>  }</p>
+<p>  if (VLOG_IS_ON(threads)) {<br>    if (thread_name != nullptr) {<br>      VLOG(threads) &lt;&lt; “Attaching thread “ &lt;&lt; thread_name;<br>    } else {<br>      VLOG(threads) &lt;&lt; “Attaching unnamed thread.”;<br>    }<br>    ScopedObjectAccess soa(self);<br>    self-&gt;Dump(LOG_STREAM(INFO));<br>  }</p>
+<p>  {<br>    ScopedObjectAccess soa(self);<br>    runtime-&gt;GetRuntimeCallbacks()-&gt;ThreadStart(self);<br>  }</p>
+<p>  return self;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">创建Thread实例，调用init函数，传入该进程的ThreadList和JavaVM。</div><div class="line">同时在init中创建该线程的JNIEnvExt对象。</div><div class="line">JNIEnvExt类的构造函数将父类JNIEnv的成员变量functions初始化为全局变量gJniNativeInterface。也就是说，JNI函数表实际是由全局变量gJniNativeInterface来描述的。其中均是jni的静态函数。</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">### 16.Runtime.Start</div><div class="line">  bool started = runtime-&gt;Start();//启动虚拟机</div><div class="line">art\runtime\runtime.cc</div></pre></td></tr></table></figure>
+<p>bool Runtime::Start() {<br>……<br>  Thread* self = Thread::Current();</p>
+<p>  self-&gt;TransitionFromRunnableToSuspended(kNative);</p>
+<p>  started_ = true;</p>
+<p>  if (!IsImageDex2OatEnabled() || !GetHeap()-&gt;HasBootImageSpace()) {<br>    ScopedObjectAccess soa(self);<br>    StackHandleScope<2> hs(soa.Self());</2></p>
+<pre><code>auto class_class(hs.NewHandle&lt;mirror::Class&gt;(mirror::Class::GetJavaLangClass()));
+auto field_class(hs.NewHandle&lt;mirror::Class&gt;(mirror::Field::StaticClass()));
+
+class_linker_-&gt;EnsureInitialized(soa.Self(), class_class, true, true);
+// Field class is needed for register_java_net_InetAddress in libcore, b/28153851.
+class_linker_-&gt;EnsureInitialized(soa.Self(), field_class, true, true);
+</code></pre><p>  }</p>
+<p>  // InitNativeMethods needs to be after started_ so that the classes<br>  // it touches will have methods linked to the oat file if necessary.<br>  {<br>    ScopedTrace trace2(“InitNativeMethods”);<br>    InitNativeMethods();<br>  }</p>
+<p>  // Initialize well known thread group values that may be accessed threads while attaching.<br>  InitThreadGroups(self);</p>
+<p>  Thread::FinishStartup();</p>
+<p>  // Create the JIT either if we have to use JIT compilation or save profiling info. This is<br>  // done after FinishStartup as the JIT pool needs Java thread peers, which require the main<br>  // ThreadGroup to exist.<br>  //<br>  // TODO(calin): We use the JIT class as a proxy for JIT compilation and for<br>  // recoding profiles. Maybe we should consider changing the name to be more clear it’s<br>  // not only about compiling. b/28295073.<br>  if (jit<em>options</em>-&gt;UseJitCompilation() || jit<em>options</em>-&gt;GetSaveProfilingInfo()) {<br>    std::string error_msg;<br>    if (!IsZygote()) {<br>    // If we are the zygote then we need to wait until after forking to create the code cache<br>    // due to SELinux restrictions on r/w/x memory regions.<br>      CreateJit();<br>    } else if (jit<em>options</em>-&gt;UseJitCompilation()) {<br>      if (!jit::Jit::LoadCompilerLibrary(&amp;error_msg)) {<br>        // Try to load compiler pre zygote to reduce PSS. b/27744947<br>        LOG(WARNING) &lt;&lt; “Failed to load JIT compiler with error “ &lt;&lt; error_msg;<br>      }<br>    }<br>  }</p>
+<p>  // Send the start phase event. We have to wait till here as this is when the main thread peer<br>  // has just been generated, important root clinits have been run and JNI is completely functional.<br>  {<br>    ScopedObjectAccess soa(self);<br>    callbacks_-&gt;NextRuntimePhase(RuntimePhaseCallback::RuntimePhase::kStart);<br>  }</p>
+<p>  system_class<em>loader</em> = CreateSystemClassLoader(this);</p>
+<p>  if (!is<em>zygote</em>) {<br>    if (is_native_bridge<em>loaded</em>) {<br>      PreInitializeNativeBridge(“.”);<br>    }<br>    NativeBridgeAction action = force_native<em>bridge</em><br>        ? NativeBridgeAction::kInitialize<br>        : NativeBridgeAction::kUnload;<br>    InitNonZygoteOrPostFork(self-&gt;GetJniEnv(),<br>                            /<em> is_system_server </em>/ false,<br>                            action,<br>                            GetInstructionSetString(kRuntimeISA));<br>  }</p>
+<p>  // Send the initialized phase event. Send it before starting daemons, as otherwise<br>  // sending thread events becomes complicated.<br>  {<br>    ScopedObjectAccess soa(self);<br>    callbacks_-&gt;NextRuntimePhase(RuntimePhaseCallback::RuntimePhase::kInit);<br>  }</p>
+<p>  StartDaemonThreads();</p>
+<p>  {<br>    ScopedObjectAccess soa(self);<br>    self-&gt;GetJniEnv()-&gt;locals.AssertEmpty();<br>  }</p>
+<p>  VLOG(startup) &lt;&lt; “Runtime::Start exiting”;<br>  finished<em>starting</em> = true;</p>
+<p>  if (trace<em>config</em>.get() != nullptr &amp;&amp; trace<em>config</em>-&gt;trace_file != “”) {<br>    ScopedThreadStateChange tsc(self, kWaitingForMethodTracingStart);<br>    Trace::Start(trace<em>config</em>-&gt;trace_file.c_str(),<br>                 -1,<br>                 static_cast<int>(trace<em>config</em>-&gt;trace_file_size),<br>                 0,<br>                 trace<em>config</em>-&gt;trace_output_mode,<br>                 trace<em>config</em>-&gt;trace_mode,<br>                 0);<br>  }</int></p>
+<p>  return true;<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">2. 初始化基本类class_class ，即java.lang.Class类，这是最基础的类；</div><div class="line">3. InitNativeMethods(): 将java.lang下面最基础的类的JNI接口进行初始化；</div><div class="line">4. InitZygote：这是zygote程序在调用时，需要做的事情。app_main.cpp文件不仅是zygote的主程序，也是安卓的am命令行的主程序，故此这里做了区分；</div><div class="line">5. StartDemonThreads，调用java.lang.Daemons.start，启动一组线程，它们的作用是，执行GC、调用finalize方法、 处理ReferenceQueue等一系列工作。</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">### 17.AndroidRuntime.startReg</div></pre></td></tr></table></figure>
+<p>/<em>static</em>/ int AndroidRuntime::startReg(JNIEnv<em> env)<br>{<br>    ATRACE_NAME(“RegisterAndroidNatives”);<br>    /</em></p>
+<pre><code> * This hook causes all future threads created in this process to be
+ * attached to the JavaVM.  (This needs to go away in favor of JNI
+ * Attach calls.)
+ */
+androidSetCreateThreadFunc((android_create_thread_fn) javaCreateThreadEtc);
+
+ALOGV(&quot;--- registering native functions ---\n&quot;);
+
+/*
+ * Every &quot;register&quot; function calls one or more things that return
+ * a local reference (e.g. FindClass).  Because we haven&apos;t really
+ * started the VM yet, they&apos;re all getting stored in the base frame
+ * and never released.  Use Push/Pop to manage the storage.
+ */
+env-&gt;PushLocalFrame(200);
+
+if (register_jni_procs(gRegJNI, NELEM(gRegJNI), env) &lt; 0) {
+    env-&gt;PopLocalFrame(NULL);
+    return -1;
+}
+env-&gt;PopLocalFrame(NULL);
+
+//createJavaThread(&quot;fubar&quot;, quickTest, (void*) &quot;hello&quot;);
+
+return 0;
+</code></pre><p>}<br>```</p>
+<p>注册android系统依赖的本地jni方法</p>
+<h3 id="18-jni方法"><a href="#18-jni方法" class="headerlink" title="18.jni方法"></a>18.jni方法</h3><p>调用之前注册好的本地方法</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>基本启动过程如上….由于老罗的版本有些久远…art的c++源码庞大复杂…..经过一段时间的摸索仍在雾中。art加载执行部分无法自行分析懂，因此接下来从apk安装、运行角度分析。让逆向相关流程更为明确。<br>老罗的分析：<a href="https://blog.csdn.net/luoshengyang/article/details/39256813" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/39256813</a><br>虚拟机本质还是一个c++程序。它解释自定义的执行文件格式。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android系统/" rel="tag"># android系统</a>
+          
+            <a href="/tags/art/" rel="tag"># art</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/21/android8-0-0源码分析-zygote的启动/" rel="next" title="android8.0.0源码分析-zygote的启动">
+                <i class="fa fa-chevron-left"></i> android8.0.0源码分析-zygote的启动
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#art虚拟机的启动"><span class="nav-number">2.</span> <span class="nav-text">art虚拟机的启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-main"><span class="nav-number">2.1.</span> <span class="nav-text">1.main</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-start"><span class="nav-number">2.2.</span> <span class="nav-text">2.start</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-jni-invocation-Init"><span class="nav-number">2.3.</span> <span class="nav-text">3.jni_invocation.Init</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-AppRuntime-startVm"><span class="nav-number">2.4.</span> <span class="nav-text">4.AppRuntime.startVm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-JNI-CreateJavaVM"><span class="nav-number">2.5.</span> <span class="nav-text">5/6.JNI_CreateJavaVM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-Runtime-Create"><span class="nav-number">2.6.</span> <span class="nav-text">7.Runtime.Create</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-Runtime-init"><span class="nav-number">2.7.</span> <span class="nav-text">8.Runtime.init</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#18-jni方法"><span class="nav-number">2.8.</span> <span class="nav-text">18.jni方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">3.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

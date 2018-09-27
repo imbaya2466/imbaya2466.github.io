@@ -283,6 +283,270 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/02/android-NDK开发2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/02/android-NDK开发2/" itemprop="url">android NDK开发2</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-02T22:11:46+08:00">
+                2018-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Android NDK就是谷歌借助java JNI来调用本地native代码。具体过程依靠NDK工具与lib库，使用各平台gcc编译工具，make管理工具，交叉编译连接ndklib将c/c++编译为特定平台程序或动态连接库（linux系统不同cpu架构下的elf）。可以手写make构建生成。</p>
+<p>而ndk-build就是提供可以在android-SDK生成的项目下，通过更加集成的makefile执行上述流程。而过去的方法中的Android.mk就是给ndk-build识别使用的。</p>
+<p>cmake提供的makefile方式更人性化点<br>AS中Gradle是总得项目管理器，它调用一切（包括cmake），并将.so打包进apk中。</p>
+<h2 id="前备知识"><a href="#前备知识" class="headerlink" title="前备知识"></a>前备知识</h2><ol>
+<li>make与gcc：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/30/gcc%E4%B8%8Emake/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/30/gcc%E4%B8%8Emake/</a></li>
+<li>jni与基本俩种ndk使用：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/20/android-NDK%E5%BC%80%E5%8F%91/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/20/android-NDK%E5%BC%80%E5%8F%91/</a></li>
+</ol>
+<h2 id="NDK详解"><a href="#NDK详解" class="headerlink" title="NDK详解"></a>NDK详解</h2><h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><p>ARM，x86，MIPS交叉编译器<br>构建系统<br>jni<br>各种c++的android库</p>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ol>
+<li>build：构建系统的所有模块</li>
+<li>platforms：不同目标平台与android版本的头文件与库文件</li>
+<li>sources：可导入的现有模块</li>
+<li>toolchains：不同目标平台的构建工具</li>
+<li>ndk-build：构建用</li>
+<li>ndk-gdb：调试用</li>
+<li>ndk-stack：排错看栈用</li>
+</ol>
+<h3 id="俩个旧mk的使用"><a href="#俩个旧mk的使用" class="headerlink" title="俩个旧mk的使用"></a>俩个旧mk的使用</h3><p>详细可参看谷歌<a href="https://developer.android.com/ndk/guides/android_mk" target="_blank" rel="external">https://developer.android.com/ndk/guides/android_mk</a><br>这里举个例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">LOCAL_PATH := $(call my-dir)</div><div class="line">include $(CLEAR_VARS)</div><div class="line">LOCAL_MODULE := hello-jni </div><div class="line">LOCAL_SRC_FILES := native-lib.cpp</div><div class="line">include $(BUILD_SHARED_LIBRARY)</div></pre></td></tr></table></figure></p>
+<p>按行号看：</p>
+<ol>
+<li>表示源文件的位置，my-dir宏表示当前目录下</li>
+<li>清理其它LOCAL_变量，防止冲突</li>
+<li>目标名字，会自动加前后缀（根据5的目标要求）</li>
+<li>源文件名，可多个</li>
+<li>具体构建什么，可以有：共享库，静态库，可执行程序等</li>
+</ol>
+<p>ps.还可以指定各种变量用于引入库等</p>
+<h3 id="cmake"><a href="#cmake" class="headerlink" title="cmake"></a>cmake</h3><p>还是推荐查看谷歌：<a href="https://developer.android.com/ndk/guides/cmake" target="_blank" rel="external">https://developer.android.com/ndk/guides/cmake</a><br>同时上一篇中讲的基本够了</p>
+<h2 id="jni：java与c-c-的数据传递"><a href="#jni：java与c-c-的数据传递" class="headerlink" title="jni：java与c/c++的数据传递"></a>jni：java与c/c++的数据传递</h2><p>win下用javah生成的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">JNIEXPORT void JNICALL Java_a_b_testHello(JNIEnv *env, jobject this)</div></pre></td></tr></table></figure></p>
+<p>AS生成的：注意as下如果是cpp文件extern “C” 必加<br>当你使用错误修正时是生成c版本的时自动不加，当是cpp文件中错误修正时自动加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">extern &quot;C&quot; JNIEXPORT jstring</div><div class="line">JNICALL</div><div class="line">Java_com_example_imbaya_native2_MainActivity_stringFromJNI(</div><div class="line">        JNIEnv *env,</div><div class="line">        jobject /* this */)</div></pre></td></tr></table></figure></p>
+<h3 id="JNICALL-JNIEXPORT"><a href="#JNICALL-JNIEXPORT" class="headerlink" title="JNICALL JNIEXPORT"></a>JNICALL JNIEXPORT</h3><p>注意这些都在jni_md中被定义，而这个文件存在与win32文件下，因此与平台有关<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#ifndef _JAVASOFT_JNI_MD_H_</div><div class="line">#define _JAVASOFT_JNI_MD_H_</div><div class="line"></div><div class="line">#define JNIEXPORT __declspec(dllexport)</div><div class="line">#define JNIIMPORT __declspec(dllimport)</div><div class="line">#define JNICALL __stdcall</div><div class="line"></div><div class="line">typedef long jint;</div><div class="line">typedef __int64 jlong;</div><div class="line">typedef signed char jbyte;</div><div class="line"></div><div class="line">#endif /* !_JAVASOFT_JNI_MD_H_ */</div></pre></td></tr></table></figure></p>
+<p><strong>stdcall:右到左压参，被调用者修改堆栈
+</strong>declspec(dllexport)微软dll的导出函数</p>
+<p>在android-ndk-r16b\sysroot\usr\include\jni.h中的是这样<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#define JNIEXPORT  __attribute__ ((visibility (&quot;default&quot;)))</div><div class="line">#define JNICALL</div></pre></td></tr></table></figure></p>
+<h3 id="JNIEnv"><a href="#JNIEnv" class="headerlink" title="JNIEnv"></a>JNIEnv</h3><p>JNI函数表的接口指针，通过这个使用虚拟机功能，来与java进行数据交互</p>
+<p>C:<br>env是指向JNINativeInterface的指针，而传入的是JNIEnv的指针，所以在c下需要解引用并将其作为环境传入。<br>typedef const struct JNINativeInterface_ *JNIEnv;<br>C与C++头文件中定义不同。<br>例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(*env)-&gt;NewStringUTF(env,&quot;123&quot;);</div></pre></td></tr></table></figure></p>
+<p>C++:<br>在C++中JNIEnv是C++类<br>例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">env-&gt;NewStringUTF(&quot;123&quot;);</div></pre></td></tr></table></figure></p>
+<h3 id="jobject-jclass"><a href="#jobject-jclass" class="headerlink" title="jobject/jclass"></a>jobject/jclass</h3><p>这里用于访问调用该方法的对象/类的数据<br>实例方法传递jobject<br>静态方法传递jclass</p>
+<h3 id="extern-“C”"><a href="#extern-“C”" class="headerlink" title="extern “C”"></a>extern “C”</h3><p>extern “C”的主要作用就是为了能够正确实现C++代码调用其他C语言代码。加上extern “C”后，会指示编译器这部分代码按C语言的进行编译，而不是C++的。</p>
+<h3 id="数据结构对照"><a href="#数据结构对照" class="headerlink" title="数据结构对照"></a>数据结构对照</h3><p>jni通过提供jni数据类型让原生访问java数据类型</p>
+<h4 id="基本数据结构"><a href="#基本数据结构" class="headerlink" title="基本数据结构"></a>基本数据结构</h4><p>基本数据结构可以直接通过对照接受处理返回，基本数据类型java对原生公开</p>
+<table>
+<thead>
+<tr>
+<th>java</th>
+<th>JNI</th>
+<th>C/C++</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boolean</td>
+<td>Jboolean</td>
+<td>unsigned char</td>
+<td>无符号8位</td>
+</tr>
+<tr>
+<td>Byte</td>
+<td>Jbyte</td>
+<td>char</td>
+<td>有符号8位</td>
+</tr>
+<tr>
+<td>Char</td>
+<td>Jchar</td>
+<td>unsigned short</td>
+<td>无符号16位</td>
+</tr>
+<tr>
+<td>Short</td>
+<td>Jshort</td>
+<td>short</td>
+<td>有符号16位</td>
+</tr>
+<tr>
+<td>Int</td>
+<td>Jint</td>
+<td>int</td>
+<td>有符号32位</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>Jlong</td>
+<td>long long</td>
+<td>有符号64位</td>
+</tr>
+<tr>
+<td>Float</td>
+<td>Jfloat</td>
+<td>float</td>
+<td>32位</td>
+</tr>
+<tr>
+<td>Double</td>
+<td>Jdouble</td>
+<td>double</td>
+<td>64位</td>
+</tr>
+</tbody>
+</table>
+<h4 id="引用数据类型"><a href="#引用数据类型" class="headerlink" title="引用数据类型"></a>引用数据类型</h4><p>引用数据类型不对原生公开。<br>各类（jclass，jstring，jxxxx）都是typedef jobject jxxxx<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#ifdef __cplusplus</div><div class="line">class _jobject &#123;&#125;; //声明并定义</div><div class="line">...</div><div class="line">#else</div><div class="line"></div><div class="line">struct _jobject; //声明未定义不可实例化</div><div class="line">typedef struct _jobject *jobject;</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>各类数组（jxxxArray）都是typedef jarry jxxxArray<br>jarry表示一般对象数组，typedef jobject jarry</p>
+<h3 id="对引用数据类型的操作"><a href="#对引用数据类型的操作" class="headerlink" title="对引用数据类型的操作"></a>对引用数据类型的操作</h3><p>基本数据结构可以直接通过对照接受处理返回<br>引用类型不透明，必须通过JNIEnv使用引用类型。<br>谨记java引用对象一直都归虚拟机中管理</p>
+<h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4><p><strong> C-&gt;java </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jstring js=(*env)-&gt;NewStringUTF(env,&quot;c字串&quot;);</div><div class="line">//还可以构建Unicode编码格式（不加UTF）</div></pre></td></tr></table></figure></p>
+<p><strong> java-&gt;c </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jbyte *str=(*env)-&gt;GetStringUTFChars(env,jstring: javastring,Jboolean*: iscopy);</div><div class="line">//还可以去UTF变为Unicode编码的jstring，第三个参数决定返回的c字串指向副本还是堆中的固定对象</div></pre></td></tr></table></figure></p>
+<p><strong> 释放 </strong><br>获得的c字串需要原生中释放（因为在堆中分配的）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(*env)-&gt;ReleaseStringUTFChars(env,javastring,str);</div><div class="line">//需要原生作为参数，编码不同函数不同</div></pre></td></tr></table></figure></p>
+<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p><strong> 创建java数组 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jintArray javaArray=env-&gt;NewIntArray(10);</div><div class="line">//Type可换，参数决定大小</div></pre></td></tr></table></figure></p>
+<p><strong> java-&gt;c副本与c副本-&gt;java </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">jint a[10];</div><div class="line">env-&gt;GetIntArrayRegion(javaArray,0,10,a);</div><div class="line">//获取原生数组。类型可换，初，末，a为原生数组</div><div class="line">env-&gt;SetIntArrayRegion(javaArray,0,10,a);</div><div class="line">//向java数组提交更改。</div></pre></td></tr></table></figure></p>
+<p><strong> c对java数组的直接操作 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">jboolean iscopy;</div><div class="line">jni * cArray=env-&gt;GetIntArrayElements(javaArray,&amp;iscopy);</div><div class="line">//直接获取c数组，自己决定是否为复制</div><div class="line">//必须释放：</div><div class="line">env-&gt;ReleaseIntArrayElements(javaArrary,cArrary,0);</div><div class="line">//第三个参是释放模式：</div><div class="line">//0:内容复制回java并释放c</div><div class="line">//JNI_COMMIT复制回但不释放</div><div class="line">//JNI_ABORT:释放但不复制回</div></pre></td></tr></table></figure></p>
+<p>同时还提供了对NIO的操作<br>以上为特殊化常用函数<br>以下为一般化函数</p>
+<h4 id="对象的域"><a href="#对象的域" class="headerlink" title="对象的域"></a>对象的域</h4><p><strong> 1.获取jclass </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jclass clazz=env-&gt;GetObjectClass(jobject);</div><div class="line">//通过java实例可以获得javaclass对象</div><div class="line">jclass clazz=env-&gt;FindClass(&quot;类名完全版&quot;);</div><div class="line">//通过类名获取class如：java/lang/Exception</div></pre></td></tr></table></figure></p>
+<p><strong> 2.获取域id </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jfieldID id=env-&gt;GetFieldID(clazz,&quot;字段名&quot;,&quot;字段类型&quot;);</div><div class="line">//实例,字段类型通过字节码方式表达，比如string是Ljava/lang/String。int是I</div><div class="line">jfieldID id=env-&gt;GetStaticFieldID(clazz,&quot;字段名&quot;,&quot;字段类型&quot;);</div><div class="line">//获取静态字段id</div></pre></td></tr></table></figure></p>
+<p><strong> 3.获取域 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jstring js=env-&gt;GetObjectField(jobject,jfieldID);</div><div class="line">//用来获取实例的字段，Type可变</div><div class="line">jstring js=env-&gt;GetStaticObjectField(jclass,jfieldID);</div><div class="line">//用来获取静态字段</div></pre></td></tr></table></figure></p>
+<p>ps：这些方法都是回到java中去获得数据，导致性能下降，建议提前传好。</p>
+<h4 id="调用方法"><a href="#调用方法" class="headerlink" title="调用方法"></a>调用方法</h4><p><strong> 1.获取方法id </strong><br>方法id可以被缓存，给予多个线程使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jmethodID id=env-&gt;GetMethodID(jclass,&quot;方法名&quot;,&quot;方法原&quot;);</div><div class="line">//用于实例方法：方法原就是字节码中的样子：()Ljava/lang/String;</div><div class="line">jmethodID id=env-&gt;GetStaticMethodID(jclass,&quot;方法名&quot;,&quot;方法原&quot;);</div><div class="line">//静态用</div></pre></td></tr></table></figure></p>
+<p><strong> 2.调用方法 </strong><br>传参只要加后面就行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jstring fanhui=env-&gt;CallStringMethod(jobject,jmethodID);</div><div class="line">//实例方法用，参1为需要调用方法的java对象，参2是id</div><div class="line">jstring fanhui=env-&gt;CallStaticStringMethod(jclass,jmethodID);</div><div class="line">//静态用</div></pre></td></tr></table></figure></p>
+<p>ps:回调java方法开销大，慎用。</p>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p><strong> c中捕获java方法中抛出的异常 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">jthrowable ex=env-&gt;ExceptionOccurred();</div><div class="line">//查询虚拟机中挂起的异常 ex!=0时为有异常</div><div class="line">env-&gt;ExceptionClear();</div><div class="line">//清理虚拟机中的异常</div></pre></td></tr></table></figure></p>
+<p><strong> c中抛出java异常 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">//首先获得javaclass对象</div><div class="line">env-&gt;ThrowNew(javaclass,&quot;消息&quot;);</div><div class="line">//原生函数不受虚拟机控制，因此抛出后不会停止原生函数执行并转去异常处理，所以要释放资源，env获得的java引用是局部引用受虚拟机控制自动释放。</div></pre></td></tr></table></figure></p>
+<h3 id="局部与全局引用"><a href="#局部与全局引用" class="headerlink" title="局部与全局引用"></a>局部与全局引用</h3><p>虚拟机通过追踪实例的引用决定释放对象的时机，在原生函数中通过显示的方式决定何时释放获取的引用。以下为原生通过env获得引用的种类<br><strong> 局部引用 </strong><br>局部引用的使用期限仅限于这个原生方法内（局部变量不会传到调用的函数里，函数调用栈的结构是一次函数调用产生一部分局部变量，但算在外层函数的执行期间，所以仍存在）不可缓存重用，返回后将释放。如FindClass.<br>手动释放：env-&gt;DeleteLocalRef(引用对象);<br><strong> 全局引用 </strong><br>全局引用在原生后续调用过程中依然有效，可以被其它原生函数与原生线程使用，只能手动释放<br>用env-&gt;NewGlobalRef(引用)将局部引用升级为全局引用，返回的是同类型的引用<br>但记得局部的也要及时释放<br>env-&gt;DeleteGlobalRef(引用)释放全局引用<br><strong> 弱全局引用 </strong><br>弱引用不阻止潜在的java对象被回收<br>env-&gt;NewWeakGlobalRef(引用)将局部引用升级为弱引用<br>JNI_FALSE a=env-&gt;IsSameObject(引用,NULL)用来检验弱引用是否存在<br>env-&gt;DeleteWeakGlobalRef(引用)释放弱引用</p>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>局部引用不能被多线程共享。只有全局可以。<br>JNIEnv只能在方法的线程中使用，不可以被别的线程缓存使用(参数也是存于栈中的，不同线程各自维护一个栈，所以不可使用)<br><strong> jni利用java对象同步 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">env-&gt;MonitorEnter(javaobject);</div><div class="line">//获取对象锁</div><div class="line">env-&gt;MonitorExit(javaobject);</div><div class="line">//释放对象锁</div><div class="line">可以和java的synchronized(obj)同步</div></pre></td></tr></table></figure></p>
+<p><strong> 原生线程开启与java沟通 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">JavaVM *c;</div><div class="line">jint JNI_OnLoad (JavaVM* vm, void* reserved)</div><div class="line">//这个函数在共享库加载时虚拟机自动调用，用来保存JavaVM;</div><div class="line">JNIEvn *env;</div><div class="line">c-&gt;AttaachCurrentThread(&amp;env,NULL);</div><div class="line">//获取java虚拟机的env</div><div class="line">c-&gt;DetachCurrentThred();</div><div class="line">//分离</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/30/gcc与make/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1920,164 +2184,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/08/dex文件格式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/08/dex文件格式/" itemprop="url">dex文件格式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-08T23:51:35+08:00">
-                2018-04-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>结构体图:<br><img src="https://i.imgur.com/T1b5fAc.jpg" alt=""></p>
-<p><img src="https://i.imgur.com/3514dvx.jpg" alt=""><br>之后说几个坑</p>
-<ol>
-<li>数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。</li>
-<li>dex只分header，索引结构区，data区。header中的各off均指向索引区。dex被映射为DexMapList结构（header中的mapoff）。该map中指定了头，索引区，以及各数据的文件偏移</li>
-<li>dex为了小，字串重复利用，被type等均用字串索引指向。位于data区，而date区的其他数据（如代码）等都用文件偏移指定。</li>
-<li>proto为方法元，表示的是方法的参和返回类型。</li>
-<li>class结构最复杂，第一层含类的基本信息，第二层是字段和方法信息，第三层是方法代码等详情。</li>
-<li>破解时可以直接修改dex文件后修改效验值和sha。不用拆包为smali再打包。不过签名是必须的</li>
-</ol>
-<p>ODEX是安卓上的应用程序apk中提取出来的可运行文件，即将APK中的classes.dex文件通过dex优化过程将其优化生成一个·dex文件单独存放，原APK中的classes.dex文件会保留。<br>这样做可以加快软件的启动速度，预先提取，减少对RAM的占用，因为没有odex的话，系统要从apk包中提取dex再运行。<br>俩种存在方式：</p>
-<ol>
-<li>cache/dalvik-cache目录下，命名为apk路径@apk名@classes.dex。用于加快程序读取速度</li>
-<li>与apk存于同一目录，以.odex后缀，多是系统程序。</li>
-</ol>
-<p><img src="https://i.imgur.com/mDOEFRJ.jpg" alt=""></p>
-<p>还有一张看雪的：<br><img src="https://i.imgur.com/YsIRrma.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2128,7 +2234,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">64</span>
+                <span class="site-state-item-count">65</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2150,7 +2256,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">61</span>
+                <span class="site-state-item-count">62</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
