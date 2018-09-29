@@ -94,13 +94,13 @@
 
 
 
-<meta name="description" content="一.前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。">
+<meta name="description" content="一前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二">
 <meta name="keywords" content="android,底层,逆向">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ARM汇编">
 <meta property="og:url" content="http://yoursite.com/2018/04/25/ARM汇编/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="一.前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。">
+<meta property="og:description" content="一前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/zKymBGG.jpg">
 <meta property="og:image" content="https://i.imgur.com/TspgmUE.png">
@@ -109,10 +109,10 @@
 <meta property="og:image" content="https://i.imgur.com/LiWHGVL.png">
 <meta property="og:image" content="https://i.imgur.com/9MziHmD.png">
 <meta property="og:image" content="https://i.imgur.com/vrpY3LR.png">
-<meta property="og:updated_time" content="2018-05-08T16:36:56.934Z">
+<meta property="og:updated_time" content="2018-09-29T13:35:14.773Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ARM汇编">
-<meta name="twitter:description" content="一.前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。">
+<meta name="twitter:description" content="一前备小理解1.平台 linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64 2.x86汇编与AT&amp;amp;T汇编 x86汇编与AT&amp;amp;T汇编。其实层次应该是AT&amp;amp;T与intel都属于x86汇编。二">
 <meta name="twitter:image" content="https://i.imgur.com/zKymBGG.jpg">
 
 
@@ -380,7 +380,7 @@
       
 
       
-        <h2 id="一-前备小理解"><a href="#一-前备小理解" class="headerlink" title="一.前备小理解"></a>一.前备小理解</h2><h4 id="1-平台"><a href="#1-平台" class="headerlink" title="1.平台"></a>1.平台</h4><p> linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64</p>
+        <h2 id="一前备小理解"><a href="#一前备小理解" class="headerlink" title="一前备小理解"></a>一前备小理解</h2><h4 id="1-平台"><a href="#1-平台" class="headerlink" title="1.平台"></a>1.平台</h4><p> linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64</p>
 <h4 id="2-x86汇编与AT-amp-T汇编"><a href="#2-x86汇编与AT-amp-T汇编" class="headerlink" title="2.x86汇编与AT&amp;T汇编"></a>2.x86汇编与AT&amp;T汇编</h4><p> x86汇编与AT&amp;T汇编。其实层次应该是AT&amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是intel）举几个例子：<br>AT&amp;T: movw 4(%bp), %dx<br>Intel: mov dx,[bp+4]</p>
 <h4 id="3-中断"><a href="#3-中断" class="headerlink" title="3.中断"></a>3.中断</h4><p>中断用于cpu停止执行当前代码，转而执行中断处理，处理后可以回到原代码处。<br>分类：可分为CPU内部与外部中断，百度上：<br>硬件中断：</p>
 <ol>
@@ -396,7 +396,7 @@
 <p>内存中从0开始的部分有着中断向量表，用于cpu寻找对应的中断发生时该执行的代码位置</p>
 <h4 id="4-端口"><a href="#4-端口" class="headerlink" title="4.端口"></a>4.端口</h4><p>和cpu通过总线相连的除了内存RAM、内部寄存器，还有各种芯片（外设），它们对cpu提供端口（寄存器）从而cpu可操控。</p>
 <p>另注：读懂操作系统底层资源管理需要：汇编，微机原理</p>
-<h2 id="二-ARM处理器"><a href="#二-ARM处理器" class="headerlink" title="二.ARM处理器"></a>二.ARM处理器</h2><p>ARM采用RISC指令集，主要全面用于嵌入式及移动领域<br>ARM处理器家族：<br><img src="https://i.imgur.com/zKymBGG.jpg" alt=""><br>相同架构兼容同一套ARM指令集<br>特性解释：</p>
+<h2 id="二ARM处理器"><a href="#二ARM处理器" class="headerlink" title="二ARM处理器"></a>二ARM处理器</h2><p>ARM采用RISC指令集，主要全面用于嵌入式及移动领域<br>ARM处理器家族：<br><img src="https://i.imgur.com/zKymBGG.jpg" alt=""><br>相同架构兼容同一套ARM指令集<br>特性解释：</p>
 <ol>
 <li>Thumb是ARM指令压缩形式子集，1为16位，2扩充32位</li>
 <li>VFP提供浮点运算能力</li>
@@ -404,8 +404,8 @@
 <li>NEON、SIMD多媒体加速</li>
 </ol>
 <p>我的1+5：骁龙835是兼容ARM指令集的处理器，由高通公司产，支持快充。<br>ARM公司本身并不参与终端处理器芯片的制造和销售，而是通过向其它芯片厂商授权设计方案，来获取收益。但也有少数手机处理器厂商，如高通，直接在ARM v7指令集的基础上深度开发自己的处理器微架构，如高通公司的Scorpion和Krait，进而设计自主的CPU，具有更大的灵活性。</p>
-<h2 id="三-android支持的架构"><a href="#三-android支持的架构" class="headerlink" title="三.android支持的架构"></a>三.android支持的架构</h2><p>最初选择ARM并做了大量优化。但也支持其他架构cpu。比如：x86、atom（凌动）、MIPS</p>
-<h2 id="四-android-native-与arm汇编程序"><a href="#四-android-native-与arm汇编程序" class="headerlink" title="四.android native 与arm汇编程序"></a>四.android native 与arm汇编程序</h2><p>android ndk可将c++编译为基于特定处理器的可执行文件于apk的lib中。这是我环境下打包apk/lib中的：<br><img src="https://i.imgur.com/TspgmUE.png" alt=""><br>可见不同cpu架构下的可执行文件不同，操作系统只能提供api来屏蔽底层。但为了执行还需ABI相同。<br>在这里主要为arm elf<br>android的arm汇编是gun arm汇编格式，使用的汇编器为GAS<br>android ndk中编译使用的是gcc。过程：</p>
+<h2 id="三android支持的架构"><a href="#三android支持的架构" class="headerlink" title="三android支持的架构"></a>三android支持的架构</h2><p>最初选择ARM并做了大量优化。但也支持其他架构cpu。比如：x86、atom（凌动）、MIPS</p>
+<h2 id="四android-native-与arm汇编程序"><a href="#四android-native-与arm汇编程序" class="headerlink" title="四android native 与arm汇编程序"></a>四android native 与arm汇编程序</h2><p>android ndk可将c++编译为基于特定处理器的可执行文件于apk的lib中。这是我环境下打包apk/lib中的：<br><img src="https://i.imgur.com/TspgmUE.png" alt=""><br>可见不同cpu架构下的可执行文件不同，操作系统只能提供api来屏蔽底层。但为了执行还需ABI相同。<br>在这里主要为arm elf<br>android的arm汇编是gun arm汇编格式，使用的汇编器为GAS<br>android ndk中编译使用的是gcc。过程：</p>
 <ol>
 <li>预处理 -E 生成.i全部展开</li>
 <li>编译 -S 语法检查生成arm汇编代码.s</li>
@@ -450,7 +450,7 @@
 </ol>
 <h4 id="子程序与参数传递"><a href="#子程序与参数传递" class="headerlink" title="子程序与参数传递"></a>子程序与参数传递</h4><p>.global 函数名<br>.type 函数名,%function<br>函数名：<br>函数体</p>
 <p><strong>ARM汇编规定：R0-R3这4个寄存器用来传递函数调用的1到4个参数，多的用堆栈来传递。R0寄存器用于存放函数返回值</strong></p>
-<h2 id="五-ARM寄存器"><a href="#五-ARM寄存器" class="headerlink" title="五.ARM寄存器"></a>五.ARM寄存器</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>ARM微处理器共有37个32位寄存器，其中31个为通用寄存器，6个为状态寄存器。但是这些寄存器不能被同时访问，具体哪些寄存器是可以访问的，取决ARM处理器的工作状态及具体的运行模式。但在任何时候，通用寄存器R14~R0、程序计数器PC、一个状态寄存器都是可访问的。都是32位。</p>
+<h2 id="五ARM寄存器"><a href="#五ARM寄存器" class="headerlink" title="五ARM寄存器"></a>五ARM寄存器</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>ARM微处理器共有37个32位寄存器，其中31个为通用寄存器，6个为状态寄存器。但是这些寄存器不能被同时访问，具体哪些寄存器是可以访问的，取决ARM处理器的工作状态及具体的运行模式。但在任何时候，通用寄存器R14~R0、程序计数器PC、一个状态寄存器都是可访问的。都是32位。</p>
 <h3 id="7种状态"><a href="#7种状态" class="headerlink" title="7种状态"></a>7种状态</h3><p>ARM手册中的寄存器状态图：<br><img src="https://i.imgur.com/qwUMkRh.png" alt=""><br>上面为通用寄存器。下面为状态寄存器。<br>CPU会根据不同的工作模式，使部分寄存器可见（即可被使用），图中有灰色下标的正是不同模式下可见的寄存器，被称为分组寄存器。未分组的寄存器在不同模式下都是可见的，但是在寄存器使用时，分组寄存器会屏蔽共享寄存器，从而实现特殊用途。</p>
 <h3 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h3><h4 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h4><ol>
 <li>不分组寄存器（R0-R7） ：R0-R7是不分组寄存器。这意味着在所有处理器模式下，访问的都是同一个物理寄存器。不分组寄存器没有被系统用于特别的用途，任何可采用通用寄存器的应用场合都可以使用未分组寄存器。</li>
@@ -484,7 +484,7 @@
 <li>控制位M[4：0]控制处理器模式：<br><img src="https://i.imgur.com/9MziHmD.png" alt=""></li>
 </ol>
 <p>CPSR中的其他位用于将来ARM版本的扩展。</p>
-<h2 id="六-ARM汇编"><a href="#六-ARM汇编" class="headerlink" title="六.ARM汇编"></a>六.ARM汇编</h2><h3 id="ARM处理器寻址方式"><a href="#ARM处理器寻址方式" class="headerlink" title="ARM处理器寻址方式"></a>ARM处理器寻址方式</h3><p>寻址：找操作数</p>
+<h2 id="六ARM汇编"><a href="#六ARM汇编" class="headerlink" title="六ARM汇编"></a>六ARM汇编</h2><h3 id="ARM处理器寻址方式"><a href="#ARM处理器寻址方式" class="headerlink" title="ARM处理器寻址方式"></a>ARM处理器寻址方式</h3><p>寻址：找操作数</p>
 <ol>
 <li>立即寻址：<br>mov R0,#123  R0=123<br>立即数以#前缀，表示16进制时用0x开头。</li>
 <li>寄存器寻址：<br>mov R0,R1    R0=R1</li>
@@ -650,7 +650,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -661,7 +661,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -707,7 +707,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-前备小理解"><span class="nav-number">1.</span> <span class="nav-text">一.前备小理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-平台"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.平台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-x86汇编与AT-amp-T汇编"><span class="nav-number">1.0.2.</span> <span class="nav-text">2.x86汇编与AT&T汇编</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-中断"><span class="nav-number">1.0.3.</span> <span class="nav-text">3.中断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-端口"><span class="nav-number">1.0.4.</span> <span class="nav-text">4.端口</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-ARM处理器"><span class="nav-number">2.</span> <span class="nav-text">二.ARM处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-android支持的架构"><span class="nav-number">3.</span> <span class="nav-text">三.android支持的架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-android-native-与arm汇编程序"><span class="nav-number">4.</span> <span class="nav-text">四.android native 与arm汇编程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arm汇编程序结构"><span class="nav-number">4.1.</span> <span class="nav-text">arm汇编程序结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#段"><span class="nav-number">4.1.1.</span> <span class="nav-text">段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注释"><span class="nav-number">4.1.2.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标号"><span class="nav-number">4.1.3.</span> <span class="nav-text">标号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译器指令"><span class="nav-number">4.1.4.</span> <span class="nav-text">编译器指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子程序与参数传递"><span class="nav-number">4.1.5.</span> <span class="nav-text">子程序与参数传递</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-ARM寄存器"><span class="nav-number">5.</span> <span class="nav-text">五.ARM寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">5.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7种状态"><span class="nav-number">5.2.</span> <span class="nav-text">7种状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详解"><span class="nav-number">5.3.</span> <span class="nav-text">详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通用寄存器"><span class="nav-number">5.3.1.</span> <span class="nav-text">通用寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cpu执行过程详解"><span class="nav-number">5.3.2.</span> <span class="nav-text">cpu执行过程详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#状态寄存器"><span class="nav-number">5.3.3.</span> <span class="nav-text">状态寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#条件标志位"><span class="nav-number">5.3.3.1.</span> <span class="nav-text">条件标志位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q标志位"><span class="nav-number">5.3.3.2.</span> <span class="nav-text">Q标志位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CPSR中的控制位"><span class="nav-number">5.3.3.3.</span> <span class="nav-text">CPSR中的控制位</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六-ARM汇编"><span class="nav-number">6.</span> <span class="nav-text">六.ARM汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM处理器寻址方式"><span class="nav-number">6.1.</span> <span class="nav-text">ARM处理器寻址方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM指令集"><span class="nav-number">6.2.</span> <span class="nav-text">ARM指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-跳转"><span class="nav-number">6.2.1.</span> <span class="nav-text">1.跳转</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-存储器访问"><span class="nav-number">6.2.2.</span> <span class="nav-text">2.存储器访问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-数据处理指令"><span class="nav-number">6.2.3.</span> <span class="nav-text">3.数据处理指令</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一前备小理解"><span class="nav-number">1.</span> <span class="nav-text">一前备小理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-平台"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.平台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-x86汇编与AT-amp-T汇编"><span class="nav-number">1.0.2.</span> <span class="nav-text">2.x86汇编与AT&T汇编</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-中断"><span class="nav-number">1.0.3.</span> <span class="nav-text">3.中断</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-端口"><span class="nav-number">1.0.4.</span> <span class="nav-text">4.端口</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二ARM处理器"><span class="nav-number">2.</span> <span class="nav-text">二ARM处理器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三android支持的架构"><span class="nav-number">3.</span> <span class="nav-text">三android支持的架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四android-native-与arm汇编程序"><span class="nav-number">4.</span> <span class="nav-text">四android native 与arm汇编程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arm汇编程序结构"><span class="nav-number">4.1.</span> <span class="nav-text">arm汇编程序结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#段"><span class="nav-number">4.1.1.</span> <span class="nav-text">段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注释"><span class="nav-number">4.1.2.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标号"><span class="nav-number">4.1.3.</span> <span class="nav-text">标号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译器指令"><span class="nav-number">4.1.4.</span> <span class="nav-text">编译器指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#子程序与参数传递"><span class="nav-number">4.1.5.</span> <span class="nav-text">子程序与参数传递</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五ARM寄存器"><span class="nav-number">5.</span> <span class="nav-text">五ARM寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">5.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7种状态"><span class="nav-number">5.2.</span> <span class="nav-text">7种状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详解"><span class="nav-number">5.3.</span> <span class="nav-text">详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通用寄存器"><span class="nav-number">5.3.1.</span> <span class="nav-text">通用寄存器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cpu执行过程详解"><span class="nav-number">5.3.2.</span> <span class="nav-text">cpu执行过程详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#状态寄存器"><span class="nav-number">5.3.3.</span> <span class="nav-text">状态寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#条件标志位"><span class="nav-number">5.3.3.1.</span> <span class="nav-text">条件标志位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q标志位"><span class="nav-number">5.3.3.2.</span> <span class="nav-text">Q标志位</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CPSR中的控制位"><span class="nav-number">5.3.3.3.</span> <span class="nav-text">CPSR中的控制位</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六ARM汇编"><span class="nav-number">6.</span> <span class="nav-text">六ARM汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM处理器寻址方式"><span class="nav-number">6.1.</span> <span class="nav-text">ARM处理器寻址方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM指令集"><span class="nav-number">6.2.</span> <span class="nav-text">ARM指令集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-跳转"><span class="nav-number">6.2.1.</span> <span class="nav-text">1.跳转</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-存储器访问"><span class="nav-number">6.2.2.</span> <span class="nav-text">2.存储器访问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-数据处理指令"><span class="nav-number">6.2.3.</span> <span class="nav-text">3.数据处理指令</span></a></li></ol></li></ol></li></ol></div>
             
 
           </div>

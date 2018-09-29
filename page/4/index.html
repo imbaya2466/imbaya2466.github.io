@@ -283,6 +283,149 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/Linux-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/04/Linux-1/" itemprop="url">Linux-1</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-04T18:39:18+08:00">
+                2018-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="linux权限"><a href="#linux权限" class="headerlink" title="linux权限"></a>linux权限</h2><p>相关指令<br>ls a表示全部，l表示详细信息<br>chmod 777 XXX</p>
+<p>用户可以加入多个用户组，一个文件只能属于一个用户与组<br>文件与目录的权限分三部分：自己，同组，其它<br>r4 w2 x1<br>权限都是针对对象之内的东西设置的。<br>自己是由上层设置的。<br>文件：r可以读取文件内容；w可以改文件内容；x可以执行文件<br>目录：r可以看目录下文件与目录的名字；w可以删除、增加、重命名目录下文件与目录；x可以把目录当工作目录（获取目录下文件与目录的详细信息和各种权限与功能）。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/02/android-NDK开发2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1133,7 +1276,7 @@
       
         
           
-            <h2 id="一-前备小理解"><a href="#一-前备小理解" class="headerlink" title="一.前备小理解"></a>一.前备小理解</h2><h4 id="1-平台"><a href="#1-平台" class="headerlink" title="1.平台"></a>1.平台</h4><p> linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64</p>
+            <h2 id="一前备小理解"><a href="#一前备小理解" class="headerlink" title="一前备小理解"></a>一前备小理解</h2><h4 id="1-平台"><a href="#1-平台" class="headerlink" title="1.平台"></a>1.平台</h4><p> linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64</p>
 <h4 id="2-x86汇编与AT-amp-T汇编"><a href="#2-x86汇编与AT-amp-T汇编" class="headerlink" title="2.x86汇编与AT&amp;T汇编"></a>2.x86汇编与AT&amp;T汇编</h4><p> x86汇编与AT&amp;T汇编。其实层次应该是AT&amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是intel）举几个例子：<br>AT&amp;T: movw 4(%bp), %dx<br>Intel: mov dx,[bp+4]</p>
 <h4 id="3-中断"><a href="#3-中断" class="headerlink" title="3.中断"></a>3.中断</h4><p>中断用于cpu停止执行当前代码，转而执行中断处理，处理后可以回到原代码处。<br>分类：可分为CPU内部与外部中断，百度上：<br>硬件中断：</p>
 <ol>
@@ -1149,7 +1292,7 @@
 <p>内存中从0开始的部分有着中断向量表，用于cpu寻找对应的中断发生时该执行的代码位置</p>
 <h4 id="4-端口"><a href="#4-端口" class="headerlink" title="4.端口"></a>4.端口</h4><p>和cpu通过总线相连的除了内存RAM、内部寄存器，还有各种芯片（外设），它们对cpu提供端口（寄存器）从而cpu可操控。</p>
 <p>另注：读懂操作系统底层资源管理需要：汇编，微机原理</p>
-<h2 id="二-ARM处理器"><a href="#二-ARM处理器" class="headerlink" title="二.ARM处理器"></a>二.ARM处理器</h2><p>ARM采用RISC指令集，主要全面用于嵌入式及移动领域<br>ARM处理器家族：<br><img src="https://i.imgur.com/zKymBGG.jpg" alt=""><br>相同架构兼容同一套ARM指令集<br>特性解释：</p>
+<h2 id="二ARM处理器"><a href="#二ARM处理器" class="headerlink" title="二ARM处理器"></a>二ARM处理器</h2><p>ARM采用RISC指令集，主要全面用于嵌入式及移动领域<br>ARM处理器家族：<br><img src="https://i.imgur.com/zKymBGG.jpg" alt=""><br>相同架构兼容同一套ARM指令集<br>特性解释：</p>
 <ol>
 <li>Thumb是ARM指令压缩形式子集，1为16位，2扩充32位</li>
 <li>VFP提供浮点运算能力</li>
@@ -1157,8 +1300,8 @@
 <li>NEON、SIMD多媒体加速</li>
 </ol>
 <p>我的1+5：骁龙835是兼容ARM指令集的处理器，由高通公司产，支持快充。<br>ARM公司本身并不参与终端处理器芯片的制造和销售，而是通过向其它芯片厂商授权设计方案，来获取收益。但也有少数手机处理器厂商，如高通，直接在ARM v7指令集的基础上深度开发自己的处理器微架构，如高通公司的Scorpion和Krait，进而设计自主的CPU，具有更大的灵活性。</p>
-<h2 id="三-android支持的架构"><a href="#三-android支持的架构" class="headerlink" title="三.android支持的架构"></a>三.android支持的架构</h2><p>最初选择ARM并做了大量优化。但也支持其他架构cpu。比如：x86、atom（凌动）、MIPS</p>
-<h2 id="四-android-native-与arm汇编程序"><a href="#四-android-native-与arm汇编程序" class="headerlink" title="四.android native 与arm汇编程序"></a>四.android native 与arm汇编程序</h2><p>android ndk可将c++编译为基于特定处理器的可执行文件于apk的lib中。这是我环境下打包apk/lib中的：<br><img src="https://i.imgur.com/TspgmUE.png" alt=""><br>可见不同cpu架构下的可执行文件不同，操作系统只能提供api来屏蔽底层。但为了执行还需ABI相同。<br>在这里主要为arm elf<br>android的arm汇编是gun arm汇编格式，使用的汇编器为GAS<br>android ndk中编译使用的是gcc。过程：</p>
+<h2 id="三android支持的架构"><a href="#三android支持的架构" class="headerlink" title="三android支持的架构"></a>三android支持的架构</h2><p>最初选择ARM并做了大量优化。但也支持其他架构cpu。比如：x86、atom（凌动）、MIPS</p>
+<h2 id="四android-native-与arm汇编程序"><a href="#四android-native-与arm汇编程序" class="headerlink" title="四android native 与arm汇编程序"></a>四android native 与arm汇编程序</h2><p>android ndk可将c++编译为基于特定处理器的可执行文件于apk的lib中。这是我环境下打包apk/lib中的：<br><img src="https://i.imgur.com/TspgmUE.png" alt=""><br>可见不同cpu架构下的可执行文件不同，操作系统只能提供api来屏蔽底层。但为了执行还需ABI相同。<br>在这里主要为arm elf<br>android的arm汇编是gun arm汇编格式，使用的汇编器为GAS<br>android ndk中编译使用的是gcc。过程：</p>
 <ol>
 <li>预处理 -E 生成.i全部展开</li>
 <li>编译 -S 语法检查生成arm汇编代码.s</li>
@@ -1203,7 +1346,7 @@
 </ol>
 <h4 id="子程序与参数传递"><a href="#子程序与参数传递" class="headerlink" title="子程序与参数传递"></a>子程序与参数传递</h4><p>.global 函数名<br>.type 函数名,%function<br>函数名：<br>函数体</p>
 <p><strong>ARM汇编规定：R0-R3这4个寄存器用来传递函数调用的1到4个参数，多的用堆栈来传递。R0寄存器用于存放函数返回值</strong></p>
-<h2 id="五-ARM寄存器"><a href="#五-ARM寄存器" class="headerlink" title="五.ARM寄存器"></a>五.ARM寄存器</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>ARM微处理器共有37个32位寄存器，其中31个为通用寄存器，6个为状态寄存器。但是这些寄存器不能被同时访问，具体哪些寄存器是可以访问的，取决ARM处理器的工作状态及具体的运行模式。但在任何时候，通用寄存器R14~R0、程序计数器PC、一个状态寄存器都是可访问的。都是32位。</p>
+<h2 id="五ARM寄存器"><a href="#五ARM寄存器" class="headerlink" title="五ARM寄存器"></a>五ARM寄存器</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>ARM微处理器共有37个32位寄存器，其中31个为通用寄存器，6个为状态寄存器。但是这些寄存器不能被同时访问，具体哪些寄存器是可以访问的，取决ARM处理器的工作状态及具体的运行模式。但在任何时候，通用寄存器R14~R0、程序计数器PC、一个状态寄存器都是可访问的。都是32位。</p>
 <h3 id="7种状态"><a href="#7种状态" class="headerlink" title="7种状态"></a>7种状态</h3><p>ARM手册中的寄存器状态图：<br><img src="https://i.imgur.com/qwUMkRh.png" alt=""><br>上面为通用寄存器。下面为状态寄存器。<br>CPU会根据不同的工作模式，使部分寄存器可见（即可被使用），图中有灰色下标的正是不同模式下可见的寄存器，被称为分组寄存器。未分组的寄存器在不同模式下都是可见的，但是在寄存器使用时，分组寄存器会屏蔽共享寄存器，从而实现特殊用途。</p>
 <h3 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h3><h4 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h4><ol>
 <li>不分组寄存器（R0-R7） ：R0-R7是不分组寄存器。这意味着在所有处理器模式下，访问的都是同一个物理寄存器。不分组寄存器没有被系统用于特别的用途，任何可采用通用寄存器的应用场合都可以使用未分组寄存器。</li>
@@ -1237,7 +1380,7 @@
 <li>控制位M[4：0]控制处理器模式：<br><img src="https://i.imgur.com/9MziHmD.png" alt=""></li>
 </ol>
 <p>CPSR中的其他位用于将来ARM版本的扩展。</p>
-<h2 id="六-ARM汇编"><a href="#六-ARM汇编" class="headerlink" title="六.ARM汇编"></a>六.ARM汇编</h2><h3 id="ARM处理器寻址方式"><a href="#ARM处理器寻址方式" class="headerlink" title="ARM处理器寻址方式"></a>ARM处理器寻址方式</h3><p>寻址：找操作数</p>
+<h2 id="六ARM汇编"><a href="#六ARM汇编" class="headerlink" title="六ARM汇编"></a>六ARM汇编</h2><h3 id="ARM处理器寻址方式"><a href="#ARM处理器寻址方式" class="headerlink" title="ARM处理器寻址方式"></a>ARM处理器寻址方式</h3><p>寻址：找操作数</p>
 <ol>
 <li>立即寻址：<br>mov R0,#123  R0=123<br>立即数以#前缀，表示16进制时用0x开头。</li>
 <li>寄存器寻址：<br>mov R0,R1    R0=R1</li>
@@ -2008,182 +2151,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/09/android文件系统目录结构/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/09/android文件系统目录结构/" itemprop="url">android文件系统目录结构</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T22:14:37+08:00">
-                2018-04-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="安卓下的文件系统"><a href="#安卓下的文件系统" class="headerlink" title="安卓下的文件系统"></a>安卓下的文件系统</h2><h3 id="安卓的存储"><a href="#安卓的存储" class="headerlink" title="安卓的存储"></a>安卓的存储</h3><p>  一部Android手机存在不同的存储空间类型。512MB ROM和512MB RAM，还有一个SDHC的扩展槽，标配2G内存卡，最大可支持32G内存卡。那么这些数据都是什么意思呢？</p>
-<h4 id="RAM："><a href="#RAM：" class="headerlink" title="RAM："></a>RAM：</h4><p>RAM是Random Access Memory的缩写，中文名称是随机存取存储器。对于大多数的计算机和智能手机来说，RAM可以使一个软件快速并直接地读取和写入数据。当断电的时候RAM中的内容就会丢失，比如手机关机。RAM的大小决定了你能同时运行几个程序，也决定了你最大能加载多大的文件。当RAM不足的时候就会提示“Out of memory”错误。因为Android 2.2能提前预测当需要内存的时候，哪一个程序将要被从RAM中去除，所以RAM的信息并没有显示到“设置”菜单里。Android 2.2之前的版本最大只支持256MB内存，但是Android 2.2可以支持大容量内存，比如512MB RAM。</p>
-<h4 id="ROM："><a href="#ROM：" class="headerlink" title="ROM："></a>ROM：</h4><p>相当于c盘<br>ROM是Read-Only Memory的缩写。以前常用来表示一旦出厂后上面存储的数据就不能被修改，同时即使没有电，数据也不会丢失。后来，一种新型的ROM——EEPROM，代替了原来的ROM。这种EEPROM允许用高一点的电压改写数据以便用于升级。以后Flash Memory（闪存）代替了EEPROM，闪存可以很容易的修改内容。现在我们说智能手机中的ROM一般指的是Flash Memory了。<br>手机中的ROM一般被分成若干区域。在Android中，有一部分被分给了操作系统，分给操作系统的这部分通常被保护起来，用户不能向里面写入数据。通常我们说Rooting指的就是获得操作系统的最高权限，因此我们可以读取和写入到这部分区域。比如替换系统默认的图片。<br>另外ROM还分了一部分空间给用户作为存储数据用，用于存储下载应用程序，保存用户数据等。这部分区域已经完全脱离了“Read-Only”，不再“只读”。在Android 2.2版本中，这部分空间被挂载到/mnt/asec目录下，我们可以进入查看下载的应用程序的APK文件。这部分空间有时被称作“手机内部存储”，想一下Windows中的C盘，windows的文件夹是不可见的并且在系统分区。在我的LG Optimus中，最初有180MB可用，这些可用的空间随着安装的程序的增多而变小。我们可以通过“设置”-“SD卡和手机内存”-“手机内部存储”来查看剩余的空间大小。最后强调一点，当可用空间变得非常小的时候，就不能再下载或者安装应用程序了。</p>
-<h4 id="Micro-SD-SDHC"><a href="#Micro-SD-SDHC" class="headerlink" title="Micro SD/SDHC"></a>Micro SD/SDHC</h4><p>这是增加手机存储空间的唯一方法。他相当于一个计算机的外部硬盘。LG Optimus出厂的时候配置了一个2GB SD卡，我们用32GB及以下的内存卡替换掉他。SD卡目录挂载到/mnt/sdcard目录下，可以去“设置”-“SD卡和手机内存”-“SD卡”查看。<br>在SD卡上，你可以存储任何的数据，电影，音乐，照片等随你。如果你喜欢你可以把手机作为一个（非常昂贵的）读卡器^_^。在Android 2.2手机中，一部分应用程序可以从手机内部存储移动到SD卡上，以便节约宝贵的内部存储空间。不过你得记住，不是所有的程序或者程序的一部分能被移动到SD卡上的。所以，如果你的手机内部存储空间几乎没有空闲，通过一味的增大SD卡的容量，并不会对你有帮助。<br>当你想替换一个SD卡的时候，记得在抠下老的SD卡之前，先去“设置”-“SD卡和手机内存”-“SD卡”-“卸下SD卡”（别忘了Android是基于Linux的）。新插入的SD卡会自动的被加载。</p>
-<h3 id="文件夹"><a href="#文件夹" class="headerlink" title="文件夹"></a>文件夹</h3><p>cache：是缓存临时文件夹，据说是除了T-mobile的OTA更新外，别无用处。</p>
-<p>sdcard：是Android手机中SD卡的文件夹路径。</p>
-<p>etc：指向 /system/etc ，众所周知的配置文件存放目录。</p>
-<p>sys：用于挂载 sysfs文件系统。 在设备模型中，sysfs文件系统用来表示设备的结构。将设备的层次结构形象的反应到用户空间中，用户空间可以修改sysfs中的文件属性来修改设备的属性值 。</p>
-<p>sbin：只放了一个用于调试的adbd程序。</p>
-<p>proc：/proc 文件系统下的多种文件提供的系统信息不是针对某个特定进程的，而是能够在整个系统范围的上下文中使用。</p>
-<p>data：存放用户安装的软件以及各种数据。</p>
-<p>root：空。</p>
-<p>dev：Linux系统常规文件夹，里面的文件很多都是设备模拟的文件系统，一般用户无需理会。</p>
-<p>system：是一个很重要的目录，系统中的大部分东西都在这里了</p>
-<p>udisk/flash/udiskint：都是到/mnt相应目录的软链接（挂载目录）。</p>
-<p>sqlite_stmt_journals：一个根目录下的tmpfs文件系统，用于存放临时文件数据。（Android原生态系统下存在）</p>
-<h4 id="system目录的结构"><a href="#system目录的结构" class="headerlink" title="/system目录的结构"></a>/system目录的结构</h4><p>xbin：下放了很多系统管理工具，这些工具不是到toolbox的链接，每个都是可执行程序。如果你看 到这些命令你会发现他们根本不常用，他们都是为系统管理员准备的，是一些系统管理和配置工具。这个文件夹的作用相当于标准Linux文件系统中的 /sbin。我的手机此目录下有busybox，肯定是改过的，应该是破解者加上的。</p>
-<p>modules：使用来存放内核模块（主要是fs和net）和模块配置文件的地方。</p>
-<p>framework： 是JAVA平台的一些核心文件，属于JAVA平台系统框架文件。里面的文件都是.jar和.odex文件。</p>
-<p>fonts：很显然，这是字体库文件的存放目录。</p>
-<p>etc：这里存放了系统中几乎所有的配置文件，根目录下的/etc就链结于此。</p>
-<p>build.prop：是一个属性文件，在Android系统中.prop文件很重要，记录了系统的设置和改变，类似于/etc中的文件。</p>
-<p>media：里面主要是存放了系统的铃声的，分为 notifications（通知）、ui（界面）、alarms（警告）和ringtones（铃声），里面都是.ogg音频文件。</p>
-<p>bin：众所周知，是存放用户常用的工具程序的，其中大部分是到toolbox的链接（类似嵌入式Linux中的busybox）。toolbox应该是google简化版的busybox，我还没深入研究过。</p>
-<p>usr ：用户的配置文件，如键盘布局、共享、时区文件等等。您可以cat 来看看。</p>
-<p>app：顾名思义，存放的是Android系统自带的JAVA应用程序。在这里的程序会随开机启动。（勒索软件）</p>
-<p>lost+found：yaffs文件系统固有的，类似回收站的文件夹，只有是yaffs文件系统都会有。</p>
-<p>lib：存放几乎所有的共享库（.so）文件。</p>
-<p>sd：SD卡中的EXT2分区的挂载目录。</p>
-<p>init.rc：一个初始化脚本，用于将/system/modules和/system/xbin挂载为cramfs，避免系统被无意破坏。</p>
-<h3 id="非目录的文件："><a href="#非目录的文件：" class="headerlink" title="非目录的文件："></a>非目录的文件：</h3><p>runme.sh用于 SD 卡中 EXT2文件系统的自动挂载动作的脚本。</p>
-<p>init.trout.rc，init.rc，init.goldfish.rc 是初始化文件.</p>
-<p>init是系统启动到文件系统的时候第一个运行的程序。</p>
-<p>从以上的根目录分析来看，Android的根文件系统并非标准的Linux文件系统，所以以后还得仔细分析一下启动过程，才能认识Android系统。</p>
-<h2 id="linux下的文件结构"><a href="#linux下的文件结构" class="headerlink" title="linux下的文件结构"></a>linux下的文件结构</h2><p>待补充</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2234,7 +2201,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-count">66</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2245,7 +2212,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">21</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
