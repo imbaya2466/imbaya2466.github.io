@@ -103,7 +103,7 @@
 <meta property="og:description" content="前言apk安装分4种方式：  系统开机应用安装，安装的是系统应用。 adb安装 应用调用系统应用安装第三方apk包 静默安装  在代码里的实现其实就是如下两种：  PMS调用scanDirLI扫描安装 直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数  在本篇我们看下第一种系统启动时的安装流程。下一篇介绍第二种">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/l2hfrbh.jpg">
-<meta property="og:updated_time" content="2018-10-05T12:16:37.219Z">
+<meta property="og:updated_time" content="2018-10-05T13:59:28.221Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android8-0-0源码分析-应用安装1">
 <meta name="twitter:description" content="前言apk安装分4种方式：  系统开机应用安装，安装的是系统应用。 adb安装 应用调用系统应用安装第三方apk包 静默安装  在代码里的实现其实就是如下两种：  PMS调用scanDirLI扫描安装 直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数  在本篇我们看下第一种系统启动时的安装流程。下一篇介绍第二种">
@@ -390,6 +390,7 @@
 <a id="more"></a>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>一张时序图：<br><img src="https://i.imgur.com/l2hfrbh.jpg" alt=""></p>
 <p>介于大小问题图中执行长度不做对应。</p>
+<p>dex的优化：<br>在SystemServer.java 中有mPackageManagerService.updatePackagesIfNeeded()<br>updatePackagesIfNeeded-&gt;performDexOptUpgrade-&gt;performDexOptTraced-&gt;performDexOptInternal-&gt;performDexOptInternalWithDependenciesLI-&gt;PackageDexOptimizer.performDexOpt-&gt;performDexOptLI-&gt;dexOptPath-&gt;Installer.dexopt-&gt;InstalldNativeService.dexopt-&gt;dexopt.dexopt</p>
 <h3 id="1-main"><a href="#1-main" class="headerlink" title="1.main"></a>1.main</h3><p>ZygoteInit fork启动SystemServer</p>
 <p>frameworks\base\services\java\com\android\server\SystemServer.java</p>
 <p>SystemServer.main</p>
