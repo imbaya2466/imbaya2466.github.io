@@ -283,6 +283,306 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/05/android8-0-0源码分析-应用安装2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/05/android8-0-0源码分析-应用安装2/" itemprop="url">android8-0-0源码分析-应用安装2</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-05T19:04:40+08:00">
+                2018-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <a id="more"></a>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/05/android8-0-0源码分析-应用安装1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/10/05/android8-0-0源码分析-应用安装1/" itemprop="url">android8-0-0源码分析-应用安装1</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-05T19:04:30+08:00">
+                2018-10-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>apk安装分4种方式：</p>
+<ol>
+<li>系统开机应用安装，安装的是系统应用。</li>
+<li>adb安装</li>
+<li>应用调用系统应用安装第三方apk包</li>
+<li>静默安装</li>
+</ol>
+<p>在代码里的实现其实就是如下两种：</p>
+<ol>
+<li>PMS调用scanDirLI扫描安装</li>
+<li>直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数</li>
+</ol>
+<p>在本篇我们看下第一种系统启动时的安装流程。下一篇介绍第二种</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/10/05/android8-0-0源码分析-应用安装1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/28/ddctf-Android第一题-RSA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -375,40 +675,15 @@
 
       
         
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>好久没做ctf题了，arm指令都快忘光了…..<br>提起去年太菜没做出的题再分析下。</p>
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>好久没做ctf题了，arm指令都快忘光了…..<br>提起去年太菜没做出的题再分析下。</p>
 <p>ida addmap时可以直接把系统库函数全部取出来，放到一个本地文件夹中这样ida即可加载对应的so用于分析。–全部提出system/lib指定目录即可<br>现在的加载so，不落地手动加载是绝杀…….必须读读linker<br>debugger里的watch view可以查看任意形式的目标时时信息，支持c变量表达式。十分好用   比如：(char*)R0</p>
-<h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>这题的垃圾代码比较多，这里看下快速的分析方式。</p>
-<p>首先运行一下：</p>
-<p><img src="https://i.imgur.com/Pn1igB1.png" alt=""></p>
-<p>输入flag判断正误</p>
-<p>直接拖到jeb里看下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;manifest package=&quot;com.didictf.guesskey2018one&quot; platformBuildVersionCode=&quot;24&quot; platformBuildVersionName=&quot;7.0&quot; xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;</div><div class="line">    &lt;uses-sdk android:minSdkVersion=&quot;13&quot; android:targetSdkVersion=&quot;24&quot; /&gt;</div><div class="line">    &lt;application android:allowBackup=&quot;true&quot; android:icon=&quot;@mipmap/ic_launcher&quot; android:label=&quot;@string/app_name&quot; android:supportsRtl=&quot;true&quot; android:theme=&quot;@style/AppTheme&quot;&gt;</div><div class="line">        &lt;activity android:name=&quot;com.didictf.guesskey2018one.MainActivity&quot;&gt;</div><div class="line">            &lt;intent-filter&gt;</div><div class="line">                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;</div><div class="line">                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;</div><div class="line">            &lt;/intent-filter&gt;</div><div class="line">        &lt;/activity&gt;</div><div class="line">    &lt;/application&gt;</div><div class="line">&lt;/manifest&gt;</div></pre></td></tr></table></figure>
-<p>没什么特别的声明，就一个Activity。</p>
-<p>看下他的类与layout</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">package com.didictf.guesskey2018one;</div><div class="line"></div><div class="line">import android.os.Bundle;</div><div class="line">import android.support.v7.a.u;</div><div class="line">import android.view.View;</div><div class="line">import android.widget.TextView;</div><div class="line"></div><div class="line">public class MainActivity extends u &#123;</div><div class="line">    private TextView m;</div><div class="line">    private TextView n;</div><div class="line"></div><div class="line">    static &#123;</div><div class="line">        System.loadLibrary(&quot;hello-libs&quot;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public MainActivity() &#123;</div><div class="line">        super();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void onClickTest(View arg3) &#123;</div><div class="line">        this.n.setText(&quot;Empty Input&quot;);</div><div class="line">        if(this.stringFromJNI(this.m.getText().toString())) &#123;</div><div class="line">            this.n.setText(&quot;Correct&quot;);</div><div class="line">        &#125;</div><div class="line">        else &#123;</div><div class="line">            this.n.setText(&quot;Wrong&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    protected void onCreate(Bundle arg2) &#123;</div><div class="line">        super.onCreate(arg2);</div><div class="line">        this.setContentView(2130968602);</div><div class="line">        this.m = this.findViewById(2131427413);</div><div class="line">        this.n = this.findViewById(2131427415);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public native boolean stringFromJNI(String arg1) &#123;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在public中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;public id=&quot;0x7f04001a&quot; name=&quot;activity_main&quot; type=&quot;layout&quot; /&gt;</div></pre></td></tr></table></figure></p>
-<p>activity_main:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;RelativeLayout android:layout_height=&quot;fill_parent&quot; android:layout_width=&quot;fill_parent&quot; android:paddingBottom=&quot;@dimen/activity_vertical_margin&quot; android:paddingLeft=&quot;@dimen/activity_horizontal_margin&quot; android:paddingRight=&quot;@dimen/activity_horizontal_margin&quot; android:paddingTop=&quot;@dimen/activity_vertical_margin&quot; xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;&gt;</div><div class="line">    &lt;LinearLayout android:layout_centerInParent=&quot;true&quot; android:layout_height=&quot;wrap_content&quot; android:layout_width=&quot;wrap_content&quot; android:orientation=&quot;vertical&quot;&gt;</div><div class="line">        &lt;TextView android:id=&quot;@id/flag_prompt&quot; android:layout_gravity=&quot;center&quot; android:layout_height=&quot;wrap_content&quot; android:layout_width=&quot;wrap_content&quot; android:text=&quot;Guess Key&quot; android:textAppearance=&quot;?android:textAppearanceLarge&quot; /&gt;</div><div class="line">        &lt;EditText android:ems=&quot;10&quot; android:id=&quot;@id/flag_entry&quot; android:inputType=&quot;textPassword&quot; android:layout_gravity=&quot;center&quot; android:layout_height=&quot;wrap_content&quot; android:layout_width=&quot;wrap_content&quot; /&gt;</div><div class="line">        &lt;Button android:id=&quot;@id/button&quot; android:layout_gravity=&quot;center_horizontal&quot; android:layout_height=&quot;wrap_content&quot; android:layout_width=&quot;wrap_content&quot; android:onClick=&quot;onClickTest&quot; android:text=&quot;Test&quot; /&gt;</div><div class="line">        &lt;TextView android:id=&quot;@id/flag_result&quot; android:layout_gravity=&quot;center&quot; android:layout_height=&quot;wrap_content&quot; android:layout_width=&quot;wrap_content&quot; android:text=&quot;Empty Result&quot; android:textAppearance=&quot;?android:textAppearanceLarge&quot; /&gt;</div><div class="line">    &lt;/LinearLayout&gt;</div><div class="line">&lt;/RelativeLayout&gt;</div></pre></td></tr></table></figure></p>
-<p>可见为基本的读入字串，在libhello-libs.so中判断结果返回，返回1为正确</p>
-<p>接下来ida分析libhello-libs.so：<br>该so为32位的，init_array段有内容但不影响，无jni_onload，导出部分也没有下坑。找到导出函数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">int __fastcall Java_com_didictf_guesskey2018one_MainActivity_stringFromJNI(int a1)</div><div class="line">&#123;</div><div class="line">  int v1; // r5</div><div class="line">  int v2; // r4</div><div class="line">  int v3; // r0</div><div class="line">  int v4; // r0</div><div class="line">  int v5; // r4</div><div class="line">  int v7; // [sp+4h] [bp-28h]</div><div class="line">  char v8; // [sp+8h] [bp-24h]</div><div class="line">  int v9; // [sp+Ch] [bp-20h]</div><div class="line">  int v10; // [sp+10h] [bp-1Ch]</div><div class="line">  char v11; // [sp+14h] [bp-18h]</div><div class="line">  char v12; // [sp+18h] [bp-14h]</div><div class="line"></div><div class="line">  v1 = 0;</div><div class="line">  v2 = (*(int (**)(void))(*(_DWORD *)a1 + 676))(); //GetStringUTFChars</div><div class="line">  j_GetTicks();</div><div class="line">  do</div><div class="line">    v10 = j_gpower(v1++);</div><div class="line">  while ( v1 != 32 );</div><div class="line">  j_GetTicks();</div><div class="line">  sub_D6EC3364(&amp;v9, v2, &amp;v8);</div><div class="line">  v3 = sub_D6EC2A08(&amp;v7, &amp;v9);</div><div class="line">  j___aeabi_wind_cpp_prj(v3);</div><div class="line">  v5 = v4;</div><div class="line">  sub_D6EC28E4(v7 - 12, &amp;v12);</div><div class="line">  sub_D6EC28E4(v9 - 12, &amp;v11);</div><div class="line">  return v5;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>分析：</p>
-<ol>
-<li>GetStringUTFChars将utf编码的java字串拷贝到本地c的asll实现</li>
-<li>v1,v10都没用上可知为垃圾代码</li>
-<li>sub_D6EC3364为将v2的字串封装结构体为v9,根据里面库函数的字串应该是string的构造</li>
-<li>sub_D6EC2A08动态调试结果返回和输入没区别…..</li>
-<li>j-aeabi这个函数是关键函数</li>
-<li>后面俩个的参数对判断结果v5毫无影响，为垃圾函数</li>
-</ol>
-<p>之后来看核心判断：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div></pre></td><td class="code"><pre><div class="line">void __fastcall __aeabi_wind_cpp_prj(int *a1)</div><div class="line">&#123;</div><div class="line">  int inpit; // r0</div><div class="line">  int v2; // r5</div><div class="line">  char v3; // r2</div><div class="line">  char v4; // ST18_1</div><div class="line">  unsigned int length; // r0</div><div class="line">  unsigned __int8 *v6; // r1</div><div class="line">  int v7; // r7</div><div class="line">  unsigned int v8; // r3</div><div class="line">  signed int v9; // r5</div><div class="line">  unsigned int v10; // r6</div><div class="line">  int v11; // r1</div><div class="line">  int v12; // r0</div><div class="line">  int v13; // r0</div><div class="line">  unsigned int v14; // r4</div><div class="line">  int v15; // r5</div><div class="line">  int v16; // r0</div><div class="line">  int v17; // r6</div><div class="line">  int v18; // r1</div><div class="line">  int v19; // r5</div><div class="line">  __int64 v20; // r2</div><div class="line">  unsigned int v21; // [sp+4h] [bp-8Ch]</div><div class="line">  int v22; // [sp+4h] [bp-8Ch]</div><div class="line">  int *v23; // [sp+8h] [bp-88h]</div><div class="line">  int v24; // [sp+8h] [bp-88h]</div><div class="line">  unsigned __int8 *v25; // [sp+10h] [bp-80h]</div><div class="line">  int v26; // [sp+10h] [bp-80h]</div><div class="line">  int v27; // [sp+14h] [bp-7Ch]</div><div class="line">  int v28; // [sp+18h] [bp-78h]</div><div class="line">  int v29; // [sp+1Ch] [bp-74h]</div><div class="line">  int v30; // [sp+20h] [bp-70h]</div><div class="line">  int *v31; // [sp+24h] [bp-6Ch]</div><div class="line">  int *v32; // [sp+28h] [bp-68h]</div><div class="line">  int v33; // [sp+30h] [bp-60h]</div><div class="line">  int v34; // [sp+34h] [bp-5Ch]</div><div class="line">  int v35; // [sp+38h] [bp-58h]</div><div class="line">  void *v36; // [sp+3Ch] [bp-54h]</div><div class="line">  __int16 v37; // [sp+42h] [bp-4Eh]</div><div class="line">  char v38; // [sp+48h] [bp-48h]</div><div class="line">  char v39[10]; // [sp+4Ch] [bp-44h]</div><div class="line">  char v40; // [sp+56h] [bp-3Ah]</div><div class="line"></div><div class="line">  v23 = a1;</div><div class="line">  inpit = *a1;</div><div class="line">  if ( *(_DWORD *)(inpit - 12) == 43 )</div><div class="line">  &#123;</div><div class="line">    v2 = 0;</div><div class="line">    do</div><div class="line">    &#123;</div><div class="line">      v3 = *((_BYTE *)&amp;unk_4DEF3 - v2);</div><div class="line">      if ( *(_DWORD *)(inpit - 4) &gt;= 0 )</div><div class="line">      &#123;</div><div class="line">        v4 = *((_BYTE *)&amp;unk_4DEF3 - v2);</div><div class="line">        sub_2FF8C(v23);</div><div class="line">        v3 = v4;</div><div class="line">        inpit = *v23;</div><div class="line">      &#125;</div><div class="line">      v39[-v2] = *(_BYTE *)(inpit - v2) ^ v3;</div><div class="line">      --v2;</div><div class="line">    &#125;</div><div class="line">    while ( v2 != -43 );</div><div class="line"></div><div class="line">//每一位^一个数列，生成与输入同大小的一个数列  </div><div class="line">//输入应该是43位的</div><div class="line">/*</div><div class="line">5A 44 5C 54 4D  5D 52 5D 53 01 08 02 5A</div><div class="line">50 0C 5B 0C 07 50 58 43  42 4B 55 4C 04 54 01 0D    </div><div class="line">4A 57 42 09 57 00 47 0B  00 4D 59 42 5C 5F 00 </div><div class="line"></div><div class="line"></div><div class="line">*/</div><div class="line"></div><div class="line">//异或后产生v6字串</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">	</div><div class="line">    length = *(_DWORD *)(inpit - 12);</div><div class="line">    v6 = (unsigned __int8 *)&amp;v37;</div><div class="line">    v7 = 0;</div><div class="line">    v8 = 0;</div><div class="line">    v9 = 0;</div><div class="line">LABEL_7:</div><div class="line">    v21 = v8;</div><div class="line">    v25 = v6;</div><div class="line">    while ( v9 &lt; 1 || v8 &gt;= length || v6[10] == *v6 )</div><div class="line">    &#123;</div><div class="line">      ++v8;</div><div class="line">      ++v6;</div><div class="line">      if ( ++v7 &gt;= 10 )</div><div class="line">      &#123;</div><div class="line">        v8 = v21 + 10;</div><div class="line">        v6 = v25 + 10;</div><div class="line">        ++v9;</div><div class="line">        v7 = 0;</div><div class="line">        if ( v9 &lt; 5 )</div><div class="line">          goto LABEL_7;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">	// 保证v6[i+10]==v6[i]    v8表示v6的位置，当v6超过length时由v8过while，后面判断屏蔽</div><div class="line"></div><div class="line">		</div><div class="line">        v10 = 0;</div><div class="line">        v40 = 0;</div><div class="line"></div><div class="line">	//v6[10]=0</div><div class="line"></div><div class="line">	</div><div class="line">        sub_31364(&amp;v28, v39, &amp;v34);</div><div class="line">        sub_2F50C(v23, &amp;v28);</div><div class="line">        sub_308E4(v28 - 12, &amp;v36);</div><div class="line">        sub_30A08(&amp;v35, v23);</div><div class="line">        j_str2vec(&amp;v36, &amp;v35);</div><div class="line">        sub_308E4(v35 - 12, &amp;v28);</div><div class="line">        v24 = j_atoll(*v23);</div><div class="line"></div><div class="line"></div><div class="line">  //取v6代表的long long整形</div><div class="line"></div><div class="line">		</div><div class="line">        v26 = v11;</div><div class="line">        sub_31364(&amp;v34, &quot;deknmgqipbjthfasolrc&quot;, &amp;v28);</div><div class="line">        sub_31364(&amp;v33, &quot;jlocpnmbmbhikcjgrla&quot;, &amp;v28);</div><div class="line">        j___aeabi_memclr4(&amp;v29, 20);</div><div class="line">        v31 = &amp;v29;</div><div class="line">        v32 = &amp;v29;</div><div class="line">        v12 = v34;</div><div class="line">        if ( *(_DWORD *)(v34 - 12) )</div><div class="line">        &#123;</div><div class="line">          do</div><div class="line">          &#123;</div><div class="line">            if ( *(_DWORD *)(v12 - 4) &gt;= 0 )</div><div class="line">            &#123;</div><div class="line">              sub_2FF8C(&amp;v34);</div><div class="line">              v12 = v34;</div><div class="line">            &#125;</div><div class="line">            *(_DWORD *)j_std::map&lt;char,int,std::less&lt;char&gt;,std::allocator&lt;std::pair&lt;char const,int&gt;&gt;&gt;::operator[](</div><div class="line">                         &amp;v28,</div><div class="line">                         v12 + v10) = (signed int)v10 / 2;</div><div class="line">            v12 = v34;</div><div class="line">            ++v10;</div><div class="line">          &#125;</div><div class="line">          while ( v10 &lt; *(_DWORD *)(v34 - 12) );</div><div class="line">        &#125;</div><div class="line">        sub_30A08(&amp;v27, &amp;v33);</div><div class="line">        v13 = v33;</div><div class="line">        if ( *(_DWORD *)(v33 - 12) )</div><div class="line">        &#123;</div><div class="line">          v14 = 0;</div><div class="line">          do</div><div class="line">          &#123;</div><div class="line">            if ( *(_DWORD *)(v13 - 4) &gt;= 0 )</div><div class="line">            &#123;</div><div class="line">              sub_2FF8C(&amp;v33);</div><div class="line">              v13 = v33;</div><div class="line">            &#125;</div><div class="line">            v15 = *(_DWORD *)j_std::map&lt;char,int,std::less&lt;char&gt;,std::allocator&lt;std::pair&lt;char const,int&gt;&gt;&gt;::operator[](</div><div class="line">                               &amp;v28,</div><div class="line">                               v13 + v14)</div><div class="line">                + 48;</div><div class="line">            v16 = v27;</div><div class="line">            if ( *(_DWORD *)(v27 - 4) &gt;= 0 )</div><div class="line">            &#123;</div><div class="line">              sub_2FF8C(&amp;v27);</div><div class="line">              v16 = v27;</div><div class="line">            &#125;</div><div class="line">            *(_BYTE *)(v16 + v14) = v15;</div><div class="line">            v13 = v33;</div><div class="line">            ++v14;</div><div class="line">          &#125;</div><div class="line">          while ( v14 &lt; *(_DWORD *)(v33 - 12) );</div><div class="line">        &#125;</div><div class="line">        v31 = v36;</div><div class="line">        v18 = j_atoll(v36);</div><div class="line">        v20 = v19;</div><div class="line">        ((void (*)(void))j_j___aeabi_uldivmod)();</div><div class="line">        if ( v21 )</div><div class="line">          goto LABEL_47; //余数==0</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    v18        v33</div><div class="line">//第二次的数  与第一次的数mod</div><div class="line">//第二个数最好动调出来  为：0x91F5A65B 51BB6565注意longlong的返回用俩个寄存器R0R1</div><div class="line">/*定义：</div><div class="line">		__value_in_regs ulldiv_t __aeabi_uldivmod(</div><div class="line">		 unsigned long long n, unsigned long long d)</div><div class="line">		unsigned signed ll division, remainder,</div><div class="line">		&#123;q, r&#125; = n / d [2]</div><div class="line"></div><div class="line">		他的参数是俩个，每个参数为longlong 要占俩个32位的寄存器</div><div class="line">		大端和小端都支持，默认是小端模式</div><div class="line">		因此R0是低位  R1是高位</div><div class="line"></div><div class="line"></div><div class="line">		字串是5889412424631952987    </div><div class="line">		其16进制表示为51BB656591F5A65B    注意进制转化不能分开位数，应该整体算--因为每位都是*16的几次方-不是10的倍数</div><div class="line"></div><div class="line">2. A pair of (unsigned) long longs is returned in &#123;&#123;r0, r1&#125;, &#123;r2, r3&#125;&#125;, the quotient in &#123;r0, r1&#125;, and the remainder in</div><div class="line">&#123;r2, r3&#125;. The description above is written using ARM-specific function prototype notation, though no prototype</div><div class="line">need be read by any compiler. (In the table above, think of __value_in_regs as a structured comment).</div><div class="line">*/</div><div class="line"></div><div class="line"></div><div class="line">		                          被除数           除数低高</div><div class="line">        v22 = j_j___aeabi_uldivmod(v18, v20, v33, v35);</div><div class="line">        v2 = 1;</div><div class="line"></div><div class="line">		//此时可过</div><div class="line">        v24 = 1;</div><div class="line">        if ( v33 &gt;= 2 )</div><div class="line">          v24 = 0;执行</div><div class="line">        v25 = 1;</div><div class="line">        if ( (v35 &amp; 0x80000000) == 0 )</div><div class="line">          v25 = 0;</div><div class="line">        if ( v35 )</div><div class="line">          v24 = v25;</div><div class="line">        if ( v24 )</div><div class="line">          goto LABEL_47; 不可执行</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">		//  除数小于商    </div><div class="line">        v26 = 1;</div><div class="line">        v27 = v33 &gt;= v22;  </div><div class="line">        v28 = 1;</div><div class="line">        if ( v27 )</div><div class="line">          v28 = 0;</div><div class="line">        if ( v35 &gt;= v23 )   //判断高位，高位必须除数小于商</div><div class="line">          v26 = 0;</div><div class="line">        if ( v35 != v23 )    //高位不等时直接按高位的判断 ，相等时按之前低位的判断</div><div class="line">          v28 = v26;</div><div class="line">        if ( !v28 )   v28要=1    //结果为除数必须小于商</div><div class="line">LABEL_47:</div><div class="line">          v2 = 0;</div><div class="line">        sub_308E4(v31 - 12, &amp;v47);</div><div class="line">        j_std::_Rb_tree&lt;char,std::pair&lt;char const,int&gt;,std::_Select1st&lt;std::pair&lt;char const,int&gt;&gt;,std::less&lt;char&gt;,std::allocator&lt;std::pair&lt;char const,int&gt;&gt;&gt;::_M_erase(</div><div class="line">          &amp;v37,</div><div class="line">          v39);</div><div class="line">        sub_308E4(v42 - 12, &amp;v37);</div><div class="line">        sub_308E4(v43 - 12, &amp;v37);</div><div class="line">        if ( v45 )</div><div class="line">          return j_operator delete();</div><div class="line">        break;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  result = _stack_chk_guard - v50;</div><div class="line">  if ( _stack_chk_guard == v50 )</div><div class="line">    result = v2;</div><div class="line">  return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>基本流程就是：<br>对输入异或一个串，判断结果是10个一循环的，取前10位化为longlong，取一个大整数除它，要求余数==0，除数小于商。</p>
-<p>值得说说的就是动调看汇编代码或者汇编对照idaF5看比只看F5效率高很多…..F5出来的很难看出在干什么….<br>把arm指令记熟了应该静态主读汇编以F5为辅也能很快分析出来。<br>始终确保某寄存器或某地址上的目标数据内容，知道该数据的传递在算法的一部分中可以快速理清思路。<br>arm大小端存储都可以，默认为小端，longlong系列的指令都是用俩个寄存器传递，R0低32位，R1高32位。遇到不懂的指令去arm手册查。<br>在F5的结果中参数为R0-R1放，对应的是左-右的参。且将longlong类型识别为俩个参数了</p>
-<p>最后写出脚本：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">	long long a=5889412424631952987;</div><div class="line">	/*long long b=2;</div><div class="line">	while(1)</div><div class="line">	&#123;</div><div class="line">		if(a%b==0)</div><div class="line">		&#123;</div><div class="line">			printf(&quot;%lld\n&quot;,b);</div><div class="line">		&#125;</div><div class="line">		b++;</div><div class="line">		if(b==a)</div><div class="line">		&#123;</div><div class="line">			break;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	*/</div><div class="line">	//1499419583</div><div class="line">	char* b=&quot;14994195831499419583149941958314994195831499419583&quot;;</div><div class="line">	char c[]=&#123;0x5A,0x44,0x5C,0x54,0x4D,0x5D,0x52,0x5D,0x53,0x01,0x08,0x02,0x5A,0x50,0x0C,0x5B,0x0C,0x07,0x50,0x58,0x43,0x42,0x4B,0x55,0x4C,0x04,0x54,0x01,0x0D,0x4A,0x57,0x42,0x09,0x57,0x00,0x47,0x0B,0x00,0x4D,0x59,0x42,0x5C,0x5F,0x00&#125;;	</div><div class="line">	int i=0;</div><div class="line">	for(i=0;i&lt;43;i++)</div><div class="line">	&#123;</div><div class="line">		c[i]=b[i]^c[i];</div><div class="line">	&#125;</div><div class="line">	c[i]=0;</div><div class="line">	printf(&quot;%s&quot;,c);	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>因为arm架构是基于寄存器的，注意一个反编译函数中许多变量都是寄存器。在局部内是有效的。由于idaF5出的arm代码还不是非常准确，最好是用汇编代码对照着读，c保证大体位置不走丢，汇编保证细节准确性和算法理解。动态调试最好能够配合，可以关注输入与返回等的位置与变动情况。<br>对于arm指令来说…..直接读汇编辅助读F5比只读F5好太多…….F5出来的简直坑…….<br>顺便arm指令需要背下来。</p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/28/ddctf-Android第一题-RSA/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1536,308 +1811,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/23/android分析利器DDMS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/23/android分析利器DDMS/" itemprop="url">android分析利器DDMS</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-23T19:16:12+08:00">
-                2018-07-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>DDMS提供了强大的应用监控能力<br><a href="https://blog.csdn.net/songyi160/article/details/53107245" target="_blank" rel="external">https://blog.csdn.net/songyi160/article/details/53107245</a></p>
-<p>有关逆向方面可用的：</p>
-<h2 id="应用信息"><a href="#应用信息" class="headerlink" title="应用信息"></a>应用信息</h2><p>只有开启了debugger模式的应用才可以显示，点击可开启8700端口调试。<br><strong>调试端</strong>在pc，用来与被<strong>调试服务端</strong>（android）通过adb交互，8600+这个端口是调试服务端在本地开开用来给调试器jdb等使用的，8700是备用公共的。可以用adb或ddms将这个端口转发到pc端</p>
-<h2 id="控件"><a href="#控件" class="headerlink" title="控件"></a>控件</h2><p>加载layout时id名标记，用R.id数字在资源中查找对应名称，用名称找到控件。读资源时应该直接分析成id。混淆可改名。<br>通过代码定位控件：可以通过id在public或R中对应名字，后用名字在layout中对应。<br>通过控件定位代码：layout找到名字public找到id，再在代码中找id</p>
-<p>通过DDMS的Dump View可以直观查看当前页面layout布局，并可以查看控件信息，名字。</p>
-<h2 id="logcat"><a href="#logcat" class="headerlink" title="logcat"></a>logcat</h2><p>完整的logcat输出，完整的筛选功能。</p>
-<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>直观的文件任意查看，导出导入。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/19/apk加固-加密so-native层解密/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/19/apk加固-加密so-native层解密/" itemprop="url">apk加固-加密so-native层解密</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-19T21:14:04+08:00">
-                2018-07-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android应用加固/" itemprop="url" rel="index">
-                    <span itemprop="name">android应用加固</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="so中节加密"><a href="#so中节加密" class="headerlink" title="so中节加密"></a>so中节加密</h2><p>c语言处理文件格式写好写点：<br>注意点：</p>
-<ol>
-<li>加密时遍历节找到名字（存的是相对于字串节的地址偏移）加密，并将节偏移存到头的节偏移处，节大小和页数存到头的入口点处，为了方便解密时查找，同时这俩项对so加载无用。破坏section，但可从p节读出结构。</li>
-<li>解密函数在init中解密，用属性声明为特殊段，init执行时文件已经加载，可以修改。</li>
-<li>linker等native的加载源码需要熟</li>
-<li>头、节等都是基于装载地址映射的，节等按头加载，代码和数据用重定位定位。因此修改节内数据、节数据、头数据只要文件偏移+装载地址即可。</li>
-<li>c语言对文件格式读取与细节处理比java来的方便。清晰</li>
-<li>操作步骤：写好so与解密函数，编译后用加密程序处理。</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/19/apk加固-加密so-native层解密/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1888,7 +1861,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">66</span>
+                <span class="site-state-item-count">68</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1910,7 +1883,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-count">63</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

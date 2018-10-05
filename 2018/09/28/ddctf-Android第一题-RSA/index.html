@@ -103,7 +103,7 @@
 <meta property="og:description" content="前言好久没做ctf题了，arm指令都快忘光了…..提起去年太菜没做出的题再分析下。 ida addmap时可以直接把系统库函数全部取出来，放到一个本地文件夹中这样ida即可加载对应的so用于分析。–全部提出system/lib指定目录即可现在的加载so，不落地手动加载是绝杀…….必须读读linkerdebugger里的watch view可以查看任意形式的目标时时信息，支持c变量表达式。十分好用">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/Pn1igB1.png">
-<meta property="og:updated_time" content="2018-09-29T13:50:56.306Z">
+<meta property="og:updated_time" content="2018-10-05T11:08:22.906Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ddctf-Android第一题-RSA">
 <meta name="twitter:description" content="前言好久没做ctf题了，arm指令都快忘光了…..提起去年太菜没做出的题再分析下。 ida addmap时可以直接把系统库函数全部取出来，放到一个本地文件夹中这样ida即可加载对应的so用于分析。–全部提出system/lib指定目录即可现在的加载so，不落地手动加载是绝杀…….必须读读linkerdebugger里的watch view可以查看任意形式的目标时时信息，支持c变量表达式。十分好用">
@@ -376,6 +376,7 @@
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>好久没做ctf题了，arm指令都快忘光了…..<br>提起去年太菜没做出的题再分析下。</p>
 <p>ida addmap时可以直接把系统库函数全部取出来，放到一个本地文件夹中这样ida即可加载对应的so用于分析。–全部提出system/lib指定目录即可<br>现在的加载so，不落地手动加载是绝杀…….必须读读linker<br>debugger里的watch view可以查看任意形式的目标时时信息，支持c变量表达式。十分好用   比如：(char*)R0</p>
+<a id="more"></a>
 <h2 id="题解"><a href="#题解" class="headerlink" title="题解"></a>题解</h2><p>这题的垃圾代码比较多，这里看下快速的分析方式。</p>
 <p>首先运行一下：</p>
 <p><img src="https://i.imgur.com/Pn1igB1.png" alt=""></p>
@@ -444,6 +445,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/05/android8-0-0源码分析-应用安装1/" rel="prev" title="android8-0-0源码分析-应用安装1">
+                android8-0-0源码分析-应用安装1 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -520,7 +525,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">66</span>
+                <span class="site-state-item-count">68</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -542,7 +547,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">62</span>
+                <span class="site-state-item-count">63</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
