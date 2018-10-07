@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android,逆向,动态调试,静态分析," />
+  <meta name="keywords" content="android," />
 
 
 
@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="2018.5.24分析博客：https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;amp;articleid=339https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;amp;article">
-<meta name="keywords" content="android,逆向,动态调试,静态分析">
+<meta name="description" content="前言总结下android应用开发中常出现的依靠第三方加固无法解决的代码漏洞问题。这些代码漏洞通常可用自动化检测工具检验。搭建行为检测检验环境也是十分有效的做法。 https://www.zhihu.com/question/22933619/answer/392842386https://blog.csdn.net/whklhhhh/article/details/79116894">
+<meta name="keywords" content="android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="android逆向分析操作随笔">
-<meta property="og:url" content="http://yoursite.com/2018/05/24/android逆向分析操作随笔/index.html">
+<meta property="og:title" content="android应用层常见安全漏洞">
+<meta property="og:url" content="http://yoursite.com/2018/10/07/android应用层常见安全漏洞/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="2018.5.24分析博客：https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;amp;articleid=339https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;amp;article">
+<meta property="og:description" content="前言总结下android应用开发中常出现的依靠第三方加固无法解决的代码漏洞问题。这些代码漏洞通常可用自动化检测工具检验。搭建行为检测检验环境也是十分有效的做法。 https://www.zhihu.com/question/22933619/answer/392842386https://blog.csdn.net/whklhhhh/article/details/79116894">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-06-22T13:51:32.781Z">
+<meta property="og:updated_time" content="2018-10-07T08:39:09.672Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="android逆向分析操作随笔">
-<meta name="twitter:description" content="2018.5.24分析博客：https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;amp;articleid=339https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;amp;article">
+<meta name="twitter:title" content="android应用层常见安全漏洞">
+<meta name="twitter:description" content="前言总结下android应用开发中常出现的依靠第三方加固无法解决的代码漏洞问题。这些代码漏洞通常可用自动化检测工具检验。搭建行为检测检验环境也是十分有效的做法。 https://www.zhihu.com/question/22933619/answer/392842386https://blog.csdn.net/whklhhhh/article/details/79116894">
 
 
 
@@ -134,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/05/24/android逆向分析操作随笔/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/07/android应用层常见安全漏洞/"/>
 
 
 
 
 
-  <title>android逆向分析操作随笔 | GGWP</title>
+  <title>android应用层常见安全漏洞 | GGWP</title>
   
 
 
@@ -283,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/24/android逆向分析操作随笔/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/07/android应用层常见安全漏洞/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="imbaya">
@@ -300,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">android逆向分析操作随笔</h1>
+          <h1 class="post-title" itemprop="name headline">android应用层常见安全漏洞</h1>
         
 
         <div class="post-meta">
@@ -312,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T21:57:33+08:00">
-                2018-05-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-07T16:11:04+08:00">
+                2018-10-07
               </time>
             
 
@@ -335,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
+                  <a href="/categories/android应用加固/" itemprop="url" rel="index">
+                    <span itemprop="name">android应用加固</span>
                   </a>
                 </span>
 
@@ -372,26 +372,31 @@
       
 
       
-        <h2 id="2018-5-24"><a href="#2018-5-24" class="headerlink" title="2018.5.24"></a>2018.5.24</h2><p>分析博客：<br><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;articleid=339" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;articleid=339</a><br><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;articleid=365" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;articleid=365</a></p>
-<p>ida分析出的变量类型可随意转化，指针也可以，所以选择适当的类型可更直观。选中后按一下”y”键，然后将类型声明为”JNIEnv*”</p>
-<p>smail代码可以修改，目前做不到java层修改，自己通过编译原理写一个！！！！</p>
-<p>增加大量smali：<br>把想要增加的逻辑先用java写成一个apk，然后把这个apk反编译成smali文件，随后把反编译后的这部分逻辑的smali文件插入到目标程序的smali文件夹中，然后再在原来的方法上采用invoke的方式调用新加入的逻辑。</p>
-<p>大多数反破解都有apk签校验，最好的做法是自己修改android源码解决。一劳永逸。libcore\luni\src\main\java\java\security\MessageDigest.java文件。将isEqual函数中的判断语句注释掉</p>
-<p>so文件在被加载的时候会首先执行.init_array中的函数，然后再执行JNI_OnLoad()函数。后者好找，但前者是数据不识别为代码。首先打开view -&gt;Open subviews-&gt;Segments。然后点击.init.array就可以看到.init_array中的函数了。p为创建函数。c为识别为代码。</p>
-<p>ida动态中也可以F5，有时候你明明在一个函数中却无法F5，这时候你需要先按一下”p”键，程序会将这段代码作为函数分析，然后再按一下”F5”。</p>
-<p>常见的反调试方法都会用fopen打开一些文件(/proc内的进程情况)来检测自己的进程是否被attach。</p>
-<p>我们先在”F5”界面选择所有代码，然后用”Copy to assembly”功能，就可以把c语言代码注释到汇编代码里。可防止nop出错</p>
-<p>ida可动态修改程序的一切，也可以静态修改文件的一切。<br>静态：Edit-&gt;Plugins-&gt;modifyfile更改成新so</p>
-<p>因为ARM是没有单独的NOP指令的。于是我们采用movs r0,r0作为NOP，对应的机器码为”00 00 A0 E1”</p>
-<p>ida的动态时的指针可快速（D）转化成自己想要的类型从而清晰显示</p>
-<p>kill调试：<br>首先用ps获取运行的app的pid，然后用kill -19 [pid] 就可以将这个app挂起了。随后用ida attach上这个app。ida如何加载不同线程???</p>
-<p>ida找不到模块文件也可以分析，只能看到内存中的状态?</p>
-<p>脱壳工具多的很，但都会被针对，所以手动脱壳必会。</p>
-<p>最基本的内存dump流程：<br>ida动态调试中<br>使用ida的script command去dump内存中的dex文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">staticmain(void)</div><div class="line">&#123;</div><div class="line">  auto fp, begin, end, dexbyte;</div><div class="line">  fp =fopen(&quot;C:\\dump.dex&quot;,&quot;wb&quot;);</div><div class="line">  begin = r0;</div><div class="line">  end = r0 + r1;</div><div class="line">  for( dexbyte = begin; dexbyte &lt; end; dexbyte ++ )</div><div class="line">      fputc(Byte(dexbyte), fp);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>学习ida脚本！！！但许多壳完全动态修改dex等文件，很难dump。</p>
-<p>使用ida直接反编译的代码：<br>defs.h头文件导入可识别ida定义的宏了。复制代码即可直接使用。</p>
-<p>直接调用：<br>另外我们还可以自己创建一个NDK项目，然后自己编写一个so或者elf利用dlopen()和dlsym()调用目标so中的函数。比如我们想要调用libdvm.so中的dvmGetCurrentJNIMethod()函数，我们就可以在我们的NDK项目中这么写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">typedefvoid* (*dvmGetCurrentJNIMethod_func)();</div><div class="line">dvmGetCurrentJNIMethod_func dvmGetCurrentJNIMethod_fnPtr;</div><div class="line">dvm_hand= dlopen(&quot;libdvm.so&quot;, RTLD_NOW);</div><div class="line">dvmGetCurrentJNIMethod_fnPtr =dlsym(dvm_hand,&quot;_Z22dvmGetCurrentJNIMethodv&quot;);</div><div class="line"></div><div class="line">dvmGetCurrentJNIMethod_fnPtr();</div></pre></td></tr></table></figure></p>
-<p>看雪分享的ida调试android技巧：<br><a href="https://www.kanxue.com/chm.htm?id=10296&amp;pid=node1000944" target="_blank" rel="external">https://www.kanxue.com/chm.htm?id=10296&amp;pid=node1000944</a></p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结下android应用开发中常出现的依靠第三方加固无法解决的代码漏洞问题。这些代码漏洞通常可用自动化检测工具检验。搭建行为检测检验环境也是十分有效的做法。</p>
+<p><a href="https://www.zhihu.com/question/22933619/answer/392842386" target="_blank" rel="external">https://www.zhihu.com/question/22933619/answer/392842386</a><br><a href="https://blog.csdn.net/whklhhhh/article/details/79116894" target="_blank" rel="external">https://blog.csdn.net/whklhhhh/article/details/79116894</a></p>
+<a id="more"></a>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="Android-Manifest配置相关"><a href="#Android-Manifest配置相关" class="headerlink" title="Android Manifest配置相关"></a>Android Manifest配置相关</h3><p>1.组件导出<br>android:exported，若为ture则导出该组件。不声明时包含<intent-filter>则可导出。<br>风险：导出的组件可被其它应用使用（intent），使其它应用有超出其权限的行为</intent-filter></p>
+<p>2.敏感权限申请<br>android:name=”xxx”<br>api23以后权限写在清单里是没有效果的（如sd卡读写权，只是能开启但不会自动开启），开启需要写代码询问或者手动去设置中开启清单申请的。没有权限会直接抛出一般错误<br>风险：该应用可能有不良行为</p>
+<p>3.备份权限<br>allowbackup为ture可导出，不写可能导出。可导出的数据为data/data部分的私有数据<br>风险：可通过adb backup对应用数据进行备份，该命令不需要root权限即可获得应用数据。对不开放root的系统造成安全隐患，可能造成数据泄露。一些应用还可能有登录他人账号的可能。</p>
+<p>4.调试权限<br>Debuggable为ture时，可以被调试。<br>风险：被调试意味着完全控制该程序进程。非root下暴露该应用可能造成信息泄露</p>
+<p>5.消息推送劫持<br>消息的apikey被暴露在xml或代码中。<br>风险：key暴露引起该sdk的流量被解密。从而泄露隐私或恶意推送。</p>
+<h3 id="公共组件"><a href="#公共组件" class="headerlink" title="公共组件"></a>公共组件</h3><p>1.SQLite<br>openOrCreateDatabase访问权限为MODE_WORLD_READABLE或者MODE_WORLD_WRITEABLE<br>风险：其它进程任意访问应用私有数据库</p>
+<p>2.SharedPreference<br>getSharedPreferences访问权限设置为MODE_WORLD_READABLE或者MODE_WORLD_WRITEABLE<br>风险：其它进程任意访问应用私有数据库</p>
+<p>3.WebView证书<br>WebViewClient类的onReceivedSslError方法中错误不应该忽略。<br>风险：无证书校验可能受到中间人攻击。</p>
+<p>4.WebView远程代码执行<br>SDK版本小于17时addJavascriptInterface接口函数使用未限制。<br>风险：风及一时的webview远程代码执行漏洞。</p>
+<p>5.WebView明文存储<br>setSavePassword(true)或者不设置默认为ture<br>风险：webview保存的账户与密码将明文保存在data/data/WebView.db</p>
+<p>6.WebView跨域访问<br>CNVD-2017-36682：<br>手动调用getSettings().setAllowFileAccessFromFileURLs(true)或getSettings().setAllowUniversalAccessFromFileURLs(true)<br>风险：由于Android应用WebView开启了file域访问，且允许file域访问http域，未对file域的路径做严格限制，可构造js代码实现以目标APP的权限访问文件系统。</p>
+<p>7.unzip解压缩漏洞<br>解压zip文件，使用getName()获取压缩文件名后未对名称进行校验。<br>风险：通过构造压缩包内路径造成文件任意写</p>
+<h3 id="私有组件"><a href="#私有组件" class="headerlink" title="私有组件"></a>私有组件</h3><p>1.Intent<br>Intent的flag为FLAG_ACTIVITY_NEW_TASK时，该标志新启动一个活动堆栈。<br>风险：如果创建的Activity不是在同一个Task中打开，就很可能被其他的Activity劫持读取到Intent内容</p>
+<p>2.Intent Scheme URL<br>Intent intent = Intent.parseUri(uri)应进行过滤uri，若该uri来自外部的话<br>风险：该url可以通过web页面启动已安装应用的Activity组件，可能发生基于intent的攻击。</p>
+<p>3.本地SQL注入<br>Content Provider时，将组件导出，提供了query接口。输入未有完备的检查。contentResolver.query();<br>风险：使应用私有数据泄露</p>
+<p>4.本地拒绝服务<br>组件响应Intent时未对数据异常处理<br>风险：造成组件崩溃。或其它应用漏洞</p>
+<p>5.Content Provide<br>contentprovider中的openfile接口并未校验输入<br>风险：应用数据泄露</p>
+<p>6.文件权限<br>android.content.Context.openFileOutput()方法来创建文件时MODE_WORLD_XXXXX会使权限为-rw-rw-rxx。<br>风险：造成私有数据泄露，私有目录其它进程也是可以查看的，只不过对应文件需要权限。</p>
+<h3 id="系统无关"><a href="#系统无关" class="headerlink" title="系统无关"></a>系统无关</h3><p>1.协议安全性<br>协议加密是否安全，证书检查是否完备</p>
+<p>2.密匙安全性<br>密匙硬编码，加密算法弱</p>
+<p>3.随机数算法弱等密码学安全问题</p>
+<p>4.含有敏感信息未删除</p>
 
       
     </div>
@@ -411,12 +416,6 @@
           
             <a href="/tags/android/" rel="tag"># android</a>
           
-            <a href="/tags/逆向/" rel="tag"># 逆向</a>
-          
-            <a href="/tags/动态调试/" rel="tag"># 动态调试</a>
-          
-            <a href="/tags/静态分析/" rel="tag"># 静态分析</a>
-          
         </div>
       
 
@@ -428,8 +427,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/21/android系统表层攻击与ROM/" rel="next" title="android系统表层攻击与ROM">
-                <i class="fa fa-chevron-left"></i> android系统表层攻击与ROM
+              <a href="/2018/10/05/android8-0-0源码分析-应用安装2/" rel="next" title="android8-0-0源码分析-应用安装2">
+                <i class="fa fa-chevron-left"></i> android8-0-0源码分析-应用安装2
               </a>
             
           </div>
@@ -437,10 +436,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/25/win下实现简单的android-arm-linux-交叉编译/" rel="prev" title="win下实现简单的android(arm linux)交叉编译">
-                win下实现简单的android(arm linux)交叉编译 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -574,7 +569,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2018-5-24"><span class="nav-number">1.</span> <span class="nav-text">2018.5.24</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Manifest配置相关"><span class="nav-number">2.1.</span> <span class="nav-text">Android Manifest配置相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公共组件"><span class="nav-number">2.2.</span> <span class="nav-text">公共组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#私有组件"><span class="nav-number">2.3.</span> <span class="nav-text">私有组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统无关"><span class="nav-number">2.4.</span> <span class="nav-text">系统无关</span></a></li></ol></li></ol></div>
             
 
           </div>
