@@ -103,7 +103,7 @@
 <meta property="og:description" content="前言补充当系统决定要在一个新的进程中启动一个Activity或者Service时，ActivityManagerService组件负责通知Zygote创建一个新的进程，然后在这个新的进程中启动这个Activity或者Service。 Android应用程序架构中非常核心的一点：MainActivity不需要知道SubActivity的存在，即它不直接拥有SubActivity的接口，但是它可以通过">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/fNDlj1N.jpg">
-<meta property="og:updated_time" content="2018-10-14T08:49:43.995Z">
+<meta property="og:updated_time" content="2018-10-18T15:45:49.107Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android8-0-0源码分析-app启动1">
 <meta name="twitter:description" content="前言补充当系统决定要在一个新的进程中启动一个Activity或者Service时，ActivityManagerService组件负责通知Zygote创建一个新的进程，然后在这个新的进程中启动这个Activity或者Service。 Android应用程序架构中非常核心的一点：MainActivity不需要知道SubActivity的存在，即它不直接拥有SubActivity的接口，但是它可以通过">
@@ -384,6 +384,7 @@
 <p>Binder的四个角色：Server、Client、ServiceManager、Binder驱动。驱动位于内核空间。与互联网类似：服务器、客户端、域名服务器、路由器</p>
 <p><a href="https://blog.csdn.net/universus/article/details/6211589" target="_blank" rel="external">https://blog.csdn.net/universus/article/details/6211589</a></p>
 <p>目前知道：可用于进程间通信，大量用于android各层即可。</p>
+<p>参考文：<br><a href="http://duanqz.github.io/2016-07-29-Activity-LaunchProcess-Part1#%E6%A6%82%E8%BF%B0" target="_blank" rel="external">http://duanqz.github.io/2016-07-29-Activity-LaunchProcess-Part1#%E6%A6%82%E8%BF%B0</a><br>老罗<br>gityuan</p>
 <a id="more"></a>
 <h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h2><p>一张图：<br><img src="https://i.imgur.com/fNDlj1N.jpg" alt=""></p>
 <p>启动部分涉及4个进程：发起进程、system_server进程、Zygote进程、新建进程。<br>本篇我们先看启动部分的前俩个进程的工作，值得注意的是各安装的应用都会有自己的信息记录在AMS中，启动的Task也由其间接管理，对于将要启动的app，它会首先将其信息放入栈中再去执行进程的启动任务。</p>
@@ -476,7 +477,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/10/13/android8-0-0源码分析-app启动2/" rel="prev" title="android8-0-0源码分析-app启动2">
+              <a href="/2018/10/18/android8-0-0源码分析-app启动2/" rel="prev" title="android8-0-0源码分析-app启动2">
                 android8-0-0源码分析-app启动2 <i class="fa fa-chevron-right"></i>
               </a>
             
