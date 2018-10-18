@@ -376,7 +376,8 @@
       
         
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>继续上篇的app启动，本篇将从zygote接受到消息跟到activity启动。<br>下一篇将着重分析应用进程加载代码与资源的过程，并分析实现应用壳的加载方案。</p>
-<p>ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。<br>参考文：<br><a href="http://duanqz.github.io/2016-10-23-Activity-LaunchProcess-Part2#%E6%A6%82%E8%A7%88" target="_blank" rel="external">http://duanqz.github.io/2016-10-23-Activity-LaunchProcess-Part2#%E6%A6%82%E8%A7%88</a><br>gityuan</p>
+<p>ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。</p>
+<p>参考文：<br><a href="http://duanqz.github.io/2016-10-23-Activity-LaunchProcess-Part2#%E6%A6%82%E8%A7%88" target="_blank" rel="external">http://duanqz.github.io/2016-10-23-Activity-LaunchProcess-Part2#%E6%A6%82%E8%A7%88</a><br>gityuan</p>
 <h2 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h2><p><img src="https://i.imgur.com/KO8juQ7.jpg" alt=""></p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -534,6 +535,7 @@
 <p><a href="https://blog.csdn.net/universus/article/details/6211589" target="_blank" rel="external">https://blog.csdn.net/universus/article/details/6211589</a></p>
 <p>目前知道：可用于进程间通信，大量用于android各层即可。</p>
 <p>参考文：<br><a href="http://duanqz.github.io/2016-07-29-Activity-LaunchProcess-Part1#%E6%A6%82%E8%BF%B0" target="_blank" rel="external">http://duanqz.github.io/2016-07-29-Activity-LaunchProcess-Part1#%E6%A6%82%E8%BF%B0</a><br>老罗<br>gityuan</p>
+<p>不得不说<a href="http://duanqz.github.io/" target="_blank" rel="external">http://duanqz.github.io/</a> 这位大佬的博客写的太详细了而且版本很新……接下来尽量都看完<br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/10/13/android8-0-0源码分析-app启动1/#more" rel="contents">

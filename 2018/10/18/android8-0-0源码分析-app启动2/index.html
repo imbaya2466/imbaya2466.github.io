@@ -94,19 +94,19 @@
 
 
 
-<meta name="description" content="前言继续上篇的app启动，本篇将从zygote接受到消息跟到activity启动。下一篇将着重分析应用进程加载代码与资源的过程，并分析实现应用壳的加载方案。 ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。参考文：htt">
+<meta name="description" content="前言继续上篇的app启动，本篇将从zygote接受到消息跟到activity启动。下一篇将着重分析应用进程加载代码与资源的过程，并分析实现应用壳的加载方案。 ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。 参考文：ht">
 <meta name="keywords" content="android系统,app启动">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android8-0-0源码分析-app启动2">
 <meta property="og:url" content="http://yoursite.com/2018/10/18/android8-0-0源码分析-app启动2/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="前言继续上篇的app启动，本篇将从zygote接受到消息跟到activity启动。下一篇将着重分析应用进程加载代码与资源的过程，并分析实现应用壳的加载方案。 ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。参考文：htt">
+<meta property="og:description" content="前言继续上篇的app启动，本篇将从zygote接受到消息跟到activity启动。下一篇将着重分析应用进程加载代码与资源的过程，并分析实现应用壳的加载方案。 ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。 参考文：ht">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/KO8juQ7.jpg">
-<meta property="og:updated_time" content="2018-10-18T15:54:04.194Z">
+<meta property="og:updated_time" content="2018-10-18T16:19:02.872Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android8-0-0源码分析-app启动2">
-<meta name="twitter:description" content="前言继续上篇的app启动，本篇将从zygote接受到消息跟到activity启动。下一篇将着重分析应用进程加载代码与资源的过程，并分析实现应用壳的加载方案。 ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。参考文：htt">
+<meta name="twitter:description" content="前言继续上篇的app启动，本篇将从zygote接受到消息跟到activity启动。下一篇将着重分析应用进程加载代码与资源的过程，并分析实现应用壳的加载方案。 ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。 参考文：ht">
 <meta name="twitter:image" content="https://i.imgur.com/KO8juQ7.jpg">
 
 
@@ -375,7 +375,8 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>继续上篇的app启动，本篇将从zygote接受到消息跟到activity启动。<br>下一篇将着重分析应用进程加载代码与资源的过程，并分析实现应用壳的加载方案。</p>
-<p>ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。<br>参考文：<br><a href="http://duanqz.github.io/2016-10-23-Activity-LaunchProcess-Part2#%E6%A6%82%E8%A7%88" target="_blank" rel="external">http://duanqz.github.io/2016-10-23-Activity-LaunchProcess-Part2#%E6%A6%82%E8%A7%88</a><br>gityuan</p>
+<p>ActivityStarter是Android 7.0新加入的类，它是加载Activity的控制类，会收集所有的逻辑来决定如何将Intent和Flags转换为Activity，并将Activity和Task以及Stack相关联。</p>
+<p>参考文：<br><a href="http://duanqz.github.io/2016-10-23-Activity-LaunchProcess-Part2#%E6%A6%82%E8%A7%88" target="_blank" rel="external">http://duanqz.github.io/2016-10-23-Activity-LaunchProcess-Part2#%E6%A6%82%E8%A7%88</a><br>gityuan</p>
 <h2 id="时序图"><a href="#时序图" class="headerlink" title="时序图"></a>时序图</h2><p><img src="https://i.imgur.com/KO8juQ7.jpg" alt=""></p>
 <a id="more"></a>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="1-zygoteServer-runSelectLoop"><a href="#1-zygoteServer-runSelectLoop" class="headerlink" title="1-zygoteServer.runSelectLoop"></a>1-zygoteServer.runSelectLoop</h3><p>这里进入zygote进程<br>zygoteServer.runSelectLoop<br>位于frameworks\base\core\java\com\android\internal\os\ZygoteServer.java</p>
