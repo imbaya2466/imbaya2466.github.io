@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android系统,classloader," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言本篇继续探索oat文件的加载。先补充些内容： ApplicationThread与Application不同。ActivityThread内mAppThread是一个ApplicationThread类型的Binder对象，它的作用是用来进行进程间通信的。其继承于IApplicationThread.StubApplication是继承ContextWrapper的组件，表示app，同样存于A">
+<meta name="keywords" content="android系统,classloader">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android8-0-0源码分析-app启动3">
+<meta property="og:url" content="http://yoursite.com/2018/10/21/android8-0-0源码分析-app启动3/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言本篇继续探索oat文件的加载。先补充些内容： ApplicationThread与Application不同。ActivityThread内mAppThread是一个ApplicationThread类型的Binder对象，它的作用是用来进行进程间通信的。其继承于IApplicationThread.StubApplication是继承ContextWrapper的组件，表示app，同样存于A">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/Aefzmxw.jpg">
+<meta property="og:updated_time" content="2018-10-21T15:08:22.523Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android8-0-0源码分析-app启动3">
+<meta name="twitter:description" content="前言本篇继续探索oat文件的加载。先补充些内容： ApplicationThread与Application不同。ActivityThread内mAppThread是一个ApplicationThread类型的Binder对象，它的作用是用来进行进程间通信的。其继承于IApplicationThread.StubApplication是继承ContextWrapper的组件，表示app，同样存于A">
+<meta name="twitter:image" content="https://i.imgur.com/Aefzmxw.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/21/android8-0-0源码分析-app启动3/"/>
+
+
+
+
+
+  <title>android8-0-0源码分析-app启动3 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/21/android8-0-0源码分析-app启动3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android8-0-0源码分析-app启动3</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-21T21:37:15+08:00">
+                2018-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇继续探索oat文件的加载。先补充些内容：</p>
+<p>ApplicationThread与Application不同。<br>ActivityThread内mAppThread是一个ApplicationThread类型的Binder对象，它的作用是用来进行进程间通信的。其继承于IApplicationThread.Stub<br>Application是继承ContextWrapper的组件，表示app，同样存于ActivityThread内mInitialApplication全局唯一</p>
+<p>参考文：<br><a href="http://gityuan.com/2017/04/09/android_context/" target="_blank" rel="external">http://gityuan.com/2017/04/09/android_context/</a><br><a href="https://shuwoom.com/?p=142" target="_blank" rel="external">https://shuwoom.com/?p=142</a></p>
+<p>几个关键的类：</p>
+<ol>
+<li>ActivityThread：主线程，通过接受AMS的请求对Activity等组件进行控制。因此可以及时控制app。</li>
+<li>Application：代表app对象，LoadedApk对象存于其中。</li>
+<li>Instrumentation：用来监控系统和应用的交互常用于测试。</li>
+<li>LoadedApk：当前加载的APK包的各种信息</li>
+</ol>
+<a id="more"></a>
+<h2 id="图"><a href="#图" class="headerlink" title="图"></a>图</h2><p><img src="https://i.imgur.com/Aefzmxw.jpg" alt=""><br>有些类的调用比较多因此省略图，但在文中会有体现</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><h3 id="1-handleBindApplication"><a href="#1-handleBindApplication" class="headerlink" title="1-handleBindApplication"></a>1-handleBindApplication</h3><p>handleBindApplication<br>frameworks\base\core\java\android\app\ActivityThread.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div><div class="line">    private void handleBindApplication(AppBindData data) &#123;</div><div class="line">......</div><div class="line"></div><div class="line">		//创建Loadedapk</div><div class="line">        data.info = getPackageInfoNoCheck(data.appInfo, data.compatInfo);</div><div class="line"></div><div class="line">......</div><div class="line">		</div><div class="line">		</div><div class="line">		</div><div class="line">        // Instrumentation info affects the class loader, so load it before</div><div class="line">        // setting up the app context.</div><div class="line">		//这里获取Instrumentation的信息，其实普通包不会声明这个</div><div class="line">        final InstrumentationInfo ii;</div><div class="line">        if (data.instrumentationName != null) &#123;</div><div class="line">            try &#123;</div><div class="line">                ii = new ApplicationPackageManager(null, getPackageManager())</div><div class="line">                        .getInstrumentationInfo(data.instrumentationName, 0);</div><div class="line">            &#125; catch (PackageManager.NameNotFoundException e) &#123;</div><div class="line">                throw new RuntimeException(</div><div class="line">                        &quot;Unable to find instrumentation info for: &quot; + data.instrumentationName);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            mInstrumentationPackageName = ii.packageName;</div><div class="line">            mInstrumentationAppDir = ii.sourceDir;</div><div class="line">            mInstrumentationSplitAppDirs = ii.splitSourceDirs;</div><div class="line">            mInstrumentationLibDir = getInstrumentationLibrary(data.appInfo, ii);</div><div class="line">            mInstrumentedAppDir = data.info.getAppDir();</div><div class="line">            mInstrumentedSplitAppDirs = data.info.getSplitAppDirs();</div><div class="line">            mInstrumentedLibDir = data.info.getLibDir();</div><div class="line">        &#125; else &#123;</div><div class="line">            ii = null;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">		</div><div class="line">		//创建ContextImpl对象</div><div class="line">        final ContextImpl appContext = ContextImpl.createAppContext(this, data.info);</div><div class="line">        updateLocaleListFromAppContext(appContext,</div><div class="line">                mResourcesManager.getConfiguration().getLocales());</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line"></div><div class="line">        // 这里加载Instrumentation。Instrumentation常用于测试，可以在工程文件中自己定义实现。</div><div class="line">		//一般测试的Instrumentation是写在另一个apk中的，因此一般的到这里是null</div><div class="line">        if (ii != null) &#123;</div><div class="line">            final ApplicationInfo instrApp = new ApplicationInfo();</div><div class="line">            ii.copyTo(instrApp);</div><div class="line">            instrApp.initForUser(UserHandle.myUserId());</div><div class="line">            final LoadedApk pi = getPackageInfo(instrApp, data.compatInfo,</div><div class="line">                    appContext.getClassLoader(), false, true, false);</div><div class="line">            final ContextImpl instrContext = ContextImpl.createAppContext(this, pi);</div><div class="line"></div><div class="line">            try &#123;</div><div class="line">                final ClassLoader cl = instrContext.getClassLoader();</div><div class="line">                mInstrumentation = (Instrumentation)</div><div class="line">                    cl.loadClass(data.instrumentationName.getClassName()).newInstance();</div><div class="line">            &#125; catch (Exception e) &#123;</div><div class="line">                throw new RuntimeException(</div><div class="line">                    &quot;Unable to instantiate instrumentation &quot;</div><div class="line">                    + data.instrumentationName + &quot;: &quot; + e.toString(), e);</div><div class="line">            &#125;</div><div class="line">......</div><div class="line"></div><div class="line">        &#125; else &#123;</div><div class="line">			//一般apk执行这里获取默认的Instrumentation</div><div class="line">            mInstrumentation = new Instrumentation();</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">		</div><div class="line">		......</div><div class="line">		</div><div class="line">        try &#123;</div><div class="line">			//创建mInitialApplication并赋给了ActivityThread的默认权限属性  restrictedBackupMode表示是否默认application</div><div class="line">            Application app = data.info.makeApplication(data.restrictedBackupMode, null);</div><div class="line">            mInitialApplication = app;</div><div class="line"></div><div class="line">            // don&apos;t bring up providers in restricted mode; they may depend on the</div><div class="line">            // app&apos;s custom Application class</div><div class="line">            if (!data.restrictedBackupMode) &#123;</div><div class="line">                if (!ArrayUtils.isEmpty(data.providers)) &#123;</div><div class="line">                    installContentProviders(app, data.providers);</div><div class="line">                    // For process that contains content providers, we want to</div><div class="line">                    // ensure that the JIT is enabled &quot;at some point&quot;.</div><div class="line">                    mH.sendEmptyMessageDelayed(H.ENABLE_JIT, 10*1000);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            // Do this after providers, since instrumentation tests generally start their</div><div class="line">            // test thread at this point, and we don&apos;t want that racing.</div><div class="line">            try &#123;</div><div class="line">				//执行测试类的oncreate</div><div class="line">                mInstrumentation.onCreate(data.instrumentationArgs);</div><div class="line">            &#125;</div><div class="line">            catch (Exception e) &#123;</div><div class="line">                throw new RuntimeException(</div><div class="line">                    &quot;Exception thrown in onCreate() of &quot;</div><div class="line">                    + data.instrumentationName + &quot;: &quot; + e.toString(), e);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            try &#123;</div><div class="line">				//执行Application.Create回调</div><div class="line">                mInstrumentation.callApplicationOnCreate(app);</div><div class="line">            &#125; catch (Exception e) &#123;</div><div class="line">......</div><div class="line">            &#125;</div><div class="line">        &#125; finally &#123;</div><div class="line">            StrictMode.setThreadPolicy(savedPolicy);</div><div class="line">        &#125;</div><div class="line">......</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>instrumentation是一种典型的委托观察者模式，用该对象操作活动等可以检测活动。<br>其常用于测试，可在manifest文件中声明，定义。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;instrumentation</div><div class="line">android:name=&quot;android.test.InstrumentationTestRunner&quot;</div><div class="line">android:targetPackage=&quot;com.xuxu.unittest&quot; &gt;</div><div class="line">&lt;/instrumentation&gt;</div></pre></td></tr></table></figure></p>
+<p>从上到下依次看：</p>
+<h3 id="2-getPackageInfoNoCheck"><a href="#2-getPackageInfoNoCheck" class="headerlink" title="2-getPackageInfoNoCheck"></a>2-getPackageInfoNoCheck</h3><p>创建LoadedApk：<br>frameworks\base\core\java\android\app\ActivityThread.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">   public final LoadedApk getPackageInfoNoCheck(ApplicationInfo ai,</div><div class="line">           CompatibilityInfo compatInfo) &#123;</div><div class="line">       return getPackageInfo(ai, compatInfo, null, false, true, false);</div><div class="line">   &#125;</div><div class="line"></div><div class="line">//securityViolation=false,则不进行是否违反隐私的监测;</div><div class="line">//includeCode为true</div><div class="line">//registerPackage=false, 则在获取类加载器(getClassLoader)时,不会将该package添加到当前所在进程的成员变量pkgDeps.</div><div class="line">   private LoadedApk getPackageInfo(ApplicationInfo aInfo, CompatibilityInfo compatInfo,</div><div class="line">           ClassLoader baseLoader, boolean securityViolation, boolean includeCode,</div><div class="line">           boolean registerPackage) &#123;</div><div class="line">       final boolean differentUser = (UserHandle.myUserId() != UserHandle.getUserId(aInfo.uid));</div><div class="line">       synchronized (mResourcesManager) &#123;</div><div class="line">           WeakReference&lt;LoadedApk&gt; ref;</div><div class="line">           if (differentUser) &#123;</div><div class="line">               // Caching not supported across users</div><div class="line">               ref = null;</div><div class="line">           &#125; else if (includeCode) &#123;</div><div class="line">               ref = mPackages.get(aInfo.packageName);</div><div class="line">           &#125; else &#123;</div><div class="line">               ref = mResourcePackages.get(aInfo.packageName);</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           LoadedApk packageInfo = ref != null ? ref.get() : null;</div><div class="line">           if (packageInfo == null || (packageInfo.mResources != null</div><div class="line">                   &amp;&amp; !packageInfo.mResources.getAssets().isUpToDate())) &#123;</div><div class="line"> </div><div class="line"> </div><div class="line">			//创建LoadedApk对象, 此时baseLoader为null</div><div class="line">               packageInfo =</div><div class="line">                   new LoadedApk(this, aInfo, compatInfo, baseLoader,</div><div class="line">                           securityViolation, includeCode &amp;&amp;</div><div class="line">                           (aInfo.flags&amp;ApplicationInfo.FLAG_HAS_CODE) != 0, registerPackage);</div><div class="line">			//系统应用</div><div class="line">               if (mSystemThread &amp;&amp; &quot;android&quot;.equals(aInfo.packageName)) &#123;</div><div class="line">                   packageInfo.installSystemApplicationInfo(aInfo,</div><div class="line">                           getSystemContext().mPackageInfo.getClassLoader());</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               if (differentUser) &#123;</div><div class="line">                   // Caching not supported across users</div><div class="line">               &#125; else if (includeCode) &#123;</div><div class="line">                   mPackages.put(aInfo.packageName,</div><div class="line">                           new WeakReference&lt;LoadedApk&gt;(packageInfo));</div><div class="line">               &#125; else &#123;</div><div class="line">                   mResourcePackages.put(aInfo.packageName,</div><div class="line">                           new WeakReference&lt;LoadedApk&gt;(packageInfo));</div><div class="line">               &#125;</div><div class="line">           &#125;</div><div class="line">           return packageInfo;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>mPackages的数据类型为ArrayMap<string, weakreference="">,记录着每一个包名所对应的LoadedApk对象的弱引用。<br>当mPackages没有找到相应的LoadedApk对象, 则创建该对象并加入到mPackages。这里初次创建。</string,></p>
+<h3 id="4-LoadedApk"><a href="#4-LoadedApk" class="headerlink" title="4-LoadedApk"></a>4-LoadedApk</h3><p>LoadedApk<br>frameworks\base\core\java\android\app\LoadedApk.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line">public final class LoadedApk &#123;</div><div class="line">	static final String TAG = &quot;LoadedApk&quot;;</div><div class="line">    static final boolean DEBUG = false;</div><div class="line"></div><div class="line">    private final ActivityThread mActivityThread;</div><div class="line">    final String mPackageName;</div><div class="line">    private ApplicationInfo mApplicationInfo;</div><div class="line">    private String mAppDir;</div><div class="line">    private String mResDir;</div><div class="line">    private String[] mOverlayDirs;</div><div class="line">    private String[] mSharedLibraries;</div><div class="line">    private String mDataDir;</div><div class="line">    private String mLibDir;</div><div class="line">    private File mDataDirFile;</div><div class="line">    private File mDeviceProtectedDataDirFile;</div><div class="line">    private File mCredentialProtectedDataDirFile;</div><div class="line">    private final ClassLoader mBaseClassLoader;</div><div class="line">    private final boolean mSecurityViolation;</div><div class="line">    private final boolean mIncludeCode;</div><div class="line">    private final boolean mRegisterPackage;</div><div class="line">    private final DisplayAdjustments mDisplayAdjustments = new DisplayAdjustments();</div><div class="line">    /** WARNING: This may change. Don&apos;t hold external references to it. */</div><div class="line">    Resources mResources;</div><div class="line">    private ClassLoader mClassLoader;</div><div class="line">    private Application mApplication;</div><div class="line"></div><div class="line">    private String[] mSplitNames;</div><div class="line">    private String[] mSplitAppDirs;</div><div class="line">    private String[] mSplitResDirs;</div><div class="line"></div><div class="line">    private final ArrayMap&lt;Context, ArrayMap&lt;BroadcastReceiver, ReceiverDispatcher&gt;&gt; mReceivers</div><div class="line">        = new ArrayMap&lt;&gt;();</div><div class="line">    private final ArrayMap&lt;Context, ArrayMap&lt;BroadcastReceiver, LoadedApk.ReceiverDispatcher&gt;&gt; mUnregisteredReceivers</div><div class="line">        = new ArrayMap&lt;&gt;();</div><div class="line">    private final ArrayMap&lt;Context, ArrayMap&lt;ServiceConnection, LoadedApk.ServiceDispatcher&gt;&gt; mServices</div><div class="line">        = new ArrayMap&lt;&gt;();</div><div class="line">    private final ArrayMap&lt;Context, ArrayMap&lt;ServiceConnection, LoadedApk.ServiceDispatcher&gt;&gt; mUnboundServices</div><div class="line">        = new ArrayMap&lt;&gt;();</div><div class="line"></div><div class="line">    int mClientCount = 0;</div><div class="line">    /**</div><div class="line">     * Create information about a new .apk</div><div class="line">     *</div><div class="line">     * NOTE: This constructor is called with ActivityThread&apos;s lock held,</div><div class="line">     * so MUST NOT call back out to the activity manager.</div><div class="line">     */</div><div class="line">    public LoadedApk(ActivityThread activityThread, ApplicationInfo aInfo,</div><div class="line">            CompatibilityInfo compatInfo, ClassLoader baseLoader,//null</div><div class="line">            boolean securityViolation, boolean includeCode, boolean registerPackage) &#123;</div><div class="line"></div><div class="line">        mActivityThread = activityThread;</div><div class="line">        setApplicationInfo(aInfo);</div><div class="line">        mPackageName = aInfo.packageName;</div><div class="line">        mBaseClassLoader = baseLoader;</div><div class="line">        mSecurityViolation = securityViolation;</div><div class="line">        mIncludeCode = includeCode;</div><div class="line">        mRegisterPackage = registerPackage;</div><div class="line">        mDisplayAdjustments.setCompatibilityInfo(compatInfo);</div><div class="line">    &#125;</div><div class="line">    private void setApplicationInfo(ApplicationInfo aInfo) &#123;</div><div class="line">        final int myUid = Process.myUid();</div><div class="line">        aInfo = adjustNativeLibraryPaths(aInfo);</div><div class="line">        mApplicationInfo = aInfo;</div><div class="line">        mAppDir = aInfo.sourceDir;</div><div class="line">        mResDir = aInfo.uid == myUid ? aInfo.sourceDir : aInfo.publicSourceDir;</div><div class="line">        mOverlayDirs = aInfo.resourceDirs;</div><div class="line">        mSharedLibraries = aInfo.sharedLibraryFiles;</div><div class="line">        mDataDir = aInfo.dataDir;</div><div class="line">        mLibDir = aInfo.nativeLibraryDir;</div><div class="line">        mDataDirFile = FileUtils.newFileOrNull(aInfo.dataDir);</div><div class="line">        mDeviceProtectedDataDirFile = FileUtils.newFileOrNull(aInfo.deviceProtectedDataDir);</div><div class="line">        mCredentialProtectedDataDirFile = FileUtils.newFileOrNull(aInfo.credentialProtectedDataDir);</div><div class="line"></div><div class="line">        mSplitNames = aInfo.splitNames;</div><div class="line">        mSplitAppDirs = aInfo.splitSourceDirs;</div><div class="line">        mSplitResDirs = aInfo.uid == myUid ? aInfo.splitSourceDirs : aInfo.splitPublicSourceDirs;</div><div class="line"></div><div class="line">        if (aInfo.requestsIsolatedSplitLoading() &amp;&amp; !ArrayUtils.isEmpty(mSplitNames)) &#123;</div><div class="line">            mSplitLoader = new SplitDependencyLoaderImpl(aInfo.splitDependencies);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>对象的属性赋予。baseLoader为null<br>一个应用程序对应一个LoadedApk对象。它用来保存当前加载的APK包的各种信息，包括app安装路径、资源路径、用户数据保存路径、使用的类加载器、Application信息等。<br>!!这几个值需要打印下看下具体路径!!</p>
+<h3 id="Instrumentation"><a href="#Instrumentation" class="headerlink" title="Instrumentation"></a>Instrumentation</h3><p>默认的Instrumentation：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">   public Instrumentation() &#123;</div><div class="line">   &#125;</div><div class="line"></div><div class="line"></div><div class="line">public void onCreate(Bundle arguments) &#123;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>都是空….因为是测试类要实现的，用于在正常回调前执行。</p>
+<h3 id="7-makeApplication"><a href="#7-makeApplication" class="headerlink" title="7-makeApplication"></a>7-makeApplication</h3><p>data.info.makeApplication<br>frameworks\base\core\java\android\app\LoadedApk.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">  public Application makeApplication(boolean forceDefaultAppClass,</div><div class="line">          Instrumentation instrumentation) &#123;</div><div class="line">      if (mApplication != null) &#123;</div><div class="line">          return mApplication;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;makeApplication&quot;);</div><div class="line"></div><div class="line">      Application app = null;</div><div class="line"></div><div class="line">//默认application或者没有className就用默认的Application</div><div class="line">      String appClass = mApplicationInfo.className;</div><div class="line">      if (forceDefaultAppClass || (appClass == null)) &#123;</div><div class="line">          appClass = &quot;android.app.Application&quot;;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      try &#123;</div><div class="line">	//获取ClassLoader</div><div class="line">          java.lang.ClassLoader cl = getClassLoader();</div><div class="line">          if (!mPackageName.equals(&quot;android&quot;)) &#123;</div><div class="line">              Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER,</div><div class="line">                      &quot;initializeJavaContextClassLoader&quot;);</div><div class="line">              initializeJavaContextClassLoader();</div><div class="line">              Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">          &#125;</div><div class="line">	</div><div class="line">	</div><div class="line">	//创建ContextImpl对象</div><div class="line">          ContextImpl appContext = ContextImpl.createAppContext(mActivityThread, this);</div><div class="line">	//创建Application对象, 并将appContext attach到新创建的Application</div><div class="line">          app = mActivityThread.mInstrumentation.newApplication(</div><div class="line">                  cl, appClass, appContext);</div><div class="line">          appContext.setOuterContext(app);</div><div class="line">      &#125; catch (Exception e) &#123;</div><div class="line">          if (!mActivityThread.mInstrumentation.onException(app, e)) &#123;</div><div class="line">              Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">              throw new RuntimeException(</div><div class="line">                  &quot;Unable to instantiate application &quot; + appClass</div><div class="line">                  + &quot;: &quot; + e.toString(), e);</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line">      mActivityThread.mAllApplications.add(app);</div><div class="line">      mApplication = app;</div><div class="line"></div><div class="line">//这里是null</div><div class="line">      if (instrumentation != null) &#123;</div><div class="line">          try &#123;</div><div class="line">              instrumentation.callApplicationOnCreate(app);</div><div class="line">          &#125; catch (Exception e) &#123;</div><div class="line">              if (!instrumentation.onException(app, e)) &#123;</div><div class="line">                  Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">                  throw new RuntimeException(</div><div class="line">                      &quot;Unable to create application &quot; + app.getClass().getName()</div><div class="line">                      + &quot;: &quot; + e.toString(), e);</div><div class="line">              &#125;</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      // Rewrite the R &apos;constants&apos; for all library apks.</div><div class="line">      SparseArray&lt;String&gt; packageIdentifiers = getAssets().getAssignedPackageIdentifiers();</div><div class="line">      final int N = packageIdentifiers.size();</div><div class="line">      for (int i = 0; i &lt; N; i++) &#123;</div><div class="line">          final int id = packageIdentifiers.keyAt(i);</div><div class="line">          if (id == 0x01 || id == 0x7f) &#123;</div><div class="line">              continue;</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          rewriteRValues(getClassLoader(), packageIdentifiers.valueAt(i), id);</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line"></div><div class="line">      return app;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>LoadedApk中存有应用解析出的各种信息。这里获取ClassLoader、创建ContextImpl对象、创建Application对象并attach。</p>
+<p>顺路把createAppContext看一下<br>frameworks\base\core\java\android\app\ContextImpl.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">    static ContextImpl createAppContext(ActivityThread mainThread, LoadedApk packageInfo) &#123;</div><div class="line">        if (packageInfo == null) throw new IllegalArgumentException(&quot;packageInfo&quot;);</div><div class="line">        ContextImpl context = new ContextImpl(null, mainThread, packageInfo, null, null, null, 0,</div><div class="line">                null);</div><div class="line">        context.setResources(packageInfo.getResources());</div><div class="line">        return context;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">	private ContextImpl(@Nullable ContextImpl container, @NonNull ActivityThread mainThread,</div><div class="line">            @NonNull LoadedApk packageInfo, @Nullable String splitName,</div><div class="line">            @Nullable IBinder activityToken, @Nullable UserHandle user, int flags,</div><div class="line">            @Nullable ClassLoader classLoader) &#123;</div><div class="line">        mOuterContext = this;//ContextImpl对象</div><div class="line"></div><div class="line">......</div><div class="line"></div><div class="line">        mMainThread = mainThread; // ActivityThread赋值</div><div class="line">        mActivityToken = activityToken;</div><div class="line">        mFlags = flags;</div><div class="line"></div><div class="line">        if (user == null) &#123;</div><div class="line">            user = Process.myUserHandle();</div><div class="line">        &#125;</div><div class="line">        mUser = user;</div><div class="line"></div><div class="line">        mPackageInfo = packageInfo;// LoadedApk赋值</div><div class="line">        mSplitName = splitName;</div><div class="line">        mClassLoader = classLoader;</div><div class="line">        mResourcesManager = ResourcesManager.getInstance();</div><div class="line"></div><div class="line">        if (container != null) &#123;</div><div class="line">.....</div><div class="line">        &#125; else &#123;</div><div class="line">            mBasePackageName = packageInfo.mPackageName;</div><div class="line">            ApplicationInfo ainfo = packageInfo.getApplicationInfo();</div><div class="line">            if (ainfo.uid == Process.SYSTEM_UID &amp;&amp; ainfo.uid != Process.myUid()) &#123;</div><div class="line">                // Special case: system components allow themselves to be loaded in to other</div><div class="line">                // processes.  For purposes of app ops, we must then consider the context as</div><div class="line">                // belonging to the package of this process, not the system itself, otherwise</div><div class="line">                // the package+uid verifications in app ops will fail.</div><div class="line">                mOpPackageName = ActivityThread.currentPackageName();</div><div class="line">            &#125; else &#123;</div><div class="line">                mOpPackageName = mBasePackageName;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        mContentResolver = new ApplicationContentResolver(this, mainThread, user);</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">	final void setOuterContext(Context context) &#123;</div><div class="line">        mOuterContext = context;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>到此为止简单总结下Context是什么。通过其使用与构造可以看出就是如其所意：上下文，存储着运行环境的相关信息。并设定其运行场景可执行的不同方法。<br>ContextImpl:<br>Application/Activity/Service通过attach() 调用父类ContextWrapper的attachBaseContext(), 从而设置父类成员变量mBase为ContextImpl对象;<br>ContextWrapper的核心工作都是交给mBase(即ContextImpl)来完成;</p>
+<h3 id="13-newApplication"><a href="#13-newApplication" class="headerlink" title="13-newApplication"></a>13-newApplication</h3><p>mInstrumentation.newApplication<br>frameworks\base\core\java\android\app\Instrumentation.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">  public Application newApplication(ClassLoader cl, String className, Context context)</div><div class="line">          throws InstantiationException, IllegalAccessException, </div><div class="line">          ClassNotFoundException &#123;</div><div class="line">      return newApplication(cl.loadClass(className), context);</div><div class="line">  &#125;</div><div class="line">	</div><div class="line">   static public Application newApplication(Class&lt;?&gt; clazz, Context context)</div><div class="line">          throws InstantiationException, IllegalAccessException, </div><div class="line">          ClassNotFoundException &#123;</div><div class="line">		</div><div class="line">		//反射创建对象</div><div class="line">      Application app = (Application)clazz.newInstance();</div><div class="line">//这里执行力application的第一个方法！attach！</div><div class="line">      app.attach(context);</div><div class="line">      return app;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>通过classloader加载类创建对象。</p>
+<p>frameworks\base\core\java\android\app\Application.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">    /* package */ final void attach(Context context) &#123;</div><div class="line">        attachBaseContext(context);</div><div class="line">        mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;</div><div class="line">    &#125;</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">//D:\androidwsp\android8.0.0_r1\android-8.0.0_r1\frameworks\base\core\java\android\content\ContextWrapper.java</div><div class="line">	protected void attachBaseContext(Context base) &#123;</div><div class="line">        if (mBase != null) &#123;</div><div class="line">            throw new IllegalStateException(&quot;Base context already set&quot;);</div><div class="line">        &#125;</div><div class="line">        mBase = base;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>将新创建的ContextImpl对象保存到Application的父类成员变量mBase;</li>
+<li>将当前所在的LoadedApk对象保存到Application的父员变量mLoadedApk;</li>
+</ol>
+<p>保护时常重写attachBaseContext方法！！！！！！！</p>
+<h3 id="9-createOrUpdateClassLoaderLocked"><a href="#9-createOrUpdateClassLoaderLocked" class="headerlink" title="9-createOrUpdateClassLoaderLocked"></a>9-createOrUpdateClassLoaderLocked</h3><p>getClassLoader<br>frameworks\base\core\java\android\app\LoadedApk.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">  public ClassLoader getClassLoader() &#123;</div><div class="line">      synchronized (this) &#123;</div><div class="line">	//到这里确实是null，mClassLoader存于LoadedApk对象中</div><div class="line">          if (mClassLoader == null) &#123;</div><div class="line">              createOrUpdateClassLoaderLocked(null /*addedPaths*/);</div><div class="line">          &#125;</div><div class="line">          return mClassLoader;</div><div class="line">      &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">	</div><div class="line">	</div><div class="line">  private void createOrUpdateClassLoaderLocked(List&lt;String&gt; addedPaths) &#123;</div><div class="line">//系统应用</div><div class="line">      if (mPackageName.equals(&quot;android&quot;)) &#123;</div><div class="line">          // Note: This branch is taken for system server and we don&apos;t need to setup</div><div class="line">          // jit profiling support.</div><div class="line">          if (mClassLoader != null) &#123;</div><div class="line">              // nothing to update</div><div class="line">              return;</div><div class="line">          &#125;</div><div class="line">	//mBaseClassLoader=null</div><div class="line">          if (mBaseClassLoader != null) &#123;</div><div class="line">              mClassLoader = mBaseClassLoader;</div><div class="line">          &#125; else &#123;</div><div class="line">              mClassLoader = ClassLoader.getSystemClassLoader();</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          return;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      // Avoid the binder call when the package is the current application package.</div><div class="line">      // The activity manager will perform ensure that dexopt is performed before</div><div class="line">      // spinning up the process.</div><div class="line">//当包不是当前的应用程序包时</div><div class="line">      if (!Objects.equals(mPackageName, ActivityThread.currentPackageName()) &amp;&amp; mIncludeCode) &#123;</div><div class="line">          try &#123;</div><div class="line">              ActivityThread.getPackageManager().notifyPackageUse(mPackageName,</div><div class="line">                      PackageManager.NOTIFY_PACKAGE_USE_CROSS_PACKAGE);</div><div class="line">          &#125; catch (RemoteException re) &#123;</div><div class="line">              throw re.rethrowFromSystemServer();</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      if (mRegisterPackage) &#123;</div><div class="line">          try &#123;</div><div class="line">              ActivityManager.getService().addPackageDependency(mPackageName);</div><div class="line">          &#125; catch (RemoteException e) &#123;</div><div class="line">              throw e.rethrowFromSystemServer();</div><div class="line">          &#125;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      // Lists for the elements of zip/code and native libraries.</div><div class="line">      //</div><div class="line">      // Both lists are usually not empty. We expect on average one APK for the zip component,</div><div class="line">      // but shared libraries and splits are not uncommon. We expect at least three elements</div><div class="line">      // for native libraries (app-based, system, vendor). As such, give both some breathing</div><div class="line">      // space and initialize to a small value (instead of incurring growth code).</div><div class="line">      final List&lt;String&gt; zipPaths = new ArrayList&lt;&gt;(10);</div><div class="line">      final List&lt;String&gt; libPaths = new ArrayList&lt;&gt;(10);</div><div class="line"></div><div class="line">      final boolean isBundledApp = mApplicationInfo.isSystemApp()</div><div class="line">              &amp;&amp; !mApplicationInfo.isUpdatedSystemApp();</div><div class="line"></div><div class="line">//这里添加data/app/xxx/下的目录</div><div class="line">      makePaths(mActivityThread, isBundledApp, mApplicationInfo, zipPaths, libPaths);</div><div class="line"></div><div class="line">      String libraryPermittedPath = mDataDir;</div><div class="line">      if (isBundledApp) &#123;</div><div class="line">          // This is necessary to grant bundled apps access to</div><div class="line">          // libraries located in subdirectories of /system/lib</div><div class="line">          libraryPermittedPath += File.pathSeparator +</div><div class="line">                                  System.getProperty(&quot;java.library.path&quot;);</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      final String librarySearchPath = TextUtils.join(File.pathSeparator, libPaths);</div><div class="line"></div><div class="line">      // If we&apos;re not asked to include code, we construct a classloader that has</div><div class="line">      // no code path included. We still need to set up the library search paths</div><div class="line">      // and permitted path because NativeActivity relies on it (it attempts to</div><div class="line">      // call System.loadLibrary() on a classloader from a LoadedApk with</div><div class="line">      // mIncludeCode == false).</div><div class="line">//不含代码执行</div><div class="line">      if (!mIncludeCode) &#123;</div><div class="line">          if (mClassLoader == null) &#123;</div><div class="line">              StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();</div><div class="line">              mClassLoader = ApplicationLoaders.getDefault().getClassLoader(</div><div class="line">                  &quot;&quot; /* codePath */, mApplicationInfo.targetSdkVersion, isBundledApp,</div><div class="line">                  librarySearchPath, libraryPermittedPath, mBaseClassLoader);</div><div class="line">              StrictMode.setThreadPolicy(oldPolicy);</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          return;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      /*</div><div class="line">       * With all the combination done (if necessary, actually create the java class</div><div class="line">       * loader and set up JIT profiling support if necessary.</div><div class="line">       *</div><div class="line">       * In many cases this is a single APK, so try to avoid the StringBuilder in TextUtils.</div><div class="line">       */</div><div class="line"> //这个就是app需要加载的文件目录了</div><div class="line">      final String zip = (zipPaths.size() == 1) ? zipPaths.get(0) :</div><div class="line">              TextUtils.join(File.pathSeparator, zipPaths);</div><div class="line"></div><div class="line">      if (DEBUG) Slog.v(ActivityThread.TAG, &quot;Class path: &quot; + zip +</div><div class="line">                  &quot;, JNI path: &quot; + librarySearchPath);</div><div class="line"></div><div class="line">      boolean needToSetupJitProfiles = false;</div><div class="line"></div><div class="line">//这里是应用调用的地方</div><div class="line">      if (mClassLoader == null) &#123;</div><div class="line">          // Temporarily disable logging of disk reads on the Looper thread</div><div class="line">          // as this is early and necessary.</div><div class="line">          StrictMode.ThreadPolicy oldPolicy = StrictMode.allowThreadDiskReads();</div><div class="line"></div><div class="line">          mClassLoader = ApplicationLoaders.getDefault().getClassLoader(zip,</div><div class="line">                  mApplicationInfo.targetSdkVersion, isBundledApp, librarySearchPath,</div><div class="line">                  libraryPermittedPath, mBaseClassLoader);</div><div class="line"></div><div class="line">          StrictMode.setThreadPolicy(oldPolicy);</div><div class="line">          // Setup the class loader paths for profiling.</div><div class="line">          needToSetupJitProfiles = true;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      if (addedPaths != null &amp;&amp; addedPaths.size() &gt; 0) &#123;</div><div class="line">          final String add = TextUtils.join(File.pathSeparator, addedPaths);</div><div class="line">          ApplicationLoaders.getDefault().addPath(mClassLoader, add);</div><div class="line">          // Setup the new code paths for profiling.</div><div class="line">          needToSetupJitProfiles = true;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      // Setup jit profile support.</div><div class="line">      //</div><div class="line">      // It is ok to call this multiple times if the application gets updated with new splits.</div><div class="line">      // The runtime only keeps track of unique code paths and can handle re-registration of</div><div class="line">      // the same code path. There&apos;s no need to pass `addedPaths` since any new code paths</div><div class="line">      // are already in `mApplicationInfo`.</div><div class="line">      //</div><div class="line">      // It is NOT ok to call this function from the system_server (for any of the packages it</div><div class="line">      // loads code from) so we explicitly disallow it there.</div><div class="line">      if (needToSetupJitProfiles &amp;&amp; !ActivityThread.isSystem()) &#123;</div><div class="line">          setupJitProfileSupport();</div><div class="line">      &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>在这里mClassLoader为null，第三方应用且includecode为true，经过判断各项包的属性进入：<br>mClassLoader = ApplicationLoaders.getDefault().getClassLoader(zip,mApplicationInfo.targetSdkVersion, isBundledApp, librarySearchPath,libraryPermittedPath, mBaseClassLoader);</p>
+<h3 id="10-getClassLoader"><a href="#10-getClassLoader" class="headerlink" title="10-getClassLoader"></a>10-getClassLoader</h3><p>frameworks\base\core\java\android\app\ApplicationLoaders.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">private final ArrayMap&lt;String, ClassLoader&gt; mLoaders = new ArrayMap&lt;String, ClassLoader&gt;();</div><div class="line">private static final ApplicationLoaders gApplicationLoaders = new ApplicationLoaders();//默认构造函数</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">   public static ApplicationLoaders getDefault() &#123;</div><div class="line">       return gApplicationLoaders;</div><div class="line">   &#125;</div><div class="line"></div><div class="line"></div><div class="line">ClassLoader getClassLoader(String zip, int targetSdkVersion, boolean isBundled,</div><div class="line">                              String librarySearchPath, String libraryPermittedPath,</div><div class="line">                              ClassLoader parent) &#123;</div><div class="line">       // For normal usage the cache key used is the same as the zip path.</div><div class="line">       return getClassLoader(zip, targetSdkVersion, isBundled, librarySearchPath,</div><div class="line">                             libraryPermittedPath, parent, zip);</div><div class="line">   &#125;</div><div class="line"></div><div class="line"></div><div class="line">   private ClassLoader getClassLoader(String zip, int targetSdkVersion, boolean isBundled,</div><div class="line">                                      String librarySearchPath, String libraryPermittedPath,</div><div class="line">                                      ClassLoader parent, String cacheKey) &#123;</div><div class="line">       /*</div><div class="line">        * This is the parent we use if they pass &quot;null&quot; in.  In theory</div><div class="line">        * this should be the &quot;system&quot; class loader; in practice we</div><div class="line">        * don&apos;t use that and can happily (and more efficiently) use the</div><div class="line">        * bootstrap class loader.</div><div class="line">        */</div><div class="line">	//这里获取的是：</div><div class="line">	/*</div><div class="line">	private static ClassLoader createSystemClassLoader() &#123;</div><div class="line">	//获取默认的path</div><div class="line">       String classPath = System.getProperty(&quot;java.class.path&quot;, &quot;.&quot;);</div><div class="line">       String librarySearchPath = System.getProperty(&quot;java.library.path&quot;, &quot;&quot;);</div><div class="line">	//构造了一个PathClassLoader，父用BootClassLoader</div><div class="line">       return new PathClassLoader(classPath, librarySearchPath, BootClassLoader.getInstance());//BootClassLoader是静态唯一的。</div><div class="line">   &#125;</div><div class="line">	</div><div class="line">	*/</div><div class="line">       ClassLoader baseParent = ClassLoader.getSystemClassLoader().getParent();</div><div class="line"></div><div class="line">       synchronized (mLoaders) &#123;</div><div class="line">           if (parent == null) &#123;</div><div class="line">               parent = baseParent;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           /*</div><div class="line">            * If we&apos;re one step up from the base class loader, find</div><div class="line">            * something in our cache.  Otherwise, we create a whole</div><div class="line">            * new ClassLoader for the zip archive.</div><div class="line">            */</div><div class="line">           if (parent == baseParent) &#123;</div><div class="line">			</div><div class="line">			//以前没存过</div><div class="line">               ClassLoader loader = mLoaders.get(cacheKey);</div><div class="line">               if (loader != null) &#123;</div><div class="line">                   return loader;</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, zip);</div><div class="line"></div><div class="line">               PathClassLoader pathClassloader = PathClassLoaderFactory.createClassLoader(</div><div class="line">                                                     zip,</div><div class="line">                                                     librarySearchPath,</div><div class="line">                                                     libraryPermittedPath,</div><div class="line">                                                     parent,</div><div class="line">                                                     targetSdkVersion,</div><div class="line">                                                     isBundled);</div><div class="line"></div><div class="line">               Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line"></div><div class="line">               Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;setupVulkanLayerPath&quot;);</div><div class="line">               setupVulkanLayerPath(pathClassloader, librarySearchPath);</div><div class="line">               Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line"></div><div class="line">               mLoaders.put(cacheKey, pathClassloader);</div><div class="line">               return pathClassloader;</div><div class="line">           &#125;</div><div class="line"></div><div class="line">           Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, zip);</div><div class="line">           PathClassLoader pathClassloader = new PathClassLoader(zip, parent);</div><div class="line">           Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line">           return pathClassloader;</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>从缓存中获取，没有的话就新建并添加缓存，parent为默认创建的PathClassLoader</p>
+<h3 id="11-createClassLoader"><a href="#11-createClassLoader" class="headerlink" title="11-createClassLoader"></a>11-createClassLoader</h3><p>createClassLoader<br>frameworks\base\core\java\com\android\internal\os\PathClassLoaderFactory.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">   public static PathClassLoader createClassLoader(String dexPath,</div><div class="line">                                                   String librarySearchPath,</div><div class="line">                                                   String libraryPermittedPath,</div><div class="line">                                                   ClassLoader parent,</div><div class="line">                                                   int targetSdkVersion,</div><div class="line">                                                   boolean isNamespaceShared) &#123;</div><div class="line">													</div><div class="line">														//需要加载的文件目录，lib，父</div><div class="line">       PathClassLoader pathClassloader = new PathClassLoader(dexPath, librarySearchPath, parent);</div><div class="line"></div><div class="line">       Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, &quot;createClassloaderNamespace&quot;);</div><div class="line">       String errorMessage = createClassloaderNamespace(pathClassloader,</div><div class="line">                                                        targetSdkVersion,</div><div class="line">                                                        librarySearchPath,</div><div class="line">                                                        libraryPermittedPath,</div><div class="line">                                                        isNamespaceShared);</div><div class="line">       Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line"></div><div class="line">       if (errorMessage != null) &#123;</div><div class="line">           throw new UnsatisfiedLinkError(&quot;Unable to create namespace for the classloader &quot; +</div><div class="line">                                          pathClassloader + &quot;: &quot; + errorMessage);</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       return pathClassloader;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">private static native String createClassloaderNamespace(ClassLoader classLoader,</div><div class="line">                                                           int targetSdkVersion,</div><div class="line">                                                           String librarySearchPath,</div><div class="line">                                                           String libraryPermittedPath,</div><div class="line">                                                           boolean isNamespaceShared);</div></pre></td></tr></table></figure></p>
+<p>正式创建PathClassLoader就在这里。</p>
+<h3 id="15-callApplicationOnCreate"><a href="#15-callApplicationOnCreate" class="headerlink" title="15-callApplicationOnCreate"></a>15-callApplicationOnCreate</h3><p>frameworks\base\core\java\android\app\Instrumentation.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public void callApplicationOnCreate(Application app) &#123;</div><div class="line">    app.onCreate();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>android架构逐渐明朗，ActivityThread受到AMS的BindApplication命令后，用AMS传来的应用信息创建LoadedApk，application，Instrumentation等单例对象。<br>重点放在classloader的创建和类查找执行上，下一篇进入classloader。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android系统/" rel="tag"># android系统</a>
+          
+            <a href="/tags/classloader/" rel="tag"># classloader</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/18/android8-0-0源码分析-app启动2/" rel="next" title="android8-0-0源码分析-app启动2">
+                <i class="fa fa-chevron-left"></i> android8-0-0源码分析-app启动2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/21/android8-0-0源码分析-classloader1/" rel="prev" title="android8-0-0源码分析-classloader1">
+                android8-0-0源码分析-classloader1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图"><span class="nav-number">2.</span> <span class="nav-text">图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码"><span class="nav-number">3.</span> <span class="nav-text">源码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-handleBindApplication"><span class="nav-number">3.1.</span> <span class="nav-text">1-handleBindApplication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-getPackageInfoNoCheck"><span class="nav-number">3.2.</span> <span class="nav-text">2-getPackageInfoNoCheck</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-LoadedApk"><span class="nav-number">3.3.</span> <span class="nav-text">4-LoadedApk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instrumentation"><span class="nav-number">3.4.</span> <span class="nav-text">Instrumentation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-makeApplication"><span class="nav-number">3.5.</span> <span class="nav-text">7-makeApplication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-newApplication"><span class="nav-number">3.6.</span> <span class="nav-text">13-newApplication</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-createOrUpdateClassLoaderLocked"><span class="nav-number">3.7.</span> <span class="nav-text">9-createOrUpdateClassLoaderLocked</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-getClassLoader"><span class="nav-number">3.8.</span> <span class="nav-text">10-getClassLoader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-createClassLoader"><span class="nav-number">3.9.</span> <span class="nav-text">11-createClassLoader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-callApplicationOnCreate"><span class="nav-number">3.10.</span> <span class="nav-text">15-callApplicationOnCreate</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">4.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
