@@ -375,9 +375,27 @@
 
       
         
-          
-            <a id="more"></a>
-          
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇开始分析classloader。</p>
+<p>参考：<br><a href="https://blog.csdn.net/itachi85/article/details/78088701" target="_blank" rel="external">https://blog.csdn.net/itachi85/article/details/78088701</a><br><a href="https://blog.csdn.net/itachi85/article/details/78276837?utm_source=blogxgwz0" target="_blank" rel="external">https://blog.csdn.net/itachi85/article/details/78276837?utm_source=blogxgwz0</a><br><a href="http://gityuan.com/2017/03/19/android-classloader/" target="_blank" rel="external">http://gityuan.com/2017/03/19/android-classloader/</a><br><a href="https://www.jianshu.com/p/2f9b1d8be88d" target="_blank" rel="external">https://www.jianshu.com/p/2f9b1d8be88d</a><br><a href="https://www.jianshu.com/p/3912c05d257e" target="_blank" rel="external">https://www.jianshu.com/p/3912c05d257e</a><br><a href="https://www.jianshu.com/p/20dcfcf27004" target="_blank" rel="external">https://www.jianshu.com/p/20dcfcf27004</a><br><a href="https://www.jianshu.com/p/b89d0b03e82c" target="_blank" rel="external">https://www.jianshu.com/p/b89d0b03e82c</a></p>
+<h2 id="jvm"><a href="#jvm" class="headerlink" title="jvm"></a>jvm</h2><p>先从java虚拟机的类加载器讲起。以后再补java虚拟机的规范。</p>
+<p>java虚拟机的系统加载器有：</p>
+<p>Bootstrap ClassLoader（引导类加载器）<br>用C/C++代码实现的加载器，用于加载指定的JDK的核心类库，比如java.lang.、java.uti.等这些系统类。它用来加载以下目录中的类库：<br>$JAVA_HOME/jre/lib目录<br>-Xbootclasspath参数指定的目录<br>Java虚拟机的启动就是通过引导类加载器创建一个初始类来完成的。由于类加载器是使用平台相关的底层C/C++语言实现的， 所以该加载器不能被Java代码访问到。但是我们可以查询某个类是否被引导类加载器加载过。</p>
+<p>Extensions ClassLoader（拓展类加载器）<br>用于加载 Java 的拓展类 ，用来提供除了系统类之外的额外功能。它用来加载以下目录中的类库：<br>加载$JAVA_HOME/jre/lib/ext目录<br>系统属性java.ext.dir所指定的目录。</p>
+<p>Application ClassLoader（应用程序类加载器）<br>又称作System ClassLoader(系统类加载器)，这是因为这个类加载器可以通过ClassLoader的getSystemClassLoader方法获取到。它用来加载以下目录中的类库：<br>当前应用程序Classpath目录<br>系统属性java.class.path指定的目录</p>
+<p>用户自定义加载器，则是通过继承 java.lang.ClassLoader类的方式来实现自己的类加载器。<br>除了 Bootstrap ClassLoader，Extensions ClassLoader和App ClassLoader也继承了java.lang.ClassLoader类。</p>
+<p>类加载器查找Class所采用的是双亲委托模式，所谓双亲委托模式就是首先判断该Class是否已经加载，如果没有则不是自身去查找而是委托给父加载器进行查找，这样依次的进行递归，直到委托到最顶层的Bootstrap ClassLoader，如果Bootstrap ClassLoader找到了该Class，就会直接返回，如果没找到，则继续依次向下查找，如果还没找到则最后会交由自身去查找。<br>其父都是创建时存储的。</p>
+<p>采取双亲委托模式主要有两点好处： </p>
+<ol>
+<li>避免重复加载，如果已经加载过一次Class，就不需要再次加载，而是先从缓存中直接读取。 </li>
+<li>更加安全，如果不使用双亲委托模式，就可以自定义一个String类来替代系统的String类，这显然会造成安全隐患，采用双亲委托模式会使得系统的String类在Java虚拟机启动时就被加载，也就无法自定义String类来替代系统的String类，除非我们修改 类加载器搜索类的默认算法。还有一点，只有两个类名一致并且被同一个类加载器加载的类，Java虚拟机才会认为它们是同一个类，想要骗过Java虚拟机显然不会那么容易。</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/10/21/android8-0-0源码分析-classloader1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

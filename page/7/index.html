@@ -1541,8 +1541,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/c/" itemprop="url" rel="index">
-                    <span itemprop="name">c#</span>
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
                   </a>
                 </span>
 
@@ -1580,7 +1580,9 @@
       
         
           
-            <h4 id="传统的对象创建过程："><a href="#传统的对象创建过程：" class="headerlink" title="传统的对象创建过程："></a>传统的对象创建过程：</h4><ol>
+            <h3 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h3><p>static内部类属于外部类的class内，而非静态内部类属于外部类的对象内。因为在其内所以访问范围等同于其内的方法，互相之间private可访问，原因就是互相提供静态方法同时内部对象含有外部的引用（深入字节码）<br>OutClassTest类有个叫InnerClass的内部类（非静态）<br>俩个类的外部使用：<br>OutClassTest oc1 = new OutClassTest();<br>OutClassTest.InnerClass no_static_inner = oc1.new InnerClass();<br>俩个类的内部使用：<br>InnerClass innerObj = new InnerClass();<br>sch就是School的一个对象。<br>假如School是内部静态类：<br>Student.School sch = new Student.School();</p>
+<p><a href="https://blog.csdn.net/Hacker_ZhiDian/article/details/82193100" target="_blank" rel="external">https://blog.csdn.net/Hacker_ZhiDian/article/details/82193100</a></p>
+<h4 id="传统的对象创建过程："><a href="#传统的对象创建过程：" class="headerlink" title="传统的对象创建过程："></a>传统的对象创建过程：</h4><ol>
 <li>类实现接口</li>
 <li>new类创建对象</li>
 <li>对象传入目标使用</li>
