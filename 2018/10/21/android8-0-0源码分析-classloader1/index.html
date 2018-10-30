@@ -104,7 +104,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/Snnsa4W.jpg">
 <meta property="og:image" content="https://i.imgur.com/ua21akv.jpg">
-<meta property="og:updated_time" content="2018-10-23T15:16:10.374Z">
+<meta property="og:updated_time" content="2018-10-24T12:01:56.660Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android8-0-0源码分析-classloader1">
 <meta name="twitter:description" content="前言本篇开始分析classloader。 参考：https://blog.csdn.net/itachi85/article/details/78088701https://blog.csdn.net/itachi85/article/details/78276837?utm_source=blogxgwz0http://gityuan.com/2017/03/19/android-classlo">
@@ -376,7 +376,7 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇开始分析classloader。</p>
-<p>参考：<br><a href="https://blog.csdn.net/itachi85/article/details/78088701" target="_blank" rel="external">https://blog.csdn.net/itachi85/article/details/78088701</a><br><a href="https://blog.csdn.net/itachi85/article/details/78276837?utm_source=blogxgwz0" target="_blank" rel="external">https://blog.csdn.net/itachi85/article/details/78276837?utm_source=blogxgwz0</a><br><a href="http://gityuan.com/2017/03/19/android-classloader/" target="_blank" rel="external">http://gityuan.com/2017/03/19/android-classloader/</a><br><a href="https://www.jianshu.com/p/2f9b1d8be88d" target="_blank" rel="external">https://www.jianshu.com/p/2f9b1d8be88d</a><br><a href="https://www.jianshu.com/p/3912c05d257e" target="_blank" rel="external">https://www.jianshu.com/p/3912c05d257e</a><br><a href="https://www.jianshu.com/p/20dcfcf27004" target="_blank" rel="external">https://www.jianshu.com/p/20dcfcf27004</a><br><a href="https://www.jianshu.com/p/b89d0b03e82c" target="_blank" rel="external">https://www.jianshu.com/p/b89d0b03e82c</a></p>
+<p>参考：<br><a href="https://blog.csdn.net/itachi85/article/details/78088701" target="_blank" rel="external">https://blog.csdn.net/itachi85/article/details/78088701</a><br><a href="https://blog.csdn.net/itachi85/article/details/78276837?utm_source=blogxgwz0" target="_blank" rel="external">https://blog.csdn.net/itachi85/article/details/78276837?utm_source=blogxgwz0</a><br><a href="http://gityuan.com/2017/03/19/android-classloader/" target="_blank" rel="external">http://gityuan.com/2017/03/19/android-classloader/</a><br><a href="https://www.jianshu.com/p/2f9b1d8be88d" target="_blank" rel="external">https://www.jianshu.com/p/2f9b1d8be88d</a><br><a href="https://www.jianshu.com/p/3912c05d257e" target="_blank" rel="external">https://www.jianshu.com/p/3912c05d257e</a><br><a href="https://www.jianshu.com/p/20dcfcf27004" target="_blank" rel="external">https://www.jianshu.com/p/20dcfcf27004</a><br><a href="https://www.jianshu.com/p/b89d0b03e82c" target="_blank" rel="external">https://www.jianshu.com/p/b89d0b03e82c</a><br><a href="http://liwenkun.me/2016/11/11/android-load-class-dynamically/" target="_blank" rel="external">http://liwenkun.me/2016/11/11/android-load-class-dynamically/</a></p>
 <h2 id="jvm"><a href="#jvm" class="headerlink" title="jvm"></a>jvm</h2><p>先从java虚拟机的类加载器讲起。以后再补java虚拟机的规范。</p>
 <p>java虚拟机的系统加载器有：</p>
 <p>Bootstrap ClassLoader（引导类加载器）<br>用C/C++代码实现的加载器，用于加载指定的JDK的核心类库，比如java.lang.、java.uti.等这些系统类。它用来加载以下目录中的类库：<br>$JAVA_HOME/jre/lib目录<br>-Xbootclasspath参数指定的目录<br>Java虚拟机的启动就是通过引导类加载器创建一个初始类来完成的。由于类加载器是使用平台相关的底层C/C++语言实现的， 所以该加载器不能被Java代码访问到。但是我们可以查询某个类是否被引导类加载器加载过。</p>
@@ -491,6 +491,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/10/30/apk自动化加固1/" rel="prev" title="apk自动化加固1">
+                apk自动化加固1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -566,7 +570,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-count">74</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -577,7 +581,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -588,7 +592,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-count">67</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

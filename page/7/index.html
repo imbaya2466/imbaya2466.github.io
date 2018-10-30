@@ -283,6 +283,148 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/java-netty-文件服务器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/12/java-netty-文件服务器/" itemprop="url">java-netty-文件服务器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T18:18:31+08:00">
+                2018-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="原本是基于netty的java文件服务器，采用http协议，后在学习web时不断升级完善中"><a href="#原本是基于netty的java文件服务器，采用http协议，后在学习web时不断升级完善中" class="headerlink" title="原本是基于netty的java文件服务器，采用http协议，后在学习web时不断升级完善中"></a>原本是基于netty的java文件服务器，采用http协议，后在学习web时不断升级完善中</h2><p>2018.7.21：<br>asm工具可以用代码手动构造class文件。jadx原理就是先用smali解码dex，之后解析smali代码，用asm生成class文件，反编译成java。<br>javaweb中也使用asm。实现自定义语法生成class文件，可以把页面和后台代码一起写，后用程序处理访问时读取，分离，用asm生成class，动态加载，反射调用，提供服务。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div><div class="line">369</div><div class="line">370</div><div class="line">371</div><div class="line">372</div><div class="line">373</div><div class="line">374</div><div class="line">375</div><div class="line">376</div><div class="line">377</div><div class="line">378</div><div class="line">379</div><div class="line">380</div><div class="line">381</div><div class="line">382</div><div class="line">383</div><div class="line">384</div><div class="line">385</div><div class="line">386</div><div class="line">387</div><div class="line">388</div><div class="line">389</div><div class="line">390</div><div class="line">391</div><div class="line">392</div><div class="line">393</div><div class="line">394</div><div class="line">395</div><div class="line">396</div><div class="line">397</div><div class="line">398</div><div class="line">399</div><div class="line">400</div><div class="line">401</div><div class="line">402</div><div class="line">403</div><div class="line">404</div><div class="line">405</div><div class="line">406</div><div class="line">407</div><div class="line">408</div><div class="line">409</div><div class="line">410</div><div class="line">411</div><div class="line">412</div><div class="line">413</div><div class="line">414</div><div class="line">415</div><div class="line">416</div><div class="line">417</div><div class="line">418</div><div class="line">419</div><div class="line">420</div><div class="line">421</div><div class="line">422</div><div class="line">423</div><div class="line">424</div><div class="line">425</div><div class="line">426</div><div class="line">427</div><div class="line">428</div><div class="line">429</div><div class="line">430</div><div class="line">431</div><div class="line">432</div><div class="line">433</div><div class="line">434</div><div class="line">435</div><div class="line">436</div><div class="line">437</div><div class="line">438</div><div class="line">439</div><div class="line">440</div><div class="line">441</div><div class="line">442</div><div class="line">443</div><div class="line">444</div><div class="line">445</div><div class="line">446</div><div class="line">447</div><div class="line">448</div><div class="line">449</div><div class="line">450</div><div class="line">451</div><div class="line">452</div><div class="line">453</div><div class="line">454</div><div class="line">455</div><div class="line">456</div><div class="line">457</div><div class="line">458</div><div class="line">459</div><div class="line">460</div><div class="line">461</div><div class="line">462</div><div class="line">463</div><div class="line">464</div><div class="line">465</div><div class="line">466</div><div class="line">467</div><div class="line">468</div><div class="line">469</div><div class="line">470</div><div class="line">471</div><div class="line">472</div><div class="line">473</div><div class="line">474</div><div class="line">475</div><div class="line">476</div><div class="line">477</div></pre></td><td class="code"><pre><div class="line">package httpbynetty;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">//该服务器为下载服务器！！！！！！</div><div class="line">import io.netty.bootstrap.ServerBootstrap;</div><div class="line">import io.netty.channel.ChannelFuture;</div><div class="line">import io.netty.channel.ChannelInitializer;</div><div class="line">import io.netty.channel.EventLoopGroup;</div><div class="line">import io.netty.channel.nio.NioEventLoopGroup;</div><div class="line">import io.netty.channel.socket.SocketChannel;</div><div class="line">import io.netty.channel.socket.nio.NioServerSocketChannel;</div><div class="line">import io.netty.handler.codec.http.HttpObjectAggregator;</div><div class="line">import io.netty.handler.codec.http.HttpRequestDecoder;</div><div class="line">import io.netty.handler.codec.http.HttpResponseEncoder;</div><div class="line">import io.netty.handler.stream.ChunkedWriteHandler;</div><div class="line">import io.netty.buffer.ByteBuf;</div><div class="line">import io.netty.buffer.Unpooled;</div><div class="line">import io.netty.channel.*;</div><div class="line">import io.netty.handler.codec.http.*;</div><div class="line">import io.netty.handler.stream.ChunkedFile;</div><div class="line">import io.netty.util.CharsetUtil;</div><div class="line"></div><div class="line">import javax.activation.MimetypesFileTypeMap;</div><div class="line">import java.io.File;</div><div class="line">import java.io.FileNotFoundException;</div><div class="line">import java.io.RandomAccessFile;</div><div class="line">import java.io.UnsupportedEncodingException;</div><div class="line">import java.net.InetAddress;</div><div class="line">import java.net.URLDecoder;</div><div class="line">import java.util.regex.Pattern;</div><div class="line"></div><div class="line">import static io.netty.handler.codec.http.HttpMethod.GET;</div><div class="line">import static io.netty.handler.codec.http.HttpResponseStatus.*;</div><div class="line">import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;</div><div class="line"></div><div class="line">public class HttpFileServer &#123;</div><div class="line">	 private static final String DEFAULT_URL = &quot;/&quot;;</div><div class="line"></div><div class="line">	    public void run(final int port, final String url) throws Exception &#123;</div><div class="line">	        EventLoopGroup bossGroup = new NioEventLoopGroup();</div><div class="line">	        EventLoopGroup workerGroup = new NioEventLoopGroup();</div><div class="line">	        try &#123;</div><div class="line">	            ServerBootstrap b = new ServerBootstrap();</div><div class="line">	            b.group(bossGroup, workerGroup)</div><div class="line">	                    .channel(NioServerSocketChannel.class)</div><div class="line">	                    .childHandler(new ChannelInitializer&lt;SocketChannel&gt;() &#123;</div><div class="line">	                        @Override</div><div class="line">	                        protected void initChannel(SocketChannel ch)</div><div class="line">	                                throws Exception &#123;</div><div class="line">	                            ch.pipeline().addLast(&quot;http-decoder&quot;,</div><div class="line">	                                    new HttpRequestDecoder()); // 请求消息解码器</div><div class="line">	                            ch.pipeline().addLast(&quot;http-encoder&quot;,</div><div class="line">	                                    new HttpResponseEncoder());//响应解码器</div><div class="line">	                            ch.pipeline().addLast(&quot;http-aggregator&quot;,</div><div class="line">	                                    new HttpObjectAggregator(65536));// 目的是将多个消息转换为单一的request或者response对象</div><div class="line">	  </div><div class="line">	                            ch.pipeline().addLast(&quot;http-chunked&quot;,</div><div class="line">	                                    new ChunkedWriteHandler());//目的是支持异步大文件传输（）</div><div class="line">	                            ch.pipeline().addLast(&quot;fileServerHandler&quot;,</div><div class="line">	                                    new HttpFileServerHandler(url));// 业务逻辑</div><div class="line">	                        &#125;</div><div class="line">	                    &#125;);</div><div class="line">	            ChannelFuture future = b.bind(port).sync();</div><div class="line">	            System.out.println(&quot;HTTP文件目录服务器启动，网址是 : &quot; +  InetAddress.getLocalHost()+&quot;:&quot;</div><div class="line">	                    + port + url);</div><div class="line">	            future.channel().closeFuture().sync();</div><div class="line">	        &#125; catch (Exception e) &#123;</div><div class="line">	            e.printStackTrace();</div><div class="line">	        &#125; finally &#123;</div><div class="line">	            bossGroup.shutdownGracefully();</div><div class="line">	            workerGroup.shutdownGracefully();</div><div class="line">	        &#125;</div><div class="line">	    &#125;</div><div class="line"></div><div class="line">	    public static void main(String[] args) throws Exception &#123;</div><div class="line">	        int port = 8080;</div><div class="line">	        if (args.length &gt; 0) &#123;</div><div class="line">	            try &#123;</div><div class="line">	                port = Integer.parseInt(args[0]);</div><div class="line">	            &#125; catch (NumberFormatException e) &#123;</div><div class="line">	                e.printStackTrace();</div><div class="line">	            &#125;</div><div class="line">	        &#125;</div><div class="line">	        String url = DEFAULT_URL;</div><div class="line">	        if (args.length &gt; 1)</div><div class="line">	            url = args[1];</div><div class="line">	        new HttpFileServer().run(port, url);</div><div class="line">	    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">class HttpFileServerHandler extends SimpleChannelInboundHandler&lt;FullHttpRequest&gt; &#123;</div><div class="line"></div><div class="line">	private final String url;</div><div class="line"></div><div class="line"></div><div class="line">	public HttpFileServerHandler(String url)</div><div class="line">	&#123;</div><div class="line"></div><div class="line">		this.url = url;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">	@Override</div><div class="line"></div><div class="line">	protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception &#123;</div><div class="line">		/*如果无法解码400*/</div><div class="line">	//	System.out.println(request);</div><div class="line">		if (!request.decoderResult().isSuccess()) </div><div class="line">		&#123;</div><div class="line">			//decoderResult解析该对象的结果</div><div class="line">			sendError(ctx, BAD_REQUEST);</div><div class="line">   </div><div class="line">			return;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		/*只支持GET方法*/</div><div class="line"></div><div class="line">		if (request.method() != GET)</div><div class="line">		&#123;</div><div class="line">    </div><div class="line">			sendError(ctx, METHOD_NOT_ALLOWED);</div><div class="line">    </div><div class="line">			return;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line"></div><div class="line">		final String uri = request.uri();//get的uri是什么————GET /hello.txt HTTP/1.1  需要前端知识</div><div class="line">		//会在当前网页路径下加上页面上的要求</div><div class="line">		</div><div class="line">		/*格式化URL，并且获取路径*/</div><div class="line">		System.out.println(uri);//http://127.0.0.1:8080   是指host</div><div class="line">		//这里.uri得到的是http请求中的uri     /bin/   GET /bin/ HTTP/1.1中间的那个（不含host）</div><div class="line">		final String path = sanitizeUri(uri);//解析uri</div><div class="line"></div><div class="line">		if (path == null)</div><div class="line">		&#123;</div><div class="line">    </div><div class="line">			sendError(ctx, FORBIDDEN);</div><div class="line">   </div><div class="line">			return;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		File file = new File(path);//file创建时最后一个有/时会被忽略掉/</div><div class="line">	//	System.out.println(path);</div><div class="line">		/*如果文件不可访问或者文件不存在*/</div><div class="line"></div><div class="line">		if (file.isHidden() || !file.exists()) &#123;</div><div class="line">    </div><div class="line">			sendError(ctx, NOT_FOUND);</div><div class="line">  </div><div class="line">			return;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		/*如果是目录*/</div><div class="line"></div><div class="line">		if (file.isDirectory()) &#123;</div><div class="line">    </div><div class="line">			//1. 以/结尾就列出所有文件</div><div class="line">  </div><div class="line">			if (uri.endsWith(&quot;/&quot;)) &#123;//uri是get获取到的</div><div class="line">        </div><div class="line">				sendListing(ctx, file);</div><div class="line">				//列文件</div><div class="line">			&#125;</div><div class="line">			else</div><div class="line">			&#123;</div><div class="line">        </div><div class="line">				//2. 否则自动+/</div><div class="line">        </div><div class="line">				sendRedirect(ctx, uri + &apos;/&apos;);</div><div class="line">				//重定向到带/的</div><div class="line">			&#125;</div><div class="line">    </div><div class="line">			return;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		if (!file.isFile()) &#123;</div><div class="line">    </div><div class="line">			sendError(ctx, FORBIDDEN);</div><div class="line">    </div><div class="line">			return;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		RandomAccessFile randomAccessFile = null;</div><div class="line"></div><div class="line">		try &#123;</div><div class="line">   </div><div class="line">			randomAccessFile = new RandomAccessFile(file, &quot;r&quot;);// 以只读的方式打开文件</div><div class="line"></div><div class="line">		&#125; catch (FileNotFoundException fnfe) &#123;</div><div class="line">    </div><div class="line">			sendError(ctx, NOT_FOUND);</div><div class="line">    </div><div class="line">			return;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		long fileLength = randomAccessFile.length();</div><div class="line"></div><div class="line">		//创建一个默认的HTTP响应</div><div class="line"></div><div class="line">		HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);</div><div class="line"></div><div class="line">		//设置Content Length</div><div class="line"></div><div class="line">		HttpUtil.setContentLength(response, fileLength);</div><div class="line"></div><div class="line">		//设置Content Type  </div><div class="line"></div><div class="line">		setContentTypeHeader(response, file);//传入file？——自定义的函数</div><div class="line">		</div><div class="line"></div><div class="line">		//如果request中有KEEP ALIVE信息</div><div class="line"></div><div class="line">		if (HttpUtil.isKeepAlive(request)) &#123;</div><div class="line">    </div><div class="line">			response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		ctx.write(response);//发送回答头</div><div class="line"></div><div class="line">		ChannelFuture sendFileFuture;</div><div class="line">		//发送回答体</div><div class="line">		</div><div class="line">		//通过Netty的ChunkedFile对象直接将文件写入发送到缓冲区中</div><div class="line">		//ChunkedFile是第二种，分块的方式，采用的是chunkedinput里的阻塞从文件中读取</div><div class="line">		sendFileFuture = ctx.write(new ChunkedFile(randomAccessFile, 0,</div><div class="line">        fileLength, 8192), ctx.newProgressivePromise());</div><div class="line"></div><div class="line">		sendFileFuture.addListener(new ChannelProgressiveFutureListener() &#123;</div><div class="line">    </div><div class="line">			@Override</div><div class="line">    </div><div class="line">			public void operationProgressed(ChannelProgressiveFuture future,long progress, long total) &#123;</div><div class="line">        //一个EventListener侦听器，一旦与未来相关的发送任务被传送，将被调用。 表示已经发了多少(累计)   表示总量（未知为-1）</div><div class="line">				</div><div class="line">				if (total &lt; 0) &#123; // 总大小为止</div><div class="line">           </div><div class="line">					System.err.println(&quot;Transfer progress: &quot; + progress);</div><div class="line">        </div><div class="line">				&#125; </div><div class="line">				else &#123;</div><div class="line">            </div><div class="line">					System.err.println(&quot;Transfer progress: &quot; + progress + &quot; / &quot;+ total);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    </div><div class="line">			@Override</div><div class="line">    </div><div class="line">			public void operationComplete(ChannelProgressiveFuture future)throws Exception &#123;</div><div class="line">        </div><div class="line">				System.out.println(&quot;Transfer complete.&quot;);</div><div class="line">    </div><div class="line">			&#125;</div><div class="line"></div><div class="line">		&#125;);</div><div class="line">		</div><div class="line">		//发送最后一个回答体</div><div class="line">		ChannelFuture lastContentFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);</div><div class="line"></div><div class="line">		//如果不支持keep-Alive，服务器端主动关闭请求</div><div class="line"></div><div class="line">		if (!HttpUtil.isKeepAlive(request)) &#123;</div><div class="line">    </div><div class="line">			lastContentFuture.addListener(ChannelFutureListener.CLOSE);</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////</div><div class="line"></div><div class="line">	@Override</div><div class="line"></div><div class="line">	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)throws Exception &#123;</div><div class="line"></div><div class="line">		cause.printStackTrace();</div><div class="line"></div><div class="line">		if (ctx.channel().isActive()) &#123;</div><div class="line">  </div><div class="line">			sendError(ctx, INTERNAL_SERVER_ERROR);</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	private static final Pattern INSECURE_URI = Pattern.compile(&quot;.*[&lt;&gt;&amp;\&quot;].*&quot;);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">	private String sanitizeUri(String uri) &#123;//    /bin/    </div><div class="line"></div><div class="line">		try &#123;</div><div class="line">    </div><div class="line">			uri = URLDecoder.decode(uri, &quot;UTF-8&quot;);</div><div class="line"></div><div class="line">		&#125; catch (UnsupportedEncodingException e) &#123;</div><div class="line">    </div><div class="line">			try &#123;</div><div class="line">        </div><div class="line">				uri = URLDecoder.decode(uri, &quot;ISO-8859-1&quot;);</div><div class="line">    </div><div class="line">			&#125; catch (UnsupportedEncodingException e1) &#123;</div><div class="line">        </div><div class="line">				throw new Error();</div><div class="line">    </div><div class="line">			&#125;</div><div class="line"></div><div class="line">		&#125;</div><div class="line">	//	System.out.println(uri);//   /bin/</div><div class="line"></div><div class="line">		if (!uri.startsWith(url)) &#123;</div><div class="line">    </div><div class="line">			return null;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		if (!uri.startsWith(&quot;/&quot;)) &#123;</div><div class="line">    </div><div class="line">			return null;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		uri = uri.replace(&apos;/&apos;, File.separatorChar);</div><div class="line">		//    \bin\httpbynetty\1\</div><div class="line"></div><div class="line">		if (uri.contains(File.separator + &apos;.&apos;)//含&quot;/.&quot;   &quot;./&quot;   开始为&quot;.&quot;  结束为.    </div><div class="line">				|| uri.contains(&apos;.&apos; + File.separator) || uri.startsWith(&quot;.&quot;)</div><div class="line">				|| uri.endsWith(&quot;.&quot;) || INSECURE_URI.matcher(uri).matches()) &#123;</div><div class="line">			//matches()对整个字符串进行匹配,只有整个字符串都匹配了才返回true </div><div class="line">			//此处为含&lt;&gt;&amp;\之一就错</div><div class="line">    </div><div class="line">			return null;</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		return System.getProperty(&quot;user.dir&quot;)  + uri;//当前目录，+get的请求</div><div class="line">		//      D:\javawsp\jav\netty实现http服务器\bin\httpbynetty\1\</div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line">	private static final Pattern ALLOWED_FILE_NAME = Pattern.compile(&quot;[A-Za-z0-9][-_A-Za-z0-9\\.]*&quot;);</div><div class="line"></div><div class="line"></div><div class="line">	private static void sendListing(ChannelHandlerContext ctx, File dir) &#123;</div><div class="line"></div><div class="line">		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);</div><div class="line"></div><div class="line">		response.headers().set(HttpHeaderNames.CONTENT_TYPE, &quot;text/html; charset=UTF-8&quot;);</div><div class="line"></div><div class="line">		StringBuilder buf = new StringBuilder();</div><div class="line"></div><div class="line">		String dirPath = dir.getPath();</div><div class="line"></div><div class="line">		buf.append(&quot;&lt;!DOCTYPE html&gt;\r\n&quot;);</div><div class="line"></div><div class="line">		buf.append(&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;&quot;);</div><div class="line"></div><div class="line">		buf.append(dirPath);</div><div class="line"></div><div class="line">		buf.append(&quot; 目录：&quot;);</div><div class="line"></div><div class="line">		buf.append(&quot;&lt;/title&gt;&lt;/head&gt;&lt;body&gt;\r\n&quot;);</div><div class="line"></div><div class="line">		buf.append(&quot;&lt;h3&gt;&quot;);</div><div class="line"></div><div class="line">		buf.append(dirPath).append(&quot; 目录：&quot;);</div><div class="line"></div><div class="line">		buf.append(&quot;&lt;/h3&gt;\r\n&quot;);</div><div class="line">		</div><div class="line">		buf.append(&quot;&lt;img src=\&quot;http://192.168.100.177:8080/1.jpg\&quot; width=\&quot;352\&quot; height=\&quot;220\&quot; /&gt;&quot;);</div><div class="line">		</div><div class="line">		//这里获取jpg为发送一次get请求，有俩种方式：</div><div class="line">		//1.:   &lt;img src=\&quot;1.jpg\&quot; width=\&quot;352\&quot; height=\&quot;220\&quot; /&gt;   get的uri直接解析为当前get的uri+src   </div><div class="line">		//请求uri为：/bin/1.jpg</div><div class="line">		//2.:   &lt;img src=\&quot;http://192.168.100.177:8080/1.jpg\&quot; width=\&quot;352\&quot; height=\&quot;220\&quot; /&gt;   get的uri为src内写的</div><div class="line">		//请求uri为：/1.jpg</div><div class="line">		buf.append(&quot;&lt;ul&gt;&quot;);</div><div class="line"></div><div class="line">		buf.append(&quot;&lt;li&gt;链接：&lt;a href=\&quot;../\&quot;&gt;..&lt;/a&gt;&lt;/li&gt;\r\n&quot;);</div><div class="line"></div><div class="line">		for (File f : dir.listFiles()) &#123;</div><div class="line">    </div><div class="line">			if (f.isHidden() || !f.canRead()) &#123;</div><div class="line">        </div><div class="line">				continue;</div><div class="line">    </div><div class="line">			&#125;</div><div class="line">    </div><div class="line">			String name = f.getName();</div><div class="line">    </div><div class="line">			if (!ALLOWED_FILE_NAME.matcher(name).matches()) &#123;</div><div class="line">        </div><div class="line">				continue;</div><div class="line">    </div><div class="line">			&#125;</div><div class="line">    </div><div class="line">			buf.append(&quot;&lt;li&gt;链接：&lt;a href=\&quot;&quot;);</div><div class="line">    </div><div class="line">			buf.append(name);</div><div class="line">   </div><div class="line">			buf.append(&quot;/\&quot;&gt;&quot;);</div><div class="line">  </div><div class="line">			buf.append(name);</div><div class="line">    </div><div class="line">			buf.append(&quot;&lt;/a&gt;&lt;/li&gt;\r\n&quot;);</div><div class="line"></div><div class="line">		&#125;</div><div class="line"></div><div class="line">		buf.append(&quot;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;\r\n&quot;);</div><div class="line"></div><div class="line">		ByteBuf buffer = Unpooled.copiedBuffer(buf, CharsetUtil.UTF_8);</div><div class="line"></div><div class="line">		response.content().writeBytes(buffer);</div><div class="line"></div><div class="line">		buffer.release();</div><div class="line"></div><div class="line">		ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	</div><div class="line"></div><div class="line"></div><div class="line">	private static void sendRedirect(ChannelHandlerContext ctx, String newUri) &#123;</div><div class="line"></div><div class="line">		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, FOUND);//302重定向</div><div class="line"></div><div class="line">		response.headers().set(HttpHeaderNames.LOCATION, newUri);//重定向到带/结尾的请求</div><div class="line"></div><div class="line">		ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">//返回错误</div><div class="line"></div><div class="line">	private static void sendError(ChannelHandlerContext ctx,HttpResponseStatus status) </div><div class="line"></div><div class="line">	&#123;</div><div class="line"></div><div class="line">		FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1,</div><div class="line">        </div><div class="line">				status, Unpooled.copiedBuffer(&quot;Failure: &quot; + status.toString()</div><div class="line">        </div><div class="line">				+ &quot;\r\n&quot;, CharsetUtil.UTF_8));</div><div class="line"></div><div class="line">		response.headers().set(HttpHeaderNames.CONTENT_TYPE, &quot;text/plain; charset=UTF-8&quot;);</div><div class="line"></div><div class="line">		ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);</div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	private static void setContentTypeHeader(HttpResponse response, File file) &#123;</div><div class="line"></div><div class="line">	</div><div class="line">		MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();</div><div class="line">		//把文件路径化为mime类型——MIME (Multipurpose Internet Mail Extensions) 是描述消息内容类型的因特网标准。</div><div class="line">	</div><div class="line">		response.headers().set(HttpHeaderNames.CONTENT_TYPE,mimeTypesMap.getContentType(file.getPath()));</div><div class="line"></div><div class="line"></div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/16/windows内存逐渐升高的解决/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1629,155 +1771,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/26/栈-算法1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/26/栈-算法1/" itemprop="url">栈 算法1</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-26T22:48:46+08:00">
-                2017-09-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="迷宫问题"><a href="#迷宫问题" class="headerlink" title="迷宫问题"></a>迷宫问题</h3><p>可扩展为：带路径，求最短，带权，等多种，基本思路如下</p>
-<h4 id="该实例要求："><a href="#该实例要求：" class="headerlink" title="该实例要求："></a>该实例要求：</h4><p>用一个m×n的矩阵表示迷宫，0和1分别表示迷宫中的通路和障碍。设计一个程序，对给定的迷宫，求出找到的第一条从入口到出口的通路，或得到没有通路的结论。</p>
-<p>我们指定:</p>
-<p>(1) 迷宫的入口为矩阵的左上角（1,1），迷宫的出口为右下角（m,n）;</p>
-<p>(2) 路径的探索顺序依次为”东南西北”（即：右下左上）。</p>
-<h4 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h4><p>9 8<br>00100010<br>00100010<br>00001101<br>01110010<br>00010000<br>01000101<br>01111001<br>11000101<br>11000000</p>
-<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h4><p>(1,1,1)(1,2,2)(2,2,2)(3,2,3)(3,1,2)(4,1,2)(5,1,1)(5,2,1)(5,3,2)(6,3,1)(6,4,1)(6,5,4)(5,5,1)(5,6,1)(5,7,2)(6,7,2)(7,7,2)(8,7,2)(9,7,1)(9,8,0)</p>
-<h3 id="AC代码："><a href="#AC代码：" class="headerlink" title="AC代码："></a>AC代码：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#pragma warning(disable:4996)；</div><div class="line">int n,m,p,q,min=99999999;</div><div class="line">int a[1000][1000], book[1000][1000] = &#123;0&#125;;</div><div class="line"></div><div class="line">int flag=0;</div><div class="line">int p1[10000];</div><div class="line">int p2[10000];</div><div class="line">int p3[10000];</div><div class="line">int top;</div><div class="line"></div><div class="line">void dfs(int x,int y,int step)</div><div class="line">&#123;</div><div class="line">	int next[4][2]=&#123;&#123;0,1&#125;,&#123;1,0&#125;,&#123;0,-1&#125;,&#123;-1,0&#125;&#125;;</div><div class="line">	int tx,ty,k;</div><div class="line">	if(flag==1)</div><div class="line">	&#123;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	if(x==n&amp;&amp;y==m)</div><div class="line">	&#123;</div><div class="line">		flag=1;</div><div class="line">		top=step;</div><div class="line">		return;</div><div class="line">	&#125;</div><div class="line">	for(k=0;k&lt;4;k++)</div><div class="line">	&#123;</div><div class="line">		tx=x+next[k][0];</div><div class="line">		ty=y+next[k][1];</div><div class="line">		if(tx&lt;1||tx&gt;n||ty&lt;1||ty&gt;m)</div><div class="line">		continue;</div><div class="line">		</div><div class="line">		if(a[tx][ty]==0&amp;&amp;book[tx][ty]==0)</div><div class="line">		&#123;</div><div class="line">			book[tx][ty]=1;</div><div class="line">			p1[step]=x;</div><div class="line">			p2[step]=y;</div><div class="line">			p3[step]=k+1;</div><div class="line">			dfs(tx,ty,step+1);</div><div class="line">			if (flag == 1)</div><div class="line">			&#123;</div><div class="line">				return;</div><div class="line">			&#125;</div><div class="line">			</div><div class="line">			book[tx][ty]=0;</div><div class="line">		&#125;</div><div class="line">			</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return;</div><div class="line"> &#125;</div><div class="line"></div><div class="line">  int main(void)</div><div class="line">&#123;</div><div class="line">	int i,j;</div><div class="line">	scanf(&quot;%d%d\n&quot;,&amp;n,&amp;m);</div><div class="line">	char ls[1000];</div><div class="line">	for(i=1;i&lt;=n;i++)</div><div class="line">	&#123;</div><div class="line"></div><div class="line">		gets(ls);</div><div class="line">		for(j=1;j&lt;=m;j++)</div><div class="line">		&#123;</div><div class="line">			a[i][j]=ls[j-1]-&apos;0&apos;;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	book[1][1]=1;</div><div class="line">	p1[top]=1;</div><div class="line">	p2[top]=1;</div><div class="line">	p3[top]=1;</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">	dfs(1,1,1);</div><div class="line">	</div><div class="line">	if (flag == 1)</div><div class="line">	&#123;</div><div class="line">		for (i = 1; i &lt; top; i++)</div><div class="line">		&#123;</div><div class="line">			printf(&quot;(%d,%d,%d)&quot;, p1[i], p2[i], p3[i]);</div><div class="line">			</div><div class="line">		&#125;</div><div class="line">		printf(&quot;(%d,%d,%d)&quot;, n, m, 0);</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">	&#123;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	return 0;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="另附中缀表达式转后缀代码"><a href="#另附中缀表达式转后缀代码" class="headerlink" title="另附中缀表达式转后缀代码"></a>另附中缀表达式转后缀代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div></pre></td><td class="code"><pre><div class="line">#include&lt;stdio.h&gt;</div><div class="line">#include&lt;stdlib.h&gt;</div><div class="line">#pragma warning(disable:4996)；</div><div class="line">int cmp(char a, char b)</div><div class="line">&#123;</div><div class="line">	if (a == &apos;*&apos; || a == &apos;/&apos;)</div><div class="line">	&#123;</div><div class="line">		if (b == &apos;+&apos; || b == &apos;-&apos;)</div><div class="line">		&#123;</div><div class="line">			return 1;</div><div class="line">		&#125;</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			return 0;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	else if(a== &apos;+&apos; || a == &apos;-&apos;)</div><div class="line">	&#123;</div><div class="line">		if (b == &apos;+&apos; || b == &apos;-&apos;)</div><div class="line">		&#123;</div><div class="line">			return 0;</div><div class="line">		&#125;</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			return -1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">	&#123;</div><div class="line">		return -1;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">int isnum(char a)</div><div class="line">&#123;</div><div class="line">	if (a &gt;= &apos;a&apos;&amp;&amp;a &lt;= &apos;z&apos;)</div><div class="line">	&#123;</div><div class="line">		return 1;</div><div class="line">	&#125;</div><div class="line">	else</div><div class="line">		return 0;</div><div class="line">&#125;</div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">	char q1[1000] = &#123;0&#125;;</div><div class="line">	char q2[1000] = &#123;0&#125;;</div><div class="line">	int t1=1, t2=0;</div><div class="line">	char o[1000] = &#123;0&#125;;</div><div class="line">	int t3=0;</div><div class="line">	scanf(&quot;%s&quot;, q2);</div><div class="line">	char ch = q2[t2];</div><div class="line">	t2++;</div><div class="line">	while (ch != &apos;\0&apos;)</div><div class="line">	&#123;</div><div class="line">		if (isnum(ch))</div><div class="line">		&#123;</div><div class="line">			o[t3] = ch;</div><div class="line">			t3++;</div><div class="line"></div><div class="line">			ch = q2[t2];</div><div class="line">			t2++;</div><div class="line">		&#125;</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			if (ch == &apos;)&apos;)</div><div class="line">			&#123;</div><div class="line">				</div><div class="line">				while (q1[t1-1] != &apos;(&apos;) &#123;</div><div class="line">					</div><div class="line">					t1--;</div><div class="line">					o[t3] = q1[t1];</div><div class="line">					t3++;</div><div class="line">				&#125; </div><div class="line">				t1--;</div><div class="line">				ch = q2[t2];</div><div class="line">				t2++;</div><div class="line">			&#125;</div><div class="line">			else if (ch == &apos;(&apos;)</div><div class="line">			&#123;</div><div class="line">				q1[t1] = ch;</div><div class="line">				t1++;</div><div class="line">				ch = q2[t2];</div><div class="line">				t2++;</div><div class="line">			&#125;</div><div class="line">			else</div><div class="line">			&#123;</div><div class="line">				if (cmp(q1[t1 - 1], ch) &lt; 0)</div><div class="line">				&#123;</div><div class="line">					q1[t1] = ch;</div><div class="line">					t1++;</div><div class="line"></div><div class="line"></div><div class="line">					ch = q2[t2];</div><div class="line">					t2++;</div><div class="line">				&#125;</div><div class="line">				else if (cmp(q1[t1 - 1], ch) &gt; 0)</div><div class="line">				&#123;</div><div class="line">					t1--;</div><div class="line">					o[t3] = q1[t1];</div><div class="line">					t3++;</div><div class="line">				&#125;</div><div class="line">				else</div><div class="line">				&#123;</div><div class="line">					t1--;</div><div class="line">					o[t3] = q1[t1];</div><div class="line">					t3++;</div><div class="line"></div><div class="line"></div><div class="line">				&#125;</div><div class="line"></div><div class="line">			&#125;</div><div class="line">			</div><div class="line">		</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	&#125;</div><div class="line">	while (t1 != -1)</div><div class="line">	&#123;</div><div class="line">		t1--;</div><div class="line">		o[t3] = q1[t1];</div><div class="line">		t3++;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	o[t3] = 0;</div><div class="line">	printf(&quot;%s&quot;, o);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1828,7 +1821,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-count">74</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1839,7 +1832,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1850,7 +1843,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">65</span>
+                <span class="site-state-item-count">67</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

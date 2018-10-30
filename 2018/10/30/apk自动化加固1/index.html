@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="apk加固,自动化," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="加固技术第一代加固技术——混淆技术； 第二代加固技术——加壳技术； 第三代加固技术——指令抽离； 第四代加固技术——指令转换，VMP； 接下来逐步实现一个自动化的加壳服务。鉴于软件工程的重要性因此大致按着软工的步骤来，鉴于个人开发步骤有所删减">
+<meta name="keywords" content="apk加固,自动化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="apk自动化加固1">
+<meta property="og:url" content="http://yoursite.com/2018/10/30/apk自动化加固1/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="加固技术第一代加固技术——混淆技术； 第二代加固技术——加壳技术； 第三代加固技术——指令抽离； 第四代加固技术——指令转换，VMP； 接下来逐步实现一个自动化的加壳服务。鉴于软件工程的重要性因此大致按着软工的步骤来，鉴于个人开发步骤有所删减">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-30T15:19:13.056Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="apk自动化加固1">
+<meta name="twitter:description" content="加固技术第一代加固技术——混淆技术； 第二代加固技术——加壳技术； 第三代加固技术——指令抽离； 第四代加固技术——指令转换，VMP； 接下来逐步实现一个自动化的加壳服务。鉴于软件工程的重要性因此大致按着软工的步骤来，鉴于个人开发步骤有所删减">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/30/apk自动化加固1/"/>
+
+
+
+
+
+  <title>apk自动化加固1 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/30/apk自动化加固1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">apk自动化加固1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-30T23:15:43+08:00">
+                2018-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android应用加固/" itemprop="url" rel="index">
+                    <span itemprop="name">android应用加固</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="加固技术"><a href="#加固技术" class="headerlink" title="加固技术"></a>加固技术</h1><p>第一代加固技术——混淆技术；</p>
+<p>第二代加固技术——加壳技术；</p>
+<p>第三代加固技术——指令抽离；</p>
+<p>第四代加固技术——指令转换，VMP；</p>
+<p>接下来逐步实现一个自动化的加壳服务。<br>鉴于软件工程的重要性因此大致按着软工的步骤来，鉴于个人开发步骤有所删减</p>
+<a id="more"></a>
+<h1 id="需求工程"><a href="#需求工程" class="headerlink" title="需求工程"></a>需求工程</h1><p>首先需要一个修改apk的方案：</p>
+<ol>
+<li>使得apk改动幅度尽量小，这样便于自动化实现以及通用性</li>
+<li>保护覆盖面大，小部分的加密代码可以加密全部的重要资源/代码</li>
+<li>扩展性强，易于后续维护开发</li>
+</ol>
+<p>功能动态补充中：</p>
+<ol>
+<li>壳dex替换保护</li>
+<li>自动化dex替换</li>
+<li>…</li>
+</ol>
+<h1 id="项目设计"><a href="#项目设计" class="headerlink" title="项目设计"></a>项目设计</h1><h2 id="第一点-amp-第二点"><a href="#第一点-amp-第二点" class="headerlink" title="第一点&amp;第二点"></a>第一点&amp;第二点</h2><p>因为apk在安装过程中会注册到PMS中，启动时大量的配置也是依据AndroidManifest.xml设置的，因此AndroidManifest.xml文件不能大量更改，lib、Assets、resource等需要时才加载因此可以提前加固。<br>classes.dex是加密核心，尽量全部隐藏。<br>因此采用替换app启动时最先加载的Application类来实现加固基础，以下称为壳application与源application</p>
+<h2 id="第三点"><a href="#第三点" class="headerlink" title="第三点"></a>第三点</h2><p>为了便于调试与增加功能，针对完全替换的新dex做开发，AS下可以方便进行调试与编码，因为先建立的classloader再建立的application，因此可以编写so进行加固。<br>开发在AS下进行，导出apk。从中提取出dex以及so就是需要植入的解密逻辑了。注意导出的dex中仅有固定名的壳application与系统库，编译时会自动加上无关的东西需要手动smali删除。<br>之后实现自动化加固工具，注意：</p>
+<ol>
+<li>修改AndroidManifest.xml里application标签中的android:name为自己的壳application全名，其它地方不要改动。</li>
+<li>将源application的名字存到某地方，协定到壳application中获取作为加载依据</li>
+<li>加固工具应当加密源dex，将源dex提取到某处，协定到壳application中解密加载</li>
+<li>替换全部dex为壳dex，只暴露壳代码</li>
+<li>壳代码逐步native化，采取不落地加载。</li>
+<li>源代码逐步native化，采取不落地加载。</li>
+<li>前期壳代码变动较为频繁，因此先稳定下一个简单的自动加壳工具，不进行加密，只是替换dex与打包，方便测试开发。注意dex先放到应用自己的目录下，要不然总忘记加sd卡的权限。</li>
+<li>基本的壳native完成之后，开发的重点为源dex的native化，此部分完成代码主要在自动加壳工具中，此时应保障壳代码的稳定</li>
+</ol>
+<h2 id="功能实现"><a href="#功能实现" class="headerlink" title="功能实现"></a>功能实现</h2><p>功能实现设计在后续文章中</p>
+<h1 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h1><p>暂无，学到啥加啥，不过因为涉及到俩部分比较独立又互有牵制的代码，应该保持一方基本功能稳定的情况下扩展开发。切记先做能提高开发效率的部分。</p>
+<h1 id="项目管理"><a href="#项目管理" class="headerlink" title="项目管理"></a>项目管理</h1><p>SourceTree+github<br>备份频率一周一次</p>
+<p>地址：<a href="https://github.com/imbaya2466/apksec" target="_blank" rel="external">https://github.com/imbaya2466/apksec</a></p>
+<h1 id="java壳dex的初步实现"><a href="#java壳dex的初步实现" class="headerlink" title="java壳dex的初步实现"></a>java壳dex的初步实现</h1><p>本次先实现壳dex的通用demo<br>将目标dex置于sd下，修改AndroidManifest.xml中application name与sd权限，其它部分不变<br>删除全部java代码，新建自己的壳application代码，相当于替换dex，可以借用AS强大的java与so代码调试方便开发。<br>实际导出壳dex时切记反编译下清理其中无用类，若不清除其按表单自动添加的类会覆盖源dex的实现，之前启动成功但c++与按钮全失效的原因就是默认添加的activity实现覆盖了源的。</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>首先务必熟悉这部分：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/10/21/android8-0-0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-app%E5%90%AF%E5%8A%A83/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/10/21/android8-0-0%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-app%E5%90%AF%E5%8A%A83/</a></p>
+<p>可知如下启动过程：<br>ActivityThread是应用的开始，向AMS注册之后进入循环接收返回的应用信息用于启动应用。启动的大部分过程都在handleBindApplication之中。</p>
+<p>接下来分析需要的部分：<br>handleBindApplication之中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">        try &#123;</div><div class="line">            // If the app is being launched for full backup or restore, bring it up in</div><div class="line">            // a restricted environment with the base application class.</div><div class="line">			//应该为false null</div><div class="line">            Application app = data.info.makeApplication(data.restrictedBackupMode, null);</div><div class="line">            mInitialApplication = app;</div><div class="line"></div><div class="line">            // don&apos;t bring up providers in restricted mode; they may depend on the</div><div class="line">            // app&apos;s custom Application class</div><div class="line">			//会执行</div><div class="line">            if (!data.restrictedBackupMode) &#123;</div><div class="line">                if (!ArrayUtils.isEmpty(data.providers)) &#123;</div><div class="line">                    installContentProviders(app, data.providers);</div><div class="line">                    // For process that contains content providers, we want to</div><div class="line">                    // ensure that the JIT is enabled &quot;at some point&quot;.</div><div class="line">                    mH.sendEmptyMessageDelayed(H.ENABLE_JIT, 10*1000);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            // Do this after providers, since instrumentation tests generally start their</div><div class="line">            // test thread at this point, and we don&apos;t want that racing.</div><div class="line">            try &#123;</div><div class="line">                mInstrumentation.onCreate(data.instrumentationArgs);</div><div class="line">            &#125;</div><div class="line">.....</div><div class="line"></div><div class="line">            try &#123;</div><div class="line">				//里面直接调用app.onCreate()</div><div class="line">                mInstrumentation.callApplicationOnCreate(app);</div><div class="line">            &#125; </div><div class="line">.....</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>ActivityThread<br>data.info.makeApplication之中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">  public Application makeApplication(boolean forceDefaultAppClass,</div><div class="line">          Instrumentation instrumentation) &#123;</div><div class="line">      if (mApplication != null) &#123;</div><div class="line">          return mApplication;</div><div class="line">      &#125;</div><div class="line"></div><div class="line"></div><div class="line">      Application app = null;</div><div class="line"></div><div class="line">      String appClass = mApplicationInfo.className;</div><div class="line">      if (forceDefaultAppClass || (appClass == null)) &#123;</div><div class="line">          appClass = &quot;android.app.Application&quot;;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      try &#123;</div><div class="line">          java.lang.ClassLoader cl = getClassLoader();</div><div class="line">	</div><div class="line">	...//针对系统app的操作</div><div class="line">	</div><div class="line">          ContextImpl appContext = ContextImpl.createAppContext(mActivityThread, this);</div><div class="line">          app = mActivityThread.mInstrumentation.newApplication(</div><div class="line">                  cl, appClass, appContext);</div><div class="line">          appContext.setOuterContext(app);</div><div class="line">      &#125; </div><div class="line"></div><div class="line">...//catch</div><div class="line"></div><div class="line">      mActivityThread.mAllApplications.add(app);</div><div class="line">      mApplication = app;</div><div class="line"></div><div class="line">...//instrumentation为null，这里不会执行</div><div class="line"></div><div class="line">      // Rewrite the R &apos;constants&apos; for all library apks.</div><div class="line">      SparseArray&lt;String&gt; packageIdentifiers = getAssets().getAssignedPackageIdentifiers();</div><div class="line">      final int N = packageIdentifiers.size();</div><div class="line">      for (int i = 0; i &lt; N; i++) &#123;</div><div class="line">          final int id = packageIdentifiers.keyAt(i);</div><div class="line">          if (id == 0x01 || id == 0x7f) &#123;</div><div class="line">              continue;</div><div class="line">          &#125;</div><div class="line"></div><div class="line">          rewriteRValues(getClassLoader(), packageIdentifiers.valueAt(i), id);</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);</div><div class="line"></div><div class="line">      return app;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>LoadedApk<br>newApplication:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">   public Application newApplication(ClassLoader cl, String className, Context context)</div><div class="line">           throws InstantiationException, IllegalAccessException, </div><div class="line">           ClassNotFoundException &#123;</div><div class="line">       return newApplication(cl.loadClass(className), context);</div><div class="line">   &#125;</div><div class="line"></div><div class="line">static public Application newApplication(Class&lt;?&gt; clazz, Context context)</div><div class="line">           throws InstantiationException, IllegalAccessException, </div><div class="line">           ClassNotFoundException &#123;</div><div class="line">       Application app = (Application)clazz.newInstance();</div><div class="line">       app.attach(context);</div><div class="line">       return app;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>Application<br>attach:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">final void attach(Context context) &#123;</div><div class="line">       attachBaseContext(context);</div><div class="line">       mLoadedApk = ContextImpl.getImpl(context).mPackageInfo;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>ContextWrapper<br>attachBaseContext:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">protected void attachBaseContext(Context base) &#123;</div><div class="line">    if (mBase != null) &#123;</div><div class="line">        throw new IllegalStateException(&quot;Base context already set&quot;);</div><div class="line">    &#125;</div><div class="line">    mBase = base;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行顺序：<br>makeApplication调用<br>    检测mApplication存在<br>    取mApplicationInfo.className作为目标名<br>    获取ClassLoader<br>    创建ContextImpl<br>    newApplication<br>        用cl创建Application对象<br>        attach<br>            attachBaseContext<em><br>            设置mLoadedApk<br>    setOuterContext<br>    设置mAllApplications<br>    设置mApplication<br>    资源操作<br>mInitialApplication赋值<br>初始化Providers<br>调用app.onCreate</em></p>
+<h2 id="欺骗世界"><a href="#欺骗世界" class="headerlink" title="欺骗世界"></a>欺骗世界</h2><p>接下来要做的就是欺骗了，欺骗系统使系统认为这是本来的应用，欺骗应用使应用以为这是它第一次进系统。有俩个插入点：attachBaseContext与onCreate其它的调用attach是final的。<br>针对这俩处最先运行的可控制代码,有俩个可行的方案：</p>
+<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><p>attachBaseContext中</p>
+<ol>
+<li>在壳attachBaseContext之中创建新的classloader，因为之前ClassLoader创建时便赋予了LoadedApk中的mClassLoader,因此此处可以获取到作为父。父会加载原lib，因此自己的dexpath与lib可以随意定</li>
+<li>替换classloader，临时变量cl仅在加载application中使用了一下，因此替换了LoadedApk中的mClassLoader就保证了加载器的正常。</li>
+<li>替换ApplicationName，将拥有ApplicationName的对象内application名字全部替换，保证之后加载正确</li>
+</ol>
+<p>onCreate中：</p>
+<ol>
+<li>删除mApplication，为了第二次调用make正常</li>
+<li>删除mAllApplications，抹掉存在，这俩步其实为了恢复make为执行前状态</li>
+<li>执行makeApplication此时用的cl会自动返回之前替换好的，加载目标的名字也是之前替换好的，ContextImpl是新的，之后正常过程</li>
+<li>注意，此时make中的过程已经全部替换了，但是make到oncreate之间的步骤还是旧的，因此替换mInitialApplication为新的</li>
+<li>恢复Providers的操作</li>
+<li>调用原onCreate</li>
+</ol>
+<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><p>attachBaseContext中</p>
+<ol>
+<li>替换cl</li>
+<li>替换ApplicationName</li>
+<li>执行makeApplication</li>
+</ol>
+<p>onCreate中<br>将attachBaseContext之后的操作全部替换为新的</p>
+<h2 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h2><p>对比分析方案1的代码实现较少，意味着bug可能更少，因此实现方案一。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">package FFF.imbaya.protect;</div><div class="line"></div><div class="line">import android.app.Application;</div><div class="line">import android.app.Instrumentation;</div><div class="line">import android.content.Context;</div><div class="line">import java.util.ArrayList;</div><div class="line"></div><div class="line">import java.util.List;</div><div class="line"></div><div class="line">import dalvik.system.DexClassLoader;</div><div class="line"></div><div class="line"></div><div class="line">public class MainApplication extends Application &#123;</div><div class="line"></div><div class="line">    private static String ApplicationName=&quot;com.example.imbaya.protectapk1.MyApplication&quot;;</div><div class="line">    private static String path=&quot;/sdcard/ls/classes.dex&quot;;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    private  Object currentActivityThread;</div><div class="line">    private  Object boundApplication;//是AMS传入的AppBindData</div><div class="line">    private  Object loadedapk;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void attachBaseContext(Context base) &#123;</div><div class="line">            super.attachBaseContext(base);</div><div class="line"></div><div class="line">        //获取ActivityThread对象</div><div class="line">        currentActivityThread = RefInvoke.invokeStaticMethod(</div><div class="line">                &quot;android.app.ActivityThread&quot;, &quot;currentActivityThread&quot;,</div><div class="line">                new Class[] &#123;&#125;, new Object[] &#123;&#125;);</div><div class="line"></div><div class="line">        boundApplication  =  RefInvoke.getFieldOjbect(</div><div class="line">                &quot;android.app.ActivityThread&quot;, currentActivityThread,</div><div class="line">                &quot;mBoundApplication&quot;);</div><div class="line"></div><div class="line">        loadedapk= RefInvoke.getFieldOjbect(</div><div class="line">                &quot;android.app.ActivityThread$AppBindData&quot;,boundApplication , &quot;info&quot;);</div><div class="line"></div><div class="line">        Object applicationInfo_LoadedApk= RefInvoke.getFieldOjbect(</div><div class="line">                &quot;android.app.LoadedApk&quot;,loadedapk, &quot;mApplicationInfo&quot;);</div><div class="line">        Object applicationInfo_AppBindData= RefInvoke.getFieldOjbect(</div><div class="line">                &quot;android.app.ActivityThread$AppBindData&quot;,boundApplication, &quot;appInfo&quot;);</div><div class="line"></div><div class="line">        //获取当前包的名字，并更改为目标包的名字,有俩处：LoadedApk与AppBindData的ApplicationInfo</div><div class="line">        String nowname=(String) RefInvoke.getFieldOjbect(</div><div class="line">                &quot;android.content.pm.ApplicationInfo&quot;, applicationInfo_LoadedApk, &quot;className&quot;);</div><div class="line">        RefInvoke.setFieldOjbect(</div><div class="line">                &quot;android.content.pm.ApplicationInfo&quot;, &quot;className&quot;,applicationInfo_LoadedApk, ApplicationName);</div><div class="line">        RefInvoke.setFieldOjbect(</div><div class="line">                &quot;android.content.pm.ApplicationInfo&quot;, &quot;className&quot;,applicationInfo_AppBindData, ApplicationName);</div><div class="line"></div><div class="line"></div><div class="line">        //获取nativelib的路径</div><div class="line">        String nownativeLibraryDir=(String) RefInvoke.getFieldOjbect(</div><div class="line">                &quot;android.content.pm.ApplicationInfo&quot;, applicationInfo_LoadedApk, &quot;nativeLibraryDir&quot;);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">        //新的classloader</div><div class="line">        DexClassLoader dLoader = new DexClassLoader(path, null,</div><div class="line">                nownativeLibraryDir, (ClassLoader) RefInvoke.getFieldOjbect(</div><div class="line">                &quot;android.app.LoadedApk&quot;,loadedapk, &quot;mClassLoader&quot;));</div><div class="line"></div><div class="line">        //设置成新的classloader</div><div class="line">        RefInvoke.setFieldOjbect(&quot;android.app.LoadedApk&quot;, &quot;mClassLoader&quot;,</div><div class="line">                loadedapk, dLoader);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //因为前面的attachBaseContext执行时app等待返回，因此无法更改方法内动作，</div><div class="line">    @Override</div><div class="line">    public void onCreate() &#123;</div><div class="line">        super.onCreate();</div><div class="line">        //LoadedApk.mApplication删除</div><div class="line">        RefInvoke.setFieldOjbect(&quot;android.app.LoadedApk&quot;, &quot;mApplication&quot;,</div><div class="line">                loadedapk, null);</div><div class="line"></div><div class="line">        //mActivityThread.mAllApplications.add(app);删除</div><div class="line">        Object oldApplication = RefInvoke.getFieldOjbect(</div><div class="line">                &quot;android.app.ActivityThread&quot;, currentActivityThread,</div><div class="line">                &quot;mInitialApplication&quot;);</div><div class="line">        ArrayList&lt;Application&gt; mAllApplications = (ArrayList&lt;Application&gt;) RefInvoke</div><div class="line">                .getFieldOjbect(&quot;android.app.ActivityThread&quot;,</div><div class="line">                        currentActivityThread, &quot;mAllApplications&quot;);</div><div class="line">        mAllApplications.remove(oldApplication);</div><div class="line"></div><div class="line"></div><div class="line">        //执行makeApplication，此时的ApplicationInfo与classloader是修改过的</div><div class="line">        Application app = (Application) RefInvoke.invokeMethod(</div><div class="line">                &quot;android.app.LoadedApk&quot;, &quot;makeApplication&quot;, loadedapk,</div><div class="line">                new Class[] &#123; boolean.class, Instrumentation.class &#125;,</div><div class="line">                new Object[] &#123; false, null &#125;);</div><div class="line"></div><div class="line">        //恢复makeApplication到oncreate之间的操作</div><div class="line">        RefInvoke.setFieldOjbect(&quot;android.app.ActivityThread&quot;,</div><div class="line">                &quot;mInitialApplication&quot;, currentActivityThread, app);</div><div class="line"></div><div class="line">        //泛型的概念是在编译时替换内部，因此其class对象为不加泛型的本类</div><div class="line">        RefInvoke.invokeMethod(</div><div class="line">                &quot;android.app.ActivityThread&quot;, &quot;installContentProviders&quot;, currentActivityThread,</div><div class="line">                new Class[] &#123; Context.class, List.class&#125;,</div><div class="line">                new Object[] &#123; app, RefInvoke.getFieldOjbect(&quot;android.app.ActivityThread$AppBindData&quot;,</div><div class="line">                        boundApplication, &quot;providers&quot;) &#125;);</div><div class="line"></div><div class="line"></div><div class="line">        app.onCreate();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>欺骗完成，接下来实现自动化加固</p>
+<h1 id="自动化加固"><a href="#自动化加固" class="headerlink" title="自动化加固"></a>自动化加固</h1><p>因为易于与java服务器结合且跨平台开发便于个人部署，因此采用java开发。<br>因为assets资源不会自动解压出来，lib只解压需要的，因此决定开发阶段先暂时实现为：壳dex替换，源dex放于assets中，只改变application name，原名直接修改smali重新打包签名。<br>因此壳代码一开始就是smali态的，步骤为</p>
+<ol>
+<li>apktool壳，导出smali与so，置于自动化加固要求位置</li>
+<li>自动化接受源apk，将源dex提出</li>
+<li>解包源apk，修改application name，替换全部smali为壳smali，修改smali中的application名，导入so，导入assets源dex</li>
+<li>打包apk，签名。</li>
+<li>临时实现：壳中从assets中提出dex到data/data/自己/ls下，并作为目标dex路径</li>
+</ol>
+<p>注意点：必须为smali替换，再打包，不能直接用压缩工具替换dex。原因未知</p>
+<p>使用目录结构：<br>work/<br>    main.jar<br>    tool/<br>        apktool/<br>    housing/<br>        smali/<br>        lib/<br>    work/<br>        out/<br>    mubiao.apk<br>    unsign.apk</p>
+<p>代码详见github<br>注意术业有专攻，文件格式解析用c、服务用java、目录等操作就用脚本</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/apk加固/" rel="tag"># apk加固</a>
+          
+            <a href="/tags/自动化/" rel="tag"># 自动化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/21/android8-0-0源码分析-classloader1/" rel="next" title="android8-0-0源码分析-classloader1">
+                <i class="fa fa-chevron-left"></i> android8-0-0源码分析-classloader1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">74</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">67</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#加固技术"><span class="nav-number">1.</span> <span class="nav-text">加固技术</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#需求工程"><span class="nav-number">2.</span> <span class="nav-text">需求工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目设计"><span class="nav-number">3.</span> <span class="nav-text">项目设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一点-amp-第二点"><span class="nav-number">3.1.</span> <span class="nav-text">第一点&第二点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三点"><span class="nav-number">3.2.</span> <span class="nav-text">第三点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能实现"><span class="nav-number">3.3.</span> <span class="nav-text">功能实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发流程"><span class="nav-number">4.</span> <span class="nav-text">开发流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目管理"><span class="nav-number">5.</span> <span class="nav-text">项目管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#java壳dex的初步实现"><span class="nav-number">6.</span> <span class="nav-text">java壳dex的初步实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#源码分析"><span class="nav-number">6.1.</span> <span class="nav-text">源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#欺骗世界"><span class="nav-number">6.2.</span> <span class="nav-text">欺骗世界</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方案一"><span class="nav-number">6.2.1.</span> <span class="nav-text">方案一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方案二"><span class="nav-number">6.2.2.</span> <span class="nav-text">方案二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编码"><span class="nav-number">6.3.</span> <span class="nav-text">编码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自动化加固"><span class="nav-number">7.</span> <span class="nav-text">自动化加固</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
