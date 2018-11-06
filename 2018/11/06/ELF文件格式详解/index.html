@@ -105,6 +105,7 @@
 <meta property="og:image" content="https://i.imgur.com/BMj6qpj.png">
 <meta property="og:image" content="https://i.imgur.com/Cc6dCwQ.png">
 <meta property="og:image" content="https://i.imgur.com/RVRaTEv.png">
+<meta property="og:image" content="https://i.imgur.com/MNYcFJH.png">
 <meta property="og:image" content="https://i.imgur.com/TqEDYFo.png">
 <meta property="og:image" content="https://i.imgur.com/31RrnM4.png">
 <meta property="og:image" content="https://i.imgur.com/8l2Ps0C.png">
@@ -116,7 +117,7 @@
 <meta property="og:image" content="https://i.imgur.com/Y25pX1x.png">
 <meta property="og:image" content="https://i.imgur.com/SNz1mjh.png">
 <meta property="og:image" content="https://i.imgur.com/PlDTBOD.png">
-<meta property="og:updated_time" content="2018-11-06T13:48:01.542Z">
+<meta property="og:updated_time" content="2018-11-06T14:06:29.828Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ELF文件格式详解">
 <meta name="twitter:description" content="前情提要需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..还是因为当初看的时候手太懒了没有动手写啊………. 于是先从一篇完整的elf文件格式解析写起readelf真的好用…… hook基本都是c++写的，因此解析也用c++写好点因为我的机子都是">
@@ -391,7 +392,53 @@
 <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..<br>还是因为当初看的时候手太懒了没有动手写啊……….</p>
 <p>于是先从一篇完整的elf文件格式解析写起<br>readelf真的好用……</p>
 <p>hook基本都是c++写的，因此解析也用c++写好点<br>因为我的机子都是64位的，因此解析android arm-64位下的so为目的</p>
-<p>由于许多书籍对elf中的名词描述不同，因此采用如下翻译：<br>| 汉语        | 英语  |<br>| —-  | —-  |<br>|    ELF文件头     |   ELF header    |<br>|     基地址    |    base address   |<br>|      动态连接器   |     dynamic linker  |<br>|    全局偏移量表     |   global offset table    |<br>|     初始化函数    |    initialization function   |<br>|      函数连接表    |     procedure linkage table   |<br>|     程序头    |    program header    |<br>|      节   |     section  |<br>|     段     |    segment   |  </p>
+<p>由于许多书籍对elf中的名词描述不同，因此采用如下翻译：</p>
+<table>
+<thead>
+<tr>
+<th>汉语</th>
+<th>英语</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ELF文件头</td>
+<td>ELF header</td>
+</tr>
+<tr>
+<td>基地址</td>
+<td>base address</td>
+</tr>
+<tr>
+<td>动态连接器</td>
+<td>dynamic linker</td>
+</tr>
+<tr>
+<td>全局偏移量表</td>
+<td>global offset table</td>
+</tr>
+<tr>
+<td>初始化函数</td>
+<td>initialization function</td>
+</tr>
+<tr>
+<td>函数连接表</td>
+<td>procedure linkage table</td>
+</tr>
+<tr>
+<td>程序头</td>
+<td>program header</td>
+</tr>
+<tr>
+<td>节</td>
+<td>section</td>
+</tr>
+<tr>
+<td>段</td>
+<td>segment</td>
+</tr>
+</tbody>
+</table>
 <p>此外本篇将地址区分为三种：<br>逻辑地址：指由程序产生的与段相关的偏移地址部分。也就是段*16+的那个值。<br>虚拟地址/线性地址：为进程虚拟的地址空间<br>物理地址：实际地址空间</p>
 <p>现在从逻辑地址到虚拟地址还要经过一次保护模式分段机制。简述就是保护模式将段的信息存于GDT与LDT中，段寄存器存其表的索引值。<br>32位Linux中逻辑地址等于线性地址，因为Linux所有的段（用户代码段、用户数据段、内核代码段、内核数据段）的线性地址都是从 0x00000000 开始，长度4G，这样 线性地址=逻辑地址+ 0x00000000，也就是说逻辑地址等于线性地址了。<br>现在先认为elf中的都是虚拟地址。等搞清保护模式机制时阅读exec与linker再分析地址问题。64位下的机制貌似很不一样…….</p>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>由于考虑到对各种不同硬件和操作系统的适用性和扩展性，ELF(v1.2)规范在制 定时，把 ELF格式分为了三个层次。<br>第一层是基本的部分，即格式中通用的部 分，这部分在各种处理器架构和操作系统上都是相同的；<br>第二层是处理器的扩展部 分，这部分会因处理器架构的不同而不同，规范中只定义了针对 Intel i386架构的内容，针对其它的处理器的内容由处理器厂商自己提供；<br>第三层是操作系统的扩展 部分，这部分内容在不同的操作系统下面也可能是不同的，规范中只定义了针对 UNIX System V Release 4操作系统的内容。<br>90年代发布的ELF1.2标准，因此本篇参考该标准解析。由于该文件只是规范，并且有根据不同厂商扩展的部分，<strong>实际一切以现有的ARM64-android为分析源</strong></p>
@@ -400,15 +447,75 @@
 <h3 id="共享目标文件"><a href="#共享目标文件" class="headerlink" title="共享目标文件"></a>共享目标文件</h3><p>即动态连接库文件。它在以下两种情况下被使用：第一，在连接过程中与其它动态链接库或可重定位文件一起构建新的目标 文件；第二，在可执行文件被加载的过程中，被动态链接到新的进程中，成为运行 代码的一部分。 </p>
 <h3 id="可执行文件"><a href="#可执行文件" class="headerlink" title="可执行文件"></a>可执行文件</h3><p>经过连接的，可以执行的程序文件。</p>
 <h2 id="文件格式概观"><a href="#文件格式概观" class="headerlink" title="文件格式概观"></a>文件格式概观</h2><p>ELF文件根据用途不同可被看成的内容不同</p>
-<p><img src="https://i.imgur.com/BMj6qpj.png" alt=""><br>图elf1</p>
+<p><img src="https://i.imgur.com/BMj6qpj.png" alt=""></p>
 <p>用于构建程序或者用于运行程序</p>
 <p><strong>注意实际上elf文件只有文件头的位置是固定的，其它内容的位置都可以变化</strong></p>
 <h3 id="ELF文件头"><a href="#ELF文件头" class="headerlink" title="ELF文件头"></a>ELF文件头</h3><p>位于文件的开始处，包含有整个文件的结构信息。 </p>
 <h3 id="节-section"><a href="#节-section" class="headerlink" title="节(section)"></a>节(section)</h3><p>是专用于连接过程而言的，在每个“节”中包含有指令数据、符号数据、重 定位数据等等。</p>
 <h3 id="程序头表-program-header-table"><a href="#程序头表-program-header-table" class="headerlink" title="程序头表(program header table)"></a>程序头表(program header table)</h3><p>在运行过程中是必须的，在连接过程中是可选的，因为它的作用是告诉系统 如何创建进程的镜像。 </p>
 <h3 id="节头表-section-header-table"><a href="#节头表-section-header-table" class="headerlink" title="节头表 (section header table)"></a>节头表 (section header table)</h3><p>包含有文件中所有“节”的信息。在连接视图中，“节头表”是必须存在 的，文件里的每一个“节”都需要在“节头表”中有一个对应的注册项，这个注册 项描述了节的名字、大小等等。 </p>
-<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>无符号：<br>| 自定义        | 字节  |<br>| —-  | —-  |<br>|    Elf_Byte     |   1    |<br>|     Elf64_Quarter    |    2   |<br>|      Elf64_Half   |     4  |<br>|      Elf64_Word   |   4    |<br>|     Elf64_Addr    |   8    |<br>|     Elf64_Off    |     8  |<br>|      Elf64_Xword   |    8   |  </p>
-<p>有符号：<br>| 自定义        | 字节  |<br>| —-  | —-  |<br>|    Elf64_Shalf     |   4    |<br>|     Elf64_Sword    |    4   |<br>|      Elf64_Sxword   |     8  |  </p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>无符号：</p>
+<table>
+<thead>
+<tr>
+<th>自定义</th>
+<th>字节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elf_Byte</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Elf64_Quarter</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Elf64_Half</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Elf64_Word</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Elf64_Addr</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Elf64_Off</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Elf64_Xword</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>有符号：</p>
+<table>
+<thead>
+<tr>
+<th>自定义</th>
+<th>字节</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elf64_Shalf</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Elf64_Sword</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Elf64_Sxword</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
 <p>不管平台如何，x86还是arm。linux还是win。编译或者加载64位elf的时候ELF文件都是按这个类型大小定义的。因此只要保证头文件数据类型的大小一致性就能移植编译使用<br>该字长由ELF自己定义，与主机无关</p>
 <p>ELF的字符集采用ASCII，支持其它编码格式</p>
 <h1 id="ELF文件头-1"><a href="#ELF文件头-1" class="headerlink" title="ELF文件头"></a>ELF文件头</h1><p>文件头描述整个文件的结构信息，描述可能与文件中实际不同，具体处理需要参考具体实现源码-linker与exec。加壳时寻找其bug<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#define EI_NIDENT	16		/* Size of e_ident[] */</div><div class="line">typedef struct &#123;</div><div class="line">	unsigned char	e_ident[EI_NIDENT];	/* Id bytes */</div><div class="line">	Elf64_Quarter	e_type;			/* file type */</div><div class="line">	Elf64_Quarter	e_machine;		/* machine type */</div><div class="line">	Elf64_Half	e_version;		/* version number */</div><div class="line">	Elf64_Addr	e_entry;		/* entry point */</div><div class="line">	Elf64_Off	e_phoff;		/* Program hdr offset */</div><div class="line">	Elf64_Off	e_shoff;		/* Section hdr offset */</div><div class="line">	Elf64_Half	e_flags;		/* Processor flags */</div><div class="line">	Elf64_Quarter	e_ehsize;		/* sizeof ehdr */</div><div class="line">	Elf64_Quarter	e_phentsize;		/* Program header entry size */</div><div class="line">	Elf64_Quarter	e_phnum;		/* Number of program headers */</div><div class="line">	Elf64_Quarter	e_shentsize;		/* Section header entry size */</div><div class="line">	Elf64_Quarter	e_shnum;		/* Number of section headers */</div><div class="line">	Elf64_Quarter	e_shstrndx;		/* String table index */</div><div class="line">&#125; Elf64_Ehdr;</div></pre></td></tr></table></figure></p>
@@ -486,22 +593,22 @@
 <h3 id="offset"><a href="#offset" class="headerlink" title="offset"></a>offset</h3><p>指明了本节所在的位置，该值是节的第一个字节在文件中的位置，即相对于文件开头的偏移量。单位是字节。如果该节的类型为 SHT-NOBITS的话，表明这一节的内容是空的，节并不占用实际的空间，这时 sh_offset只代表一个逻辑上的位置概念，并不代表实际的内容。</p>
 <h3 id="size"><a href="#size" class="headerlink" title="size"></a>size</h3><p>指明节的大小，单位是字节。如果该节的类型为 SHT-NOBITS，此值仍然可能为非零，但没有实际的意义。<br>指明的是该节在内存与文件中的大小，但是可被 NOBITS表示为仅指明内存中的大小。</p>
 <h3 id="link"><a href="#link" class="headerlink" title="link"></a>link</h3><p>此成员是一个索引值，指向节头表中本节所对应的位置。根据节的类型不同，本成员的意义也有所不同。</p>
-<h3 id="info"><a href="#info" class="headerlink" title="info"></a>info</h3><p>此成员含有此节的附加信息，根据节的类型不同，本成员的意义也有所不同<br>对于某些节类型来说，sh-link和 sh-info含有特殊的信息：<br><img src="https://i.imgur.com/Cc6dCwQ.png" alt=""><br>elf图2</p>
+<h3 id="info"><a href="#info" class="headerlink" title="info"></a>info</h3><p>此成员含有此节的附加信息，根据节的类型不同，本成员的意义也有所不同<br>对于某些节类型来说，sh-link和 sh-info含有特殊的信息：<br><img src="https://i.imgur.com/Cc6dCwQ.png" alt=""></p>
 <h3 id="addralign"><a href="#addralign" class="headerlink" title="addralign"></a>addralign</h3><p>此成员指明本节内容如何对齐字节，即该节的地址应该向多少个字节对齐。<br>保证addr%(2<em> </em>addralign )=0  为0或1表示没有对齐要求</p>
 <h3 id="entsize"><a href="#entsize" class="headerlink" title="entsize"></a>entsize</h3><p>有一些节的内容是一张表，其中每一个表项的大小是固定的，比如符号表。对于这种表来说，本成员指定其每一个表项的大小。如果此值为 0则表明本节内容不是这种表格</p>
 <h2 id="特殊节"><a href="#特殊节" class="headerlink" title="特殊节"></a>特殊节</h2><p>在ELF文件中有一些特定的节是预定义好的，其内容是指令代码或者控制信息。这些节专门为操作系统使用，对于不同的操作系统，这些节的类型和属性有所不同。<br>.开头表示为系统保留的。应用程序可以构造自己的节，但最好不要重名。节名不具有唯一性，可以重复。</p>
 <p>比如但不限于：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">/* Section names */</div><div class="line">#define ELF_BSS         &quot;.bss&quot;		/* uninitialized data */</div><div class="line">#define ELF_DATA        &quot;.data&quot;		/* initialized data */</div><div class="line">#define ELF_DEBUG       &quot;.debug&quot;	/* debug */</div><div class="line">#define ELF_DYNAMIC     &quot;.dynamic&quot;	/* dynamic linking information */</div><div class="line">#define ELF_DYNSTR      &quot;.dynstr&quot;	/* dynamic string table */</div><div class="line">#define ELF_DYNSYM      &quot;.dynsym&quot;	/* dynamic symbol table */</div><div class="line">#define ELF_FINI        &quot;.fini&quot;		/* termination code */</div><div class="line">#define ELF_GOT         &quot;.got&quot;		/* global offset table */</div><div class="line">#define ELF_HASH        &quot;.hash&quot;		/* symbol hash table */</div><div class="line">#define ELF_INIT        &quot;.init&quot;		/* initialization code */</div><div class="line">#define ELF_REL_DATA    &quot;.rel.data&quot;	/* relocation data */</div><div class="line">#define ELF_REL_FINI    &quot;.rel.fini&quot;	/* relocation termination code */</div><div class="line">#define ELF_REL_INIT    &quot;.rel.init&quot;	/* relocation initialization code */</div><div class="line">#define ELF_REL_DYN     &quot;.rel.dyn&quot;	/* relocaltion dynamic link info */</div><div class="line">#define ELF_REL_RODATA  &quot;.rel.rodata&quot;	/* relocation read-only data */</div><div class="line">#define ELF_REL_TEXT    &quot;.rel.text&quot;	/* relocation code */</div><div class="line">#define ELF_RODATA      &quot;.rodata&quot;	/* read-only data */</div><div class="line">#define ELF_SHSTRTAB    &quot;.shstrtab&quot;	/* section header string table */</div><div class="line">#define ELF_STRTAB      &quot;.strtab&quot;	/* string table */</div><div class="line">#define ELF_SYMTAB      &quot;.symtab&quot;	/* symbol table */</div><div class="line">#define ELF_TEXT        &quot;.text&quot;		/* code */</div></pre></td></tr></table></figure></p>
-<h3 id="bss"><a href="#bss" class="headerlink" title="bss"></a>bss</h3><p>本节中包含目标文件中未初始化的全局变量。一般情况下，可执行程序在开始运行的时候，系统会把这一段内容清零。但是，在运行期间的 bss段是由系统初始化而成的，在目标文件中.bss节并不包含任何内容，其长度为 0，所以它的节类型为 SHT-NOBITS。<br>其也指明了size<br><img src="https://i.imgur.com/RVRaTEv.png" alt=""><br>图bss</p>
-<h3 id="comment"><a href="#comment" class="headerlink" title="comment"></a>comment</h3><p>版本控制信息</p>
-<p>图comment</p>
+<h3 id="bss"><a href="#bss" class="headerlink" title="bss"></a>bss</h3><p>本节中包含目标文件中未初始化的全局变量。一般情况下，可执行程序在开始运行的时候，系统会把这一段内容清零。但是，在运行期间的 bss段是由系统初始化而成的，在目标文件中.bss节并不包含任何内容，其长度为 0，所以它的节类型为 SHT-NOBITS。<br>其也指明了size<br><img src="https://i.imgur.com/RVRaTEv.png" alt=""></p>
+<h3 id="comment"><a href="#comment" class="headerlink" title="comment"></a>comment</h3><p>版本控制信息<br><img src="https://i.imgur.com/MNYcFJH.png" alt=""></p>
 <p>可见其中包含了编译器信息，没有alloc表示不在内存中分配空间</p>
-<h3 id="data-data1"><a href="#data-data1" class="headerlink" title="data/data1"></a>data/data1</h3><p>这两个节用于存放程序中被初始化过的全局变量。在目标文件中，它们是占用实际的存储空间的，与.bss节不同。<br><img src="https://i.imgur.com/TqEDYFo.png" alt=""><br>图data</p>
+<h3 id="data-data1"><a href="#data-data1" class="headerlink" title="data/data1"></a>data/data1</h3><p>这两个节用于存放程序中被初始化过的全局变量。在目标文件中，它们是占用实际的存储空间的，与.bss节不同。<br><img src="https://i.imgur.com/TqEDYFo.png" alt=""></p>
 <h3 id="debug"><a href="#debug" class="headerlink" title="debug"></a>debug</h3><p>本节中含有调试信息，内容格式没有统一规定。所有以”.debug”为前缀的节名 字都是保留的</p>
 <h3 id="dynamic"><a href="#dynamic" class="headerlink" title="dynamic"></a>dynamic</h3><p>本节包含动态连接信息，并且可能有 SHF-ALLOC和 SHF-WRITE等属性。 是否具有SHF-WRITE属性取决于操作系统和处理器。<br>保存了动态连接的基本信息，依赖对象、动态连接符号表、动态连接重定位表等</p>
-<p><img src="https://i.imgur.com/31RrnM4.png" alt=""><br>图dynamic</p>
+<p><img src="https://i.imgur.com/31RrnM4.png" alt=""></p>
 <h3 id="dynstr"><a href="#dynstr" class="headerlink" title="dynstr"></a>dynstr</h3><p>此节含有用于动态连接的字符串，一般是那些与符号表相关的名字。</p>
-<p><img src="https://i.imgur.com/8l2Ps0C.png" alt=""><br>图dynastr<br>里面含有动态连接符号的字串</p>
-<h3 id="dynsym"><a href="#dynsym" class="headerlink" title="dynsym"></a>dynsym</h3><p>此节含有动态连接符号表<br><img src="https://i.imgur.com/SsFfAQE.png" alt=""><br>图dynsym</p>
+<p><img src="https://i.imgur.com/8l2Ps0C.png" alt=""></p>
+<p>里面含有动态连接符号的字串</p>
+<h3 id="dynsym"><a href="#dynsym" class="headerlink" title="dynsym"></a>dynsym</h3><p>此节含有动态连接符号表<br><img src="https://i.imgur.com/SsFfAQE.png" alt=""></p>
 <h3 id="fini"><a href="#fini" class="headerlink" title="fini"></a>fini</h3><p>此节包含进程终止时要执行的程序指令。当程序正常退出时，系统会执行这一节中的代码。</p>
 <h3 id="got"><a href="#got" class="headerlink" title="got"></a>got</h3><p>此节包含全局偏移量表。 </p>
 <h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p>本节包含一张符号哈希表。 </p>
@@ -524,7 +631,8 @@
 <p>低32位表示重定位类型，高32位表示重定位符号在符号表的下标。使用的符号表用link表示，作用的段用info表示<br>比如：<br>GLOB-DAT:  这种重定位类型用于把指定的符号地址设置为一个全局偏移量表项。这种重 定位类型在符号与全局偏移量表项之间建立起了联系。 </p>
 <h4 id="addend"><a href="#addend" class="headerlink" title="addend"></a>addend</h4><p>本成员指定了一个加数，这个加数用于计算需要重定位的域的值</p>
 <h3 id="rodata-rodata1"><a href="#rodata-rodata1" class="headerlink" title="rodata/rodata1"></a>rodata/rodata1</h3><p>本节包含程序中的只读数据，在程序装载时，它们一般会被装入进程空间中 那些只读的段中去。</p>
-<h3 id="shstrtab"><a href="#shstrtab" class="headerlink" title="shstrtab"></a>shstrtab</h3><p>本节是“节名字表”，含有所有其它节的名字，属于字符串表的一种，它包含所有节的名字。每一个节头的 sh-name成员应该是一个索引值，它指向节名字表中的一个位置，从这个位置开始到接下来第一个’null’字符为止的这个字符串，正是这个节的名字。<br><img src="https://i.imgur.com/Slc8Fg9.png" alt=""><br>图shstrtab<br>可见并不用分配内存空间</p>
+<h3 id="shstrtab"><a href="#shstrtab" class="headerlink" title="shstrtab"></a>shstrtab</h3><p>本节是“节名字表”，含有所有其它节的名字，属于字符串表的一种，它包含所有节的名字。每一个节头的 sh-name成员应该是一个索引值，它指向节名字表中的一个位置，从这个位置开始到接下来第一个’null’字符为止的这个字符串，正是这个节的名字。<br><img src="https://i.imgur.com/Slc8Fg9.png" alt=""></p>
+<p>可见并不用分配内存空间</p>
 <h3 id="strtab"><a href="#strtab" class="headerlink" title="strtab"></a>strtab</h3><p>本节用于存放字符串，主要是那些符号表项的名字。如果一个目标文件有一个可装载的段，并且其中含有符号表，那么本节的属性中应该有SHF-ALLOC。<br>以null开头，该节种存放多个以null结尾的字符序列。<br>索引时提供的序号不是字符串的序号。如果把整个字符串节看做字节数组的话该序号是数组的下标。从下标到null为被指向的字串。因此可以引用每个字符串靠后的部分。<br>实际上so与可执行中没有看见这个节，这个节一般在可重定位文件中(.o.a)</p>
 <h3 id="symtab"><a href="#symtab" class="headerlink" title="symtab"></a>symtab</h3><p>本节用于存放符号表。如果一个目标文件有一个可载入的段，并且其中含有 符号表，那么本节的属性中应该有 SHF-ALLOC。<br>目标文件中的“符号表(symbol table)”所包含的信息用于定位和重定位程序中的符号<strong>定义和引用</strong>。目标文件的其它部分通过一个符号在这个表中的索引值来使用该符号。索引值从0开始计数，但值为0的表项（即第一项）并没有实际的意义，它表示未定义的符号。这里用常量STN-UNDEF来表示未定义的符号。 </p>
 <p>定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">typedef struct &#123;</div><div class="line">	Elf64_Half	st_name;	/* Symbol name index in str table */</div><div class="line">	Elf_Byte	st_info;	/* type / binding attrs */</div><div class="line">	Elf_Byte	st_other;	/* unused */</div><div class="line">	Elf64_Quarter	st_shndx;	/* section index of symbol */</div><div class="line">	Elf64_Xword	st_value;	/* value of symbol */</div><div class="line">	Elf64_Xword	st_size;	/* size of symbol */</div><div class="line">&#125; Elf64_Sym;</div></pre></td></tr></table></figure></p>
@@ -558,7 +666,7 @@
 <p>这样的设计是为了在不同类型文件中访问数据更有效</p>
 <h4 id="size-1"><a href="#size-1" class="headerlink" title="size"></a>size</h4><p>符号的大小。各种符号的大小各不相同，比如一个对象的大小就是它实际占用的字节数。</p>
 <h3 id="text"><a href="#text" class="headerlink" title="text"></a>text</h3><p>本节包含程序指令代码</p>
-<h1 id="段"><a href="#段" class="headerlink" title="段"></a>段</h1><p>要执行一个程序，系统要先把相应的可执行文件和动态连接库装载到进程空间中，这样形成一个可运行的进程的内存空间布局，也可以称它为“进程镜像”。<br>权限相同的节分别映射容易浪费页，因为映射必须以页为单位才可以方便进行权限管理、换入换出等操作(段式现往往用于在页式前划分空间)，因此将权限相同的节合并为段一起映射，用于加载执行。<br>这也就是前面看节表时发现如下具有W权限的节明显新分配到了一个页<br><img src="https://i.imgur.com/EOB8ity.png" alt=""><br>图段-1</p>
+<h1 id="段"><a href="#段" class="headerlink" title="段"></a>段</h1><p>要执行一个程序，系统要先把相应的可执行文件和动态连接库装载到进程空间中，这样形成一个可运行的进程的内存空间布局，也可以称它为“进程镜像”。<br>权限相同的节分别映射容易浪费页，因为映射必须以页为单位才可以方便进行权限管理、换入换出等操作(段式现往往用于在页式前划分空间)，因此将权限相同的节合并为段一起映射，用于加载执行。<br>这也就是前面看节表时发现如下具有W权限的节明显新分配到了一个页<br><img src="https://i.imgur.com/EOB8ity.png" alt=""></p>
 <h2 id="程序头"><a href="#程序头" class="headerlink" title="程序头"></a>程序头</h2><p>一个可执行文件或共享目标文件的程序头表(program header table)是一个数组， 数组中的每一个元素称为“程序头(program header)”，每一个程序头描述了一个 “段(segment)”或者一块用于准备执行程序的信息。一个目标文件中的“段 (segment)”包含一个或者多个“节(section)”。程序头只对可执行文件或共享目标文件有意义，对于其它类型的目标文件，该信息可以忽略。在目标文件的文件头 (elf header)中，e-phentsize和 e-phnum成员指定了程序头的大小。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">typedef struct &#123;</div><div class="line">	Elf64_Half	p_type;		/* entry type类型 */</div><div class="line">	Elf64_Half	p_flags;	/* flags 标志*/</div><div class="line">	Elf64_Off	p_offset;	/* offset 文件偏移*/</div><div class="line">	Elf64_Addr	p_vaddr;	/* virtual address 虚拟地址*/</div><div class="line">	Elf64_Addr	p_paddr;	/* physical address 物理地址*/</div><div class="line">	Elf64_Xword	p_filesz;	/* file size 文件中大小*/</div><div class="line">	Elf64_Xword	p_memsz;	/* memory size 镜像中大小*/</div><div class="line">	Elf64_Xword	p_align;	/* memory &amp; file alignment对齐 */</div><div class="line">&#125; Elf64_Phdr;</div></pre></td></tr></table></figure></p>
 <p>有些程序头的内容是描述进程内的段，而有的是给出一些辅助信息，并不直接成为段的内容</p>
 <h3 id="type-2"><a href="#type-2" class="headerlink" title="type"></a>type</h3><p>此数据成员说明了本程序头所描述的段的类型，或者如何解析本程序头的信息。<br>除非有特别要求，否则所有程序头的段类型域 p-type 都是可选项，不是必须存在的。在所有程序头都不指定段类型的情况下，程序头表中所有的表项都不代表任何特别的类型，而只是作为一种索引，表明其相应的段的大小和位置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">/* Segment types - p_type */</div><div class="line">#define PT_NULL		0		/* unused */</div><div class="line">#define PT_LOAD		1		/* loadable segment */</div><div class="line">#define PT_DYNAMIC	2		/* dynamic linking section */</div><div class="line">#define PT_INTERP	3		/* the RTLD */</div><div class="line">#define PT_NOTE		4		/* auxiliary information */</div><div class="line">#define PT_SHLIB	5		/* reserved - purpose undefined */</div><div class="line">#define PT_PHDR		6		/* program header */</div><div class="line">#define PT_NUM		7		/* Number of segment types */</div><div class="line">#define PT_LOOS		0x60000000	/* reserved range for OS */</div><div class="line">#define PT_HIOS		0x6fffffff	/*  specific segment types */</div><div class="line">#define PT_LOPROC	0x70000000	/* reserved range for processor */</div><div class="line">#define PT_HIPROC	0x7fffffff	/*  specific segment types */</div><div class="line">010edit模板中的：</div><div class="line"></div><div class="line">// Program Header Types</div><div class="line">typedef enum &lt;Elf32_Word&gt; &#123;</div><div class="line">    PT_NULL                     = 0x0,</div><div class="line">    PT_LOAD                     = 0x1,</div><div class="line">    PT_DYNAMIC                  = 0x2,</div><div class="line">    PT_INERP                    = 0x3,</div><div class="line">    PT_NOTE                     = 0x4,</div><div class="line">    PT_SHLIB                    = 0x5,</div><div class="line">    PT_PHDR                     = 0x6,</div><div class="line">    PT_TLS                      = 0x7,</div><div class="line">    PT_NUM                      = 0x8,</div><div class="line">    PT_LOOS                     = 0x60000000,</div><div class="line">    PT_GNU_EH_FRAME             = 0x6474e550,</div><div class="line">    PT_GNU_STACK                = 0x6474e551,</div><div class="line">    PT_GNU_RELRO                = 0x6474e552,</div><div class="line">    PT_LOSUNW                   = 0x6ffffffa,</div><div class="line">    PT_SUNWBSS                  = 0x6ffffffa,</div><div class="line">    PT_SUNWSTACK                = 0x6ffffffb,</div><div class="line">    PT_HISUNW                   = 0x6fffffff,</div><div class="line">    PT_HIOS                     = 0x6fffffff,</div><div class="line">    PT_LOPROC                   = 0x70000000,</div><div class="line">    PT_HIPROC                   = 0x7fffffff,</div><div class="line">    // ARM Sections</div><div class="line">    PT_SHT_ARM_EXIDX            = 0x70000001,</div><div class="line">    PT_SHT_ARM_PREEMPTMAP       = 0x70000002,</div><div class="line">    PT_SHT_ARM_ATTRIBUTES       = 0x70000003,</div><div class="line">    PT_SHT_ARM_DEBUGOVERLAY     = 0x70000004,</div><div class="line">    PT_SHT_ARM_OVERLAYSECTION   = 0x70000005</div><div class="line">&#125; p_type32_e;</div><div class="line">typedef p_type32_e p_type64_e;</div></pre></td></tr></table></figure></p>
@@ -583,10 +691,10 @@
 <p>注释节中包含三种信息：名字 (name/namesz)、类型(type)和描述(desc/descsz)。<br>名字用于区别不同的信息提供者， 比如不同的厂商，”ABC Computer Company”或”XYZ Computer Company”。<br>一个信息提供者可能会提供很多种信息，为了区别，把信息分类，即给每一种 信息加一个 ID，或者说是类型 type。<br>有了 name和 type的约束，desc的内容才有意义，才知道它所描述的是什么。 </p>
 <h3 id="程序解析器-动调连接器INTERP"><a href="#程序解析器-动调连接器INTERP" class="headerlink" title="程序解析器/动调连接器INTERP"></a>程序解析器/动调连接器INTERP</h3><p>这个串指明了一个 ELF程序解析器，系统会转去初始化该解析器的进程镜像。也就是，在这时系统会暂停原来的工作，不是用待执行文件的段内容去初始化进程空间，而是把进程空间暂时“借”给解析器程序使用。然后，解析器程序将从系统手中接过控制权继续执行。<br>在 Intel架构下，系统中自带一种符合 ELF规范的程序解析器： /usr/lib/libc.so.1。 </p>
 <p>当创建一个可执行文件时，如果依赖其它的动态连接库，那么连接编辑器会在可执行文件的程序头中加入一个 PT-INTERP项，告诉系统这里需要使用动态连接器。</p>
-<p><img src="https://i.imgur.com/osHe9oH.png" alt=""><br>图(INTERP)</p>
+<p><img src="https://i.imgur.com/osHe9oH.png" alt=""></p>
 <p>通过dynamic段取到需要的so，在程序加载到内存执行前完成加载so并重定位。</p>
 <h3 id="动态段DYNAMIC"><a href="#动态段DYNAMIC" class="headerlink" title="动态段DYNAMIC"></a>动态段DYNAMIC</h3><p>如果一个目标文件参与动态连接的话，它的程序头表中一定会包含一个类型为PT-DYNAMIC的表项，其所对应的段称为动态段(dynamic segment)，段的名字为.dynamic。动态段的作用是提供动态连接器所需要的信息，比如依赖于哪些共享目标文件、动态连接符号表的位置、动态连接重定位表的位置等等。<br>这个动态段中包含有动态节：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">typedef struct &#123;</div><div class="line">	Elf64_Xword	d_tag;		/* controls meaning of d_val */</div><div class="line">	union &#123;</div><div class="line">		Elf64_Addr	d_ptr;  //地址是VA的，相对基址</div><div class="line">		Elf64_Xword	d_val;</div><div class="line">	&#125; d_un;</div><div class="line">&#125; Elf64_Dyn;</div></pre></td></tr></table></figure></p>
-<p>对于每一项，tag控制着对un的解析<br><img src="https://i.imgur.com/CeffDqZ.png" alt=""><br>图dynamic-ph</p>
+<p>对于每一项，tag控制着对un的解析<br><img src="https://i.imgur.com/CeffDqZ.png" alt=""></p>
 <h4 id="tag"><a href="#tag" class="headerlink" title="tag"></a>tag</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">/* Dynamic Array Tags - d_tag */</div><div class="line">            名称   值      un    可执行文件   共享目标文件</div><div class="line">#define DT_NULL		0		/*忽略 必须 必须   */</div><div class="line">#define DT_NEEDED	1		/*val 可选 可选  */</div><div class="line">#define DT_PLTRELSZ	2		/*val 可选 可选  */</div><div class="line">#define DT_PLTGOT	3		/*ptr 可选 可选  */</div><div class="line">#define DT_HASH		4		/*ptr 必须 必须  */</div><div class="line">#define DT_STRTAB	5		/*ptr 必须 必须  */</div><div class="line">#define DT_SYMTAB	6		/*ptr 必须 必须  */</div><div class="line">#define DT_RELA		7		/*ptr 必须 可选  */</div><div class="line">#define DT_RELASZ	8		/*val 必须 可选  */</div><div class="line">#define DT_RELAENT	9		/*val 必须 可选  */</div><div class="line">#define DT_STRSZ	10		/*val 必须 必须  */</div><div class="line">#define DT_SYMENT	11		/*val 必须 必须*/</div><div class="line">#define DT_INIT		12		/*ptr 可选 可选  */</div><div class="line">#define DT_FINI		13		/*ptr 可选 可选  */</div><div class="line">#define DT_SONAME	14		/*val 忽略 可选  */</div><div class="line">#define DT_RPATH	15		/*val 可选 忽略  */</div><div class="line">#define DT_SYMBOLIC	16		/*忽略 忽略 可选  */</div><div class="line">#define DT_REL		17		/*ptr 必须 可选  */</div><div class="line">#define DT_RELSZ	18		/*val 必须 可选 */</div><div class="line">#define DT_RELENT	19		/*val 必须 可选  */</div><div class="line">#define DT_PLTREL	20		/*val 可选 可选  */</div><div class="line">#define DT_DEBUG	21		/*ptr 可选 可选  */</div><div class="line">#define DT_TEXTREL	22		/*忽略 可选 可选  */</div><div class="line">#define DT_JMPREL	23		/*ptr 可选 可选  */</div><div class="line">#define DT_BIND_NOW	24		/*忽略 可选 可选  */</div><div class="line">#define DT_NUM		25		/*数量  */</div><div class="line">#define DT_LOPROC	0x70000000	/*  */</div><div class="line">#define DT_HIPROC	0x7fffffff	/*   */</div></pre></td></tr></table></figure>
 <p><img src="https://i.imgur.com/Y25pX1x.png" alt=""><br>图：dynamic-so<br><img src="https://i.imgur.com/SNz1mjh.png" alt=""><br>图：dynamic-exe</p>
 <p><strong>NULL</strong><br>用于标记DYNAMIC数组的结束。 </p>
