@@ -94,13 +94,13 @@
 
 
 
-<meta name="description" content="前情提要需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..还是因为当初看的时候手太懒了没有动手写啊………. 于是先从一篇完整的elf文件格式解析写起readelf真的好用…… hook基本都是c++写的，因此解析也用c++写好点因为我的机子都是">
+<meta name="description" content="前情提要需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..还是因为当初看的时候手太懒了没有动手写啊………. 于是先从一篇完整的elf文件格式解析写起readelf真的好用…… hook基本都是c++写的，因此解析也用c++写好点因为我的机子都是6">
 <meta name="keywords" content="ELF">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ELF文件格式详解">
 <meta property="og:url" content="http://yoursite.com/2018/11/06/ELF文件格式详解/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="前情提要需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..还是因为当初看的时候手太懒了没有动手写啊………. 于是先从一篇完整的elf文件格式解析写起readelf真的好用…… hook基本都是c++写的，因此解析也用c++写好点因为我的机子都是">
+<meta property="og:description" content="前情提要需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..还是因为当初看的时候手太懒了没有动手写啊………. 于是先从一篇完整的elf文件格式解析写起readelf真的好用…… hook基本都是c++写的，因此解析也用c++写好点因为我的机子都是6">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/BMj6qpj.png">
 <meta property="og:image" content="https://i.imgur.com/Cc6dCwQ.png">
@@ -117,10 +117,10 @@
 <meta property="og:image" content="https://i.imgur.com/Y25pX1x.png">
 <meta property="og:image" content="https://i.imgur.com/SNz1mjh.png">
 <meta property="og:image" content="https://i.imgur.com/PlDTBOD.png">
-<meta property="og:updated_time" content="2018-11-06T14:06:29.828Z">
+<meta property="og:updated_time" content="2018-11-07T11:25:00.119Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ELF文件格式详解">
-<meta name="twitter:description" content="前情提要需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..还是因为当初看的时候手太懒了没有动手写啊………. 于是先从一篇完整的elf文件格式解析写起readelf真的好用…… hook基本都是c++写的，因此解析也用c++写好点因为我的机子都是">
+<meta name="twitter:description" content="前情提要需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..还是因为当初看的时候手太懒了没有动手写啊………. 于是先从一篇完整的elf文件格式解析写起readelf真的好用…… hook基本都是c++写的，因此解析也用c++写好点因为我的机子都是6">
 <meta name="twitter:image" content="https://i.imgur.com/BMj6qpj.png">
 
 
@@ -388,8 +388,7 @@
       
 
       
-        <a id="more"></a>
-<h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..<br>还是因为当初看的时候手太懒了没有动手写啊……….</p>
+        <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..<br>还是因为当初看的时候手太懒了没有动手写啊……….</p>
 <p>于是先从一篇完整的elf文件格式解析写起<br>readelf真的好用……</p>
 <p>hook基本都是c++写的，因此解析也用c++写好点<br>因为我的机子都是64位的，因此解析android arm-64位下的so为目的</p>
 <p>由于许多书籍对elf中的名词描述不同，因此采用如下翻译：</p>
@@ -441,6 +440,7 @@
 </table>
 <p>此外本篇将地址区分为三种：<br>逻辑地址：指由程序产生的与段相关的偏移地址部分。也就是段*16+的那个值。<br>虚拟地址/线性地址：为进程虚拟的地址空间<br>物理地址：实际地址空间</p>
 <p>现在从逻辑地址到虚拟地址还要经过一次保护模式分段机制。简述就是保护模式将段的信息存于GDT与LDT中，段寄存器存其表的索引值。<br>32位Linux中逻辑地址等于线性地址，因为Linux所有的段（用户代码段、用户数据段、内核代码段、内核数据段）的线性地址都是从 0x00000000 开始，长度4G，这样 线性地址=逻辑地址+ 0x00000000，也就是说逻辑地址等于线性地址了。<br>现在先认为elf中的都是虚拟地址。等搞清保护模式机制时阅读exec与linker再分析地址问题。64位下的机制貌似很不一样…….</p>
+<a id="more"></a>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>由于考虑到对各种不同硬件和操作系统的适用性和扩展性，ELF(v1.2)规范在制 定时，把 ELF格式分为了三个层次。<br>第一层是基本的部分，即格式中通用的部 分，这部分在各种处理器架构和操作系统上都是相同的；<br>第二层是处理器的扩展部 分，这部分会因处理器架构的不同而不同，规范中只定义了针对 Intel i386架构的内容，针对其它的处理器的内容由处理器厂商自己提供；<br>第三层是操作系统的扩展 部分，这部分内容在不同的操作系统下面也可能是不同的，规范中只定义了针对 UNIX System V Release 4操作系统的内容。<br>90年代发布的ELF1.2标准，因此本篇参考该标准解析。由于该文件只是规范，并且有根据不同厂商扩展的部分，<strong>实际一切以现有的ARM64-android为分析源</strong></p>
 <h2 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h2><p>ELF文件的类型：可重定位文件(.o .a)、可执行文件、共享文件(.so)、转存文件</p>
 <h3 id="可重定位文件"><a href="#可重定位文件" class="headerlink" title="可重定位文件"></a>可重定位文件</h3><p>，用于与其它目标文件进行连接以构建可执行文件或动态链接库。可重定位文件就是常说的目标文件，由源文件编译而成，但还 没有连接成可执行文件。在 UNIX系统下，一般有扩展名”.o”。之所以称其为“可 重定位”，是因为在这些文件中，如果引用到其它目标文件或库文件中定义的符号 （变量或者函数）的话，只是给出一个名字，这里还并不知道这个符号在哪里，其 具体的地址是什么。需要在连接的过程中，把对这些外部符号的引用重新定位到其 真正定义的位置上，所以称目标文件为“可重定位”或者“待重定位”的。 </p>
