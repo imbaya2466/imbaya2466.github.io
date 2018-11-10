@@ -94,19 +94,19 @@
 
 
 
-<meta name="description" content="前言apk安装分4种方式：  系统开机应用安装，安装的是系统应用。 adb安装 应用调用系统应用安装第三方apk包 静默安装  在代码里的实现其实就是如下两种：  PMS调用scanDirLI扫描安装 直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数  在本篇我们看下第一种系统启动时的安装流程。下一篇介绍第二种">
+<meta name="description" content="前言apk安装分4种方式：  系统开机应用安装，安装的是系统应用。 adb安装 应用调用系统应用安装第三方apk包 静默安装  在代码里的实现其实就是如下两种：  PMS调用scanDirLI扫描安装 直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数  apk安装后主要体现在：data/app:apk包-含优化后的oat与libdata/data:数据">
 <meta name="keywords" content="android系统,apk安装">
 <meta property="og:type" content="article">
 <meta property="og:title" content="android8-0-0源码分析-应用安装1">
 <meta property="og:url" content="http://yoursite.com/2018/10/05/android8-0-0源码分析-应用安装1/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="前言apk安装分4种方式：  系统开机应用安装，安装的是系统应用。 adb安装 应用调用系统应用安装第三方apk包 静默安装  在代码里的实现其实就是如下两种：  PMS调用scanDirLI扫描安装 直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数  在本篇我们看下第一种系统启动时的安装流程。下一篇介绍第二种">
+<meta property="og:description" content="前言apk安装分4种方式：  系统开机应用安装，安装的是系统应用。 adb安装 应用调用系统应用安装第三方apk包 静默安装  在代码里的实现其实就是如下两种：  PMS调用scanDirLI扫描安装 直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数  apk安装后主要体现在：data/app:apk包-含优化后的oat与libdata/data:数据">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/l2hfrbh.jpg">
-<meta property="og:updated_time" content="2018-10-05T13:59:28.221Z">
+<meta property="og:updated_time" content="2018-11-08T11:47:52.240Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android8-0-0源码分析-应用安装1">
-<meta name="twitter:description" content="前言apk安装分4种方式：  系统开机应用安装，安装的是系统应用。 adb安装 应用调用系统应用安装第三方apk包 静默安装  在代码里的实现其实就是如下两种：  PMS调用scanDirLI扫描安装 直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数  在本篇我们看下第一种系统启动时的安装流程。下一篇介绍第二种">
+<meta name="twitter:description" content="前言apk安装分4种方式：  系统开机应用安装，安装的是系统应用。 adb安装 应用调用系统应用安装第三方apk包 静默安装  在代码里的实现其实就是如下两种：  PMS调用scanDirLI扫描安装 直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数  apk安装后主要体现在：data/app:apk包-含优化后的oat与libdata/data:数据">
 <meta name="twitter:image" content="https://i.imgur.com/l2hfrbh.jpg">
 
 
@@ -386,6 +386,7 @@
 <li>PMS调用scanDirLI扫描安装</li>
 <li>直接或间接调用installPackageAsUser安装，这个8.0下其实调用的是另一个函数</li>
 </ol>
+<p>apk安装后主要体现在：<br>data/app:apk包-含优化后的oat与lib<br>data/data:数据目录</p>
 <p>在本篇我们看下第一种系统启动时的安装流程。下一篇介绍第二种</p>
 <a id="more"></a>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>一张时序图：<br><img src="https://i.imgur.com/l2hfrbh.jpg" alt=""></p>
