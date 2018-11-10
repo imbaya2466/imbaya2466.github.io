@@ -283,6 +283,160 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/19/apk加固-dex中子apk-java层加载/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/19/apk加固-dex中子apk-java层加载/" itemprop="url">apk加固-dex中子apk-java层加载</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-19T19:16:12+08:00">
+                2018-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android应用加固/" itemprop="url" rel="index">
+                    <span itemprop="name">android应用加固</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本机测试成功</p>
+<h2 id="过程简介"><a href="#过程简介" class="headerlink" title="过程简介"></a>过程简介</h2><p>3部分：</p>
+<ol>
+<li>源程序apk</li>
+<li>加壳程序，将apk直接附着于解壳程序apk的dex后</li>
+<li>解壳程序，读出dex后的程序并解密加载运行。重点！主要是用反射调用系统java层。详细需要看aosp。</li>
+</ol>
+<p>操作步骤：编写源apk，将源apk与解壳的dex用加密程序合并，将dex复制回解壳apk中。签名。</p>
+<p>360加固中：将dex中藏有源dex，但资源并没加密，运行自己的脱壳程序在so中解密源加载运行。因为data区应该是dex最后的区了，所以用data_size+data_off判断是否藏有其它。<br>art运行模式对这种加载模式有什么影响？一样有可以加载dex？</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/19/apk加固-dex中子apk-java层加载/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/29/android应用加固2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -391,6 +545,205 @@
 <p>hook导出表完整：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div></pre></td><td class="code"><pre><div class="line">#include &lt;jni.h&gt;</div><div class="line">#include &lt;dlfcn.h&gt;</div><div class="line">#include &lt;elf.h&gt;</div><div class="line">#include &lt;android/log.h&gt; </div><div class="line">#include &lt;sys/mman.h&gt;</div><div class="line">#define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, &quot;ror_got_hook&quot;, __VA_ARGS__))</div><div class="line"></div><div class="line">#define MEM_PAGE_SIZE 4096</div><div class="line">#define MEM_PAGE_MASK (MEM_PAGE_SIZE-1)</div><div class="line">#define MEM_PAGE_START(x)  ((x) &amp; ~MEM_PAGE_MASK)</div><div class="line">#define MEM_PAGE_END(x)    MEM_PAGE_START((x) + (MEM_PAGE_SIZE-1))</div><div class="line">#define ElfW(type) Elf32_ ## type</div><div class="line"></div><div class="line"></div><div class="line">JNIEXPORT jint JNICALL ReturnGiveValue(int val)</div><div class="line">&#123;</div><div class="line">    return val;</div><div class="line">&#125;</div><div class="line"></div><div class="line">JNIEXPORT jint JNICALL ReturnFakeValue(int val)</div><div class="line">&#123;</div><div class="line">    return val * 100;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">int __attribute__((constructor))  gothook()</div><div class="line">&#123;</div><div class="line">    //获取动态库基值</div><div class="line">    void* testlib = dlopen(&quot;/data/data/com.test.test/libtest.so&quot;,RTLD_LAZY);</div><div class="line">    int nBase = *(int*)(testlib+0x8C);</div><div class="line">    LOGD(&quot;nBase : %x&quot;,nBase);</div><div class="line"></div><div class="line">    //计算program header table实际地址</div><div class="line">    ElfW(Ehdr) *header = (ElfW(Ehdr)*)(nBase);</div><div class="line">    if (memcmp(header-&gt;e_ident, &quot;\177ELF&quot;, 4) != 0) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    int phOffset = header-&gt;e_phoff;</div><div class="line">    int phNumber = header-&gt;e_phnum;</div><div class="line">    int phPhyAddr = phOffset + nBase;</div><div class="line">    LOGD(&quot;phOffset  : %x&quot;,phOffset);</div><div class="line">    LOGD(&quot;phNumber  : %x&quot;,phNumber);</div><div class="line">    LOGD(&quot;phPhyAddr : %x&quot;,phPhyAddr);</div><div class="line">    int i = 0;</div><div class="line"></div><div class="line">    ElfW(Phdr)* phdr_table = (ElfW(Phdr)*)(nBase + phOffset);</div><div class="line">    if (phdr_table == 0)</div><div class="line">    &#123;</div><div class="line">        LOGD(&quot;phdr_table address : 0&quot;);</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">/*</div><div class="line">// Program header for ELF32.</div><div class="line">struct Elf32_Phdr &#123;</div><div class="line">  Elf32_Word p_type;   // Type of segment</div><div class="line">  Elf32_Off  p_offset; // File offset where segment is located, in bytes</div><div class="line">  Elf32_Addr p_vaddr;  // Virtual address of beginning of segment</div><div class="line">  Elf32_Addr p_paddr;  // Physical address of beginning of segment (OS-specific)</div><div class="line">  Elf32_Word p_filesz; // Num. of bytes in file image of segment (may be zero)</div><div class="line">  Elf32_Word p_memsz;  // Num. of bytes in mem image of segment (may be zero)</div><div class="line">  Elf32_Word p_flags;  // Segment flags</div><div class="line">  Elf32_Word p_align;  // Segment alignment constraint</div><div class="line">&#125;;</div><div class="line">*/</div><div class="line">    //遍历program header table，ptype等于2即为dynameic，获取到p_offset</div><div class="line">    unsigned long dynamicAddr = 0;</div><div class="line">    unsigned int dynamicSize = 0;</div><div class="line">    for (int i = 0; i &lt; phNumber; i++)</div><div class="line">    &#123;</div><div class="line">        if (phdr_table[i].p_type == PT_DYNAMIC)</div><div class="line">        &#123;</div><div class="line">            dynamicAddr = phdr_table[i].p_vaddr + nBase;</div><div class="line">            dynamicSize = phdr_table[i].p_memsz;</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    LOGD(&quot;Dynamic Addr : %x&quot;,dynamicAddr);</div><div class="line">    LOGD(&quot;Dynamic Size : %x&quot;,dynamicSize);</div><div class="line"></div><div class="line">/*</div><div class="line">typedef struct dynamic &#123;</div><div class="line">    Elf32_Sword d_tag;</div><div class="line">    union &#123;</div><div class="line">    Elf32_Sword d_val;</div><div class="line">    Elf32_Addr d_ptr;</div><div class="line">    &#125; d_un;</div><div class="line">&#125; Elf32_Dyn;</div><div class="line">*/</div><div class="line">    //开始遍历dynamic段结构，d_tag为6即为符号表地址</div><div class="line">    int systemTableAddr = 0;</div><div class="line">    ElfW(Dyn)* dynamic_table = (ElfW(Dyn)*)(dynamicAddr);</div><div class="line"></div><div class="line">    for(i=0;i &lt; dynamicSize / 8;i ++)</div><div class="line">    &#123;</div><div class="line">        int val = dynamic_table[i].d_un.d_val;</div><div class="line">        if (dynamic_table[i].d_tag == 6)</div><div class="line">        &#123;</div><div class="line">            systemTableAddr = val + nBase;</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    LOGD(&quot;System Table Addr : %x&quot;,systemTableAddr);</div><div class="line"></div><div class="line">/*</div><div class="line">typedef struct elf32_sym &#123;</div><div class="line">    Elf32_Word st_name;</div><div class="line">    Elf32_Addr st_value;</div><div class="line">    Elf32_Word st_size;</div><div class="line">    unsigned char st_info;</div><div class="line">    unsigned char st_other;</div><div class="line">    Elf32_Half st_shndx;</div><div class="line">&#125; Elf32_Sym;</div><div class="line">*/</div><div class="line">    //遍历符号表，查找符号表中标记的ReturnGiveValue函数地址，替换为ReturnFakeValue的地址</div><div class="line">    int giveValuePtr = 0;</div><div class="line">    int fakeValuePtr = 0;</div><div class="line">    int fakeFunc = (int)ReturnFakeValue - nBase;</div><div class="line">    int giveFunc = (int)ReturnGiveValue - nBase;</div><div class="line">    i = 0;</div><div class="line">    LOGD(&quot;fakeFunc Addr : %x&quot;,fakeFunc);</div><div class="line">    LOGD(&quot;giveFunc Addr : %x&quot;,giveFunc);</div><div class="line"></div><div class="line">    void* pstart = (void*)MEM_PAGE_START(((ElfW(Addr))systemTableAddr));</div><div class="line">    mprotect(pstart,MEM_PAGE_SIZE,PROT_READ | PROT_WRITE | PROT_EXEC);</div><div class="line">    ElfW(Sym)* symTab = (ElfW(Sym)*)(systemTableAddr);</div><div class="line">    while(1)</div><div class="line">    &#123;</div><div class="line">        LOGD(&quot;func Addr : %x&quot;,symTab[i].st_value);</div><div class="line">        if(symTab[i].st_value == giveFunc)</div><div class="line">        &#123;</div><div class="line">            symTab[i].st_value = fakeFunc;</div><div class="line">            LOGD(&quot;New Give func Addr : %x&quot;,symTab[i].st_value);</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line">        i ++;</div><div class="line">    &#125;</div><div class="line">    mprotect(pstart,MEM_PAGE_SIZE,PROT_READ | PROT_EXEC);</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>hook导入表<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div></pre></td><td class="code"><pre><div class="line">#include &lt;jni.h&gt;</div><div class="line">#include &lt;dlfcn.h&gt;</div><div class="line">#include &lt;elf.h&gt;</div><div class="line">#include &lt;android/log.h&gt; </div><div class="line">#include &lt;sys/mman.h&gt;</div><div class="line">#define LOGD(...) ((void)__android_log_print(ANDROID_LOG_DEBUG, &quot;ror_got_hook&quot;, __VA_ARGS__))</div><div class="line"></div><div class="line">#define MEM_PAGE_SIZE 4096</div><div class="line">#define MEM_PAGE_MASK (MEM_PAGE_SIZE-1)</div><div class="line">#define MEM_PAGE_START(x)  ((x) &amp; ~MEM_PAGE_MASK)</div><div class="line">#define MEM_PAGE_END(x)    MEM_PAGE_START((x) + (MEM_PAGE_SIZE-1))</div><div class="line">#define ElfW(type) Elf32_ ## type</div><div class="line"></div><div class="line"></div><div class="line">char str[] = &quot;return give value&quot;;</div><div class="line">JNIEXPORT void JNICALL ReturnGiveValue()</div><div class="line">&#123;</div><div class="line">    char logStr[255] = &#123;0&#125;;</div><div class="line">    strncpy(logStr,str,strlen(str));</div><div class="line">    LOGD(&quot;%x&quot;,(unsigned int)strncpy);</div><div class="line">    LOGD(&quot;show : %s&quot;,logStr);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int my_strncpy(char* s1, char* s2, int n)</div><div class="line">&#123;</div><div class="line">    memcpy(s1,&quot;return fake value\0&quot;,18);</div><div class="line">    LOGD(&quot;%x&quot;,(unsigned int)strncpy);</div><div class="line">    return 1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int __attribute__((constructor)) gothook()</div><div class="line">&#123;</div><div class="line">    //获取动态库基值</div><div class="line">    void* testlib = dlopen(&quot;/data/local/tmp/libtest.so&quot;,RTLD_LAZY);</div><div class="line">    int nBase = *(int*)(testlib+0x8C);</div><div class="line">    LOGD(&quot;nBase : %x&quot;,nBase);</div><div class="line"></div><div class="line">    //计算program header table实际地址</div><div class="line">    ElfW(Ehdr) *header = (ElfW(Ehdr)*)(nBase);</div><div class="line">    if (memcmp(header-&gt;e_ident, &quot;\177ELF&quot;, 4) != 0) &#123;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ElfW(Phdr)* phdr_table = (ElfW(Phdr)*)(nBase + header-&gt;e_phoff);</div><div class="line">    if (phdr_table == 0)</div><div class="line">    &#123;</div><div class="line">        LOGD(&quot;phdr_table address : 0&quot;);</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line">    size_t phdr_count = header-&gt;e_phnum;</div><div class="line">    LOGD(&quot;phdr_count : %d&quot;, phdr_count);</div><div class="line"></div><div class="line"></div><div class="line">    //遍历program header table，ptype等于PT_DYNAMIC即为dynameic，获取到p_offset</div><div class="line">    unsigned long dynamicAddr = 0;</div><div class="line">    unsigned int dynamicSize = 0;</div><div class="line">    for (int i = 0; i &lt; phdr_count; i++)</div><div class="line">    &#123;</div><div class="line">        if (phdr_table[i].p_type == PT_DYNAMIC)</div><div class="line">        &#123;</div><div class="line">            dynamicAddr = phdr_table[i].p_vaddr + nBase;</div><div class="line">            dynamicSize = phdr_table[i].p_memsz;</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    LOGD(&quot;Dynamic Addr : %x&quot;,dynamicAddr);</div><div class="line">    LOGD(&quot;Dynamic Size : %x&quot;,dynamicSize);</div><div class="line"></div><div class="line">/*</div><div class="line">typedef struct dynamic &#123;</div><div class="line">    Elf32_Sword d_tag;</div><div class="line">    union &#123;</div><div class="line">    Elf32_Sword d_val;</div><div class="line">    Elf32_Addr d_ptr;</div><div class="line">    &#125; d_un;</div><div class="line">&#125; Elf32_Dyn;</div><div class="line">*/</div><div class="line">    ElfW(Dyn)* dynamic_table = (ElfW(Dyn)*)(dynamicAddr);</div><div class="line">    unsigned long jmpRelOff = 0;</div><div class="line">    unsigned long strTabOff = 0;</div><div class="line">    unsigned long pltRelSz = 0;</div><div class="line">    unsigned long symTabOff = 0;</div><div class="line">    int i;</div><div class="line">    for(i=0;i &lt; dynamicSize / 8;i ++)</div><div class="line">    &#123;</div><div class="line">        int val = dynamic_table[i].d_un.d_val;</div><div class="line">        if (dynamic_table[i].d_tag == DT_JMPREL)</div><div class="line">        &#123;</div><div class="line">            jmpRelOff = val;</div><div class="line">        &#125;</div><div class="line">        if (dynamic_table[i].d_tag == DT_STRTAB)</div><div class="line">        &#123;</div><div class="line">            strTabOff = val;</div><div class="line">        &#125;</div><div class="line">        if (dynamic_table[i].d_tag == DT_PLTRELSZ)</div><div class="line">        &#123;</div><div class="line">            pltRelSz = val;</div><div class="line">        &#125;</div><div class="line">        if (dynamic_table[i].d_tag == DT_SYMTAB)</div><div class="line">        &#123;</div><div class="line">            symTabOff = val;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">	//重定位表</div><div class="line">    ElfW(Rel)* rel_table = (ElfW(Rel)*)(jmpRelOff+nBase);</div><div class="line">    LOGD(&quot;jmpRelOff : %x&quot;,jmpRelOff);</div><div class="line">    LOGD(&quot;strTabOff : %x&quot;,strTabOff);</div><div class="line">    LOGD(&quot;symTabOff : %x&quot;,symTabOff);</div><div class="line">    //遍历查找要hook的导入函数，这里以strncpy做示例</div><div class="line">    for(i=0;i &lt; pltRelSz / 8;i++)</div><div class="line">    &#123;</div><div class="line">		//取重定位表每一项的符号表下标24 8 位分开功能</div><div class="line">        int number = (rel_table[i].r_info &gt;&gt; 8) &amp; 0xffffff;</div><div class="line">		//符号表下标找到对应项</div><div class="line">        ElfW(Sym)* symTableIndex = (ElfW(Sym)*)(number*16 + symTabOff + nBase);</div><div class="line">		//找到对应名字</div><div class="line">        char* funcName = (char*)(symTableIndex-&gt;st_name + strTabOff + nBase);</div><div class="line">    //  LOGD(&quot;Func Name : %s&quot;,funcName);</div><div class="line">        if(memcmp(funcName,&quot;strncpy&quot;,7) == 0)</div><div class="line">        &#123;</div><div class="line">            void* pstart = (void*)MEM_PAGE_START(((ElfW(Addr))rel_table[i].r_offset + nBase));</div><div class="line">            mprotect(pstart,MEM_PAGE_SIZE,PROT_READ | PROT_WRITE | PROT_EXEC);</div><div class="line">            LOGD(&quot;r_off : %x&quot;,rel_table[i].r_offset + nBase);</div><div class="line">            LOGD(&quot;my_strncpy : %x&quot;,my_strncpy);</div><div class="line">			//要重定位的位置位于got处，修改其地址。</div><div class="line">            *(unsigned int*)(rel_table[i].r_offset + nBase) = my_strncpy;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="资源混淆"><a href="#资源混淆" class="headerlink" title="资源混淆"></a>资源混淆</h3><p>resources.arsc这个文件是存放在APK包中的，他是由AAPT工具在打包过程中生成的，他本身是一个资源的索引表，里面维护者资源ID、Name、Path或者Value的对应关系。<a href="https://www.jianshu.com/p/3cc131db2002" target="_blank" rel="external">https://www.jianshu.com/p/3cc131db2002</a><br>通过resources.arsc这个桥梁，使R.类+名（这个组合名可以锁定资源，给人看的，二进制中只是id）的int值还原到type+名，从而可以用android框架寻找加载资源。<br>例如value/string.xml添加名-值生成的R.string.名使用该值，编译为id。使用时resources.arsc中通过id找到对应的分类与名，value下的几个分类都被打包在resources.arsc里了，所以string资源可以直接在resources.arsc中通过种类加名找到。还有些xml被加密放在原处（layout），还有些没加密放原处（mipmap）：这些按类就是文件夹，名就是文件名路径就能查找到。在Android系统中，Resources类可以根据ID来查找资源，而AssetManager类根据文件名来查找资源<br>混淆只是将还原时的type+名改变，同时将res中文件名改变。没有做到资源加密。<br><strong>针对图片加密</strong>：当图片资源放在drawable中的时候，能有相应的Id去解析： BitmapFactory.decodeResource(res, id)<br>如果放置在assets下，就需要根据文件的名字去解析（Android提供AssetManager）。<br>若使用id解析，其实是框架中的Resources类先根据ID来找到资源文件名称，然后再将该文件名称交给AssetManager类来打开对应的文件的。但是这个过程由框架实现无法更改，所以若自己写应用时加密方式可采用手动从assets中提取自定义加密文件。<br>若针对任意apk如何加密资源？（所有资源-layout、string、图片特别关注）其实这些都可以手动加载，但是如何在不大量改代码情况下实现自动化。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/android应用加固1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/25/android应用加固1/" itemprop="url">android应用加固1</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T20:09:35+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>非虫的文章：<a href="http://www.mottoin.com/89035.html" target="_blank" rel="external">http://www.mottoin.com/89035.html</a></p>
+<h3 id="Android-Java混淆-ProGuard"><a href="#Android-Java混淆-ProGuard" class="headerlink" title="Android Java混淆(ProGuard)"></a>Android Java混淆(ProGuard)</h3><p>该开源项目用来混淆java字节码，现已集成在sdk中：SDK\tools\proguard。<br>使用：build.gradle中配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">buildTypes &#123;</div><div class="line">        release &#123;</div><div class="line">            minifyEnabled true //开启混淆</div><div class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;//指定混淆配置文件为 proguard-rules.pro</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>该混淆配置文件位于build同目录下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div></pre></td><td class="code"><pre><div class="line">#下面是常见的proguard.cfg配置项</div><div class="line">#指定代码的压缩级别</div><div class="line">-optimizationpasses 5</div><div class="line">#包名不混合大小写</div><div class="line">-dontusemixedcaseclassnames</div><div class="line">#不去忽略非公共的库类</div><div class="line">-dontskipnonpubliclibraryclasses</div><div class="line"># 指定不去忽略非公共的库的类的成员</div><div class="line">-dontskipnonpubliclibraryclassmembers</div><div class="line">#优化  不优化输入的类文件</div><div class="line">-dontoptimize</div><div class="line">#预校验</div><div class="line">-dontpreverify</div><div class="line">#混淆时是否记录日志</div><div class="line">-verbose</div><div class="line"># 混淆时所采用的算法</div><div class="line">-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*</div><div class="line">#保护注解</div><div class="line">-keepattributes *Annotation*</div><div class="line"></div><div class="line">#忽略警告</div><div class="line">-ignorewarning</div><div class="line"></div><div class="line">##记录生成的日志数据,gradle build时在本项目根目录输出##</div><div class="line">#apk 包内所有 class 的内部结构</div><div class="line">-dump class_files.txt</div><div class="line">#未混淆的类和成员-printseeds seeds.txt</div><div class="line">#列出从 apk 中删除的代码</div><div class="line">-printusage unused.txt</div><div class="line">#混淆前后的映射-printmapping mapping.txt</div><div class="line">########记录生成的日志数据，gradle build时 在本项目根目录输出-end#####</div><div class="line"></div><div class="line">#需要保留的东西</div><div class="line"># 保持哪些类不被混淆</div><div class="line">-keep public class * extends android.app.Fragment</div><div class="line">-keep public class * extends android.app.Activity</div><div class="line">-keep public class * extends android.app.Application</div><div class="line">-keep public class * extends android.app.Service</div><div class="line">-keep public class * extends android.content.BroadcastReceiver</div><div class="line">-keep public class * extends android.content.ContentProvider</div><div class="line">-keep public class * extends android.app.backup.BackupAgentHelper</div><div class="line">-keep public class * extends android.preference.Preference</div><div class="line">-keep public class * extends android.support.v4.**</div><div class="line">-keep public class com.android.vending.licensing.ILicensingService</div><div class="line"></div><div class="line">#如果有引用v4包可以添加下面这行</div><div class="line">-keep public class * extends android.support.v4.app.Fragment</div><div class="line"></div><div class="line">##########JS接口类不混淆，否则执行不了</div><div class="line">-dontwarn com.android.JsInterface.**</div><div class="line">-keep class com.android.JsInterface.** &#123;*; &#125;</div><div class="line"></div><div class="line">#极光推送和百度lbs android sdk一起使用proguard 混淆的问题#http的类被混淆后，导致apk定位失败，保持apache 的http类不被混淆就好了</div><div class="line">-dontwarn org.apache.**</div><div class="line">-keep class org.apache.**&#123; *; &#125;</div><div class="line"></div><div class="line">-keep public class * extends android.view.View &#123;        </div><div class="line">  public &lt;init&gt;(android.content.Context);        </div><div class="line">  public &lt;init&gt;(android.content.Context, android.util.AttributeSet);        </div><div class="line">  public &lt;init&gt;(android.content.Context, android.util.AttributeSet, int);</div><div class="line">  public void set*(...);    </div><div class="line"> &#125;</div><div class="line"></div><div class="line">#保持 native 方法不被混淆</div><div class="line">-keepclasseswithmembernames class * &#123;        </div><div class="line">  native &lt;methods&gt;;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持自定义控件类不被混淆</div><div class="line">-keepclasseswithmembers class * &#123;        </div><div class="line">  public &lt;init&gt;(android.content.Context, android.util.AttributeSet);    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持自定义控件类不被混淆</div><div class="line">-keepclassmembers class * extends android.app.Activity &#123;       </div><div class="line">  public void *(android.view.View);    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持 Parcelable 不被混淆</div><div class="line">-keep class * implements android.os.Parcelable &#123;      </div><div class="line">  public static final android.os.Parcelable$Creator *;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持 Serializable 不被混淆</div><div class="line">-keepnames class * implements java.io.Serializable</div><div class="line"></div><div class="line">#保持 Serializable 不被混淆并且enum 类也不被混淆</div><div class="line">-keepclassmembers class * implements java.io.Serializable &#123;        </div><div class="line">    static final long serialVersionUID;        </div><div class="line">    private static final java.io.ObjectStreamField[] serialPersistentFields;</div><div class="line">    !static !transient &lt;fields&gt;;        </div><div class="line">    !private &lt;fields&gt;;        </div><div class="line">    !private &lt;methods&gt;;        </div><div class="line">    private void writeObject(java.io.ObjectOutputStream);        </div><div class="line">    private void readObject(java.io.ObjectInputStream);        </div><div class="line">    java.lang.Object writeReplace();        </div><div class="line">    java.lang.Object readResolve();    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持枚举 enum 类不被混淆 如果混淆报错，建议直接使用上面的 -keepclassmembers class * implements java.io.Serializable即可</div><div class="line">-keepclassmembers enum * &#123;        </div><div class="line">      public static **[] values();        </div><div class="line">      public static ** valueOf(java.lang.String);    </div><div class="line">&#125;</div><div class="line"></div><div class="line">-keepclassmembers class * &#123;        </div><div class="line">      public void *ButtonClicked(android.view.View);    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#不混淆资源类</div><div class="line">-keepclassmembers class **.R$* &#123;        </div><div class="line">      public static &lt;fields&gt;;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#避免混淆泛型 如果混淆报错建议关掉    </div><div class="line">#–keepattributes Signature</div><div class="line"></div><div class="line">######混淆保护自己项目的部分代码以及引用的第三方jar包library########</div><div class="line">#如果引用了v4或者v7包</div><div class="line">-dontwarn android.support.**</div><div class="line"></div><div class="line">#如果用到Gson解析包的，直接添加下面这几行就能成功混淆，不然会报错    </div><div class="line">#gson    </div><div class="line">#-libraryjars libs/gson-2.2.2.jar    </div><div class="line">-keepattributes Signature    </div><div class="line"># Gson specific classes    </div><div class="line">-keep class sun.misc.Unsafe &#123; *; &#125;    </div><div class="line"># Application classes that will be serialized/deserialized over Gson    </div><div class="line">-keep class com.google.gson.examples.android.model.** &#123; *; &#125;  </div><div class="line"></div><div class="line">#客户端代码中的JavaBean(实体类)的类名与其字段名称全部变成了a、b、c、d等等字符串，这与服务端返回的json字符串中的不一致，导致解析失败。所以，解决的办法是：在进行混淆编译进行打包apk的时候，过滤掉存放所有JavaBean（实体类)的包不进行混淆编译      </div><div class="line">-keep class com.android.model.** &#123;*;&#125;</div><div class="line"></div><div class="line">####混淆保护自己项目的部分代码以及引用的第三方jar包library-end####</div></pre></td></tr></table></figure></p>
+<h3 id="签名验证"><a href="#签名验证" class="headerlink" title="签名验证"></a>签名验证</h3><p>在java&amp;native代码中加入验证签名方式。检测是否是自己的签名。</p>
+<h3 id="动态加载dex"><a href="#动态加载dex" class="headerlink" title="动态加载dex"></a>动态加载dex</h3><p>如何动态加载dex？<br>native层的代码拥有更高权限，可以看根目录等。</p>
+<p>Android 系统提供了 DexClassLoader 来支持在程序运行过程中动态加载包含 classes.dex的.jar 或者.apk 文件。DexClassLoader 实例可以继续加载dex中的类，后可通过反射调用，调用的代码中需要的类会自动加载执行？</p>
+<h3 id="检测frida"><a href="#检测frida" class="headerlink" title="检测frida"></a>检测frida</h3><p><a href="https://bbs.pediy.com/thread-217482.htm?source=1" target="_blank" rel="external">https://bbs.pediy.com/thread-217482.htm?source=1</a><br>frida开源！必看相关hook模块。</p>
+<h3 id="反调试"><a href="#反调试" class="headerlink" title="反调试"></a>反调试</h3><ol>
+<li>IDA调试端口检测:读取/proc/net/tcp，查找IDA远程调试所用的23946端口，若发现说明进程正在被IDA调试。</li>
+<li>调试器进程名检测,遍历进程，查找固定的进程名，找到说明调试器在运行。</li>
+<li>父进程名检测 有的时候不使用apk附加调试的方法进行逆向，而是写一个.out可执行文件直接加载so进行 调试，这样程序的父进程名和正常启动apk的父进程名是不一样的。<br>测试发现：<br>（1）正常启动的apk程序：父进程是zygote<br>（2）调试启动的apk程序：在AS中用LLDB调试发现父进程还是zygote<br>（3）附加调试的apk程序：父进程是zygote<br>（4）vs远程调试 用可执行文件加载so:父进程名为gdbserver<br>结论：父进程名非zygote的，判定为调试状态</li>
+<li>自身进程名检测 :也是解决上面问题的。</li>
+<li>apk线程检测 ：同样.out加载so来脱壳的场景正常apk进程一般会有十几个线程在运行(比如会有jdwp线程)，自己写可执行文件加载so一般只有一个线程，可以根据这个差异来进行调试环境检测。</li>
+<li>apk进程fd文件检测：根据/proc/pid/fd/路径下文件的个数差异，判断进程状态。   （apk启动的进程和非apk启动的进程fd数量不一样）   （apk的debug启动和正常启动，进程fd数量也不一样）</li>
+<li>安卓系统自带调试检测函数：<br>java层：android.os.Debug.isDebuggerConnected();<br>so层：  libdvm.so中的dvmDbgIsDebuggerConnected()函数，调用他就能得知程序是否被调试。dlopen(/system/lib/libdvm.so)  dlsym(_Z25dvmDbgIsDebuggerConnectedv)这个函数可能不让用了。<br>art：art模式下，结果存放在libart.so中的全局变量gDebuggerActive中， 符号名为_ZN3art3Dbg15gDebuggerActiveE</li>
+<li>ptrace检测：每个进程同时刻只能被1个调试进程ptrace，再次p自己会失败。1 主动ptrace自己,根据返回值判断自己是否被调试了。2 或者多进程ptrace。</li>
+<li>函数hash值检测：so文件中函数的指令是固定，但是如果被下了软件断点，指令就会发生改变(断点地址被改 写为bkpt断点指令)，可以计算内存中一段指令的hash值进行校验，检测函数是否被修改或 被下断点。</li>
+<li>断点指令检测：上面说了，如果函数被下软件断点，则断点地址会被改写为bkpt指令，可以在函数体中搜索bkpt指令来检测软件断点。</li>
+<li>系统源码修改检测：安卓native下流行的反调试方案是读取进程的status或stat来检测tracepid，原理是调试状态下的进程tracepid不为0。对于这种调试检测手段，彻底的绕过方式是修改系统源码后重新编译，让tracepid永远为 0。对抗这种bypass手段，我们可以创建一个子进程，让子进程主动ptrace自身设为调试状态， 此时正常情况下，子进程的tracepid应该不为0。此时我们检测子进程的tracepid是否为0， 如果为0说明源码被修改了。</li>
+<li>单步调试陷阱：<br>原理：调试器从下断点到执行断点的过程分析：<br>1 保存：保存目标处指令<br>2 替换：目标处指令替换为断点指令<br>3 命中断点：命中断点指令(引发中断 或者说发出信号)<br>4 收到信号：调试器收到信号后，执行调试器注册的信号处理函数。<br>5 恢复：调试器处理函数恢复保存的指令<br>6 回退：回退PC寄存器<br>7 控制权回归程序.<br>主动设置断点指令/注册信号处理函数的反调试方案:<br>1 在函数中写入断点指令<br>2 在代码中注册断点信号处理函数<br>3 程序执行到断点指令，发出信号   分两种情况：<br>(1)非调试状态   进入自己注册的函数，NOP指令替换断点指令，回退PC后正常指令。   (执行断点发出信号—进入处理信号函数—NOP替换断点—退回PC)<br>(2)调试状态   进入调试器的断点处理流程，他会恢复目标处指令失败，然后回退PC，进入死循环。</li>
+<li>利用IDA先截获信号特性的检测<br>原理：   IDA会首先截获信号，导致进程无法接收到信号，导致不会执行信号处理函数。将关键流程 放在信号处理函数中，如果没有执行，就是被调试状态。</li>
+<li>利用IDA解析缺陷反调试<br>原理：   IDA采用递归下降算法来反汇编指令，而该算法大的缺点在于它无法处理间接代码路径， 无法识别动态算出来的跳转。而arm架构下由于存在arm和thumb指令集，就涉及到指令集 切换，IDA在某些情况下无法智能识别arm和thumb指令，进一步导致无法进行伪代码还原。<br>在IDA动态调试时，仍然存在该问题，若在指令识别错误的地点写入断点，有可能使得调试 器崩溃。（ 可能写断点 ,不知道写ARM还是THUMB ,造成的崩溃）</li>
+<li>五种代码执行时间检测<br>原理： 一段代码，在a处获取一下时间，运行一段后，再在b处获取下时间， 然后通过(b时间­a时间)求时间差,正常情况下这个时间差会非常小，  如果这个时间差比较大，说明正在被单步调试。<br>做法：   五个能获取时间的api：<br>time()函数   time_t结构体<br>clock()函数   clock_t结构体<br>gettimeofday()函数   timeval结构   timezone结构<br>clock_gettime()函数   timespec结构<br>getrusage()函数   rusage结构</li>
+<li>三种进程信息结构检测<br>原理：   一些进程文件中存储了进程信息，可以读取这些信息得知是否为调试状态。<br>做法：<br>第一种：   /proc/pid/status  /proc/pid/task/pid/status  TracerPid非0   statue字段中写入t（tracing stop）<br>第二种：   /proc/pid/stat  /proc/pid/task/pid/stat  第二个字段是t（T）<br>第三种：   /proc/pid/wchan  /proc/pid/task/pid/wchan  ptrace_stop</li>
+<li>Inotify事件监控dump<br>原理：   通常壳会在程序运行前完成对text的解密，所以脱壳可以通过dd与gdb_gcore来dump /proc/pid/mem或/proc/pid/pagemap，获取到解密后的代码内容。<br>可以通过Inotify系列api来监控mem或pagemap的打开或访问事件，   一旦发生时间就结束进程来阻止dump。</li>
+</ol>
+<h3 id="elf"><a href="#elf" class="headerlink" title="elf"></a>elf</h3><ol>
+<li><p>ELF常见HOOK方案及应用<br>a)        Inline hook<br>b)        GOT hook<br>c)        PRELOAD hook<br>d)        Linker重定位hook</p>
+</li>
+<li><p>ELF若干种保护方案<br>a)        UPX壳及分析<br>b)        Shellcode保护方案<br>c)        链接器及加载器<br>d)        VMP</p>
+</li>
+<li><p>ELF混淆方案<br>a)        花指令<br>b)        指令乱序，使用B衔接<br>c)        指令替换，替换为B指令<br>d)        指令索引并且乱序，使用索引表来跳转<br>e)        LLVM方式混淆</p>
+</li>
+<li><p>ELF反调试<br>a)        捕捉信号<br>b)        检测tracerPID<br>c)        检测调试进程<br>d)        处理ELF格式，阻止IDA加载<br>e)        多进程守护<br>f)        CRC校验<br>g)        调试中断指令检测（类似x86 0xCC）</p>
+</li>
+<li><p>ELF函数加密<br>a)        ELF入口加解密<br>b)        函数动态加解密，指令级加解密<br>c)     基于加载器的函数加解密</p>
+</li>
+</ol>
+<p><a href="https://bbs.pediy.com/thread-183116.htm中的：" target="_blank" rel="external">https://bbs.pediy.com/thread-183116.htm中的：</a></p>
+<h3 id="Dex-中方法的隐藏"><a href="#Dex-中方法的隐藏" class="headerlink" title="Dex 中方法的隐藏"></a>Dex 中方法的隐藏</h3><p>一种：<br>class段中将 DexMethod 的 methodIdx 值设为 0x0，相当于将原先的方法指向了前一个方法，因为这个是依据上一个方法架构体中Idx的偏移。<br>访问标志符 accessFlags 一般不需要修改，在Dex文件格式里，directMethods和 virtualMethods 是分开的。<br>将codeOffset 设置为前一个方法的代码偏移地址。<br>更新需隐藏方法的下一个方法的methodIdx，可以使用公式next_method_idx=original_next_method_idx+original_method_idx<br>重新计算 Dex 的 SHA1哈希值和Adler校验值，并用以更新 DexHeader，可以使用DexFixer修复 classes.dex文件<br>重新打包生成 APK 文件：<br><img src="https://i.imgur.com/8EbkfOQ.png" alt=""></p>
+<p>二种：<br>class段中，将相应的 directMethodsSize 或virtualMethodsSize 减 1，同时将表示该需要隐藏方法的 DexMethod 结构体中的数据全部修改为 0，这样就可以将该方法隐藏起来</p>
+<p>读取隐藏方法：<br>取数据流，用反射调用 android.content.res.AssetManager.openNonAsset 方法打开当前应用程序的classes.dex文件;或者Context.getPackageCodePath()来获得当前应用程序对应的apk文件的路径，利用此路径构造ZipFile对 象 ，进而获取classes.dex的ZipEntry ，利用ZipFile的getInputStream(ZipEntry)方法获取classes.dex 的数据流。<br>修复 Dex 文件，将之前隐藏方法的 DexMethod 结构体恢复<br>将修复后的 Dex 数据使用类加载器重新加载；<br>搜索调用。</p>
+<h3 id="Dex-完整性校验"><a href="#Dex-完整性校验" class="headerlink" title="Dex 完整性校验"></a>Dex 完整性校验</h3><p>首先在代码中完成校验值比对的逻辑，此部分代码后续不能再改变，否则 CRC 值<br>会发生变化；<br>从生成的 APK 文件中提取出 classes.dex 文件，计算其 CRC 值，其他 hash 值类似；<br>将计算出的值放入 strings.xml 文件中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">1. String apkPath = this.getPackageCodePath();</div><div class="line"> </div><div class="line">2. Long dexCrc = Long.parseLong(this.getString(R.string.dex_crc));</div><div class="line"> </div><div class="line">3. try &#123;</div><div class="line"> </div><div class="line">4. ZipFile zipfile = new ZipFile(apkPath);</div><div class="line"> </div><div class="line">5. ZipEntry dexentry = zipfile.getEntry(&quot;classes.dex&quot;);</div><div class="line"> </div><div class="line">6. if(dexentry.getCrc() != dexCrc)&#123;</div><div class="line"> </div><div class="line">7. System.out.println(&quot;Dex has been *modified!&quot;);</div><div class="line"> </div><div class="line">8. &#125;else&#123;</div><div class="line"> </div><div class="line">9. System.out.println(&quot;Dex hasn&apos;t been modified!&quot;);</div><div class="line"> </div><div class="line">10. &#125;</div><div class="line"> </div><div class="line">11. &#125; catch (IOException e) &#123;</div><div class="line"> </div><div class="line">12. // TODO Auto-generated catch block</div><div class="line"> </div><div class="line">13. e.printStackTrace();</div><div class="line"> </div><div class="line">14. &#125;</div></pre></td></tr></table></figure></p>
+<p>APK 完整性校验类似，不过数据放在服务器，app只是请求和处理判断。</p>
+<h3 id="Java-反射"><a href="#Java-反射" class="headerlink" title="Java 反射"></a>Java 反射</h3><p>Java 反射机制允许运行中的 Java 程序对自身进行检查，并能直接操作程序的内部属性或方法，可动态生成类实例、变更属性内容以及调用方法。<br>增加静态分析难度</p>
+<h3 id="字串混淆"><a href="#字串混淆" class="headerlink" title="字串混淆"></a>字串混淆</h3><p>dex中的，string中的。</p>
+<h3 id="代码乱序"><a href="#代码乱序" class="headerlink" title="代码乱序"></a>代码乱序</h3><p>通过goto切割代码。</p>
+<h3 id="APK-伪加密"><a href="#APK-伪加密" class="headerlink" title="APK 伪加密"></a>APK 伪加密</h3><p>根据操作系统安装apk时与普通zip文件的不同来修改apk文件。比如General purpose bit flags 第 0 位置 1</p>
+<h3 id="Manifest-Cheating"><a href="#Manifest-Cheating" class="headerlink" title="Manifest Cheating"></a>Manifest Cheating</h3><p>这个方法挺好的。360中也遇见了<br>生成的 R.java文件中包含了相应的资源类型、名称以及对应的 id 值。资源 id 是 32bit 的整型值，格式为:0xPPTTNNNN。其中 PP 表示使用该资源的包，TT 代表该资源的类型，而 NNNN 是该类型中资源的名称。对于应用程序资源，PP 值固定为 7f，而对于被引用的系统资源包，其 PP值为 01。</p>
+<p>Manifest Cheating 的基本原理是，在 AndroidManifest 的<application>节点中插入一个未知id(如 0x0)，名称为 name 的属性，其值可以是一个从未定义实现的 Java 类文件名。而对AndroidManifest 的修改需要在二进制格式下进行，这样才能不会破坏之前 aapt 对资源文件的处理。由于是未知的资源 id，在应用程序运行过程中，Android 会忽略此属性。但是在使用apktool 进行重打包时，首先会将 AndroidManifest.xml 转换为明文，进而会包含名称为 name的属性，而相应的 id 信息会丢失，apktool 重打包会重新进行资源打包处理，由于该 name属性值是一个未实现的 Java 类，重打包后的应用程序在运行过程中，由于 application 节点中定义的类是先于所有其他组件运行的，若系统找不到对应的类，会出现运行时错误，Dalvik虚拟机会直接关闭。</application></p>
+<h3 id="黄皮书中的第8章"><a href="#黄皮书中的第8章" class="headerlink" title="黄皮书中的第8章"></a>黄皮书中的第8章</h3><p>有具体的代码</p>
+<ol>
+<li>代码混淆</li>
+<li>资源混淆</li>
+<li>签名保护</li>
+<li>手动注册native</li>
+<li>反调试检测</li>
+</ol>
 
           
         
@@ -716,205 +1069,6 @@
 <p>只能动调init那几个函数分析关键调用了，因为hook与解密，反调试等操作肯定会用到几个系统调用：pthread_create，mprotect与_NR_openat。在这里作者存了几个关键函数（各种非正常调用系统调用的方式？）：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">//proc_4</div><div class="line">  v8 = (struc_table *)operator new(0x20u);</div><div class="line">  sub_C8A0(v8);</div><div class="line"> </div><div class="line">//sub_C8A0</div><div class="line">struc_table *__fastcall sub_C8A0(struc_table *result)</div><div class="line">&#123;</div><div class="line">  result-&gt;dlopen = (int)off_35D08;</div><div class="line">  result-&gt;sscanf = (int)off_35D0C;</div><div class="line">  result-&gt;__NR_read = (int)off_35D10[0];</div><div class="line">  result-&gt;__NR_close = (int)off_35D14[0];</div><div class="line">  result-&gt;__NR_mprotect = (int)off_35D18;</div><div class="line">  result-&gt;__NR_openat = (int)sub_C874;</div><div class="line">  result-&gt;sleep = (int)off_35D1C;</div><div class="line">  result-&gt;pthread_create = (int)off_35D20;</div><div class="line">  return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>发现自己所欠缺：密码学，ida脚本dump，android系统源码知识(源码中8.0下apk执行流程)、linux系统知识。反调试与混淆法不熟悉</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/android应用加固1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/25/android应用加固1/" itemprop="url">android应用加固1</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T20:09:35+08:00">
-                2018-06-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>非虫的文章：<a href="http://www.mottoin.com/89035.html" target="_blank" rel="external">http://www.mottoin.com/89035.html</a></p>
-<h3 id="Android-Java混淆-ProGuard"><a href="#Android-Java混淆-ProGuard" class="headerlink" title="Android Java混淆(ProGuard)"></a>Android Java混淆(ProGuard)</h3><p>该开源项目用来混淆java字节码，现已集成在sdk中：SDK\tools\proguard。<br>使用：build.gradle中配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">buildTypes &#123;</div><div class="line">        release &#123;</div><div class="line">            minifyEnabled true //开启混淆</div><div class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;//指定混淆配置文件为 proguard-rules.pro</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>该混淆配置文件位于build同目录下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div></pre></td><td class="code"><pre><div class="line">#下面是常见的proguard.cfg配置项</div><div class="line">#指定代码的压缩级别</div><div class="line">-optimizationpasses 5</div><div class="line">#包名不混合大小写</div><div class="line">-dontusemixedcaseclassnames</div><div class="line">#不去忽略非公共的库类</div><div class="line">-dontskipnonpubliclibraryclasses</div><div class="line"># 指定不去忽略非公共的库的类的成员</div><div class="line">-dontskipnonpubliclibraryclassmembers</div><div class="line">#优化  不优化输入的类文件</div><div class="line">-dontoptimize</div><div class="line">#预校验</div><div class="line">-dontpreverify</div><div class="line">#混淆时是否记录日志</div><div class="line">-verbose</div><div class="line"># 混淆时所采用的算法</div><div class="line">-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*</div><div class="line">#保护注解</div><div class="line">-keepattributes *Annotation*</div><div class="line"></div><div class="line">#忽略警告</div><div class="line">-ignorewarning</div><div class="line"></div><div class="line">##记录生成的日志数据,gradle build时在本项目根目录输出##</div><div class="line">#apk 包内所有 class 的内部结构</div><div class="line">-dump class_files.txt</div><div class="line">#未混淆的类和成员-printseeds seeds.txt</div><div class="line">#列出从 apk 中删除的代码</div><div class="line">-printusage unused.txt</div><div class="line">#混淆前后的映射-printmapping mapping.txt</div><div class="line">########记录生成的日志数据，gradle build时 在本项目根目录输出-end#####</div><div class="line"></div><div class="line">#需要保留的东西</div><div class="line"># 保持哪些类不被混淆</div><div class="line">-keep public class * extends android.app.Fragment</div><div class="line">-keep public class * extends android.app.Activity</div><div class="line">-keep public class * extends android.app.Application</div><div class="line">-keep public class * extends android.app.Service</div><div class="line">-keep public class * extends android.content.BroadcastReceiver</div><div class="line">-keep public class * extends android.content.ContentProvider</div><div class="line">-keep public class * extends android.app.backup.BackupAgentHelper</div><div class="line">-keep public class * extends android.preference.Preference</div><div class="line">-keep public class * extends android.support.v4.**</div><div class="line">-keep public class com.android.vending.licensing.ILicensingService</div><div class="line"></div><div class="line">#如果有引用v4包可以添加下面这行</div><div class="line">-keep public class * extends android.support.v4.app.Fragment</div><div class="line"></div><div class="line">##########JS接口类不混淆，否则执行不了</div><div class="line">-dontwarn com.android.JsInterface.**</div><div class="line">-keep class com.android.JsInterface.** &#123;*; &#125;</div><div class="line"></div><div class="line">#极光推送和百度lbs android sdk一起使用proguard 混淆的问题#http的类被混淆后，导致apk定位失败，保持apache 的http类不被混淆就好了</div><div class="line">-dontwarn org.apache.**</div><div class="line">-keep class org.apache.**&#123; *; &#125;</div><div class="line"></div><div class="line">-keep public class * extends android.view.View &#123;        </div><div class="line">  public &lt;init&gt;(android.content.Context);        </div><div class="line">  public &lt;init&gt;(android.content.Context, android.util.AttributeSet);        </div><div class="line">  public &lt;init&gt;(android.content.Context, android.util.AttributeSet, int);</div><div class="line">  public void set*(...);    </div><div class="line"> &#125;</div><div class="line"></div><div class="line">#保持 native 方法不被混淆</div><div class="line">-keepclasseswithmembernames class * &#123;        </div><div class="line">  native &lt;methods&gt;;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持自定义控件类不被混淆</div><div class="line">-keepclasseswithmembers class * &#123;        </div><div class="line">  public &lt;init&gt;(android.content.Context, android.util.AttributeSet);    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持自定义控件类不被混淆</div><div class="line">-keepclassmembers class * extends android.app.Activity &#123;       </div><div class="line">  public void *(android.view.View);    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持 Parcelable 不被混淆</div><div class="line">-keep class * implements android.os.Parcelable &#123;      </div><div class="line">  public static final android.os.Parcelable$Creator *;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持 Serializable 不被混淆</div><div class="line">-keepnames class * implements java.io.Serializable</div><div class="line"></div><div class="line">#保持 Serializable 不被混淆并且enum 类也不被混淆</div><div class="line">-keepclassmembers class * implements java.io.Serializable &#123;        </div><div class="line">    static final long serialVersionUID;        </div><div class="line">    private static final java.io.ObjectStreamField[] serialPersistentFields;</div><div class="line">    !static !transient &lt;fields&gt;;        </div><div class="line">    !private &lt;fields&gt;;        </div><div class="line">    !private &lt;methods&gt;;        </div><div class="line">    private void writeObject(java.io.ObjectOutputStream);        </div><div class="line">    private void readObject(java.io.ObjectInputStream);        </div><div class="line">    java.lang.Object writeReplace();        </div><div class="line">    java.lang.Object readResolve();    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#保持枚举 enum 类不被混淆 如果混淆报错，建议直接使用上面的 -keepclassmembers class * implements java.io.Serializable即可</div><div class="line">-keepclassmembers enum * &#123;        </div><div class="line">      public static **[] values();        </div><div class="line">      public static ** valueOf(java.lang.String);    </div><div class="line">&#125;</div><div class="line"></div><div class="line">-keepclassmembers class * &#123;        </div><div class="line">      public void *ButtonClicked(android.view.View);    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#不混淆资源类</div><div class="line">-keepclassmembers class **.R$* &#123;        </div><div class="line">      public static &lt;fields&gt;;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">#避免混淆泛型 如果混淆报错建议关掉    </div><div class="line">#–keepattributes Signature</div><div class="line"></div><div class="line">######混淆保护自己项目的部分代码以及引用的第三方jar包library########</div><div class="line">#如果引用了v4或者v7包</div><div class="line">-dontwarn android.support.**</div><div class="line"></div><div class="line">#如果用到Gson解析包的，直接添加下面这几行就能成功混淆，不然会报错    </div><div class="line">#gson    </div><div class="line">#-libraryjars libs/gson-2.2.2.jar    </div><div class="line">-keepattributes Signature    </div><div class="line"># Gson specific classes    </div><div class="line">-keep class sun.misc.Unsafe &#123; *; &#125;    </div><div class="line"># Application classes that will be serialized/deserialized over Gson    </div><div class="line">-keep class com.google.gson.examples.android.model.** &#123; *; &#125;  </div><div class="line"></div><div class="line">#客户端代码中的JavaBean(实体类)的类名与其字段名称全部变成了a、b、c、d等等字符串，这与服务端返回的json字符串中的不一致，导致解析失败。所以，解决的办法是：在进行混淆编译进行打包apk的时候，过滤掉存放所有JavaBean（实体类)的包不进行混淆编译      </div><div class="line">-keep class com.android.model.** &#123;*;&#125;</div><div class="line"></div><div class="line">####混淆保护自己项目的部分代码以及引用的第三方jar包library-end####</div></pre></td></tr></table></figure></p>
-<h3 id="签名验证"><a href="#签名验证" class="headerlink" title="签名验证"></a>签名验证</h3><p>在java&amp;native代码中加入验证签名方式。检测是否是自己的签名。</p>
-<h3 id="动态加载dex"><a href="#动态加载dex" class="headerlink" title="动态加载dex"></a>动态加载dex</h3><p>如何动态加载dex？<br>native层的代码拥有更高权限，可以看根目录等。</p>
-<p>Android 系统提供了 DexClassLoader 来支持在程序运行过程中动态加载包含 classes.dex的.jar 或者.apk 文件。DexClassLoader 实例可以继续加载dex中的类，后可通过反射调用，调用的代码中需要的类会自动加载执行？</p>
-<h3 id="检测frida"><a href="#检测frida" class="headerlink" title="检测frida"></a>检测frida</h3><p><a href="https://bbs.pediy.com/thread-217482.htm?source=1" target="_blank" rel="external">https://bbs.pediy.com/thread-217482.htm?source=1</a><br>frida开源！必看相关hook模块。</p>
-<h3 id="反调试"><a href="#反调试" class="headerlink" title="反调试"></a>反调试</h3><ol>
-<li>IDA调试端口检测:读取/proc/net/tcp，查找IDA远程调试所用的23946端口，若发现说明进程正在被IDA调试。</li>
-<li>调试器进程名检测,遍历进程，查找固定的进程名，找到说明调试器在运行。</li>
-<li>父进程名检测 有的时候不使用apk附加调试的方法进行逆向，而是写一个.out可执行文件直接加载so进行 调试，这样程序的父进程名和正常启动apk的父进程名是不一样的。<br>测试发现：<br>（1）正常启动的apk程序：父进程是zygote<br>（2）调试启动的apk程序：在AS中用LLDB调试发现父进程还是zygote<br>（3）附加调试的apk程序：父进程是zygote<br>（4）vs远程调试 用可执行文件加载so:父进程名为gdbserver<br>结论：父进程名非zygote的，判定为调试状态</li>
-<li>自身进程名检测 :也是解决上面问题的。</li>
-<li>apk线程检测 ：同样.out加载so来脱壳的场景正常apk进程一般会有十几个线程在运行(比如会有jdwp线程)，自己写可执行文件加载so一般只有一个线程，可以根据这个差异来进行调试环境检测。</li>
-<li>apk进程fd文件检测：根据/proc/pid/fd/路径下文件的个数差异，判断进程状态。   （apk启动的进程和非apk启动的进程fd数量不一样）   （apk的debug启动和正常启动，进程fd数量也不一样）</li>
-<li>安卓系统自带调试检测函数：<br>java层：android.os.Debug.isDebuggerConnected();<br>so层：  libdvm.so中的dvmDbgIsDebuggerConnected()函数，调用他就能得知程序是否被调试。dlopen(/system/lib/libdvm.so)  dlsym(_Z25dvmDbgIsDebuggerConnectedv)这个函数可能不让用了。<br>art：art模式下，结果存放在libart.so中的全局变量gDebuggerActive中， 符号名为_ZN3art3Dbg15gDebuggerActiveE</li>
-<li>ptrace检测：每个进程同时刻只能被1个调试进程ptrace，再次p自己会失败。1 主动ptrace自己,根据返回值判断自己是否被调试了。2 或者多进程ptrace。</li>
-<li>函数hash值检测：so文件中函数的指令是固定，但是如果被下了软件断点，指令就会发生改变(断点地址被改 写为bkpt断点指令)，可以计算内存中一段指令的hash值进行校验，检测函数是否被修改或 被下断点。</li>
-<li>断点指令检测：上面说了，如果函数被下软件断点，则断点地址会被改写为bkpt指令，可以在函数体中搜索bkpt指令来检测软件断点。</li>
-<li>系统源码修改检测：安卓native下流行的反调试方案是读取进程的status或stat来检测tracepid，原理是调试状态下的进程tracepid不为0。对于这种调试检测手段，彻底的绕过方式是修改系统源码后重新编译，让tracepid永远为 0。对抗这种bypass手段，我们可以创建一个子进程，让子进程主动ptrace自身设为调试状态， 此时正常情况下，子进程的tracepid应该不为0。此时我们检测子进程的tracepid是否为0， 如果为0说明源码被修改了。</li>
-<li>单步调试陷阱：<br>原理：调试器从下断点到执行断点的过程分析：<br>1 保存：保存目标处指令<br>2 替换：目标处指令替换为断点指令<br>3 命中断点：命中断点指令(引发中断 或者说发出信号)<br>4 收到信号：调试器收到信号后，执行调试器注册的信号处理函数。<br>5 恢复：调试器处理函数恢复保存的指令<br>6 回退：回退PC寄存器<br>7 控制权回归程序.<br>主动设置断点指令/注册信号处理函数的反调试方案:<br>1 在函数中写入断点指令<br>2 在代码中注册断点信号处理函数<br>3 程序执行到断点指令，发出信号   分两种情况：<br>(1)非调试状态   进入自己注册的函数，NOP指令替换断点指令，回退PC后正常指令。   (执行断点发出信号—进入处理信号函数—NOP替换断点—退回PC)<br>(2)调试状态   进入调试器的断点处理流程，他会恢复目标处指令失败，然后回退PC，进入死循环。</li>
-<li>利用IDA先截获信号特性的检测<br>原理：   IDA会首先截获信号，导致进程无法接收到信号，导致不会执行信号处理函数。将关键流程 放在信号处理函数中，如果没有执行，就是被调试状态。</li>
-<li>利用IDA解析缺陷反调试<br>原理：   IDA采用递归下降算法来反汇编指令，而该算法大的缺点在于它无法处理间接代码路径， 无法识别动态算出来的跳转。而arm架构下由于存在arm和thumb指令集，就涉及到指令集 切换，IDA在某些情况下无法智能识别arm和thumb指令，进一步导致无法进行伪代码还原。<br>在IDA动态调试时，仍然存在该问题，若在指令识别错误的地点写入断点，有可能使得调试 器崩溃。（ 可能写断点 ,不知道写ARM还是THUMB ,造成的崩溃）</li>
-<li>五种代码执行时间检测<br>原理： 一段代码，在a处获取一下时间，运行一段后，再在b处获取下时间， 然后通过(b时间­a时间)求时间差,正常情况下这个时间差会非常小，  如果这个时间差比较大，说明正在被单步调试。<br>做法：   五个能获取时间的api：<br>time()函数   time_t结构体<br>clock()函数   clock_t结构体<br>gettimeofday()函数   timeval结构   timezone结构<br>clock_gettime()函数   timespec结构<br>getrusage()函数   rusage结构</li>
-<li>三种进程信息结构检测<br>原理：   一些进程文件中存储了进程信息，可以读取这些信息得知是否为调试状态。<br>做法：<br>第一种：   /proc/pid/status  /proc/pid/task/pid/status  TracerPid非0   statue字段中写入t（tracing stop）<br>第二种：   /proc/pid/stat  /proc/pid/task/pid/stat  第二个字段是t（T）<br>第三种：   /proc/pid/wchan  /proc/pid/task/pid/wchan  ptrace_stop</li>
-<li>Inotify事件监控dump<br>原理：   通常壳会在程序运行前完成对text的解密，所以脱壳可以通过dd与gdb_gcore来dump /proc/pid/mem或/proc/pid/pagemap，获取到解密后的代码内容。<br>可以通过Inotify系列api来监控mem或pagemap的打开或访问事件，   一旦发生时间就结束进程来阻止dump。</li>
-</ol>
-<h3 id="elf"><a href="#elf" class="headerlink" title="elf"></a>elf</h3><ol>
-<li><p>ELF常见HOOK方案及应用<br>a)        Inline hook<br>b)        GOT hook<br>c)        PRELOAD hook<br>d)        Linker重定位hook</p>
-</li>
-<li><p>ELF若干种保护方案<br>a)        UPX壳及分析<br>b)        Shellcode保护方案<br>c)        链接器及加载器<br>d)        VMP</p>
-</li>
-<li><p>ELF混淆方案<br>a)        花指令<br>b)        指令乱序，使用B衔接<br>c)        指令替换，替换为B指令<br>d)        指令索引并且乱序，使用索引表来跳转<br>e)        LLVM方式混淆</p>
-</li>
-<li><p>ELF反调试<br>a)        捕捉信号<br>b)        检测tracerPID<br>c)        检测调试进程<br>d)        处理ELF格式，阻止IDA加载<br>e)        多进程守护<br>f)        CRC校验<br>g)        调试中断指令检测（类似x86 0xCC）</p>
-</li>
-<li><p>ELF函数加密<br>a)        ELF入口加解密<br>b)        函数动态加解密，指令级加解密<br>c)     基于加载器的函数加解密</p>
-</li>
-</ol>
-<p><a href="https://bbs.pediy.com/thread-183116.htm中的：" target="_blank" rel="external">https://bbs.pediy.com/thread-183116.htm中的：</a></p>
-<h3 id="Dex-中方法的隐藏"><a href="#Dex-中方法的隐藏" class="headerlink" title="Dex 中方法的隐藏"></a>Dex 中方法的隐藏</h3><p>一种：<br>class段中将 DexMethod 的 methodIdx 值设为 0x0，相当于将原先的方法指向了前一个方法，因为这个是依据上一个方法架构体中Idx的偏移。<br>访问标志符 accessFlags 一般不需要修改，在Dex文件格式里，directMethods和 virtualMethods 是分开的。<br>将codeOffset 设置为前一个方法的代码偏移地址。<br>更新需隐藏方法的下一个方法的methodIdx，可以使用公式next_method_idx=original_next_method_idx+original_method_idx<br>重新计算 Dex 的 SHA1哈希值和Adler校验值，并用以更新 DexHeader，可以使用DexFixer修复 classes.dex文件<br>重新打包生成 APK 文件：<br><img src="https://i.imgur.com/8EbkfOQ.png" alt=""></p>
-<p>二种：<br>class段中，将相应的 directMethodsSize 或virtualMethodsSize 减 1，同时将表示该需要隐藏方法的 DexMethod 结构体中的数据全部修改为 0，这样就可以将该方法隐藏起来</p>
-<p>读取隐藏方法：<br>取数据流，用反射调用 android.content.res.AssetManager.openNonAsset 方法打开当前应用程序的classes.dex文件;或者Context.getPackageCodePath()来获得当前应用程序对应的apk文件的路径，利用此路径构造ZipFile对 象 ，进而获取classes.dex的ZipEntry ，利用ZipFile的getInputStream(ZipEntry)方法获取classes.dex 的数据流。<br>修复 Dex 文件，将之前隐藏方法的 DexMethod 结构体恢复<br>将修复后的 Dex 数据使用类加载器重新加载；<br>搜索调用。</p>
-<h3 id="Dex-完整性校验"><a href="#Dex-完整性校验" class="headerlink" title="Dex 完整性校验"></a>Dex 完整性校验</h3><p>首先在代码中完成校验值比对的逻辑，此部分代码后续不能再改变，否则 CRC 值<br>会发生变化；<br>从生成的 APK 文件中提取出 classes.dex 文件，计算其 CRC 值，其他 hash 值类似；<br>将计算出的值放入 strings.xml 文件中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">1. String apkPath = this.getPackageCodePath();</div><div class="line"> </div><div class="line">2. Long dexCrc = Long.parseLong(this.getString(R.string.dex_crc));</div><div class="line"> </div><div class="line">3. try &#123;</div><div class="line"> </div><div class="line">4. ZipFile zipfile = new ZipFile(apkPath);</div><div class="line"> </div><div class="line">5. ZipEntry dexentry = zipfile.getEntry(&quot;classes.dex&quot;);</div><div class="line"> </div><div class="line">6. if(dexentry.getCrc() != dexCrc)&#123;</div><div class="line"> </div><div class="line">7. System.out.println(&quot;Dex has been *modified!&quot;);</div><div class="line"> </div><div class="line">8. &#125;else&#123;</div><div class="line"> </div><div class="line">9. System.out.println(&quot;Dex hasn&apos;t been modified!&quot;);</div><div class="line"> </div><div class="line">10. &#125;</div><div class="line"> </div><div class="line">11. &#125; catch (IOException e) &#123;</div><div class="line"> </div><div class="line">12. // TODO Auto-generated catch block</div><div class="line"> </div><div class="line">13. e.printStackTrace();</div><div class="line"> </div><div class="line">14. &#125;</div></pre></td></tr></table></figure></p>
-<p>APK 完整性校验类似，不过数据放在服务器，app只是请求和处理判断。</p>
-<h3 id="Java-反射"><a href="#Java-反射" class="headerlink" title="Java 反射"></a>Java 反射</h3><p>Java 反射机制允许运行中的 Java 程序对自身进行检查，并能直接操作程序的内部属性或方法，可动态生成类实例、变更属性内容以及调用方法。<br>增加静态分析难度</p>
-<h3 id="字串混淆"><a href="#字串混淆" class="headerlink" title="字串混淆"></a>字串混淆</h3><p>dex中的，string中的。</p>
-<h3 id="代码乱序"><a href="#代码乱序" class="headerlink" title="代码乱序"></a>代码乱序</h3><p>通过goto切割代码。</p>
-<h3 id="APK-伪加密"><a href="#APK-伪加密" class="headerlink" title="APK 伪加密"></a>APK 伪加密</h3><p>根据操作系统安装apk时与普通zip文件的不同来修改apk文件。比如General purpose bit flags 第 0 位置 1</p>
-<h3 id="Manifest-Cheating"><a href="#Manifest-Cheating" class="headerlink" title="Manifest Cheating"></a>Manifest Cheating</h3><p>这个方法挺好的。360中也遇见了<br>生成的 R.java文件中包含了相应的资源类型、名称以及对应的 id 值。资源 id 是 32bit 的整型值，格式为:0xPPTTNNNN。其中 PP 表示使用该资源的包，TT 代表该资源的类型，而 NNNN 是该类型中资源的名称。对于应用程序资源，PP 值固定为 7f，而对于被引用的系统资源包，其 PP值为 01。</p>
-<p>Manifest Cheating 的基本原理是，在 AndroidManifest 的<application>节点中插入一个未知id(如 0x0)，名称为 name 的属性，其值可以是一个从未定义实现的 Java 类文件名。而对AndroidManifest 的修改需要在二进制格式下进行，这样才能不会破坏之前 aapt 对资源文件的处理。由于是未知的资源 id，在应用程序运行过程中，Android 会忽略此属性。但是在使用apktool 进行重打包时，首先会将 AndroidManifest.xml 转换为明文，进而会包含名称为 name的属性，而相应的 id 信息会丢失，apktool 重打包会重新进行资源打包处理，由于该 name属性值是一个未实现的 Java 类，重打包后的应用程序在运行过程中，由于 application 节点中定义的类是先于所有其他组件运行的，若系统找不到对应的类，会出现运行时错误，Dalvik虚拟机会直接关闭。</application></p>
-<h3 id="黄皮书中的第8章"><a href="#黄皮书中的第8章" class="headerlink" title="黄皮书中的第8章"></a>黄皮书中的第8章</h3><p>有具体的代码</p>
-<ol>
-<li>代码混淆</li>
-<li>资源混淆</li>
-<li>签名保护</li>
-<li>手动注册native</li>
-<li>反调试检测</li>
-</ol>
 
           
         
@@ -1791,167 +1945,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/24/android逆向分析操作随笔/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/24/android逆向分析操作随笔/" itemprop="url">android逆向分析操作随笔</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-24T21:57:33+08:00">
-                2018-05-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="2018-5-24"><a href="#2018-5-24" class="headerlink" title="2018.5.24"></a>2018.5.24</h2><p>分析博客：<br><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;articleid=339" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.7.Pa3lYS&amp;articleid=339</a><br><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;articleid=365" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916646.24000001.1.JBgCEv&amp;articleid=365</a></p>
-<p>ida分析出的变量类型可随意转化，指针也可以，所以选择适当的类型可更直观。选中后按一下”y”键，然后将类型声明为”JNIEnv*”</p>
-<p>smail代码可以修改，目前做不到java层修改，自己通过编译原理写一个！！！！</p>
-<p>增加大量smali：<br>把想要增加的逻辑先用java写成一个apk，然后把这个apk反编译成smali文件，随后把反编译后的这部分逻辑的smali文件插入到目标程序的smali文件夹中，然后再在原来的方法上采用invoke的方式调用新加入的逻辑。</p>
-<p>大多数反破解都有apk签校验，最好的做法是自己修改android源码解决。一劳永逸。libcore\luni\src\main\java\java\security\MessageDigest.java文件。将isEqual函数中的判断语句注释掉</p>
-<p>so文件在被加载的时候会首先执行.init_array中的函数，然后再执行JNI_OnLoad()函数。后者好找，但前者是数据不识别为代码。首先打开view -&gt;Open subviews-&gt;Segments。然后点击.init.array就可以看到.init_array中的函数了。p为创建函数。c为识别为代码。</p>
-<p>ida动态中也可以F5，有时候你明明在一个函数中却无法F5，这时候你需要先按一下”p”键，程序会将这段代码作为函数分析，然后再按一下”F5”。</p>
-<p>常见的反调试方法都会用fopen打开一些文件(/proc内的进程情况)来检测自己的进程是否被attach。</p>
-<p>我们先在”F5”界面选择所有代码，然后用”Copy to assembly”功能，就可以把c语言代码注释到汇编代码里。可防止nop出错</p>
-<p>ida可动态修改程序的一切，也可以静态修改文件的一切。<br>静态：Edit-&gt;Plugins-&gt;modifyfile更改成新so</p>
-<p>因为ARM是没有单独的NOP指令的。于是我们采用movs r0,r0作为NOP，对应的机器码为”00 00 A0 E1”</p>
-<p>ida的动态时的指针可快速（D）转化成自己想要的类型从而清晰显示</p>
-<p>kill调试：<br>首先用ps获取运行的app的pid，然后用kill -19 [pid] 就可以将这个app挂起了。随后用ida attach上这个app。ida如何加载不同线程???</p>
-<p>ida找不到模块文件也可以分析，只能看到内存中的状态?</p>
-<p>脱壳工具多的很，但都会被针对，所以手动脱壳必会。</p>
-<p>最基本的内存dump流程：<br>ida动态调试中<br>使用ida的script command去dump内存中的dex文件。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">staticmain(void)</div><div class="line">&#123;</div><div class="line">  auto fp, begin, end, dexbyte;</div><div class="line">  fp =fopen(&quot;C:\\dump.dex&quot;,&quot;wb&quot;);</div><div class="line">  begin = r0;</div><div class="line">  end = r0 + r1;</div><div class="line">  for( dexbyte = begin; dexbyte &lt; end; dexbyte ++ )</div><div class="line">      fputc(Byte(dexbyte), fp);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>学习ida脚本！！！但许多壳完全动态修改dex等文件，很难dump。</p>
-<p>使用ida直接反编译的代码：<br>defs.h头文件导入可识别ida定义的宏了。复制代码即可直接使用。</p>
-<p>直接调用：<br>另外我们还可以自己创建一个NDK项目，然后自己编写一个so或者elf利用dlopen()和dlsym()调用目标so中的函数。比如我们想要调用libdvm.so中的dvmGetCurrentJNIMethod()函数，我们就可以在我们的NDK项目中这么写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">typedefvoid* (*dvmGetCurrentJNIMethod_func)();</div><div class="line">dvmGetCurrentJNIMethod_func dvmGetCurrentJNIMethod_fnPtr;</div><div class="line">dvm_hand= dlopen(&quot;libdvm.so&quot;, RTLD_NOW);</div><div class="line">dvmGetCurrentJNIMethod_fnPtr =dlsym(dvm_hand,&quot;_Z22dvmGetCurrentJNIMethodv&quot;);</div><div class="line"></div><div class="line">dvmGetCurrentJNIMethod_fnPtr();</div></pre></td></tr></table></figure></p>
-<p>看雪分享的ida调试android技巧：<br><a href="https://www.kanxue.com/chm.htm?id=10296&amp;pid=node1000944" target="_blank" rel="external">https://www.kanxue.com/chm.htm?id=10296&amp;pid=node1000944</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2002,7 +1995,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">75</span>
+                <span class="site-state-item-count">76</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2013,7 +2006,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -2024,7 +2017,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-count">69</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
