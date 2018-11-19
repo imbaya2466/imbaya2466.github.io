@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="linux,execve," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言着重分析linux系统装载程序相关，涉及部分操作系统其它部分 android下与linux内核的版本对应：    Android Version API Level Linux Kernel in AOSP     1.5   Cupcake 3 2.6.27   1.6   Donut 4 2.6.29   2.0/1 Eclair 5-7 2.6.29   2.2.x Froyo 8 2.">
+<meta name="keywords" content="linux,execve">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android-armlinux系统调用与exec源码分析">
+<meta property="og:url" content="http://yoursite.com/2018/11/19/android-armlinux系统调用与exec源码分析/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言着重分析linux系统装载程序相关，涉及部分操作系统其它部分 android下与linux内核的版本对应：    Android Version API Level Linux Kernel in AOSP     1.5   Cupcake 3 2.6.27   1.6   Donut 4 2.6.29   2.0/1 Eclair 5-7 2.6.29   2.2.x Froyo 8 2.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/xTSnpxA.png">
+<meta property="og:updated_time" content="2018-11-19T13:29:03.202Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android-armlinux系统调用与exec源码分析">
+<meta name="twitter:description" content="前言着重分析linux系统装载程序相关，涉及部分操作系统其它部分 android下与linux内核的版本对应：    Android Version API Level Linux Kernel in AOSP     1.5   Cupcake 3 2.6.27   1.6   Donut 4 2.6.29   2.0/1 Eclair 5-7 2.6.29   2.2.x Froyo 8 2.">
+<meta name="twitter:image" content="https://i.imgur.com/xTSnpxA.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/19/android-armlinux系统调用与exec源码分析/"/>
+
+
+
+
+
+  <title>android-armlinux系统调用与exec源码分析 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/19/android-armlinux系统调用与exec源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android-armlinux系统调用与exec源码分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-19T21:00:18+08:00">
+                2018-11-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>着重分析linux系统装载程序相关，涉及部分操作系统其它部分</p>
+<p>android下与linux内核的版本对应：</p>
+<table>
+<thead>
+<tr>
+<th>Android Version</th>
+<th>API Level</th>
+<th>Linux Kernel in AOSP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.5   Cupcake</td>
+<td>3</td>
+<td>2.6.27</td>
+</tr>
+<tr>
+<td>1.6   Donut</td>
+<td>4</td>
+<td>2.6.29</td>
+</tr>
+<tr>
+<td>2.0/1 Eclair</td>
+<td>5-7</td>
+<td>2.6.29</td>
+</tr>
+<tr>
+<td>2.2.x Froyo</td>
+<td>8</td>
+<td>2.6.32</td>
+</tr>
+<tr>
+<td>2.3.x Gingerbread</td>
+<td>9, 10</td>
+<td>2.6.35</td>
+</tr>
+<tr>
+<td>3.x.x Honeycomb</td>
+<td>11-13</td>
+<td>2.6.36</td>
+</tr>
+<tr>
+<td>4.0.x Ice Cream San</td>
+<td>14, 15</td>
+<td>3.0.1</td>
+</tr>
+<tr>
+<td>4.1.x Jelly Bean</td>
+<td>16</td>
+<td>3.0.31</td>
+</tr>
+<tr>
+<td>4.2.x Jelly Bean</td>
+<td>17</td>
+<td>3.4.0</td>
+</tr>
+<tr>
+<td>4.3   Jelly Bean</td>
+<td>18</td>
+<td>3.4.39</td>
+</tr>
+<tr>
+<td>4.4   Kit Kat</td>
+<td>19, 20</td>
+<td>3.10</td>
+</tr>
+<tr>
+<td>5.x   Lollipop</td>
+<td>21, 22</td>
+<td>3.16.1</td>
+</tr>
+<tr>
+<td>6.0   Marshmallow</td>
+<td>23</td>
+<td>3.18.10</td>
+</tr>
+<tr>
+<td>7.0   Nougat</td>
+<td>24</td>
+<td>4.4.1</td>
+</tr>
+<tr>
+<td>7.1   Nougat</td>
+<td>25</td>
+<td>4.4.1</td>
+</tr>
+<tr>
+<td>8.0   Oreo</td>
+<td>26</td>
+<td>4.10</td>
+</tr>
+<tr>
+<td>8.1   Oreo</td>
+<td>27</td>
+<td>4.10</td>
+</tr>
+<tr>
+<td>9.0   Pie</td>
+<td>28</td>
+<td>4.4, 4.9 and 4.14</td>
+</tr>
+</tbody>
+</table>
+<p>来自：<a href="https://en.wikipedia.org/wiki/Android_version_history" target="_blank" rel="external">https://en.wikipedia.org/wiki/Android_version_history</a></p>
+<p>分析的系统虽然是8.0的…手头的android源码不含内核…只能分析网上的4.4版本了：<a href="https://www.androidos.net.cn/kernel/4.4/xref" target="_blank" rel="external">https://www.androidos.net.cn/kernel/4.4/xref</a></p>
+<a id="more"></a>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><p>Syscall位于用户与内核空间之间，使得：</p>
+<ol>
+<li>提高内核安全性，将内核操作完全独立，内核决定开放什么接口，谁能调用。</li>
+<li>便于移植</li>
+</ol>
+<p>因为各操作系统、系统版本、各架构的系统调用都不一样，因此为了形成编码级别的移植增加了一层运行库。支持编码移植的基础正是各个语言的运行库，比如c语言的read，在各系统下的运行库实现都不同，但代码调用时只需要引入它的声明并使用，连接时找到该平台下的库就可以连接到该实现。这一过程仅与运行库文件与编译器连接器有关，因此可以交叉。<br>思路就是把各个操作系统的系统调用交集在各个平台下都实现成库文件，上层编码时只需要使用语言提供的库就可以生成不同平台的可执行代码去运行。<br>其实触发中断到运行库间还有一层，是外壳函数，是各个操作系统为了方便系统调用(汇编)提供的c函数实现(相同系统使用外壳函数的源码可以移植)，外壳函数屏蔽了架构差异。<br>运行库(屏蔽系统与架构)&gt;外壳函数(屏蔽架构)&gt;系统调用(架构汇编与系统规定实现)<br>自己透过c运行库与外壳函数手动实现系统调用可以十分有效的混淆ida的分析。</p>
+<p>内核空间是高地址1G空间，余下的就是应用空间。应用可以通过系统调用陷入内核空间。64位下用户与内核各有64TB左右的空间。中间有空洞<br>用户空间对应进程，所以每当进程切换，用户空间就会跟着变化；而内核空间是由内核负责映射，它并不会跟着进程变化，是固定的。内核空间地址有自己对应的页表，用户进程各自有不同的页表。<br>因为用户与内核间要数据交互所以这样分每个虚拟内存交互可以使其交互方便点。</p>
+<p><img src="https://i.imgur.com/xTSnpxA.png" alt=""><br>图:x86段页式的寻址方式<br>相对X86，ARM的寻址方式更像是实模式，至于多任务下的数据保护，由OS来完成。<br>关于ARM、X86下地址映射运行模式的区别、cpu提供的功能与操作系统实现的部分的划分还比较模糊….先暂时以与x86相同来考虑</p>
+<p>内核的虚拟内存是固定的，每个进程虚拟空间的内核空间部分是物理相同的。该部分虚拟内存可以访问全部的物理内存，32位下用高端内存机制，64位下虚拟地址足够大了就不用了。</p>
+<p>让我们忽略Linux对段式内存映射的支持。 在保护模式下，我们知道无论CPU运行于用户态还是核心态，CPU执行程序所访问的地址都是虚拟地址，只是页表不同。<br>那为何用户模式下进程不能自己切换到内核态呢？正是因为中断的存在。使得切换到内核态必须进行限制级的申请，只有中断存在的系统调用号(系统选择开放的功能)才能获得运行。这样一来内核态的切换与执行操作绑定，没有要系统黑盒执行的操作就不能切换内核态。</p>
+<p>接下来详细分析从运行库到中断表，到内核执行的全过程</p>
+<h1 id="execv"><a href="#execv" class="headerlink" title="execv"></a>execv</h1><p>android下的运行库是google自己实现的bionic，为c语言运行库，实现直接调用的系统调用。(突然好奇图形渲染怎么实现的..等以后闲下来再分析)<br>c库的system和popen都是最后调用的exec外壳函数，exec系列只有execve是真正意义上的系统调用，其它都是在此基础上经过包装的库函数。</p>
+<p>函数声明：<br> int execve(const char <em>filename, char </em>const argv[ ], char *const envp[ ]);<br>如果执行成功则函数不会返回，执行失败则直接返回-1，失败原因存于errno 中。功能为在当前进程执行新程序。<br>man：<a href="http://man7.org/linux/man-pages/man2/execve.2.html" target="_blank" rel="external">http://man7.org/linux/man-pages/man2/execve.2.html</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"> execve() executes the program pointed to by filename.  This causes</div><div class="line">       the program that is currently being run by the calling process to be</div><div class="line">       replaced with a new program, with newly initialized stack, heap, and</div><div class="line">       (initialized and uninitialized) data segments.</div><div class="line">当前程序被替换，新的堆栈数据段。注意不会创建进程，内存地址空间还是已有的，只是更新成新的数据了</div><div class="line">如果可执行文件是动态链接的ELF可执行文件， 则PT_INTERP段中命名的解释器用于加载所需的共享对象。</div><div class="line">注意execve执行elf时如果有PT_INTERP会先装载动态连接器，由动态连接器加载重定位所有文件。控制权是先给连接器的entry，再由连接器给elf的entry</div><div class="line">具体见下分析</div></pre></td></tr></table></figure></p>
+<h2 id="壳函数"><a href="#壳函数" class="headerlink" title="壳函数"></a>壳函数</h2><p>声明：<br>bionic\libc\include\unistd.h<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int execve(const char* __file, char* const* __argv, char* const* __envp);</div></pre></td></tr></table></figure></p>
+<p>一般的壳函数会在\bionic\libc\bionic下有其c语言实现，之后通过c的形式调用其符号。符号的实现在各平台的.S文件中，这个比较特殊直接用的.S</p>
+<p>实现,外壳函数在不同的架构下实现不同：<br>bionic\libc\arch-arm64\syscalls\execve.S<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#include &lt;private/bionic_asm.h&gt;</div><div class="line"></div><div class="line">ENTRY(execve)</div><div class="line">    mov     x8, __NR_execve</div><div class="line">    svc     #0</div><div class="line"></div><div class="line">    cmn     x0, #(MAX_ERRNO + 1)</div><div class="line">    cneg    x0, x0, hi</div><div class="line">    b.hi    __set_errno_internal</div><div class="line"></div><div class="line">    ret</div><div class="line">END(execve)</div></pre></td></tr></table></figure></p>
+<p>bionic\libc\arch-x86_64\syscalls\execve.S<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#include &lt;private/bionic_asm.h&gt;</div><div class="line"></div><div class="line">ENTRY(execve)</div><div class="line">    movl    $__NR_execve, %eax</div><div class="line">    syscall</div><div class="line">    cmpq    $-MAX_ERRNO, %rax</div><div class="line">    jb      1f</div><div class="line">    negl    %eax</div><div class="line">    movl    %eax, %edi</div><div class="line">    call    __set_errno_internal</div><div class="line">1:</div><div class="line">    ret</div><div class="line">END(execve)</div></pre></td></tr></table></figure></p>
+<p>一些宏定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">bionic\libc\kernel\uapi\asm-generic\unistd.h</div><div class="line">#define __NR_execve 221</div><div class="line"></div><div class="line">bionic\libc\kernel\uapi\asm-x86\asm\unistd_32.h</div><div class="line">#define __NR_execve 11</div><div class="line"></div><div class="line">bionic\libc\kernel\uapi\asm-x86\asm\unistd_64.h</div><div class="line">#define __NR_execve 59</div><div class="line"></div><div class="line"></div><div class="line">bionic\libc\private\bionic_asm.h</div><div class="line">#define ENTRY_NO_DWARF(f) \</div><div class="line">    .text; \</div><div class="line">    .globl f; \</div><div class="line">    .balign __bionic_asm_align; \</div><div class="line">    .type f, __bionic_asm_function_type; \</div><div class="line">    f: \</div><div class="line">    __bionic_asm_custom_entry(f); \</div><div class="line">	</div><div class="line">#define END_NO_DWARF(f) \</div><div class="line">    .size f, .-f; \</div><div class="line">    __bionic_asm_custom_end(f) \</div><div class="line">	</div><div class="line">#define ENTRY(f) \</div><div class="line">    ENTRY_NO_DWARF(f) \</div><div class="line">    .cfi_startproc \</div><div class="line">	</div><div class="line">#define END(f) \</div><div class="line">    .cfi_endproc; \</div><div class="line">    END_NO_DWARF(f) \</div></pre></td></tr></table></figure></p>
+<p>各平台的时间基本都是放入系统调用号，触发中断，检测是否成功。注意这些都是微机原理课上看到过的.S汇编格式，大意为手动分段(.xxxx)，定义好符号名(f:)</p>
+<h2 id="中断过程"><a href="#中断过程" class="headerlink" title="中断过程"></a>中断过程</h2><p>这里省略中断向量表的过程，基本概述就是查询中断向量表，跳到中断处理程序，其中系统调用按编号处理。<br>省略内核态切换、堆栈切换过程，需要时再分析</p>
+<h2 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h2><h3 id="sys-execve"><a href="#sys-execve" class="headerlink" title="sys-execve"></a>sys-execve</h3><p>kernel/arch/arm/kernel/calls.S<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/* 10 */	CALL(sys_unlink)</div><div class="line">		CALL(sys_execve)</div><div class="line">		CALL(sys_chdir)</div><div class="line">		CALL(OBSOLETE(sys_time))	/* used by libc4 */</div><div class="line">		CALL(sys_mknod)</div></pre></td></tr></table></figure></p>
+<p>此处为系统调用表，调用符号sys_execve</p>
+<p>符号声明：<br>/kernel/include/linux/syscalls.h<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">asmlinkage long sys_execve(const char __user *filename,</div><div class="line">		const char __user *const __user *argv,</div><div class="line">		const char __user *const __user *envp);</div></pre></td></tr></table></figure></p>
+<p>asmlinkage是gcc标签，代表函数读取的参数来自于栈中，而非寄存器。</p>
+<p>/kernel/include/uapi/asm-generic/unistd.h<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/* arch/example/kernel/sys_example.c */</div><div class="line">#define __NR_clone 220</div><div class="line">__SYSCALL(__NR_clone, sys_clone)</div><div class="line">#define __NR_execve 221</div><div class="line">__SC_COMP(__NR_execve, sys_execve, compat_sys_execve)</div></pre></td></tr></table></figure></p>
+<p>发现221号的NR正对应sys_execve。<br>其表明的定义位置可能并没有其实现，这说明其实现可能是系统统一的。比如按着它的路径找到：<br>/arch/arm/kernel/sys_arm.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;linux/fs.h&gt;</div></pre></td></tr></table></figure></p>
+<p>添加系统调用只需添加call、与实现即可<br>还有就是拷一份内核代码到本地全局搜索：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SYSCALL_DEFINEn(xxxxx</div></pre></td></tr></table></figure></p>
+<p>系统调用的定义是用宏写的<br>fs/exec.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">SYSCALL_DEFINE3(execve,</div><div class="line">		const char __user *, filename,</div><div class="line">		const char __user *const __user *, argv,</div><div class="line">		const char __user *const __user *, envp)</div><div class="line">&#123;</div><div class="line">	return do_execve(getname(filename), argv, envp);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这个宏定义有些复杂，这里就不展开了</p>
+<h3 id="do-execve"><a href="#do-execve" class="headerlink" title="do-execve"></a>do-execve</h3><p>fs/exec.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int do_execve(struct filename *filename,</div><div class="line">	const char __user *const __user *__argv,</div><div class="line">	const char __user *const __user *__envp)</div><div class="line">&#123;</div><div class="line">	struct user_arg_ptr argv = &#123; .ptr.native = __argv &#125;;</div><div class="line">	struct user_arg_ptr envp = &#123; .ptr.native = __envp &#125;;</div><div class="line">	return do_execveat_common(AT_FDCWD, filename, argv, envp, 0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>指向程序参数argv和环境变量envp两个数组的指针以及数组中所有的指针都位于虚拟地址空间的用户空间部分。因此内核在当问用户空间内存时, 需要多加小心, 而user注释则允许自动化工具来检测时候所有相关事宜都处理得当</p>
+<h3 id="do-execveat-common"><a href="#do-execveat-common" class="headerlink" title="do-execveat-common"></a>do-execveat-common</h3><p>fs/exec.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * sys_execve() executes a new program.</div><div class="line"> */</div><div class="line"> //参数user_arg_ptr是对用户空间指针的一种封装</div><div class="line">static int do_execveat_common(int fd, struct filename *filename,</div><div class="line">			      struct user_arg_ptr argv,</div><div class="line">			      struct user_arg_ptr envp,</div><div class="line">			      int flags)</div><div class="line">&#123;</div><div class="line">	char *pathbuf = NULL;</div><div class="line">	struct linux_binprm *bprm;//保存可执行文件的信息</div><div class="line">	struct file *file;</div><div class="line">	struct files_struct *displaced;</div><div class="line">	int retval;//返回值</div><div class="line"></div><div class="line">	//判断文件名是否合法</div><div class="line">	if (IS_ERR(filename))</div><div class="line">		return PTR_ERR(filename);</div><div class="line"></div><div class="line">	/*</div><div class="line">	 * We move the actual failure in case of RLIMIT_NPROC excess from</div><div class="line">	 * set*uid() to execve() because too many poorly written programs</div><div class="line">	 * don&apos;t check setuid() return code.  Here we additionally recheck</div><div class="line">	 * whether NPROC limit is still exceeded.</div><div class="line">	 */</div><div class="line">	 //判断当前用户进程数是否超过限制</div><div class="line">	if ((current-&gt;flags &amp; PF_NPROC_EXCEEDED) &amp;&amp;</div><div class="line">	    atomic_read(&amp;current_user()-&gt;processes) &gt; rlimit(RLIMIT_NPROC)) &#123;</div><div class="line">		retval = -EAGAIN;</div><div class="line">		goto out_ret;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/* We&apos;re below the limit (still or again), so we don&apos;t want to make</div><div class="line">	 * further execve() calls fail. */</div><div class="line">	current-&gt;flags &amp;= ~PF_NPROC_EXCEEDED;</div><div class="line"></div><div class="line">	//用于备份当前进程的文件表至displaced中，即当前进程的files_struct结构，当出错或者返回时用于恢复当前进程的文件表。 </div><div class="line">	retval = unshare_files(&amp;displaced);</div><div class="line">	if (retval)</div><div class="line">		goto out_ret;</div><div class="line"></div><div class="line">	retval = -ENOMEM;</div><div class="line">	//创建linux_binprm并分配内存空间</div><div class="line">	bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);</div><div class="line">	if (!bprm)</div><div class="line">		goto out_files;</div><div class="line"></div><div class="line">	retval = prepare_bprm_creds(bprm);</div><div class="line">	if (retval)</div><div class="line">		goto out_free;</div><div class="line"></div><div class="line">	check_unsafe_exec(bprm);</div><div class="line">	current-&gt;in_execve = 1;</div><div class="line"></div><div class="line">	//通过do_filp_open函数打开文件，返回file结构。</div><div class="line">	file = do_open_execat(fd, filename, flags);</div><div class="line">	retval = PTR_ERR(file);</div><div class="line">	if (IS_ERR(file))</div><div class="line">		goto out_unmark;</div><div class="line"></div><div class="line">	//找到最小负载cpu，用来执行</div><div class="line">	sched_exec();</div><div class="line"></div><div class="line">	bprm-&gt;file = file;</div><div class="line">	if (fd == AT_FDCWD || filename-&gt;name[0] == &apos;/&apos;) &#123;</div><div class="line">		bprm-&gt;filename = filename-&gt;name;</div><div class="line">	&#125; else &#123;</div><div class="line">		if (filename-&gt;name[0] == &apos;\0&apos;)</div><div class="line">			pathbuf = kasprintf(GFP_TEMPORARY, &quot;/dev/fd/%d&quot;, fd);</div><div class="line">		else</div><div class="line">			pathbuf = kasprintf(GFP_TEMPORARY, &quot;/dev/fd/%d/%s&quot;,</div><div class="line">					    fd, filename-&gt;name);</div><div class="line">		if (!pathbuf) &#123;</div><div class="line">			retval = -ENOMEM;</div><div class="line">			goto out_unmark;</div><div class="line">		&#125;</div><div class="line">		/*</div><div class="line">		 * Record that a name derived from an O_CLOEXEC fd will be</div><div class="line">		 * inaccessible after exec. Relies on having exclusive access to</div><div class="line">		 * current-&gt;files (due to unshare_files above).</div><div class="line">		 */</div><div class="line">		if (close_on_exec(fd, rcu_dereference_raw(current-&gt;files-&gt;fdt)))</div><div class="line">			bprm-&gt;interp_flags |= BINPRM_FLAGS_PATH_INACCESSIBLE;</div><div class="line">		bprm-&gt;filename = pathbuf;</div><div class="line">	&#125;</div><div class="line">	bprm-&gt;interp = bprm-&gt;filename;</div><div class="line"></div><div class="line">	//bprm_mm_init函数分配新进程的内存空间mm_struct</div><div class="line">	retval = bprm_mm_init(bprm);</div><div class="line">	if (retval)</div><div class="line">		goto out_unmark;</div><div class="line"></div><div class="line">	//参数与环境变量个数</div><div class="line">	bprm-&gt;argc = count(argv, MAX_ARG_STRINGS);</div><div class="line">	if ((retval = bprm-&gt;argc) &lt; 0)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	bprm-&gt;envc = count(envp, MAX_ARG_STRINGS);</div><div class="line">	if ((retval = bprm-&gt;envc) &lt; 0)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	//prepare_binprm用于设置进程的授权，并将可执行文件的128字节内容读取到bprm的buf缓存中</div><div class="line">	retval = prepare_binprm(bprm);</div><div class="line">	if (retval &lt; 0)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	retval = copy_strings_kernel(1, &amp;bprm-&gt;filename, bprm);</div><div class="line">	if (retval &lt; 0)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	//拷贝字串，用户到内核</div><div class="line">	bprm-&gt;exec = bprm-&gt;p;</div><div class="line">	retval = copy_strings(bprm-&gt;envc, envp, bprm);</div><div class="line">	if (retval &lt; 0)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	retval = copy_strings(bprm-&gt;argc, argv, bprm);</div><div class="line">	if (retval &lt; 0)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	//执行新的进程</div><div class="line">	retval = exec_binprm(bprm);</div><div class="line">	if (retval &lt; 0)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	/* execve succeeded */</div><div class="line">	current-&gt;fs-&gt;in_exec = 0;</div><div class="line">	current-&gt;in_execve = 0;</div><div class="line">	acct_update_integrals(current);</div><div class="line">	task_numa_free(current);</div><div class="line">	free_bprm(bprm);</div><div class="line">	kfree(pathbuf);</div><div class="line">	putname(filename);</div><div class="line">	if (displaced)</div><div class="line">		put_files_struct(displaced);</div><div class="line">	return retval;</div><div class="line"></div><div class="line">out:</div><div class="line">	if (bprm-&gt;mm) &#123;</div><div class="line">		acct_arg_size(bprm, 0);</div><div class="line">		mmput(bprm-&gt;mm);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">out_unmark:</div><div class="line">	current-&gt;fs-&gt;in_exec = 0;</div><div class="line">	current-&gt;in_execve = 0;</div><div class="line"></div><div class="line">out_free:</div><div class="line">	free_bprm(bprm);</div><div class="line">	kfree(pathbuf);</div><div class="line"></div><div class="line">out_files:</div><div class="line">	if (displaced)</div><div class="line">		reset_files_struct(displaced);</div><div class="line">out_ret:</div><div class="line">	putname(filename);</div><div class="line">	return retval;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注释即可，主要就是填充bprm结构</p>
+<h4 id="binprm"><a href="#binprm" class="headerlink" title="binprm"></a>binprm</h4><p>include/linux/binfmts.h<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * This structure is used to hold the arguments that are used when loading binaries.</div><div class="line"> */</div><div class="line">struct linux_binprm &#123;</div><div class="line">	char buf[BINPRM_BUF_SIZE];// 保存可执行文件的头128字节</div><div class="line">#ifdef CONFIG_MMU</div><div class="line">	struct vm_area_struct *vma;</div><div class="line">	unsigned long vma_pages;</div><div class="line">#else</div><div class="line"># define MAX_ARG_PAGES	32</div><div class="line">	struct page *page[MAX_ARG_PAGES];</div><div class="line">#endif</div><div class="line">	struct mm_struct *mm;</div><div class="line">	unsigned long p; /* current top of mem 当前内存最高地址*/</div><div class="line">	unsigned int</div><div class="line">		cred_prepared:1,/* true if creds already prepared (multiple</div><div class="line">				 * preps happen for interpreters) */</div><div class="line">		cap_effective:1;/* true if has elevated effective capabilities,</div><div class="line">				 * false if not; except for init which inherits</div><div class="line">				 * its parent&apos;s caps anyway */</div><div class="line">#ifdef __alpha__</div><div class="line">	unsigned int taso:1;</div><div class="line">#endif</div><div class="line">	unsigned int recursion_depth; /* only for search_binary_handler() */</div><div class="line">	struct file * file; //要执行的文件</div><div class="line">	struct cred *cred;	/* new credentials */</div><div class="line">	int unsafe;		/* how unsafe this exec is (mask of LSM_UNSAFE_*) */</div><div class="line">	unsigned int per_clear;	/* bits to clear in current-&gt;personality */</div><div class="line">	int argc, envc;//参数与环变数目</div><div class="line">	const char * filename;	/* Name of binary as seen by procps 要执行文件的名字*/</div><div class="line">	const char * interp;	/* Name of the binary really executed. Most</div><div class="line">				   of the time same as filename, but could be</div><div class="line">				   different for binfmt_&#123;misc,script&#125; */</div><div class="line">	unsigned interp_flags;</div><div class="line">	unsigned interp_data;</div><div class="line">	unsigned long loader, exec;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>该结构体统一保存各可执行文件的信息</p>
+<h4 id="prepare-binprm"><a href="#prepare-binprm" class="headerlink" title="prepare-binprm"></a>prepare-binprm</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">int prepare_binprm(struct linux_binprm *bprm)</div><div class="line">&#123;</div><div class="line">    int retval;</div><div class="line"></div><div class="line">    bprm_fill_uid(bprm);</div><div class="line">    retval = security_bprm_set_creds(bprm);</div><div class="line">    if (retval)</div><div class="line">        return retval;</div><div class="line">    bprm-&gt;cred_prepared = 1;</div><div class="line"></div><div class="line">    memset(bprm-&gt;buf, 0, BINPRM_BUF_SIZE);</div><div class="line">    return kernel_read(bprm-&gt;file, 0, bprm-&gt;buf, BINPRM_BUF_SIZE);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>设置即将运行的uid与gid。读到buf的不是文件的全部内容BINPRM-BUF-SIZE只是128个字节</p>
+<h3 id="exec-binprm"><a href="#exec-binprm" class="headerlink" title="exec-binprm"></a>exec-binprm</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">static int exec_binprm(struct linux_binprm *bprm)</div><div class="line">&#123;</div><div class="line">	pid_t old_pid, old_vpid;</div><div class="line">	int ret;</div><div class="line"></div><div class="line">	/* Need to fetch pid before load_binary changes it */</div><div class="line">	old_pid = current-&gt;pid;</div><div class="line">	rcu_read_lock();</div><div class="line">	old_vpid = task_pid_nr_ns(current, task_active_pid_ns(current-&gt;parent));</div><div class="line">	rcu_read_unlock();</div><div class="line"></div><div class="line">	ret = search_binary_handler(bprm);</div><div class="line">	if (ret &gt;= 0) &#123;</div><div class="line">		audit_bprm(bprm);</div><div class="line">		trace_sched_process_exec(current, old_pid, bprm);</div><div class="line">		ptrace_event(PTRACE_EVENT_EXEC, old_vpid);</div><div class="line">		proc_exec_connector(current);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>调用search-binary-handler()函数对linux_binprm的formats链表进行扫描，并尝试每个load-binary函数，如果成功加载了文件的执行格式，对formats的扫描终止。</p>
+<h3 id="search-binary-handler"><a href="#search-binary-handler" class="headerlink" title="search-binary-handler"></a>search-binary-handler</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">#define printable(c) (((c)==&apos;\t&apos;) || ((c)==&apos;\n&apos;) || (0x20&lt;=(c) &amp;&amp; (c)&lt;=0x7e))</div><div class="line">/*</div><div class="line"> * cycle the list of binary formats handler, until one recognizes the image</div><div class="line"> */</div><div class="line">int search_binary_handler(struct linux_binprm *bprm)</div><div class="line">&#123;</div><div class="line">	bool need_retry = IS_ENABLED(CONFIG_MODULES);</div><div class="line">	struct linux_binfmt *fmt;//linux_binfmt描述可以执行的程序</div><div class="line">	//linux内核对所支持的每种可执行的程序类型都有个struct linux_binfmt的数据结构</div><div class="line">	int retval;</div><div class="line"></div><div class="line">	/* This allows 4 levels of binfmt rewrites before failing hard. */</div><div class="line">	if (bprm-&gt;recursion_depth &gt; 5)</div><div class="line">		return -ELOOP;</div><div class="line"></div><div class="line">	retval = security_bprm_check(bprm);</div><div class="line">	if (retval)</div><div class="line">		return retval;</div><div class="line"></div><div class="line">	retval = -ENOENT;</div><div class="line"> retry:</div><div class="line">	read_lock(&amp;binfmt_lock);</div><div class="line">	list_for_each_entry(fmt, &amp;formats, lh) &#123;</div><div class="line">		if (!try_module_get(fmt-&gt;module))</div><div class="line">			continue;</div><div class="line">		read_unlock(&amp;binfmt_lock);</div><div class="line">		bprm-&gt;recursion_depth++;</div><div class="line">		retval = fmt-&gt;load_binary(bprm);</div><div class="line">		read_lock(&amp;binfmt_lock);</div><div class="line">		put_binfmt(fmt);</div><div class="line">		bprm-&gt;recursion_depth--;</div><div class="line">		if (retval &lt; 0 &amp;&amp; !bprm-&gt;mm) &#123;</div><div class="line">			/* we got to flush_old_exec() and failed after it */</div><div class="line">			read_unlock(&amp;binfmt_lock);</div><div class="line">			force_sigsegv(SIGSEGV, current);</div><div class="line">			return retval;</div><div class="line">		&#125;</div><div class="line">		if (retval != -ENOEXEC || !bprm-&gt;file) &#123;</div><div class="line">			read_unlock(&amp;binfmt_lock);</div><div class="line">			return retval;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	read_unlock(&amp;binfmt_lock);</div><div class="line"></div><div class="line">	if (need_retry) &#123;</div><div class="line">		if (printable(bprm-&gt;buf[0]) &amp;&amp; printable(bprm-&gt;buf[1]) &amp;&amp;</div><div class="line">		    printable(bprm-&gt;buf[2]) &amp;&amp; printable(bprm-&gt;buf[3]))</div><div class="line">			return retval;</div><div class="line">		if (request_module(&quot;binfmt-%04x&quot;, *(ushort *)(bprm-&gt;buf + 2)) &lt; 0)</div><div class="line">			return retval;</div><div class="line">		need_retry = false;</div><div class="line">		goto retry;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	return retval;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>search-binary-handler函数遍历format格式，对于linux下的elf格式的可执行文件而言，会找到elf-format，调用其load-binary函数，最终其实调用的是load-elf-binary函数</p>
+<p>注意这些人非常喜欢用宏定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * list_for_each_entry	-	iterate over list of given type</div><div class="line"> * @pos:	the type * to use as a loop cursor.</div><div class="line"> * @head:	the head for your list.</div><div class="line"> * @member:	the name of the list_struct within the struct.</div><div class="line"> */</div><div class="line">#define list_for_each_entry(pos, head, member)				\</div><div class="line">	for (pos = list_entry((head)-&gt;next, typeof(*pos), member);	\</div><div class="line">	     &amp;pos-&gt;member != (head); 	\</div><div class="line">	     pos = list_entry(pos-&gt;member.next, typeof(*pos), member))</div></pre></td></tr></table></figure></p>
+<h4 id="linux-binfmt"><a href="#linux-binfmt" class="headerlink" title="linux-binfmt"></a>linux-binfmt</h4><p>include/linux/binfmts.h<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">struct linux_binfmt &#123;</div><div class="line">	struct list_head lh;</div><div class="line">	struct module *module;</div><div class="line">	int (*load_binary)(struct linux_binprm *);//通过读存放在可执行文件中的信息为当前进程建立一个新的执行环境</div><div class="line">	int (*load_shlib)(struct file *);</div><div class="line">	int (*core_dump)(struct coredump_params *cprm);</div><div class="line">	unsigned long min_coredump;	/* minimal dump size */</div><div class="line">&#125;;</div><div class="line">//elf的格式定义，构建时想用名字赋值的话前要加引用符号.</div><div class="line">static struct linux_binfmt elf_format = &#123;</div><div class="line">    .module      = THIS_MODULE,</div><div class="line">    .load_binary = load_elf_binary,</div><div class="line">    .load_shlib      = load_elf_library,</div><div class="line">    .core_dump       = elf_core_dump,</div><div class="line">    .min_coredump    = ELF_EXEC_PAGESIZE,</div><div class="line">    .hasvdso     = 1</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>这个结构体每个代表一种可执行文件格式，linux中存于formats链表中<br>其存贮的加载函数指针指向的函数不同</p>
+<h3 id="load-elf-binary"><a href="#load-elf-binary" class="headerlink" title="load-elf-binary"></a>load-elf-binary</h3><p>这部分是重点，elf文件的加载</p>
+<p>load_elf_binary<br>fs/binfmt_elf.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div><div class="line">349</div><div class="line">350</div><div class="line">351</div><div class="line">352</div><div class="line">353</div><div class="line">354</div><div class="line">355</div><div class="line">356</div><div class="line">357</div><div class="line">358</div><div class="line">359</div><div class="line">360</div><div class="line">361</div><div class="line">362</div><div class="line">363</div><div class="line">364</div><div class="line">365</div><div class="line">366</div><div class="line">367</div><div class="line">368</div><div class="line">369</div><div class="line">370</div><div class="line">371</div><div class="line">372</div><div class="line">373</div><div class="line">374</div><div class="line">375</div><div class="line">376</div><div class="line">377</div><div class="line">378</div><div class="line">379</div><div class="line">380</div><div class="line">381</div><div class="line">382</div><div class="line">383</div><div class="line">384</div><div class="line">385</div><div class="line">386</div><div class="line">387</div><div class="line">388</div><div class="line">389</div><div class="line">390</div><div class="line">391</div><div class="line">392</div><div class="line">393</div><div class="line">394</div><div class="line">395</div><div class="line">396</div><div class="line">397</div><div class="line">398</div><div class="line">399</div><div class="line">400</div><div class="line">401</div><div class="line">402</div><div class="line">403</div><div class="line">404</div><div class="line">405</div><div class="line">406</div><div class="line">407</div><div class="line">408</div><div class="line">409</div><div class="line">410</div><div class="line">411</div><div class="line">412</div><div class="line">413</div><div class="line">414</div><div class="line">415</div><div class="line">416</div><div class="line">417</div><div class="line">418</div><div class="line">419</div><div class="line">420</div><div class="line">421</div><div class="line">422</div><div class="line">423</div><div class="line">424</div><div class="line">425</div><div class="line">426</div><div class="line">427</div><div class="line">428</div><div class="line">429</div><div class="line">430</div><div class="line">431</div><div class="line">432</div><div class="line">433</div><div class="line">434</div><div class="line">435</div><div class="line">436</div><div class="line">437</div><div class="line">438</div><div class="line">439</div><div class="line">440</div><div class="line">441</div><div class="line">442</div><div class="line">443</div><div class="line">444</div><div class="line">445</div><div class="line">446</div><div class="line">447</div><div class="line">448</div><div class="line">449</div><div class="line">450</div><div class="line">451</div><div class="line">452</div><div class="line">453</div><div class="line">454</div><div class="line">455</div><div class="line">456</div><div class="line">457</div><div class="line">458</div><div class="line">459</div><div class="line">460</div><div class="line">461</div><div class="line">462</div><div class="line">463</div><div class="line">464</div><div class="line">465</div><div class="line">466</div><div class="line">467</div><div class="line">468</div><div class="line">469</div><div class="line">470</div><div class="line">471</div><div class="line">472</div><div class="line">473</div><div class="line">474</div><div class="line">475</div><div class="line">476</div><div class="line">477</div><div class="line">478</div><div class="line">479</div><div class="line">480</div><div class="line">481</div><div class="line">482</div><div class="line">483</div><div class="line">484</div><div class="line">485</div><div class="line">486</div><div class="line">487</div><div class="line">488</div><div class="line">489</div><div class="line">490</div><div class="line">491</div><div class="line">492</div><div class="line">493</div><div class="line">494</div><div class="line">495</div><div class="line">496</div><div class="line">497</div><div class="line">498</div><div class="line">499</div><div class="line">500</div><div class="line">501</div><div class="line">502</div></pre></td><td class="code"><pre><div class="line">static int load_elf_binary(struct linux_binprm *bprm)</div><div class="line">&#123;</div><div class="line">	struct file *interpreter = NULL; /* to shut gcc up */</div><div class="line"> 	unsigned long load_addr = 0, load_bias = 0;</div><div class="line">	int load_addr_set = 0;</div><div class="line">	char * elf_interpreter = NULL;</div><div class="line">	unsigned long error;</div><div class="line">	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;</div><div class="line">	unsigned long elf_bss, elf_brk;</div><div class="line">	int retval, i;</div><div class="line">	unsigned long elf_entry;</div><div class="line">	unsigned long interp_load_addr = 0;</div><div class="line">	unsigned long start_code, end_code, start_data, end_data;</div><div class="line">	unsigned long reloc_func_desc __maybe_unused = 0;</div><div class="line">	int executable_stack = EXSTACK_DEFAULT;</div><div class="line">	struct pt_regs *regs = current_pt_regs();</div><div class="line">	struct &#123;</div><div class="line">		struct elfhdr elf_ex;</div><div class="line">		struct elfhdr interp_elf_ex;</div><div class="line">	&#125; *loc;//存文件结构的</div><div class="line">	struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;</div><div class="line"></div><div class="line">	loc = kmalloc(sizeof(*loc), GFP_KERNEL);</div><div class="line">	if (!loc) &#123;</div><div class="line">		retval = -ENOMEM;</div><div class="line">		goto out_ret;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	/* Get the exec-header */</div><div class="line">	//获取缓存的elf头</div><div class="line">	loc-&gt;elf_ex = *((struct elfhdr *)bprm-&gt;buf);</div><div class="line"></div><div class="line">	retval = -ENOEXEC;</div><div class="line">	/* First of all, some simple consistency checks */</div><div class="line">	//检测魔数-前4个字节</div><div class="line">	if (memcmp(loc-&gt;elf_ex.e_ident, ELFMAG, SELFMAG) != 0)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	//既不是可执行文件又不是动态链接文件时</div><div class="line">	if (loc-&gt;elf_ex.e_type != ET_EXEC &amp;&amp; loc-&gt;elf_ex.e_type != ET_DYN)</div><div class="line">		goto out;</div><div class="line">	//不是指定的平台的</div><div class="line">	if (!elf_check_arch(&amp;loc-&gt;elf_ex))</div><div class="line">		goto out;</div><div class="line">	//</div><div class="line">	if (!bprm-&gt;file-&gt;f_op-&gt;mmap)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	//读取段头，用的file结构与缓存的头读取，空间现分配</div><div class="line">	elf_phdata = load_elf_phdrs(&amp;loc-&gt;elf_ex, bprm-&gt;file);</div><div class="line">	if (!elf_phdata)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	elf_ppnt = elf_phdata;</div><div class="line">	elf_bss = 0;</div><div class="line">	elf_brk = 0;</div><div class="line"></div><div class="line">	start_code = ~0UL;</div><div class="line">	end_code = 0;</div><div class="line">	start_data = 0;</div><div class="line">	end_data = 0;</div><div class="line"></div><div class="line">	for (i = 0; i &lt; loc-&gt;elf_ex.e_phnum; i++) &#123;</div><div class="line">		//查找到解释器信息，解释器段p地址直接指向字串</div><div class="line">		if (elf_ppnt-&gt;p_type == PT_INTERP) &#123;</div><div class="line">			/* This is the program interpreter used for</div><div class="line">			 * shared libraries - for now assume that this</div><div class="line">			 * is an a.out format binary</div><div class="line">			 */</div><div class="line">			retval = -ENOEXEC;</div><div class="line">			if (elf_ppnt-&gt;p_filesz &gt; PATH_MAX || </div><div class="line">			    elf_ppnt-&gt;p_filesz &lt; 2)</div><div class="line">				goto out_free_ph;</div><div class="line"></div><div class="line">			retval = -ENOMEM;</div><div class="line">			//分配字串</div><div class="line">			elf_interpreter = kmalloc(elf_ppnt-&gt;p_filesz,</div><div class="line">						  GFP_KERNEL);</div><div class="line">			if (!elf_interpreter)</div><div class="line">				goto out_free_ph;</div><div class="line"></div><div class="line">			//从文件中读取...可见之前确实没全读进来，毕竟还在内核态中</div><div class="line">			retval = kernel_read(bprm-&gt;file, elf_ppnt-&gt;p_offset,</div><div class="line">					     elf_interpreter,</div><div class="line">					     elf_ppnt-&gt;p_filesz);</div><div class="line">			if (retval != elf_ppnt-&gt;p_filesz) &#123;</div><div class="line">				if (retval &gt;= 0)</div><div class="line">					retval = -EIO;</div><div class="line">				goto out_free_interp;</div><div class="line">			&#125;</div><div class="line">			/* make sure path is NULL terminated */</div><div class="line">			retval = -ENOEXEC;</div><div class="line">			//结尾是0</div><div class="line">			if (elf_interpreter[elf_ppnt-&gt;p_filesz - 1] != &apos;\0&apos;)</div><div class="line">				goto out_free_interp;</div><div class="line"></div><div class="line">			//打开解析器，返回file结构</div><div class="line">			interpreter = open_exec(elf_interpreter);</div><div class="line">			retval = PTR_ERR(interpreter);</div><div class="line">			if (IS_ERR(interpreter))</div><div class="line">				goto out_free_interp;</div><div class="line"></div><div class="line">			/*</div><div class="line">			 * If the binary is not readable then enforce</div><div class="line">			 * mm-&gt;dumpable = 0 regardless of the interpreter&apos;s</div><div class="line">			 * permissions.</div><div class="line">			 */</div><div class="line">			would_dump(bprm, interpreter);</div><div class="line"></div><div class="line">			/* Get the exec headers */</div><div class="line">			//读解析器的头</div><div class="line">			retval = kernel_read(interpreter, 0,</div><div class="line">					     (void *)&amp;loc-&gt;interp_elf_ex,</div><div class="line">					     sizeof(loc-&gt;interp_elf_ex));</div><div class="line">			if (retval != sizeof(loc-&gt;interp_elf_ex)) &#123;</div><div class="line">				if (retval &gt;= 0)</div><div class="line">					retval = -EIO;</div><div class="line">				goto out_free_dentry;</div><div class="line">			&#125;</div><div class="line"></div><div class="line">			break;</div><div class="line">		&#125;</div><div class="line">		elf_ppnt++;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	elf_ppnt = elf_phdata;</div><div class="line">	//遍历段</div><div class="line">	for (i = 0; i &lt; loc-&gt;elf_ex.e_phnum; i++, elf_ppnt++)</div><div class="line">		switch (elf_ppnt-&gt;p_type) &#123;</div><div class="line">			//是GNU_STACK时</div><div class="line">		case PT_GNU_STACK:</div><div class="line">			//设置堆栈可执行</div><div class="line">			if (elf_ppnt-&gt;p_flags &amp; PF_X)</div><div class="line">				executable_stack = EXSTACK_ENABLE_X;</div><div class="line">			else</div><div class="line">				executable_stack = EXSTACK_DISABLE_X;</div><div class="line">			break;</div><div class="line">		//case可以...这么用，要求空格</div><div class="line">		case PT_LOPROC ... PT_HIPROC:</div><div class="line">			retval = arch_elf_pt_proc(&amp;loc-&gt;elf_ex, elf_ppnt,</div><div class="line">						  bprm-&gt;file, false,</div><div class="line">						  &amp;arch_state);</div><div class="line">			if (retval)</div><div class="line">				goto out_free_dentry;</div><div class="line">			break;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">	/* Some simple consistency checks for the interpreter */</div><div class="line">	//有连接器或解释器时</div><div class="line">	if (elf_interpreter) &#123;</div><div class="line">		retval = -ELIBBAD;</div><div class="line">		/* Not an ELF interpreter */</div><div class="line">		//是不是elf文件</div><div class="line">		if (memcmp(loc-&gt;interp_elf_ex.e_ident, ELFMAG, SELFMAG) != 0)</div><div class="line">			goto out_free_dentry;</div><div class="line">		/* Verify the interpreter has a valid arch */</div><div class="line">		//检测架构平台</div><div class="line">		if (!elf_check_arch(&amp;loc-&gt;interp_elf_ex))</div><div class="line">			goto out_free_dentry;</div><div class="line"></div><div class="line">		//获取段头表</div><div class="line">		/* Load the interpreter program headers */</div><div class="line">		interp_elf_phdata = load_elf_phdrs(&amp;loc-&gt;interp_elf_ex,</div><div class="line">						   interpreter);</div><div class="line">		if (!interp_elf_phdata)</div><div class="line">			goto out_free_dentry;</div><div class="line"></div><div class="line">		/* Pass PT_LOPROC..PT_HIPROC headers to arch code */</div><div class="line">		elf_ppnt = interp_elf_phdata;</div><div class="line">		for (i = 0; i &lt; loc-&gt;interp_elf_ex.e_phnum; i++, elf_ppnt++)</div><div class="line">			switch (elf_ppnt-&gt;p_type) &#123;</div><div class="line">			case PT_LOPROC ... PT_HIPROC:</div><div class="line">				retval = arch_elf_pt_proc(&amp;loc-&gt;interp_elf_ex,</div><div class="line">							  elf_ppnt, interpreter,</div><div class="line">							  true, &amp;arch_state);</div><div class="line">				if (retval)</div><div class="line">					goto out_free_dentry;</div><div class="line">				break;</div><div class="line">			&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/*</div><div class="line">	 * Allow arch code to reject the ELF at this point, whilst it&apos;s</div><div class="line">	 * still possible to return an error to the code that invoked</div><div class="line">	 * the exec syscall.</div><div class="line">	 */</div><div class="line">	 //!!可以保证其为0或1</div><div class="line">	retval = arch_check_elf(&amp;loc-&gt;elf_ex, !!interpreter, &amp;arch_state);</div><div class="line">	if (retval)</div><div class="line">		goto out_free_dentry;</div><div class="line"></div><div class="line">	/* Flush all traces of the currently running executable */</div><div class="line">	//flush_old_exec主要用来进行新进程地址空间的替换，并删除同线程组中的其他线程。</div><div class="line">	retval = flush_old_exec(bprm);</div><div class="line">	if (retval)</div><div class="line">		goto out_free_dentry;</div><div class="line"></div><div class="line">	/* Do this immediately, since STACK_TOP as used in setup_arg_pages</div><div class="line">	   may depend on the personality.  */</div><div class="line">	SET_PERSONALITY2(loc-&gt;elf_ex, &amp;arch_state);</div><div class="line">	if (elf_read_implies_exec(loc-&gt;elf_ex, executable_stack))</div><div class="line">		current-&gt;personality |= READ_IMPLIES_EXEC;</div><div class="line"></div><div class="line">	if (!(current-&gt;personality &amp; ADDR_NO_RANDOMIZE) &amp;&amp; randomize_va_space)</div><div class="line">		current-&gt;flags |= PF_RANDOMIZE;</div><div class="line"></div><div class="line">	//setup_new_exec函数对刚刚替换的地址空间进行简单的初始化</div><div class="line">	setup_new_exec(bprm);</div><div class="line"></div><div class="line">	/* Do this so that we can load the interpreter, if need be.  We will</div><div class="line">	   change some of these later */</div><div class="line">	retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),</div><div class="line">				 executable_stack);</div><div class="line">	if (retval &lt; 0)</div><div class="line">		goto out_free_dentry;</div><div class="line">	</div><div class="line">	current-&gt;mm-&gt;start_stack = bprm-&gt;p;</div><div class="line"></div><div class="line">	/* Now we do a little grungy work by mmapping the ELF image into</div><div class="line">	   the correct location in memory. */</div><div class="line">	//查找elf文件中类型为PT_LOAD的Segment，将其装载进内存</div><div class="line">	for(i = 0, elf_ppnt = elf_phdata;</div><div class="line">	    i &lt; loc-&gt;elf_ex.e_phnum; i++, elf_ppnt++) &#123;</div><div class="line">		int elf_prot = 0, elf_flags;</div><div class="line">		unsigned long k, vaddr;</div><div class="line">		unsigned long total_size = 0;</div><div class="line"></div><div class="line">		//遍历查找需要LOAD的头</div><div class="line">		if (elf_ppnt-&gt;p_type != PT_LOAD)</div><div class="line">			continue;</div><div class="line"></div><div class="line">		//如果此时brk&gt;bss就分配一段内存</div><div class="line">		if (unlikely (elf_brk &gt; elf_bss)) &#123;</div><div class="line">			unsigned long nbyte;</div><div class="line">	            </div><div class="line">			/* There was a PT_LOAD segment with p_memsz &gt; p_filesz</div><div class="line">			   before this one. Map anonymous pages, if needed,</div><div class="line">			   and clear the area.  */</div><div class="line">			retval = set_brk(elf_bss + load_bias,</div><div class="line">					 elf_brk + load_bias);</div><div class="line">			if (retval)</div><div class="line">				goto out_free_dentry;</div><div class="line">			nbyte = ELF_PAGEOFFSET(elf_bss);</div><div class="line">			if (nbyte) &#123;</div><div class="line">				nbyte = ELF_MIN_ALIGN - nbyte;</div><div class="line">				if (nbyte &gt; elf_brk - elf_bss)</div><div class="line">					nbyte = elf_brk - elf_bss;</div><div class="line">				if (clear_user((void __user *)elf_bss +</div><div class="line">							load_bias, nbyte)) &#123;</div><div class="line">					/*</div><div class="line">					 * This bss-zeroing can fail if the ELF</div><div class="line">					 * file specifies odd protections. So</div><div class="line">					 * we don&apos;t check the return value</div><div class="line">					 */</div><div class="line">				&#125;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		//该段的权限保护</div><div class="line">		if (elf_ppnt-&gt;p_flags &amp; PF_R)</div><div class="line">			elf_prot |= PROT_READ;</div><div class="line">		if (elf_ppnt-&gt;p_flags &amp; PF_W)</div><div class="line">			elf_prot |= PROT_WRITE;</div><div class="line">		if (elf_ppnt-&gt;p_flags &amp; PF_X)</div><div class="line">			elf_prot |= PROT_EXEC;</div><div class="line"></div><div class="line">		elf_flags = MAP_PRIVATE | MAP_DENYWRITE | MAP_EXECUTABLE;</div><div class="line"></div><div class="line">		//该段的VA</div><div class="line">		vaddr = elf_ppnt-&gt;p_vaddr;</div><div class="line">		//如果是可执行文件或者不是第一次映射load_addr_set，基址已经定下</div><div class="line">		if (loc-&gt;elf_ex.e_type == ET_EXEC || load_addr_set) &#123;</div><div class="line">			elf_flags |= MAP_FIXED;</div><div class="line">		//如果是动态连接文件</div><div class="line">		&#125; else if (loc-&gt;elf_ex.e_type == ET_DYN) &#123;</div><div class="line">			/* Try and get dynamic programs out of the way of the</div><div class="line">			 * default mmap base, as well as whatever program they</div><div class="line">			 * might try to exec.  This is because the brk will</div><div class="line">			 * follow the loader, and is not movable.  */</div><div class="line">			 //load_bias是偏移</div><div class="line">			load_bias = ELF_ET_DYN_BASE - vaddr;</div><div class="line">			if (current-&gt;flags &amp; PF_RANDOMIZE)</div><div class="line">				load_bias += arch_mmap_rnd();//地址随机因子</div><div class="line">			load_bias = ELF_PAGESTART(load_bias);</div><div class="line">			//total_size为计算的全部需要映射的内存大小</div><div class="line">			total_size = total_mapping_size(elf_phdata,</div><div class="line">							loc-&gt;elf_ex.e_phnum);</div><div class="line">			if (!total_size) &#123;</div><div class="line">				retval = -EINVAL;</div><div class="line">				goto out_free_dentry;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		//段映射到虚拟内存中load_bias+p_vaddr</div><div class="line">		//参数：文件句柄、虚拟地址、段头、权限、标志、内存镜像总大小-只有第一次不为0</div><div class="line">		error = elf_map(bprm-&gt;file, load_bias + vaddr, elf_ppnt,</div><div class="line">				elf_prot, elf_flags, total_size);</div><div class="line">		if (BAD_ADDR(error)) &#123;</div><div class="line">			retval = IS_ERR((void *)error) ?</div><div class="line">				PTR_ERR((void*)error) : -EINVAL;</div><div class="line">			goto out_free_dentry;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		//第一次映射</div><div class="line">		if (!load_addr_set) &#123;</div><div class="line">			load_addr_set = 1;</div><div class="line">			//记录装载的虚拟地址基址，动态文件其基址是偏移过的，装载基址为文件头的开始位置</div><div class="line">			//</div><div class="line">			load_addr = (elf_ppnt-&gt;p_vaddr - elf_ppnt-&gt;p_offset);</div><div class="line">			if (loc-&gt;elf_ex.e_type == ET_DYN) &#123;</div><div class="line">				load_bias += error -</div><div class="line">				             ELF_PAGESTART(load_bias + vaddr);</div><div class="line">				load_addr += load_bias;</div><div class="line">				reloc_func_desc = load_bias;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		//这个段的虚拟地址</div><div class="line">		k = elf_ppnt-&gt;p_vaddr;</div><div class="line">		//start_code为最小的虚拟地址</div><div class="line">		if (k &lt; start_code)</div><div class="line">			start_code = k;</div><div class="line">		//start_data为最大的虚拟地址</div><div class="line">		if (start_data &lt; k)</div><div class="line">			start_data = k;</div><div class="line"></div><div class="line">		/*</div><div class="line">		 * Check to see if the section&apos;s size will overflow the</div><div class="line">		 * allowed task size. Note that p_filesz must always be</div><div class="line">		 * &lt;= p_memsz so it is only necessary to check p_memsz.</div><div class="line">		 */</div><div class="line">		 //检查大小是否超出任务大小（用户空间）</div><div class="line">		if (BAD_ADDR(k) || elf_ppnt-&gt;p_filesz &gt; elf_ppnt-&gt;p_memsz ||</div><div class="line">		    elf_ppnt-&gt;p_memsz &gt; TASK_SIZE ||</div><div class="line">		    TASK_SIZE - elf_ppnt-&gt;p_memsz &lt; k) &#123;</div><div class="line">			/* set_brk can never work. Avoid overflows. */</div><div class="line">			retval = -EINVAL;</div><div class="line">			goto out_free_dentry;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		//该段有实际内容的结束地址</div><div class="line">		k = elf_ppnt-&gt;p_vaddr + elf_ppnt-&gt;p_filesz;</div><div class="line"></div><div class="line">		//elf_bss是最大的结束地址</div><div class="line">		if (k &gt; elf_bss)</div><div class="line">			elf_bss = k;</div><div class="line">		//end_code的可执行的最大结束地址</div><div class="line">		if ((elf_ppnt-&gt;p_flags &amp; PF_X) &amp;&amp; end_code &lt; k)</div><div class="line">			end_code = k;</div><div class="line">		//end_data是最大的结束地址</div><div class="line">		if (end_data &lt; k)</div><div class="line">			end_data = k;</div><div class="line">		//该段内存中的结束地址</div><div class="line">		k = elf_ppnt-&gt;p_vaddr + elf_ppnt-&gt;p_memsz;</div><div class="line">		//elf_brk是内存中的结束地址</div><div class="line">		if (k &gt; elf_brk)</div><div class="line">			elf_brk = k;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line">	</div><div class="line"></div><div class="line">	//退出循环后，各虚拟地址加上偏移</div><div class="line">	loc-&gt;elf_ex.e_entry += load_bias;</div><div class="line">	elf_bss += load_bias;</div><div class="line">	elf_brk += load_bias;</div><div class="line">	start_code += load_bias;</div><div class="line">	end_code += load_bias;</div><div class="line">	start_data += load_bias;</div><div class="line">	end_data += load_bias;</div><div class="line"></div><div class="line">	/* Calling set_brk effectively mmaps the pages that we need</div><div class="line">	 * for the bss and break sections.  We must do this before</div><div class="line">	 * mapping in the interpreter, to make sure it doesn&apos;t wind</div><div class="line">	 * up getting placed where the bss needs to go.</div><div class="line">	 */</div><div class="line">	 //在elf_bss到elf_brk之间分配内存空间</div><div class="line">	retval = set_brk(elf_bss, elf_brk);</div><div class="line">	if (retval)</div><div class="line">		goto out_free_dentry;</div><div class="line">	if (likely(elf_bss != elf_brk) &amp;&amp; unlikely(padzero(elf_bss))) &#123;</div><div class="line">		retval = -EFAULT; /* Nobody gets to see this, but.. */</div><div class="line">		goto out_free_dentry;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	//解释器与连接器映射</div><div class="line">	if (elf_interpreter) &#123;</div><div class="line">		unsigned long interp_map_addr = 0;</div><div class="line"></div><div class="line">		//将解释器/连接器，映射到内存，返回连接器的入口地址</div><div class="line">		elf_entry = load_elf_interp(&amp;loc-&gt;interp_elf_ex,</div><div class="line">					    interpreter,</div><div class="line">					    &amp;interp_map_addr,</div><div class="line">					    load_bias, interp_elf_phdata);</div><div class="line">		if (!IS_ERR((void *)elf_entry)) &#123;</div><div class="line">			/*</div><div class="line">			 * load_elf_interp() returns relocation</div><div class="line">			 * adjustment</div><div class="line">			 */</div><div class="line">			interp_load_addr = elf_entry;</div><div class="line">			elf_entry += loc-&gt;interp_elf_ex.e_entry;</div><div class="line">		&#125;</div><div class="line">		if (BAD_ADDR(elf_entry)) &#123;</div><div class="line">			retval = IS_ERR((void *)elf_entry) ?</div><div class="line">					(int)elf_entry : -EINVAL;</div><div class="line">			goto out_free_dentry;</div><div class="line">		&#125;</div><div class="line">		reloc_func_desc = interp_load_addr;</div><div class="line"></div><div class="line">		allow_write_access(interpreter);</div><div class="line">		fput(interpreter);</div><div class="line">		kfree(elf_interpreter);</div><div class="line">	&#125; else &#123;</div><div class="line">		//没有俩器的话就是elf文件本身的入口点，偏移过的</div><div class="line">		elf_entry = loc-&gt;elf_ex.e_entry;</div><div class="line">		if (BAD_ADDR(elf_entry)) &#123;</div><div class="line">			retval = -EINVAL;</div><div class="line">			goto out_free_dentry;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	kfree(interp_elf_phdata);</div><div class="line">	kfree(elf_phdata);</div><div class="line"></div><div class="line">	//set_binfmt将elf_format记录到mm_struct的binfmt变量中</div><div class="line">	set_binfmt(&amp;elf_format);</div><div class="line"></div><div class="line">#ifdef ARCH_HAS_SETUP_ADDITIONAL_PAGES</div><div class="line">	retval = arch_setup_additional_pages(bprm, !!elf_interpreter);</div><div class="line">	if (retval &lt; 0)</div><div class="line">		goto out;</div><div class="line">#endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */</div><div class="line"></div><div class="line">	//install_exec_creds会设置新进程的cred结构</div><div class="line">	install_exec_creds(bprm);</div><div class="line">	//create_elf_tables函数在将启动解释器或者程序前，向用户空间的堆栈添加一些额外信息，例如应用程序Segment头的起始地址，入口地址等等</div><div class="line">	//环境变量，参数置于栈底也是在这里</div><div class="line">	retval = create_elf_tables(bprm, &amp;loc-&gt;elf_ex,</div><div class="line">			  load_addr, interp_load_addr);</div><div class="line">	if (retval &lt; 0)</div><div class="line">		goto out;</div><div class="line">	/* N.B. passed_fileno might not be initialized? */</div><div class="line">	//向新进程mm_struct结构中设置前面计算的代码段、数据段、bss段和堆的位置</div><div class="line">	current-&gt;mm-&gt;end_code = end_code;</div><div class="line">	current-&gt;mm-&gt;start_code = start_code;</div><div class="line">	current-&gt;mm-&gt;start_data = start_data;</div><div class="line">	current-&gt;mm-&gt;end_data = end_data;</div><div class="line">	current-&gt;mm-&gt;start_stack = bprm-&gt;p;</div><div class="line"></div><div class="line">	if ((current-&gt;flags &amp; PF_RANDOMIZE) &amp;&amp; (randomize_va_space &gt; 1)) &#123;</div><div class="line">		current-&gt;mm-&gt;brk = current-&gt;mm-&gt;start_brk =</div><div class="line">			arch_randomize_brk(current-&gt;mm);</div><div class="line">#ifdef compat_brk_randomized</div><div class="line">		current-&gt;brk_randomized = 1;</div><div class="line">#endif</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	if (current-&gt;personality &amp; MMAP_PAGE_ZERO) &#123;</div><div class="line">		/* Why this, you ask???  Well SVr4 maps page 0 as read-only,</div><div class="line">		   and some applications &quot;depend&quot; upon this behavior.</div><div class="line">		   Since we do not have the power to recompile these, we</div><div class="line">		   emulate the SVr4 behavior. Sigh. */</div><div class="line">		error = vm_mmap(NULL, 0, PAGE_SIZE, PROT_READ | PROT_EXEC,</div><div class="line">				MAP_FIXED | MAP_PRIVATE, 0);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">#ifdef ELF_PLAT_INIT</div><div class="line">	/*</div><div class="line">	 * The ABI may specify that certain registers be set up in special</div><div class="line">	 * ways (on i386 %edx is the address of a DT_FINI function, for</div><div class="line">	 * example.  In addition, it may also specify (eg, PowerPC64 ELF)</div><div class="line">	 * that the e_entry field is the address of the function descriptor</div><div class="line">	 * for the startup routine, rather than the address of the startup</div><div class="line">	 * routine itself.  This macro performs whatever initialization to</div><div class="line">	 * the regs structure is required as well as any relocations to the</div><div class="line">	 * function descriptor entries when executing dynamically links apps.</div><div class="line">	 */</div><div class="line">	ELF_PLAT_INIT(regs, reloc_func_desc);</div><div class="line">#endif</div><div class="line"></div><div class="line">	//调用start_thread函数将执行权交给解释器或者应用程序</div><div class="line">	//寄存器、入口、栈地址</div><div class="line">	start_thread(regs, elf_entry, bprm-&gt;p);</div><div class="line">	retval = 0;</div><div class="line">out:</div><div class="line">	kfree(loc);</div><div class="line">out_ret:</div><div class="line">	return retval;</div><div class="line"></div><div class="line">	/* error cleanup */</div><div class="line">out_free_dentry:</div><div class="line">	kfree(interp_elf_phdata);</div><div class="line">	allow_write_access(interpreter);</div><div class="line">	if (interpreter)</div><div class="line">		fput(interpreter);</div><div class="line">out_free_interp:</div><div class="line">	kfree(elf_interpreter);</div><div class="line">out_free_ph:</div><div class="line">	kfree(elf_phdata);</div><div class="line">	goto out;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通过几部分代码可见内核设计者的意图，内存等资源不到用的时候不分配，即lazy加载。这样可以有效回收，并防止资源浪费<br>都做了如下事：</p>
+<ol>
+<li>检查elf文件，读取头</li>
+<li>读取段头表</li>
+<li>查找解释/连接器，打开该文件并读取头</li>
+<li>读取解释器的段</li>
+<li>flush-old-exec进行新进程地址空间的替换，setup-new-exec函数对刚刚替换的地址空间进行简单的初始化，堆栈执行性</li>
+<li>遍历加载段头，load-addr为基址，load_bias为偏移，基址与偏移只定一次</li>
+<li>将解释器的数据映射到虚拟内存中</li>
+<li>添加环变、参数等内容到栈底，设置current的mm-struct</li>
+<li>最后调用start-thread函数将执行权交给解释器或者应用程序</li>
+</ol>
+<p>start-code:最小的段va<br>end-code:最大的可执行段va+filesz<br>start-data:最大的段va<br>end-data:最大的段va+filesize<br>elf-bss:最大的段va+filesize<br>elf-brk:最大的段va+memsz<br>因此内存分配为：代码区，初始化数据区(有文件直接映射)，未初始化数据区bss，brk表示镜像所占内存末尾，堆，栈</p>
+<h4 id="load-el-phdrs"><a href="#load-el-phdrs" class="headerlink" title="load-el-phdrs"></a>load-el-phdrs</h4><p>读取段头的函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">static struct elf_phdr *load_elf_phdrs(struct elfhdr *elf_ex,</div><div class="line">                       struct file *elf_file)</div><div class="line">&#123;</div><div class="line">    struct elf_phdr *elf_phdata = NULL;</div><div class="line">    int size;</div><div class="line"></div><div class="line">    size = sizeof(struct elf_phdr) * elf_ex-&gt;e_phnum;</div><div class="line">    elf_phdata = kmalloc(size, GFP_KERNEL);</div><div class="line">    kernel_read(elf_file, elf_ex-&gt;e_phoff,</div><div class="line">                 (char *)elf_phdata, size);</div><div class="line"></div><div class="line">    return elf_phdata;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="flush-old-exec"><a href="#flush-old-exec" class="headerlink" title="flush-old-exec"></a>flush-old-exec</h4><p>fs/exec.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">int flush_old_exec(struct linux_binprm * bprm)</div><div class="line">&#123;</div><div class="line">	int retval;</div><div class="line"></div><div class="line">	/*</div><div class="line">	 * Make sure we have a private signal table and that</div><div class="line">	 * we are unassociated from the previous thread group.</div><div class="line">	 */</div><div class="line">	 //删除同线程组中的其他线程</div><div class="line">	retval = de_thread(current);</div><div class="line">	if (retval)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	/*</div><div class="line">	 * Must be called _before_ exec_mmap() as bprm-&gt;mm is</div><div class="line">	 * not visibile until then. This also enables the update</div><div class="line">	 * to be lockless.</div><div class="line">	 */</div><div class="line">	set_mm_exe_file(bprm-&gt;mm, bprm-&gt;file);</div><div class="line"></div><div class="line">	/*</div><div class="line">	 * Release all of the old mmap stuff</div><div class="line">	 */</div><div class="line">	acct_arg_size(bprm, 0);</div><div class="line">	//将新进程的地址空间设置为bprm中创建并设置好的地址空间</div><div class="line">	retval = exec_mmap(bprm-&gt;mm);</div><div class="line">	if (retval)</div><div class="line">		goto out;</div><div class="line"></div><div class="line">	bprm-&gt;mm = NULL;		/* We&apos;re using it now */</div><div class="line"></div><div class="line">	set_fs(USER_DS);</div><div class="line">	current-&gt;flags &amp;= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |</div><div class="line">					PF_NOFREEZE | PF_NO_SETAFFINITY);</div><div class="line">	</div><div class="line">	//flush_thread函数主要用来初始化thread_struct中的TLS元数据信息</div><div class="line">	flush_thread();</div><div class="line">	current-&gt;personality &amp;= ~bprm-&gt;per_clear;</div><div class="line"></div><div class="line">	return 0;</div><div class="line"></div><div class="line">out:</div><div class="line">	return retval;</div><div class="line">&#125;</div><div class="line">EXPORT_SYMBOL(flush_old_exec);</div></pre></td></tr></table></figure></p>
+<h4 id="setup-new-exec"><a href="#setup-new-exec" class="headerlink" title="setup-new-exec"></a>setup-new-exec</h4><p>fs/exec.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">void setup_new_exec(struct linux_binprm * bprm)</div><div class="line">&#123;</div><div class="line">	arch_pick_mmap_layout(current-&gt;mm);</div><div class="line"></div><div class="line">	/* This is the point of no return */</div><div class="line">	current-&gt;sas_ss_sp = current-&gt;sas_ss_size = 0;</div><div class="line"></div><div class="line">	if (uid_eq(current_euid(), current_uid()) &amp;&amp; gid_eq(current_egid(), current_gid()))</div><div class="line">		set_dumpable(current-&gt;mm, SUID_DUMP_USER);</div><div class="line">	else</div><div class="line">		set_dumpable(current-&gt;mm, suid_dumpable);</div><div class="line"></div><div class="line">	perf_event_exec();</div><div class="line">	__set_task_comm(current, kbasename(bprm-&gt;filename), true);</div><div class="line"></div><div class="line">	/* Set the new mm task size. We have to do that late because it may</div><div class="line">	 * depend on TIF_32BIT which is only updated in flush_thread() on</div><div class="line">	 * some architectures like powerpc</div><div class="line">	 */</div><div class="line">	current-&gt;mm-&gt;task_size = TASK_SIZE;</div><div class="line"></div><div class="line">	/* install the new credentials */</div><div class="line">	if (!uid_eq(bprm-&gt;cred-&gt;uid, current_euid()) ||</div><div class="line">	    !gid_eq(bprm-&gt;cred-&gt;gid, current_egid())) &#123;</div><div class="line">		current-&gt;pdeath_signal = 0;</div><div class="line">	&#125; else &#123;</div><div class="line">		would_dump(bprm, bprm-&gt;file);</div><div class="line">		if (bprm-&gt;interp_flags &amp; BINPRM_FLAGS_ENFORCE_NONDUMP)</div><div class="line">			set_dumpable(current-&gt;mm, suid_dumpable);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	/* An exec changes our domain. We are no longer part of the thread</div><div class="line">	   group */</div><div class="line">	current-&gt;self_exec_id++;</div><div class="line">	flush_signal_handlers(current, 0);</div><div class="line">	do_close_on_exec(current-&gt;files);</div><div class="line">&#125;</div><div class="line">EXPORT_SYMBOL(setup_new_exec);</div></pre></td></tr></table></figure></p>
+<h4 id="elf-map"><a href="#elf-map" class="headerlink" title="elf-map"></a>elf-map</h4><p>fs/binfmt_elf.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">static unsigned long elf_map(struct file *filep, unsigned long addr,</div><div class="line">		struct elf_phdr *eppnt, int prot, int type,</div><div class="line">		unsigned long total_size)</div><div class="line">&#123;</div><div class="line">	unsigned long map_addr;</div><div class="line">	unsigned long size = eppnt-&gt;p_filesz + ELF_PAGEOFFSET(eppnt-&gt;p_vaddr);</div><div class="line">	unsigned long off = eppnt-&gt;p_offset - ELF_PAGEOFFSET(eppnt-&gt;p_vaddr);</div><div class="line">	addr = ELF_PAGESTART(addr);</div><div class="line">	size = ELF_PAGEALIGN(size);</div><div class="line"></div><div class="line">	/* mmap() will return -EINVAL if given a zero size, but a</div><div class="line">	 * segment with zero filesize is perfectly valid */</div><div class="line">	if (!size)</div><div class="line">		return addr;</div><div class="line"></div><div class="line">	/*</div><div class="line">	* total_size is the size of the ELF (interpreter) image.</div><div class="line">	* The _first_ mmap needs to know the full size, otherwise</div><div class="line">	* randomization might put this image into an overlapping</div><div class="line">	* position with the ELF binary image. (since size &lt; total_size)</div><div class="line">	* So we first map the &apos;big&apos; image - and unmap the remainder at</div><div class="line">	* the end. (which unmap is needed for ELF images with holes.)</div><div class="line">	*/</div><div class="line">	//total_size是elf的镜像大小，只有第一次有。为了防止随机化导致重叠。因此先映射大镜像，再最后映射其它</div><div class="line">	if (total_size) &#123;</div><div class="line">		total_size = ELF_PAGEALIGN(total_size);</div><div class="line">		map_addr = vm_mmap(filep, addr, total_size, prot, type, off);</div><div class="line">		if (!BAD_ADDR(map_addr))</div><div class="line">			vm_munmap(map_addr+size, total_size-size);</div><div class="line">	&#125; else</div><div class="line">		map_addr = vm_mmap(filep, addr, size, prot, type, off);</div><div class="line"></div><div class="line">	return(map_addr);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>传入的参数filep是文件指针，addr是即将映射的内存中的虚拟地址，size是文件映像的大小，off是映像在文件中的偏移。elf-map函数主要通过vm-mmap为文件申请虚拟空间并进行相应的映射，然后返回虚拟空间的起始地址map-addr</p>
+<h3 id="start-thread"><a href="#start-thread" class="headerlink" title="start-thread"></a>start-thread</h3><p>arm下的没找到….先看熟悉的x86好了<br>start-thread<br>arch/x86/kernel/process_64.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">static void</div><div class="line">start_thread_common(struct pt_regs *regs, unsigned long new_ip,</div><div class="line">		    unsigned long new_sp,</div><div class="line">		    unsigned int _cs, unsigned int _ss, unsigned int _ds)</div><div class="line">&#123;</div><div class="line">	loadsegment(fs, 0);</div><div class="line">	loadsegment(es, _ds);</div><div class="line">	loadsegment(ds, _ds);</div><div class="line">	load_gs_index(0);</div><div class="line">	regs-&gt;ip		= new_ip;</div><div class="line">	regs-&gt;sp		= new_sp;</div><div class="line">	regs-&gt;cs		= _cs;</div><div class="line">	regs-&gt;ss		= _ss;</div><div class="line">	regs-&gt;flags		= X86_EFLAGS_IF;</div><div class="line">	force_iret();</div><div class="line">&#125;</div><div class="line"></div><div class="line">void</div><div class="line">start_thread(struct pt_regs *regs, unsigned long new_ip, unsigned long new_sp)</div><div class="line">&#123;</div><div class="line">	start_thread_common(regs, new_ip, new_sp,</div><div class="line">			    __USER_CS, __USER_DS, 0);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>设置各寄存器，force-iret强制返回，跳转到new-ip指向的地址处开始执行，要设置的就是ip与sp</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/execve/" rel="tag"># execve</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/17/纳新表演/" rel="next" title="纳新表演">
+                <i class="fa fa-chevron-left"></i> 纳新表演
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前置知识"><span class="nav-number">1.1.</span> <span class="nav-text">前置知识</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#execv"><span class="nav-number">2.</span> <span class="nav-text">execv</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#壳函数"><span class="nav-number">2.1.</span> <span class="nav-text">壳函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中断过程"><span class="nav-number">2.2.</span> <span class="nav-text">中断过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#系统调用"><span class="nav-number">2.3.</span> <span class="nav-text">系统调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sys-execve"><span class="nav-number">2.3.1.</span> <span class="nav-text">sys-execve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#do-execve"><span class="nav-number">2.3.2.</span> <span class="nav-text">do-execve</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#do-execveat-common"><span class="nav-number">2.3.3.</span> <span class="nav-text">do-execveat-common</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#binprm"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">binprm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prepare-binprm"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">prepare-binprm</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exec-binprm"><span class="nav-number">2.3.4.</span> <span class="nav-text">exec-binprm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#search-binary-handler"><span class="nav-number">2.3.5.</span> <span class="nav-text">search-binary-handler</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#linux-binfmt"><span class="nav-number">2.3.5.1.</span> <span class="nav-text">linux-binfmt</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#load-elf-binary"><span class="nav-number">2.3.6.</span> <span class="nav-text">load-elf-binary</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#load-el-phdrs"><span class="nav-number">2.3.6.1.</span> <span class="nav-text">load-el-phdrs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#flush-old-exec"><span class="nav-number">2.3.6.2.</span> <span class="nav-text">flush-old-exec</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#setup-new-exec"><span class="nav-number">2.3.6.3.</span> <span class="nav-text">setup-new-exec</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#elf-map"><span class="nav-number">2.3.6.4.</span> <span class="nav-text">elf-map</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#start-thread"><span class="nav-number">2.3.7.</span> <span class="nav-text">start-thread</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
