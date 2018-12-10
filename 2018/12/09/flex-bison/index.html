@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编译原理,flex,bison,java2native," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言这段时间沉迷编译原理…踩了不少坑也涨了不少姿势…一个项目：https://github.com/imbaya2466/java2native用于java到本地代码的编译….写到最后基本就剩个基本的函数语句native化了….语法太庞大了根本写不动啊.. 个人的小见解： 脚本语言  ：适合小型命令式快速脚本，依托于万能的库面向对象语言 ：适合工程项目，易于建模。过程语言  ： 贴近底层（汇编就是">
+<meta name="keywords" content="编译原理,flex,bison,java2native">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flex-bison">
+<meta property="og:url" content="http://yoursite.com/2018/12/09/flex-bison/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言这段时间沉迷编译原理…踩了不少坑也涨了不少姿势…一个项目：https://github.com/imbaya2466/java2native用于java到本地代码的编译….写到最后基本就剩个基本的函数语句native化了….语法太庞大了根本写不动啊.. 个人的小见解： 脚本语言  ：适合小型命令式快速脚本，依托于万能的库面向对象语言 ：适合工程项目，易于建模。过程语言  ： 贴近底层（汇编就是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-10T15:54:57.457Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="flex-bison">
+<meta name="twitter:description" content="前言这段时间沉迷编译原理…踩了不少坑也涨了不少姿势…一个项目：https://github.com/imbaya2466/java2native用于java到本地代码的编译….写到最后基本就剩个基本的函数语句native化了….语法太庞大了根本写不动啊.. 个人的小见解： 脚本语言  ：适合小型命令式快速脚本，依托于万能的库面向对象语言 ：适合工程项目，易于建模。过程语言  ： 贴近底层（汇编就是">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/09/flex-bison/"/>
+
+
+
+
+
+  <title>flex-bison | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/09/flex-bison/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">flex-bison</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-09T23:11:25+08:00">
+                2018-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编译原理/" itemprop="url" rel="index">
+                    <span itemprop="name">编译原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这段时间沉迷编译原理…踩了不少坑也涨了不少姿势…<br>一个项目：<a href="https://github.com/imbaya2466/java2native" target="_blank" rel="external">https://github.com/imbaya2466/java2native</a><br>用于java到本地代码的编译….写到最后基本就剩个基本的函数语句native化了….语法太庞大了根本写不动啊..</p>
+<p>个人的小见解：</p>
+<p>脚本语言  ：适合小型命令式快速脚本，依托于万能的库<br>面向对象语言 ：适合工程项目，易于建模。<br>过程语言  ： 贴近底层（汇编就是过程式的）全面控制计算机</p>
+<p>建议： 一门万能语言c++ 、一门脚本语言py  、一门纯对象式语言java<br><a id="more"></a></p>
+<h2 id="编译器基本架构"><a href="#编译器基本架构" class="headerlink" title="编译器基本架构"></a>编译器基本架构</h2><p>以中间IR指令分为俩大部分</p>
+<h3 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h3><p>从源码生成中间指令IR</p>
+<h4 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h4><p>输入：代码字符流<br>输出：单词token<br>正则通常是描述词法的.<br>基本的过程有俩种,通过文法构造NFA,再简化NFA到DFA,基于DFA实现代码.<br>或者直接通过正则构造NFA,DFA.这个步骤可以用自动工具解决.比如lex</p>
+<h4 id="语法分析"><a href="#语法分析" class="headerlink" title="语法分析"></a>语法分析</h4><p>输入:单词token流<br>输出:语法树的后序遍历.最好直接生成AST<br>BNF是描述文法的<br>语法分析主要分俩类,自底向上与自上而下.上下如算符优先法与递归下降.下上如移进归约<br>LL表示从左到右分析左归约,LR表示从左到右分析右归约.归约顺序不影响语法树的生成.语法树始终与语法描述一致.<br>每种分析法可分析的语法语义强度不同.LR(K)分析表范围更大.<br>核心为将文法转化为分析表,这同样有自动化工具,如yacc.顺提一下语法分析工具非常的多,甚至有的提供了大量的语言解析库,可以直接生成目标代码的AST…..如ANTLR</p>
+<h4 id="AST"><a href="#AST" class="headerlink" title="AST"></a>AST</h4><p>语法树的抽象,简单来讲就是去掉了语法树中没用的部分,提出了语法的核心:函数定义,语句,表达式.<br>去掉的部分如:各种标点符号关键字,树结构本身能代表{}()之类的符号,关键字每个节点的类型就表达了.</p>
+<h4 id="语义分析"><a href="#语义分析" class="headerlink" title="语义分析"></a>语义分析</h4><p>解析AST,判断其内容是否符合类型定义,属性与符号表内容的主要填写时机.<br>属性文法:每个AST节点携带属性值,如类型,长度,位置等.按节点类型不同有所不同</p>
+<h3 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h3><p>我还没写。见llvm</p>
+<h2 id="flex"><a href="#flex" class="headerlink" title="flex"></a>flex</h2><p>要点:</p>
+<ol>
+<li>匹配正则按最长,同长按先出现的,因此先写关键字的匹配再写标识符</li>
+<li>可以用状态机制(干预自动生成的DNF)处理注释内容</li>
+<li>正则优先级:()[] 大于 *+? 大于 字符连接 大于 |</li>
+<li>转义有俩种方式：”xxx”或者\x  “”内的内容作为字符匹配</li>
+<li>数字+-交给语法分析,因为根据最长规则会使3-2匹配为3  -2</li>
+<li>识别每个单词后有动作,使用return可以在yylex函数中返回,使得每次调用yylex读取一个token</li>
+<li>yylval由yacc定义,是用于内容栈的,而yylex返回的用于分析栈</li>
+</ol>
+<h2 id="bison"><a href="#bison" class="headerlink" title="bison"></a>bison</h2><p>要点:</p>
+<ol>
+<li>一个分析栈和一个内容栈。分析栈中保存着终结符和非终结符， 并且代表当前剖析状态。内容栈是一个 YYSTYPE 元素的数组，对于分析栈中的每一个元素都保存着一个对应的值。</li>
+<li>lex return的类型进入分析栈–lex返回终结符一步步语法分析。yylval进入内容栈。$$访问的是内容栈,其类型为YYSTYPE。正是属性文法的属性</li>
+<li>当bison分析语法规则时遇到冲突时，会查优先级表来解决冲突。优先级表按下方的高,同等级按结合性.优先级的表示可以用语法也可以用优先级规则，这样可以省去很多语法说明</li>
+<li>以进归约冲突默认以进，归约归约冲突按先出现的</li>
+<li>%prec可以指定某个产生式的优先级-可以尝试用其在不改变bnf的情况下解决错误</li>
+<li>用&lt;&gt;选择yystype的类型</li>
+<li>关于flex与bison的详细资料可以查看flex与bison 中文版 第二版 </li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+            <a href="/tags/flex/" rel="tag"># flex</a>
+          
+            <a href="/tags/bison/" rel="tag"># bison</a>
+          
+            <a href="/tags/java2native/" rel="tag"># java2native</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/19/android-armlinux系统调用与exec源码分析/" rel="next" title="android-armlinux系统调用与exec源码分析">
+                <i class="fa fa-chevron-left"></i> android-armlinux系统调用与exec源码分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">79</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">73</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译器基本架构"><span class="nav-number">2.</span> <span class="nav-text">编译器基本架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端"><span class="nav-number">2.1.</span> <span class="nav-text">前端</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#词法分析"><span class="nav-number">2.1.1.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语法分析"><span class="nav-number">2.1.2.</span> <span class="nav-text">语法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AST"><span class="nav-number">2.1.3.</span> <span class="nav-text">AST</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语义分析"><span class="nav-number">2.1.4.</span> <span class="nav-text">语义分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后端"><span class="nav-number">2.2.</span> <span class="nav-text">后端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flex"><span class="nav-number">3.</span> <span class="nav-text">flex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bison"><span class="nav-number">4.</span> <span class="nav-text">bison</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>

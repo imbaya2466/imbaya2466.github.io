@@ -119,7 +119,7 @@
 <meta property="og:image" content="https://i.imgur.com/Y25pX1x.png">
 <meta property="og:image" content="https://i.imgur.com/SNz1mjh.png">
 <meta property="og:image" content="https://i.imgur.com/PlDTBOD.png">
-<meta property="og:updated_time" content="2018-11-18T07:55:09.622Z">
+<meta property="og:updated_time" content="2018-11-26T04:18:05.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ELF文件格式详解">
 <meta name="twitter:description" content="前情提要需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..还是因为当初看的时候手太懒了没有动手写啊………. 于是先从一篇完整的elf文件格式解析写起readelf真的好用…… hook基本都是c++写的，因此解析也用c++写好点因为我的机子都是6">
@@ -445,7 +445,7 @@
 <p>ps:elf不是精灵的意思么….之后根据linker写elf壳的时候就叫darkelf好了….<br><a id="more"></a></p>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>由于考虑到对各种不同硬件和操作系统的适用性和扩展性，ELF(v1.2)规范在制 定时，把 ELF格式分为了三个层次。<br>第一层是基本的部分，即格式中通用的部 分，这部分在各种处理器架构和操作系统上都是相同的；<br>第二层是处理器的扩展部 分，这部分会因处理器架构的不同而不同，规范中只定义了针对 Intel i386架构的内容，针对其它的处理器的内容由处理器厂商自己提供；<br>第三层是操作系统的扩展 部分，这部分内容在不同的操作系统下面也可能是不同的，规范中只定义了针对 UNIX System V Release 4操作系统的内容。<br>90年代发布的ELF1.2标准，因此本篇参考该标准解析。由于该文件只是规范，并且有根据不同厂商扩展的部分，<strong>实际一切以现有的ARM64-android为分析源</strong></p>
 <h2 id="文件类型"><a href="#文件类型" class="headerlink" title="文件类型"></a>文件类型</h2><p>ELF文件的类型：可重定位文件(.o .a)、可执行文件、共享文件(.so)、转存文件</p>
-<h3 id="可重定位文件"><a href="#可重定位文件" class="headerlink" title="可重定位文件"></a>可重定位文件</h3><p>，用于与其它目标文件进行连接以构建可执行文件或动态链接库。可重定位文件就是常说的目标文件，由源文件编译而成，但还 没有连接成可执行文件。在 UNIX系统下，一般有扩展名”.o”。之所以称其为“可 重定位”，是因为在这些文件中，如果引用到其它目标文件或库文件中定义的符号 （变量或者函数）的话，只是给出一个名字，这里还并不知道这个符号在哪里，其 具体的地址是什么。需要在连接的过程中，把对这些外部符号的引用重新定位到其 真正定义的位置上，所以称目标文件为“可重定位”或者“待重定位”的。 </p>
+<h3 id="可重定位文件"><a href="#可重定位文件" class="headerlink" title="可重定位文件"></a>可重定位文件</h3><p>用于与其它目标文件进行连接以构建可执行文件或动态链接库。可重定位文件就是常说的目标文件，由源文件编译而成，但还 没有连接成可执行文件。在 UNIX系统下，一般有扩展名”.o”。之所以称其为“可 重定位”，是因为在这些文件中，如果引用到其它目标文件或库文件中定义的符号 （变量或者函数）的话，只是给出一个名字，这里还并不知道这个符号在哪里，其具体的地址是什么。需要在连接的过程中，把对这些外部符号的引用重新定位到其 真正定义的位置上，所以称目标文件为“可重定位”或者“待重定位”的。 .a是.o的集合</p>
 <h3 id="共享目标文件"><a href="#共享目标文件" class="headerlink" title="共享目标文件"></a>共享目标文件</h3><p>即动态连接库文件。它在以下两种情况下被使用：第一，在连接过程中与其它动态链接库或可重定位文件一起构建新的目标 文件；第二，在可执行文件被加载的过程中，被动态链接到新的进程中，成为运行 代码的一部分。 </p>
 <h3 id="可执行文件"><a href="#可执行文件" class="headerlink" title="可执行文件"></a>可执行文件</h3><p>经过连接的，可以执行的程序文件。</p>
 <h2 id="文件格式概观"><a href="#文件格式概观" class="headerlink" title="文件格式概观"></a>文件格式概观</h2><p>ELF文件根据用途不同可被看成的内容不同</p>
@@ -875,7 +875,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">78</span>
+                <span class="site-state-item-count">79</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -897,7 +897,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">70</span>
+                <span class="site-state-item-count">73</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
