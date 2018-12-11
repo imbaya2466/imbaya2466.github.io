@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="编译原理,llvm," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="特点基于经典编译器架构。LLVM的设计十分出色。其目标不是成为一个整体的编译器，而是被设计为一组库文件的集合，用于解决各种特定问题。比如优化器，每种优化便为一个.o文件，之间低耦合，可以针对不同需要选择不同的便。每遍称为Pass因此用于构建jni等十分方便前端：构建AST，转化为IR。优化器: 针对IR进行优化后端: 负责代码生成">
+<meta name="keywords" content="编译原理,llvm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="llvm-初识">
+<meta property="og:url" content="http://yoursite.com/2018/12/11/llvm-初识/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="特点基于经典编译器架构。LLVM的设计十分出色。其目标不是成为一个整体的编译器，而是被设计为一组库文件的集合，用于解决各种特定问题。比如优化器，每种优化便为一个.o文件，之间低耦合，可以针对不同需要选择不同的便。每遍称为Pass因此用于构建jni等十分方便前端：构建AST，转化为IR。优化器: 针对IR进行优化后端: 负责代码生成">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-11T12:43:27.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="llvm-初识">
+<meta name="twitter:description" content="特点基于经典编译器架构。LLVM的设计十分出色。其目标不是成为一个整体的编译器，而是被设计为一组库文件的集合，用于解决各种特定问题。比如优化器，每种优化便为一个.o文件，之间低耦合，可以针对不同需要选择不同的便。每遍称为Pass因此用于构建jni等十分方便前端：构建AST，转化为IR。优化器: 针对IR进行优化后端: 负责代码生成">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/11/llvm-初识/"/>
+
+
+
+
+
+  <title>llvm-初识 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/11/llvm-初识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">llvm-初识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-11T20:40:54+08:00">
+                2018-12-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/编译原理/" itemprop="url" rel="index">
+                    <span itemprop="name">编译原理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><p>基于经典编译器架构。LLVM的设计十分出色。其目标不是成为一个整体的编译器，而是被设计为一组库文件的集合，用于解决各种特定问题。比如优化器，每种优化便为一个.o文件，之间低耦合，可以针对不同需要选择不同的便。每遍称为Pass<br>因此用于构建jni等十分方便<br>前端：构建AST，转化为IR。<br>优化器: 针对IR进行优化<br>后端: 负责代码生成</p>
+<a id="more"></a>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="一键安装"><a href="#一键安装" class="headerlink" title="一键安装"></a>一键安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo apt install llvm-6.0</div><div class="line">sudo apt install clang-6.0</div><div class="line">sudo apt install cmake</div><div class="line">sudo apt install build-essential //解决CMAKE_CXX_COMPILER错误</div></pre></td></tr></table></figure>
+<p>每次使用时所有命令要加-6.0后缀</p>
+<h3 id="手动编译"><a href="#手动编译" class="headerlink" title="手动编译"></a>手动编译</h3><p><a href="http://releases.llvm.org/download.html" target="_blank" rel="external">http://releases.llvm.org/download.html</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget http://releases.llvm.org/7.0.0/llvm-7.0.0.src.tar.xz</div><div class="line">wget http://releases.llvm.org/7.0.0/cfe-7.0.0.src.tar.xz</div></pre></td></tr></table></figure></p>
+<p>将俩个包解压<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">tar -xvf  llvm-7.0.0.src.tar.xz</div><div class="line">tar -xvf  cfe-7.0.0.src.tar.xz</div></pre></td></tr></table></figure></p>
+<p>把解压后的clang的源码包重命名，并移动到llvm-7.0.0.src/tools/目录下，最终效果为llvm-7.0.0.src/tools/clang/<br>在与llvm-7.0.0.src同目录创建build目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd build</div><div class="line">cmake -G &quot;Unix Makefiles&quot; ../llvm-7.0.0.src</div><div class="line">make -j3</div></pre></td></tr></table></figure></p>
+<p>cmake 是构建make用的makefile的。因此用make就行<br>不要用make install….会直接撑爆你的主盘…..使用的话直接在build出的目录用就行而且方便多版本研究</p>
+<h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><ol>
+<li>Clang前端。 该组件将C，C ++，Objective C和Objective C ++代码编译为LLVM bitcode。</li>
+<li>LLVM工具套件。 它包含使用LLVM所需的所有工具，库和头文件。它包含汇编程序，反汇编程序，bitcode分析程序和bitcode优化程序。</li>
+</ol>
+<h3 id="源码目录结构"><a href="#源码目录结构" class="headerlink" title="源码目录结构"></a>源码目录结构</h3><p>llvm/examples:示例，教程<a href="http://llvm.org/docs/tutorial/index.html" target="_blank" rel="external">http://llvm.org/docs/tutorial/index.html</a><br>llvm/include:从llvm库里导出来的头文件<br>llvm/lib:大多数源文件<br>llvm/tools:由工具库的源代码构建而成，这些工具可以直接运行<br>llvm/utils:这个文件夹里包含了，用于处理LLVM源代码的实用程序; 有些也是是构建过程的一部分，因为它们是部分基础结构的代码生成器。</p>
+<h3 id="libc"><a href="#libc" class="headerlink" title="libc++"></a>libc++</h3><p>libc++库是llvm项目对C++标准库的重写，它支持包括C++11和C++14在内的最新的C++标准</p>
+<h3 id="IR中间指令"><a href="#IR中间指令" class="headerlink" title="IR中间指令"></a>IR中间指令</h3><p>比java字节码更低级的表示,无限变量，可以使用llvm提供的AST方法生成..<br>待续…</p>
+<h3 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h3><p>针对IR进行优化,每个为Pass<br>待续…</p>
+<h3 id="官方文档"><a href="#官方文档" class="headerlink" title="官方文档"></a>官方文档</h3><ol>
+<li>Design &amp; Overview这个类别里的文档主要是几篇介绍LLVM架构和设计的论文和会议报告。</li>
+<li>Publications这个类别主要是一个已经发布的基于LLVM的项目列表。</li>
+<li>User Guides这个类别的文档主要是针对刚接触LLVM，打算使用LLVM的用户，并且此类用户打算接触LLVM的中间表示。</li>
+<li>API Clients这个类别主要是针对以LLVM为基础进行工程开发的人。提供一些介绍编程需要的文档。比如:编程手册、编程规范等文档。</li>
+<li>Subsystems这个类别里的文档主要是介绍子系统的。相对前一个类别，这个列别里的文档都是针对的是LLVM里的某一块。比如介绍如何写Pass,如何写 Backend等。</li>
+<li>Development Process这个类别里主要介绍的是开发过程中的几个动作需要的文档。如何构建工程，如果编译工程，如何发布等。</li>
+<li>Mailing Lists这里主要是几个邮件列表，有开发的还有报告bug的，还有关于提交代码的。</li>
+</ol>
+<h2 id="安全保护"><a href="#安全保护" class="headerlink" title="安全保护"></a>安全保护</h2><ol>
+<li>ollvm就是在优化层做的代码混淆便.基于Pass</li>
+<li>通过代码同功能多样化,同功能.可以大大增加代码安全强度,因为即使逆向了自己的应用也难以确定其他人的应用.</li>
+</ol>
+<p>待熟悉后思考</p>
+<h2 id="推荐文档"><a href="#推荐文档" class="headerlink" title="推荐文档"></a>推荐文档</h2><p><a href="https://llvm.org/docs/" target="_blank" rel="external">https://llvm.org/docs/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+            <a href="/tags/llvm/" rel="tag"># llvm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/09/flex-bison/" rel="next" title="flex-bison">
+                <i class="fa fa-chevron-left"></i> flex-bison
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">74</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">1.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一键安装"><span class="nav-number">2.1.</span> <span class="nav-text">一键安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#手动编译"><span class="nav-number">2.2.</span> <span class="nav-text">手动编译</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主要内容"><span class="nav-number">3.</span> <span class="nav-text">主要内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#源码目录结构"><span class="nav-number">3.1.</span> <span class="nav-text">源码目录结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#libc"><span class="nav-number">3.2.</span> <span class="nav-text">libc++</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IR中间指令"><span class="nav-number">3.3.</span> <span class="nav-text">IR中间指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化器"><span class="nav-number">3.4.</span> <span class="nav-text">优化器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#官方文档"><span class="nav-number">3.5.</span> <span class="nav-text">官方文档</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全保护"><span class="nav-number">4.</span> <span class="nav-text">安全保护</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#推荐文档"><span class="nav-number">5.</span> <span class="nav-text">推荐文档</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
