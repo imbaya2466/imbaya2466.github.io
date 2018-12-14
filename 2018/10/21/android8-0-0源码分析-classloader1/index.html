@@ -104,7 +104,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://i.imgur.com/Snnsa4W.jpg">
 <meta property="og:image" content="https://i.imgur.com/ua21akv.jpg">
-<meta property="og:updated_time" content="2018-10-24T12:01:56.660Z">
+<meta property="og:updated_time" content="2018-12-14T06:56:08.096Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android8-0-0源码分析-classloader1">
 <meta name="twitter:description" content="前言本篇开始分析classloader。 参考：https://blog.csdn.net/itachi85/article/details/78088701https://blog.csdn.net/itachi85/article/details/78276837?utm_source=blogxgwz0http://gityuan.com/2017/03/19/android-classlo">
@@ -386,7 +386,7 @@
 <p>类加载器查找Class所采用的是双亲委托模式，所谓双亲委托模式就是首先判断该Class是否已经加载，如果没有则不是自身去查找而是委托给父加载器进行查找，这样依次的进行递归，直到委托到最顶层的Bootstrap ClassLoader，如果Bootstrap ClassLoader找到了该Class，就会直接返回，如果没找到，则继续依次向下查找，如果还没找到则最后会交由自身去查找。<br>其父都是创建时存储的。</p>
 <p>采取双亲委托模式主要有两点好处： </p>
 <ol>
-<li>避免重复加载，如果已经加载过一次Class，就不需要再次加载，而是先从缓存中直接读取。 </li>
+<li>避免重复加载，如果已经加载过一次Class，就不需要再次加载，而是先从缓存中直接读取。 因为所有加载器都被连接在了一起，加载类时一定先向上委托，再向下加载，因此保证了只加载一次</li>
 <li>更加安全，如果不使用双亲委托模式，就可以自定义一个String类来替代系统的String类，这显然会造成安全隐患，采用双亲委托模式会使得系统的String类在Java虚拟机启动时就被加载，也就无法自定义String类来替代系统的String类，除非我们修改 类加载器搜索类的默认算法。还有一点，只有两个类名一致并且被同一个类加载器加载的类，Java虚拟机才会认为它们是同一个类，想要骗过Java虚拟机显然不会那么容易。</li>
 </ol>
 <a id="more"></a>
@@ -570,7 +570,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-count">81</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -592,7 +592,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">74</span>
+                <span class="site-state-item-count">75</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
