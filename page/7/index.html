@@ -283,6 +283,150 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/31/jvm的-class文件格式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/31/jvm的-class文件格式/" itemprop="url">jvm的.class文件格式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-31T15:18:56+08:00">
+                2018-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>先上个出处<a href="https://www.cnblogs.com/chenyangyao/p/5240079.html的图：" target="_blank" rel="external">https://www.cnblogs.com/chenyangyao/p/5240079.html的图：</a><br><img src="https://i.imgur.com/IJXpXwG.jpg" alt=""></p>
+<p>2018.3.31待续…(看完.java虚拟机规范.再详细写下java文件到.class到jar到执行的详细过程)</p>
+<p>源代码经过编译器编译之后便会生成一个字节码文件，字节码是一种二进制的类文件，它的内容是JVM的指令，而不像C、C++经由编译器直接生成机器码。我们不用担心生成的字节码文件的兼容性，因为所有的JVM全部遵守Java虚拟机规范，也就是说所有的JVM环境都是一样的，这样一来字节码文件可以在各种JVM上运行。 当然也包括KVM。<br>每一个线程都有一个保存帧的栈。在每一个方法调用的时候创建一个帧。一个帧包括了三个部分：操作栈，局部变量数组，和一个对当前方法所属类的常量池的引用。<br>局部变量数组也被称之为局部变量表，它包含了方法的参数，也用于保存一些局部变量的值。参数值得存放总是在局部变量数组的index0开始的。如果当前帧是由构造函数或者实例方法创建的，那么该对象引用将会存放在location0处，然后才开始存放其余的参数。<br>局部变量表的大小由编译时决定，同时也依赖于局部变量的数量和一些方法的大小。操作栈是一个（LIFO）栈，用于压入和取出值，其大小也在编译时决定。某些opcode指令将值压入操作栈，其余的opcode指令将操作数取出栈。使用它们后再把结果压入栈。操作栈也用于接收从方法中返回的值。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/30/安卓逆向第一天的坑/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1637,149 +1781,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/12/ssl在java的实现/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/12/ssl在java的实现/" itemprop="url">ssl在java的实现</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-12T22:33:47+08:00">
-                2017-12-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java服务器/" itemprop="url" rel="index">
-                    <span itemprop="name">java服务器</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="java的ssl实现"><a href="#java的ssl实现" class="headerlink" title="java的ssl实现"></a>java的ssl实现</h4><p>server端：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line">import java.net.*;</div><div class="line">import java.io.*;</div><div class="line">import javax.net.ssl.*;</div><div class="line">import java.security.*;</div><div class="line"></div><div class="line">public class EchoServer &#123;</div><div class="line">  private int port=8000;</div><div class="line">  private SSLServerSocket serverSocket;</div><div class="line"></div><div class="line">  public EchoServer() throws Exception &#123;</div><div class="line">    //输出跟踪日志</div><div class="line">    //System.setProperty(&quot;javax.net.debug&quot;, &quot;all&quot;); </div><div class="line">    SSLContext context=createSSLContext();</div><div class="line">    SSLServerSocketFactory factory=context.getServerSocketFactory();</div><div class="line">    serverSocket =(SSLServerSocket)factory.createServerSocket(port);</div><div class="line">    System.out.println(&quot;服务器启动&quot;);</div><div class="line">    System.out.println(serverSocket.getUseClientMode()? &quot;客户模式&quot;:&quot;服务器模式&quot;);</div><div class="line">    System.out.println(serverSocket.getNeedClientAuth()? &quot;需要验证对方身份&quot;:&quot;不需要验证对方身份&quot;);</div><div class="line">    </div><div class="line">    String[] supported=serverSocket.getSupportedCipherSuites();</div><div class="line">    serverSocket.setEnabledCipherSuites(supported);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  </div><div class="line">  public SSLContext createSSLContext() throws Exception &#123;</div><div class="line">    String keyStoreFile = &quot;test.keys&quot;;</div><div class="line">    String passphrase = &quot;654321&quot;;</div><div class="line">    KeyStore ks = KeyStore.getInstance(&quot;JKS&quot;);</div><div class="line">    char[] password = passphrase.toCharArray();</div><div class="line">    ks.load(new FileInputStream(keyStoreFile), password);</div><div class="line">    KeyManagerFactory kmf = KeyManagerFactory.getInstance(&quot;SunX509&quot;);</div><div class="line">    kmf.init(ks, password);</div><div class="line"></div><div class="line">    SSLContext sslContext = SSLContext.getInstance(&quot;SSL&quot;);</div><div class="line">    sslContext.init(kmf.getKeyManagers(), null, null);</div><div class="line"></div><div class="line">    //当要求客户端提供安全证书时，服务器端可创建TrustManagerFactory，</div><div class="line">    //并由它创建TrustManager，TrustManger根据与之关联的KeyStore中的信息，</div><div class="line">    //来决定是否相信客户提供的安全证书。</div><div class="line">    //String trustStoreFile = &quot;client.keys&quot;;    </div><div class="line">    //KeyStore ts = KeyStore.getInstance(&quot;JKS&quot;);</div><div class="line">    //ts.load(new FileInputStream(trustStoreFile), password);</div><div class="line">    //TrustManagerFactory tmf = TrustManagerFactory.getInstance(&quot;SunX509&quot;);</div><div class="line">    //tmf.init(ts);</div><div class="line">    //sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);</div><div class="line">    </div><div class="line">    return sslContext;</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">  public String echo(String msg) &#123;</div><div class="line">    return &quot;echo:&quot; + msg;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  private PrintWriter getWriter(Socket socket)throws IOException&#123;</div><div class="line">    OutputStream socketOut = socket.getOutputStream();</div><div class="line">    return new PrintWriter(socketOut,true);</div><div class="line">  &#125;</div><div class="line">  private BufferedReader getReader(Socket socket)throws IOException&#123;</div><div class="line">    InputStream socketIn = socket.getInputStream();</div><div class="line">    return new BufferedReader(new InputStreamReader(socketIn));</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  public void service() &#123;</div><div class="line">    while (true) &#123;</div><div class="line">      Socket socket=null;</div><div class="line">      try &#123;</div><div class="line">        socket = serverSocket.accept();  //等待客户连接</div><div class="line">        System.out.println(&quot;New connection accepted &quot; </div><div class="line">                        +socket.getInetAddress() + &quot;:&quot; +socket.getPort());</div><div class="line">        BufferedReader br =getReader(socket);</div><div class="line">        PrintWriter pw = getWriter(socket);</div><div class="line"></div><div class="line">        String msg = null;</div><div class="line">        while ((msg = br.readLine()) != null) &#123;</div><div class="line">          System.out.println(msg); </div><div class="line">          pw.println(echo(msg));</div><div class="line">          if (msg.equals(&quot;bye&quot;)) //如果客户发送的消息为“bye”，就结束通信</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line">      &#125;catch (IOException e) &#123;</div><div class="line">         e.printStackTrace();</div><div class="line">      &#125;finally &#123;</div><div class="line">         try&#123;</div><div class="line">if(socket!=null)socket.close();  //断开连接</div><div class="line">         &#125;catch (IOException e) &#123;e.printStackTrace();&#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  public static void main(String args[])throws Exception &#123;</div><div class="line">    new EchoServer().service();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>client端：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">import java.net.*;</div><div class="line">import java.io.*;</div><div class="line">import javax.net.ssl.*;</div><div class="line">import java.security.*;</div><div class="line"></div><div class="line">public class EchoClient &#123;</div><div class="line">  private String host=&quot;localhost&quot;;</div><div class="line">  private int port=8000;</div><div class="line">  private SSLSocket socket;</div><div class="line">  </div><div class="line">  public EchoClient()throws IOException&#123;</div><div class="line">    SSLSocketFactory factory=(SSLSocketFactory)SSLSocketFactory.getDefault();</div><div class="line">    socket=(SSLSocket)factory.createSocket(host,port);</div><div class="line">    String[] supported=socket.getSupportedCipherSuites();</div><div class="line">    socket.setEnabledCipherSuites(supported);</div><div class="line">    System.out.println(socket.getUseClientMode()? &quot;客户模式&quot;:&quot;服务器模式&quot;);</div><div class="line">  &#125;</div><div class="line">  public static void main(String args[])throws IOException&#123;</div><div class="line">    new EchoClient().talk();</div><div class="line">  &#125;</div><div class="line">  private PrintWriter getWriter(Socket socket)throws IOException&#123;</div><div class="line">    OutputStream socketOut = socket.getOutputStream();</div><div class="line">    return new PrintWriter(socketOut,true);</div><div class="line">  &#125;</div><div class="line">  private BufferedReader getReader(Socket socket)throws IOException&#123;</div><div class="line">    InputStream socketIn = socket.getInputStream();</div><div class="line">    return new BufferedReader(new InputStreamReader(socketIn));</div><div class="line">  &#125;</div><div class="line">  public void talk()throws IOException &#123;</div><div class="line">    try&#123;</div><div class="line">      BufferedReader br=getReader(socket);</div><div class="line">      PrintWriter pw=getWriter(socket);</div><div class="line">      BufferedReader localReader=new BufferedReader(new InputStreamReader(System.in));</div><div class="line">      String msg=null;</div><div class="line">      while((msg=localReader.readLine())!=null)&#123;</div><div class="line"></div><div class="line">        pw.println(msg);</div><div class="line">        System.out.println(br.readLine());</div><div class="line"></div><div class="line">        if(msg.equals(&quot;bye&quot;))</div><div class="line">          break;</div><div class="line">      &#125;</div><div class="line">    &#125;catch(IOException e)&#123;</div><div class="line">       e.printStackTrace();</div><div class="line">    &#125;finally&#123;</div><div class="line">       try&#123;socket.close();&#125;catch(IOException e)&#123;e.printStackTrace();&#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1830,7 +1831,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">81</span>
+                <span class="site-state-item-count">82</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
