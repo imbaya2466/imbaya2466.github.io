@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpp,反汇编," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="核心简记 c++可以直接用的算数类型:bool(可赋予true或非0|false或0)表示出来为1或0;char(规定8位，GBK用俩个char表示);wchar-t宽字符;char16-t;char32-t用于unicode;short;int;long;long long;float;double;long double unsigned可用于char、int、short、long与long">
+<meta name="keywords" content="cpp,反汇编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp学习-第二章-变量和基本类型">
+<meta property="og:url" content="http://yoursite.com/2018/12/17/cpp学习-第二章-变量和基本类型/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="核心简记 c++可以直接用的算数类型:bool(可赋予true或非0|false或0)表示出来为1或0;char(规定8位，GBK用俩个char表示);wchar-t宽字符;char16-t;char32-t用于unicode;short;int;long;long long;float;double;long double unsigned可用于char、int、short、long与long">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-18T15:15:34.839Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp学习-第二章-变量和基本类型">
+<meta name="twitter:description" content="核心简记 c++可以直接用的算数类型:bool(可赋予true或非0|false或0)表示出来为1或0;char(规定8位，GBK用俩个char表示);wchar-t宽字符;char16-t;char32-t用于unicode;short;int;long;long long;float;double;long double unsigned可用于char、int、short、long与long">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/17/cpp学习-第二章-变量和基本类型/"/>
+
+
+
+
+
+  <title>cpp学习-第二章-变量和基本类型 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/17/cpp学习-第二章-变量和基本类型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cpp学习-第二章-变量和基本类型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-17T23:20:17+08:00">
+                2018-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><ol>
+<li>c++可以直接用的算数类型:bool(可赋予true或非0|false或0)表示出来为1或0;char(规定8位，GBK用俩个char表示);wchar-t宽字符;char16-t;char32-t用于unicode;short;int;long;long long;float;double;long double</li>
+<li>unsigned可用于char、int、short、long与long long;signed用于char。因为char的实现无符号还是有符号没定</li>
+<li>类型转化:bool对外表示为0或1，可接受任意数字与truefalse，0为false。浮点赋予整形舍弃小数位。有符号与无符号表达式会转为无符号，负数的无符号会按补码计算无符号。不要使用和过度关注依赖编译环境的问题</li>
+<li>字面值:0开头8进制，0x开头16进制。10进制字面值是带符号数，可用前后缀指定最小匹配。浮点默认double类型指数可用e标识。true与false是字面值。nullptr是指针字面值</li>
+<li>俩个字符串字面值仅由空格换行分割时当成一个整体，可用转义符与泛化转义</li>
+<li>字面值前缀字符与字串用:u(unicode16位)U(unicode32位)L(宽字符)u8(UTF-8仅用于字符串)。后缀整形:u/U(unsigned)l/L(long)ll/LL(long long)。后缀浮点型:f/F(float)l/L(long double)</li>
+<li>c++中，初始化与赋值是俩个完全不同的操作。{}列表初始化对转化要求更为严格。内置类型都应该初始化，类的初始化由类定义</li>
+<li>为了支持分离式编译，c++将声明与定义区分开:声明使得名字所知，用于使用名字与类型。定义负责创建与名字关联的实体，用于分配空间与初始化。extern用于声明，如果初始化就成了定义。定义只有一次但可多次声明使用。</li>
+<li>C++为静态类型语言，即编译阶段检查类型，该检查判断出数据类型是否支持要执行的运算。适合复杂程序</li>
+<li>定义应该放在使用附近，全局作用域下的名字使用::(前为空)访问。内可访问外层，内定义覆盖外层。</li>
+<li>复合类型:基于其它类型定义的类型。见引用与指针</li>
+<li>声明：基本数据类型 声明符(含名字与类型相关修饰)。int *p:int是基本类型，*是类型修饰符，类型修饰符是声明符的一部分。注意只有数据类型是作用于全语句的，类型修饰符只管p。因此一句可以定义不同类型变量。</li>
+<li>处理类型可用auto与decltype。类型别名等-见下</li>
+<li>基本数据类型:基本内置类型与自定义类型。基本内置类型:算数类型与空类型。算数类型:整形(字符与布尔在内)与浮点型</li>
+<li>动态类型语言:在运行期间检查数据类型python、ruby、js等。静态类型语言:运行前编译时检查类型java、c++、c#等</li>
+</ol>
+<a id="more"></a>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>引用是为对象起了另一个名字。初始化后永久绑定,不可更改。引用并非对象，只是另一个名字。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int i=1;</div><div class="line">int &amp;d=i;</div></pre></td></tr></table></figure></p>
+<p>d定义时必须初始化，类型除特殊外要求严格匹配。不可绑定字面值。<br>可以有指针的引用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int *p;</div><div class="line">int *&amp;d=p;</div></pre></td></tr></table></figure></p>
+<p>离变量名最近的符号&amp;对变量类型最直接的影响，因此d是引用，其余部分确定引用的类型。注意从右向左阅读修饰。</p>
+<h3 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h3><p>指针本身是一个对象，允许赋值与拷贝，无需定义时赋值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">int *p;</div><div class="line">int d;</div><div class="line">p=&amp;d;</div><div class="line">*p=1;</div></pre></td></tr></table></figure></p>
+<p>引用不是对象，没有实际地址，不能定义指向引用的指针。除了特殊情况指针类型要求严格匹配。解指针引用得出所指对象。组成复合类型的符号与解引用符含义不同。<br>空指针初始可用nullptr，0。可以但不推荐NULL。应该初始化所有指针。暂不知道的就nullptr。<br>void*指针:特殊类型指针，可以存放任意类型对象的地址。<br>声明符中的修饰符没有个数限制，按逻辑关系解释即可，同时该声明明确了指针的具体类型。int **p;p是指向int的指针类型的指针。</p>
+<h3 id="const常量"><a href="#const常量" class="headerlink" title="const常量"></a>const常量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">const int i=1;</div><div class="line">const int &amp;d=i;</div><div class="line">int i2=1;</div><div class="line">const int &amp;d2=i2;</div><div class="line">const int &amp;d3=123;</div><div class="line">double i3=123.312;</div><div class="line">const int &amp;d4=i3;</div></pre></td></tr></table></figure>
+<ol>
+<li>const关键字定义的对象必须初始化。之后不可被改变。</li>
+<li>默认下，const只在文件内有效-编译单元，编译器将在编译过程中把用到const变量的都替换为对应值-但要分配空间的。想共享模块的const需要定义与声明都添加extern关键字</li>
+<li>对常量的引用可以初始化为const、普通对象、任意能转化为引用类型的表达式。该const只是指明了该引用不可以使被引用的对象修改。也就是说该const是针对引用的可参与操作，引用本身就是不可被修改的</li>
+<li>对于类型不一致可以的原因，是因为先用double初始化了一个const int &amp;临时量，再用引用绑定这个临时量。也就是说const实际针对的是引用的类型</li>
+</ol>
+<h4 id="指向const的指针"><a href="#指向const的指针" class="headerlink" title="指向const的指针"></a>指向const的指针</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">const int i=1;</div><div class="line">int i2=1;</div><div class="line">const int *p=&amp;i;</div><div class="line">p=&amp;i2;</div></pre></td></tr></table></figure>
+<p>想存放常量对象的地址，只能用指向常量的指针，但常量指针也可以存放普通对象的地址。常量指针仅要求不能通过该指针改变对象的值，也就是说规定的是该指针指向的类型是const。</p>
+<h4 id="const指针"><a href="#const指针" class="headerlink" title="const指针"></a>const指针</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">int i=1;</div><div class="line">int *const p=&amp;i;</div><div class="line">const int &amp;d=i;//这个const是底层的，表示的是引用的对象是const类型的</div></pre></td></tr></table></figure>
+<p>同样右到左阅读，常量-&gt;指针-&gt;指向类型为int。该意思是指针本身为常量。指向类型的操作看指向类型的。<br>顶层const表示指针本身是个常量，底层const表示指针所指对象是常量。一般化，底层表示复合类型的，顶层表示本身。注意顶层底层是形容const的。<br>拷贝操作时，顶层不受影响。拷贝对象必须具有相同的底层const资格，或者俩个对象的数据类型可以转化。</p>
+<h4 id="常量表达式"><a href="#常量表达式" class="headerlink" title="常量表达式"></a>常量表达式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const int i=f();//不是常量表达式</div><div class="line">int i=1;//不是常量表达式</div><div class="line">constexpr int i=xxxx;</div></pre></td></tr></table></figure>
+<p>常量表达式是指在编译时可以确定值的表达式，需要类型与初始值决定，字面值是。用常量exp初始化的const是。constexpr关键字由编译器验证变量的值是否是常量表达式，声明为该类型的变量一定是一个常量，而且必须用常量表达式初始化。当指针使用constexper时仅对指针有效-顶层且constexpr的指针和引用初始值限定很大。</p>
+<h3 id="处理类型"><a href="#处理类型" class="headerlink" title="处理类型"></a>处理类型</h3><p>声明：基本数据类型 声明符(含名字与类型相关修饰)</p>
+<h4 id="类型别名"><a href="#类型别名" class="headerlink" title="类型别名"></a>类型别名</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">typedef int type1,*type2;</div><div class="line">using type3=int;</div></pre></td></tr></table></figure>
+<p>typedef作为基本数据类型的一部分，声明符的名字作为类型别名。与声明一样，其它部分组成类型。使用using也可以<br>将别名用于常量类型不太一样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">typedef char *pstr;</div><div class="line">const pstr p1=0;//p1是指向char的常量指针</div><div class="line">const pstr *p2;//p2是指针，指向char的常量指针</div></pre></td></tr></table></figure></p>
+<p>不是替换后的指向常量的意义，也就是说理解不能展开，而是当成一个整体。从右到左读:基本类型为指针，之后的const是修饰该指针的。</p>
+<h4 id="auto"><a href="#auto" class="headerlink" title="auto"></a>auto</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">auto a=exp;</div></pre></td></tr></table></figure>
+<p>编译器通过初始值(必须有)判断变量的类型。auto作为声明语句中的基本数据类型，多条声明符时基本类型是一致的。<br>引用给auto实际上是使用引用的对象。auto会忽略顶层const，底层const会保留<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">const int i=1;</div><div class="line">auto a=i;//a为int型</div><div class="line">auto b=&amp;i//a为指向整数常量的指针</div><div class="line">//可以明确指出</div><div class="line">const auto f=i;//i推演为int，f为const int</div></pre></td></tr></table></figure></p>
+<h4 id="decltype"><a href="#decltype" class="headerlink" title="decltype"></a>decltype</h4><p>用于希望从表达式的类型推断出要定义变量的类型，但不用该表达式的值初始化变量。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">decltype(exp) x=0;</div></pre></td></tr></table></figure></p>
+<p>编译器推断出exp的类型，并返回类型。该处理会返回真实的类型(包含const与引用)。一些表达式会向decltype返回引用类型，表示表达式结果对象可以做赋值语句的左值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">int *p;</div><div class="line">decltype(*p) a;//a为int &amp;引用类型-必须初始化，而不是int，因为表达式结果可以做左值</div><div class="line">decltype(*p+0) b;//b为int型，因为不可做左值</div><div class="line">decltype((b)) c;//c为int &amp;，因为()为表达式，可以做左值，是引用。因此只要加()就是引用</div></pre></td></tr></table></figure></p>
+<h3 id="自定义数据结构"><a href="#自定义数据结构" class="headerlink" title="自定义数据结构"></a>自定义数据结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//定义类</div><div class="line">struct A&#123;</div><div class="line">    int a=0;</div><div class="line">&#125;;</div><div class="line">//定义对象</div><div class="line">A  a;</div></pre></td></tr></table></figure>
+<p>可以直接用类名定义对象。c式也允许但不推荐，此外类的定义后可以加定义的对象，但不推荐。类内成员可以初始值，推荐。<br>按模块编程的话，一组.h与.cpp文件应该共同实现一个类，类名与俩文件名应该相同。.h是作为被共享出去的接口部分，因此类的定义、const应该定义在.h中。<br>保护符名:大写类名+_H<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#include  //展开</div><div class="line">#define A     //定义一个预处理变量</div><div class="line">#ifdef  A   //定义A时为真，执行到#endif</div><div class="line">#ifndef  A   //未定义A时为真，执行到#endif</div></pre></td></tr></table></figure></p>
+<p>预处理变量无视作用域，但是只在模块编译单元内生效。</p>
+<h2 id="反汇编"><a href="#反汇编" class="headerlink" title="反汇编"></a>反汇编</h2><p>Android.mk<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">LOCAL_PATH := $(call my-dir)</div><div class="line">include $(CLEAR_VARS)</div><div class="line">LOCAL_MODULE    := 2</div><div class="line">LOCAL_SRC_FILES := 2.cpp</div><div class="line">LOCAL_CFLAGS += -pie -fPIE -std=c++11</div><div class="line">LOCAL_LDFLAGS += -pie -fPIE</div><div class="line">include $(BUILD_EXECUTABLE)</div></pre></td></tr></table></figure></p>
+<p>代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">struct A&#123;</div><div class="line">    int a=0;</div><div class="line">    int b=1;</div><div class="line">    int c=2;</div><div class="line">&#125;;</div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    struct A sdad;</div><div class="line">    sdad.a=3;</div><div class="line"></div><div class="line">    float d1=3.4;</div><div class="line">    sdad.b=d1;</div><div class="line"></div><div class="line">    </div><div class="line">    bool b1=123;</div><div class="line">    void *p1=nullptr;</div><div class="line">    const char *s1=u8&quot;1234567&quot;;</div><div class="line">    //指针</div><div class="line">    int i1=12;</div><div class="line">    int *p2=&amp;i1;</div><div class="line">    *p2=3;</div><div class="line">    //引用</div><div class="line">    int &amp;qew=i1;</div><div class="line">    qew=123;</div><div class="line"></div><div class="line">    const int iqew=1;</div><div class="line">    int *p3=(int *)&amp;iqew;</div><div class="line">    *p3=2;</div><div class="line">    int wqer=iqew;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="X86-64"><a href="#X86-64" class="headerlink" title="X86-64"></a>X86-64</h3><h4 id="指令简记"><a href="#指令简记" class="headerlink" title="指令简记"></a>指令简记</h4><p>mov转义的大小看操作数和dword等类型</p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div></pre></td><td class="code"><pre><div class="line">.text:00000000000005B0 sub_5B0         proc near               ; DATA XREF: start+2E↑o</div><div class="line">.text:00000000000005B0</div><div class="line">.text:00000000000005B0 var_5C          = dword ptr -5Ch</div><div class="line">.text:00000000000005B0 var_58          = qword ptr -58h</div><div class="line">.text:00000000000005B0 var_50          = qword ptr -50h</div><div class="line">.text:00000000000005B0 var_48          = qword ptr -48h</div><div class="line">.text:00000000000005B0 var_40          = qword ptr -40h</div><div class="line">.text:00000000000005B0 var_38          = qword ptr -38h</div><div class="line">.text:00000000000005B0 var_29          = byte ptr -29h</div><div class="line">.text:00000000000005B0 var_28          = dword ptr -28h</div><div class="line">.text:00000000000005B0 var_24          = dword ptr -24h</div><div class="line">.text:00000000000005B0 var_20          = dword ptr -20h</div><div class="line">.text:00000000000005B0 var_1C          = dword ptr -1Ch</div><div class="line">.text:00000000000005B0 var_18          = dword ptr -18h</div><div class="line">.text:00000000000005B0 var_14          = dword ptr -14h</div><div class="line">.text:00000000000005B0 var_8           = qword ptr -8//用于栈保护的8字节</div><div class="line">.text:00000000000005B0</div><div class="line">.text:00000000000005B0 ; __unwind &#123;</div><div class="line">//栈帧分配了60H</div><div class="line">.text:00000000000005B0                 push    rbp</div><div class="line">.text:00000000000005B1                 mov     rbp, rsp</div><div class="line">.text:00000000000005B4                 sub     rsp, 60h</div><div class="line">//栈保护</div><div class="line">.text:00000000000005B8                 mov     rax, fs:28h</div><div class="line">.text:00000000000005C1                 mov     [rbp+var_8], rax</div><div class="line">.text:00000000000005C5                 mov     [rbp+var_24], 0</div><div class="line">//rdi应该是this,这个结构体是分配在栈中的18 14 10 abc</div><div class="line">.text:00000000000005CC                 lea     rdi, [rbp+var_18]</div><div class="line">.text:00000000000005D0                 call    sub_670</div><div class="line">//sdad.a=3</div><div class="line">.text:00000000000005D5                 mov     [rbp+var_18], 3</div><div class="line">// float d1=3.4;</div><div class="line">.text:00000000000005DC                 mov     [rbp+var_28], 4059999Ah</div><div class="line">// sdad.b=d1;</div><div class="line">.text:00000000000005E3                 movss   xmm0, [rbp+var_28]</div><div class="line">.text:00000000000005E8                 cvttss2si ecx, xmm0</div><div class="line">.text:00000000000005EC                 mov     [rbp+var_14], ecx</div><div class="line">// bool b1=123;</div><div class="line">.text:00000000000005EF                 mov     [rbp+var_29], 1</div><div class="line">// void *p1=nullptr;</div><div class="line">.text:00000000000005F3                 mov     [rbp+var_38], 0</div><div class="line">//  const char *s1=u8&quot;1234567&quot;;</div><div class="line">.text:00000000000005FB                 lea     rax, a1234567   ; &quot;1234567&quot;</div><div class="line">.text:0000000000000602                 mov     [rbp+var_40], rax</div><div class="line">//int i1=12;</div><div class="line">.text:0000000000000606                 mov     [rbp+var_1C], 0Ch</div><div class="line">//int *p2=&amp;i1;</div><div class="line">.text:000000000000060D                 lea     rax, [rbp+var_1C]</div><div class="line">.text:0000000000000611                 mov     [rbp+var_48], rax</div><div class="line">//*p2=3;</div><div class="line">.text:0000000000000615                 mov     rdi, [rbp+var_48]</div><div class="line">.text:0000000000000619                 mov     dword ptr [rdi], 3</div><div class="line">//  int &amp;qew=i1;注意此时rax是i1的地址</div><div class="line">.text:000000000000061F                 mov     [rbp+var_50], rax</div><div class="line">//  qew=123;</div><div class="line">.text:0000000000000623                 mov     rax, [rbp+var_50]</div><div class="line">.text:0000000000000627                 mov     dword ptr [rax], 7Bh ; &apos;&#123;&apos;</div><div class="line">//  const int iqew=1;</div><div class="line">.text:000000000000062D                 mov     [rbp+var_20], 1</div><div class="line">//int *p3=(int *)&amp;iqew;</div><div class="line">.text:0000000000000634                 lea     rax, [rbp+var_20]</div><div class="line">.text:0000000000000638                 mov     [rbp+var_58], rax</div><div class="line">//  *p3=2;</div><div class="line">.text:000000000000063C                 mov     rax, [rbp+var_58]</div><div class="line">.text:0000000000000640                 mov     dword ptr [rax], 2</div><div class="line">//int wqer=iqew;</div><div class="line">.text:0000000000000646                 mov     [rbp+var_5C], 1</div><div class="line">//栈保护</div><div class="line">.text:000000000000064D                 mov     rax, fs:28h</div><div class="line">.text:0000000000000656                 mov     rdi, [rbp+var_8]</div><div class="line">.text:000000000000065A                 cmp     rax, rdi</div><div class="line">.text:000000000000065D                 jnz     loc_66B</div><div class="line">//返回0 释放栈空间</div><div class="line">.text:0000000000000663                 xor     eax, eax</div><div class="line">.text:0000000000000665                 add     rsp, 60h</div><div class="line">.text:0000000000000669                 pop     rbp</div><div class="line">.text:000000000000066A                 retn</div><div class="line">.text:000000000000066B ; ---------------------------------------------------------------------------</div><div class="line">.text:000000000000066B</div><div class="line">.text:000000000000066B loc_66B:                                ; CODE XREF: sub_5B0+AD↑j</div><div class="line">.text:000000000000066B                 call    ___stack_chk_fail</div><div class="line">.text:000000000000066B ; &#125; // starts at 5B0</div><div class="line">.text:000000000000066B sub_5B0         endp</div><div class="line"></div><div class="line"></div><div class="line">.text:0000000000000670 sub_670         proc near               ; CODE XREF: sub_5B0+20↑p</div><div class="line">.text:0000000000000670</div><div class="line">.text:0000000000000670 var_8           = qword ptr -8</div><div class="line">.text:0000000000000670</div><div class="line">.text:0000000000000670 ; __unwind &#123;</div><div class="line">.text:0000000000000670                 push    rbp</div><div class="line">.text:0000000000000671                 mov     rbp, rsp</div><div class="line">//保存this到栈</div><div class="line">.text:0000000000000674                 mov     [rbp+var_8], rdi</div><div class="line">.text:0000000000000678                 mov     rdi, [rbp+var_8]</div><div class="line">//为abc赋值</div><div class="line">.text:000000000000067C                 mov     dword ptr [rdi], 0</div><div class="line">.text:0000000000000682                 mov     dword ptr [rdi+4], 1</div><div class="line">.text:0000000000000689                 mov     dword ptr [rdi+8], 2</div><div class="line">.text:0000000000000690                 pop     rbp</div><div class="line">.text:0000000000000691                 retn</div><div class="line">.text:0000000000000691 ; &#125; // starts at 670</div><div class="line">.text:0000000000000691 sub_670         endp</div><div class="line">.text:0000000000000691</div><div class="line">.text:0000000000000691 _text           ends</div></pre></td></tr></table></figure>
+<p>注意：</p>
+<ol>
+<li>补码的意义是0减这个数的绝对值，x+x(反)+1=0.所以推得常用补码计算式，其表达的意义是为了计算方便。以0为对称符合负数的自然表达(用了00x作为对称)，将二进制串用高位一分为二(越过中间将错误)，因此使二进制计算结果正确。</li>
+<li>浮点数有其专用的指令与寄存器进行计算。浮点数表示方式为先将10进制实数化为二进制实数(这一步造成了精度损失)再将二进制实数表示为IEEE规定的科学计数法样式-符号、指数、尾数。</li>
+<li>布尔型由编译器存为1或0。占一个字节。</li>
+<li>地址只能取一次(&amp;)，指针的类型只有编译器知道，汇编层面都是相同大小(8字节地址线长度)存地址。只能看操作区分用途</li>
+<li>引用实质就是指针…只是编译器封装了指针操作而已..汇编层面的指针与引用完全没区别。引用是占内存的。都是间接寻址。</li>
+<li>字面常量存储于机器码与数据段中，由系统保护机制防改。const是分配内存的，只是编译期间放改，用指针是可以改的，但是即使分配了内存，编译器依旧是对其在编译时进行了常量替换。</li>
+<li>分析:地址-&gt;权限-&gt;属性-&gt;内存布局-&gt;数据操作</li>
+</ol>
+<h3 id="ARM64-v8"><a href="#ARM64-v8" class="headerlink" title="ARM64-v8"></a>ARM64-v8</h3><h4 id="指令简记-1"><a href="#指令简记-1" class="headerlink" title="指令简记"></a>指令简记</h4><p>WZR:32位0寄存器<br>XZR:64位0寄存器</p>
+<p>SIMD全称Single Instruction Multiple Data，单指令多数据流，能够复制多个操作数，并把它们打包在大型寄存器的一组指令集。<br>Neon是适用于ARM Cortex-A系列处理器的一种128位SIMD(Single Instruction, Multiple Data,单指令、多数据)扩展结构。<br>64位下NEON寄存器：<br>包括：<br>32个B寄存器（B0~B31）,8bit<br>32个H寄存器（H0~H31）,半字 16bit<br>32个S寄存器（S0~S31） ,单字 32bit<br>32个D寄存器（D0~D31）,双字 64bit<br>32个Q寄存器（V0~V31）,四字 128bit</p>
+<p>FCVTZS:浮点转换为有符号定点，向零舍入。</p>
+<h4 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div></pre></td><td class="code"><pre><div class="line">text:0000000000000798 ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:0000000000000798                 EXPORT main</div><div class="line">.text:0000000000000798 main                                    ; DATA XREF: LOAD:0000000000000458↑o</div><div class="line">.text:0000000000000798                                         ; .got:main_ptr↓o</div><div class="line">.text:0000000000000798</div><div class="line">.text:0000000000000798 var_5C          = -0x5C</div><div class="line">.text:0000000000000798 var_58          = -0x58</div><div class="line">.text:0000000000000798 var_50          = -0x50</div><div class="line">.text:0000000000000798 var_48          = -0x48</div><div class="line">.text:0000000000000798 var_40          = -0x40</div><div class="line">.text:0000000000000798 var_38          = -0x38</div><div class="line">.text:0000000000000798 var_2C          = -0x2C</div><div class="line">.text:0000000000000798 var_28          = -0x28</div><div class="line">.text:0000000000000798 var_24          = -0x24</div><div class="line">.text:0000000000000798 var_20          = -0x20</div><div class="line">.text:0000000000000798 var_1C          = -0x1C</div><div class="line">.text:0000000000000798 var_18          = -0x18</div><div class="line">.text:0000000000000798 var_14          = -0x14</div><div class="line">.text:0000000000000798 var_8           = -8</div><div class="line">.text:0000000000000798 var_s0          =  0</div><div class="line">.text:0000000000000798</div><div class="line">.text:0000000000000798 ; __unwind &#123;</div><div class="line">//减sp分配空间</div><div class="line">.text:0000000000000798                 SUB             SP, SP, #0x70</div><div class="line">//传栈帧与返回地址到栈里高地址</div><div class="line">.text:000000000000079C                 STP             X29, X30, [SP,#0x60+var_s0]</div><div class="line">//x29新栈帧</div><div class="line">.text:00000000000007A0                 ADD             X29, SP, #0x60</div><div class="line">// X0是this，abc占栈中 -18 -14 -10</div><div class="line">.text:00000000000007A4                 SUB             X0, X29, #-var_18</div><div class="line">//  v9 = *(_QWORD *)(_ReadStatusReg(ARM64_SYSREG(3, 3, 13, 0, 2)) + 40);</div><div class="line">栈保护</div><div class="line">.text:00000000000007A8                 MRS             X8, #3, c13, c0, #2</div><div class="line">.text:00000000000007AC                 LDR             X8, [X8,#0x28]</div><div class="line">.text:00000000000007B0                 STUR            X8, [X29,#var_8]</div><div class="line">.text:00000000000007B4                 STUR            WZR, [X29,#var_24]</div><div class="line">//结构体初始化</div><div class="line">.text:00000000000007B8                 BL              sub_86C</div><div class="line"></div><div class="line">.text:00000000000007BC                 MOV             W9, #1</div><div class="line">.text:00000000000007C0                 MOV             W10, #2</div><div class="line">.text:00000000000007C4                 SUB             X8, X29, #-var_20</div><div class="line">.text:00000000000007C8                 MOV             W11, #0x7B</div><div class="line">.text:00000000000007CC                 SUB             X0, X29, #-var_1C</div><div class="line"></div><div class="line">.text:00000000000007D0                 MOV             W12, #3</div><div class="line">.text:00000000000007D4                 MOV             W13, #0xC</div><div class="line">.text:00000000000007D8                 ADRP            X30, #a1234567@PAGE ; &quot;1234567&quot;</div><div class="line">.text:00000000000007DC                 ADD             X30, X30, #a1234567@PAGEOFF ; &quot;1234567&quot;</div><div class="line">.text:00000000000007E0                 MOV             X14, XZR</div><div class="line">.text:00000000000007E4                 MOV             W15, #1</div><div class="line">.text:00000000000007E8                 ADRP            X16, #dword_894@PAGE</div><div class="line">.text:00000000000007EC                 LDR             S0, [X16,#dword_894@PAGEOFF]</div><div class="line">//sdad.a=3;</div><div class="line">.text:00000000000007F0                 STUR            W12, [X29,#var_18]</div><div class="line">//float d1=3.4;</div><div class="line">.text:00000000000007F4                 STUR            S0, [X29,#var_28]</div><div class="line">//取整   sdad.b=d1;</div><div class="line">.text:00000000000007F8                 LDUR            S0, [X29,#var_28]</div><div class="line">.text:00000000000007FC                 FCVTZS          W17, S0</div><div class="line">.text:0000000000000800                 STUR            W17, [X29,#var_14]</div><div class="line">// bool b1=123; W15=1 还是由编译器给1了 这些都应该是语义分析中间代码处理好的，所以后端不变</div><div class="line">.text:0000000000000804                 STURB           W15, [X29,#var_2C]</div><div class="line">//void *p1=nullptr;</div><div class="line">.text:0000000000000808                 STR             X14, [SP,#0x60+var_38]</div><div class="line">// const char *s1=u8&quot;1234567&quot;;</div><div class="line">.text:000000000000080C                 STR             X30, [SP,#0x60+var_40]</div><div class="line">//int i1=12;</div><div class="line">.text:0000000000000810                 STUR            W13, [X29,#var_1C]</div><div class="line">// X0=X29+var_1C  是i1的地址  var_48是p2</div><div class="line">// int *p2=&amp;i1;</div><div class="line">.text:0000000000000814                 STR             X0, [SP,#0x60+var_48]</div><div class="line">// *p2=3;</div><div class="line">.text:0000000000000818                 LDR             X14, [SP,#0x60+var_48]</div><div class="line">.text:000000000000081C                 STR             W12, [X14]</div><div class="line">// X0还是i1的地址   int &amp;qew=i1;</div><div class="line">.text:0000000000000820                 STR             X0, [SP,#0x60+var_50]</div><div class="line">// qew=123;</div><div class="line">.text:0000000000000824                 LDR             X14, [SP,#0x60+var_50]</div><div class="line">.text:0000000000000828                 STR             W11, [X14]</div><div class="line">// const int iqew=1;</div><div class="line">.text:000000000000082C                 STUR            W9, [X29,#var_20]</div><div class="line">// X8=X29+var_20 是iqew的地址  int *p3=(int *)&amp;iqew;</div><div class="line">.text:0000000000000830                 STR             X8, [SP,#0x60+var_58]</div><div class="line">//*p3=2;</div><div class="line">.text:0000000000000834                 LDR             X8, [SP,#0x60+var_58]</div><div class="line">.text:0000000000000838                 STR             W10, [X8]</div><div class="line">//  int wqer=iqew; 还是1</div><div class="line">.text:000000000000083C                 STR             W9, [SP,#0x60+var_5C]</div><div class="line">// if ( *(_QWORD *)(_ReadStatusReg(ARM64_SYSREG(3, 3, 13, 0, 2)) + 40) == v9 )</div><div class="line">栈保护</div><div class="line">.text:0000000000000840                 MRS             X8, #3, c13, c0, #2</div><div class="line">.text:0000000000000844                 LDR             X8, [X8,#0x28]</div><div class="line">.text:0000000000000848                 LDUR            X14, [X29,#var_8]</div><div class="line">.text:000000000000084C                 CMP             X8, X14</div><div class="line">.text:0000000000000850                 B.NE            loc_868</div><div class="line">//返回0 放于W0</div><div class="line">.text:0000000000000854                 MOV             W8, WZR</div><div class="line">.text:0000000000000858                 MOV             W0, W8</div><div class="line">//恢复栈帧</div><div class="line">.text:000000000000085C                 LDP             X29, X30, [SP,#0x60+var_s0]</div><div class="line">.text:0000000000000860                 ADD             SP, SP, #0x70</div><div class="line">.text:0000000000000864                 RET</div><div class="line">.text:0000000000000868 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000000868</div><div class="line">.text:0000000000000868 loc_868                                 ; CODE XREF: main+B8↑j</div><div class="line">.text:0000000000000868                 BL              .__stack_chk_fail</div><div class="line">.text:0000000000000868 ; &#125; // starts at 798</div><div class="line">.text:0000000000000868 ; End of function main</div><div class="line">.text:0000000000000868</div><div class="line">.text:000000000000086C</div><div class="line">.text:000000000000086C ; =============== S U B R O U T I N E =======================================</div><div class="line">.text:000000000000086C</div><div class="line">.text:000000000000086C</div><div class="line">.text:000000000000086C sub_86C                                 ; CODE XREF: main+20↑p</div><div class="line">.text:000000000000086C</div><div class="line">.text:000000000000086C var_8           = -8</div><div class="line">.text:000000000000086C</div><div class="line">.text:000000000000086C ; __unwind &#123;</div><div class="line">.text:000000000000086C                 SUB             SP, SP, #0x10</div><div class="line">.text:0000000000000870                 MOV             W8, #2</div><div class="line">.text:0000000000000874                 MOV             W9, #1</div><div class="line">//X0是this，放入栈高处</div><div class="line">.text:0000000000000878                 STR             X0, [SP,#0x10+var_8]</div><div class="line">.text:000000000000087C                 LDR             X0, [SP,#0x10+var_8]</div><div class="line">//初始化abc</div><div class="line">.text:0000000000000880                 STR             WZR, [X0]</div><div class="line">.text:0000000000000884                 STR             W9, [X0,#4]</div><div class="line">.text:0000000000000888                 STR             W8, [X0,#8]</div><div class="line">//恢复栈空间</div><div class="line">.text:000000000000088C                 ADD             SP, SP, #0x10</div><div class="line">.text:0000000000000890                 RET</div><div class="line">.text:0000000000000890 ; &#125; // starts at 86C</div><div class="line">.text:0000000000000890 ; End of function sub_86C</div><div class="line">.text:0000000000000890</div><div class="line">.text:0000000000000890 ; .text         ends</div></pre></td></tr></table></figure>
+<p>可见ARM的寄存器真的多….用的非常任性，先把值都放在寄存器再去赋予。c++的语法表示与x86基本相同..不过现代cpu针对计算有好多优化操作。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+          
+            <a href="/tags/反汇编/" rel="tag"># 反汇编</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/14/cpp学习-第一章-初识/" rel="next" title="cpp学习-第一章-初识">
+                <i class="fa fa-chevron-left"></i> cpp学习-第一章-初识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/18/从编程思想到dex保护方案/" rel="prev" title="从编程思想到dex保护方案">
+                从编程思想到dex保护方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">77</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#引用"><span class="nav-number">1.1.</span> <span class="nav-text">引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指针"><span class="nav-number">1.2.</span> <span class="nav-text">指针</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#const常量"><span class="nav-number">1.3.</span> <span class="nav-text">const常量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指向const的指针"><span class="nav-number">1.3.1.</span> <span class="nav-text">指向const的指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#const指针"><span class="nav-number">1.3.2.</span> <span class="nav-text">const指针</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常量表达式"><span class="nav-number">1.3.3.</span> <span class="nav-text">常量表达式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理类型"><span class="nav-number">1.4.</span> <span class="nav-text">处理类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#类型别名"><span class="nav-number">1.4.1.</span> <span class="nav-text">类型别名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#auto"><span class="nav-number">1.4.2.</span> <span class="nav-text">auto</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#decltype"><span class="nav-number">1.4.3.</span> <span class="nav-text">decltype</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义数据结构"><span class="nav-number">1.5.</span> <span class="nav-text">自定义数据结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反汇编"><span class="nav-number">2.</span> <span class="nav-text">反汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#X86-64"><span class="nav-number">2.1.</span> <span class="nav-text">X86-64</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指令简记"><span class="nav-number">2.1.1.</span> <span class="nav-text">指令简记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析"><span class="nav-number">2.1.2.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM64-v8"><span class="nav-number">2.2.</span> <span class="nav-text">ARM64-v8</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指令简记-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">指令简记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">分析</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
