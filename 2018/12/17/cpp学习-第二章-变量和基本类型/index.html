@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="核心简记 c++可以直接用的算数类型:bool(可赋予true或非0|false或0)表示出来为1或0;char(规定8位，GBK用俩个char表示);wchar-t宽字符;char16-t;char32-t用于unicode;short;int;long;long long;float;double;long double unsigned可用于char、int、short、long与long">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-18T15:15:34.839Z">
+<meta property="og:updated_time" content="2018-12-18T16:43:50.015Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cpp学习-第二章-变量和基本类型">
 <meta name="twitter:description" content="核心简记 c++可以直接用的算数类型:bool(可赋予true或非0|false或0)表示出来为1或0;char(规定8位，GBK用俩个char表示);wchar-t宽字符;char16-t;char32-t用于unicode;short;int;long;long long;float;double;long double unsigned可用于char、int、short、long与long">
@@ -388,8 +388,9 @@
 <li>处理类型可用auto与decltype。类型别名等-见下</li>
 <li>基本数据类型:基本内置类型与自定义类型。基本内置类型:算数类型与空类型。算数类型:整形(字符与布尔在内)与浮点型</li>
 <li>动态类型语言:在运行期间检查数据类型python、ruby、js等。静态类型语言:运行前编译时检查类型java、c++、c#等</li>
+<li>默认初始化:内置类型函数外的为0，内部的不初始化。类决定对象的初始化方式<a id="more"></a>
+</li>
 </ol>
-<a id="more"></a>
 <h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>引用是为对象起了另一个名字。初始化后永久绑定,不可更改。引用并非对象，只是另一个名字。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int i=1;</div><div class="line">int &amp;d=i;</div></pre></td></tr></table></figure></p>
 <p>d定义时必须初始化，类型除特殊外要求严格匹配。不可绑定字面值。<br>可以有指针的引用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int *p;</div><div class="line">int *&amp;d=p;</div></pre></td></tr></table></figure></p>
 <p>离变量名最近的符号&amp;对变量类型最直接的影响，因此d是引用，其余部分确定引用的类型。注意从右向左阅读修饰。</p>
@@ -559,7 +560,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">83</span>
+                <span class="site-state-item-count">84</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -570,7 +571,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -581,7 +582,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">77</span>
+                <span class="site-state-item-count">76</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
