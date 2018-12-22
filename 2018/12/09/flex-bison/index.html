@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言这段时间沉迷编译原理…踩了不少坑也涨了不少姿势…一个项目：https://github.com/imbaya2466/java2native用于java到本地代码的编译….写到最后基本就剩个基本的函数语句native化了….语法太庞大了根本写不动啊.. 个人的小见解： 脚本语言  ：适合小型命令式快速脚本，依托于万能的库面向对象语言 ：适合工程项目，易于建模。过程语言  ： 贴近底层（汇编就是">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-10T15:54:57.457Z">
+<meta property="og:updated_time" content="2018-12-22T11:04:31.026Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="flex-bison">
 <meta name="twitter:description" content="前言这段时间沉迷编译原理…踩了不少坑也涨了不少姿势…一个项目：https://github.com/imbaya2466/java2native用于java到本地代码的编译….写到最后基本就剩个基本的函数语句native化了….语法太庞大了根本写不动啊.. 个人的小见解： 脚本语言  ：适合小型命令式快速脚本，依托于万能的库面向对象语言 ：适合工程项目，易于建模。过程语言  ： 贴近底层（汇编就是">
@@ -376,12 +376,18 @@
 <p>个人的小见解：</p>
 <p>脚本语言  ：适合小型命令式快速脚本，依托于万能的库<br>面向对象语言 ：适合工程项目，易于建模。<br>过程语言  ： 贴近底层（汇编就是过程式的）全面控制计算机</p>
 <p>建议： 一门万能语言c++ 、一门脚本语言py  、一门纯对象式语言java<br><a id="more"></a></p>
-<h2 id="编译器基本架构"><a href="#编译器基本架构" class="headerlink" title="编译器基本架构"></a>编译器基本架构</h2><p>以中间IR指令分为俩大部分</p>
+<h2 id="编译器基本架构–这部分提出单做一篇博客"><a href="#编译器基本架构–这部分提出单做一篇博客" class="headerlink" title="编译器基本架构–这部分提出单做一篇博客"></a>编译器基本架构–这部分提出单做一篇博客</h2><p>以中间IR指令分为俩大部分</p>
 <h3 id="前端"><a href="#前端" class="headerlink" title="前端"></a>前端</h3><p>从源码生成中间指令IR</p>
 <h4 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h4><p>输入：代码字符流<br>输出：单词token<br>正则通常是描述词法的.<br>基本的过程有俩种,通过文法构造NFA,再简化NFA到DFA,基于DFA实现代码.<br>或者直接通过正则构造NFA,DFA.这个步骤可以用自动工具解决.比如lex</p>
 <h4 id="语法分析"><a href="#语法分析" class="headerlink" title="语法分析"></a>语法分析</h4><p>输入:单词token流<br>输出:语法树的后序遍历.最好直接生成AST<br>BNF是描述文法的<br>语法分析主要分俩类,自底向上与自上而下.上下如算符优先法与递归下降.下上如移进归约<br>LL表示从左到右分析左归约,LR表示从左到右分析右归约.归约顺序不影响语法树的生成.语法树始终与语法描述一致.<br>每种分析法可分析的语法语义强度不同.LR(K)分析表范围更大.<br>核心为将文法转化为分析表,这同样有自动化工具,如yacc.顺提一下语法分析工具非常的多,甚至有的提供了大量的语言解析库,可以直接生成目标代码的AST…..如ANTLR</p>
-<h4 id="AST"><a href="#AST" class="headerlink" title="AST"></a>AST</h4><p>语法树的抽象,简单来讲就是去掉了语法树中没用的部分,提出了语法的核心:函数定义,语句,表达式.<br>去掉的部分如:各种标点符号关键字,树结构本身能代表{}()之类的符号,关键字每个节点的类型就表达了.</p>
-<h4 id="语义分析"><a href="#语义分析" class="headerlink" title="语义分析"></a>语义分析</h4><p>解析AST,判断其内容是否符合类型定义,属性与符号表内容的主要填写时机.<br>属性文法:每个AST节点携带属性值,如类型,长度,位置等.按节点类型不同有所不同</p>
+<h4 id="AST"><a href="#AST" class="headerlink" title="AST"></a>AST</h4><p>语法树的抽象,简单来讲就是去掉了语法树中没用的部分,提出了语法的核心:函数定义,语句,表达式.<br>去掉的部分如:各种标点符号关键字,树结构本身能代表{}()之类的符号,关键字每个节点的类型就表达了。<br>其意义就是输入源的最简洁抽象树型表示。</p>
+<h4 id="语义分析"><a href="#语义分析" class="headerlink" title="语义分析"></a>语义分析</h4><p>这部分还未实现，了解中…<br>其意义是保证该单元可进行编译，符合语言的要求。这部分专心检查与填符号表信息(放临时变量与类型、大小，不放相对地址)符号表项与AST节点往往对应。<br>解析AST,判断其内容是否符合类型定义,属性与符号表内容的主要填写时机.<br>属性文法:每个AST节点携带属性值,如类型,长度,位置等.按节点类型不同有所不同<br>生成的符号表是链式表示作用域的，相对地址确定在中间代码生成时，地址与作用域无关！！！作用域大多数是编译器在该时段检查的。而地址则是根据过程、全局中的定义与初始化语句确定的，在中间代码生成时填写。</p>
+<h3 id="中间代码"><a href="#中间代码" class="headerlink" title="中间代码"></a>中间代码</h3><p>专心翻译成三地址码-表示数据与操作，数据全部来源于符号表。<br>变量无限。此时已经没有了作用域的概念，只有数据与操作。以过程为单位书写，数据的位置决定其相对地址(过程外的为数据区地址，过程内的为栈中相对地址)–这种表示贴近汇编。<br>中间代码与汇编比较:</p>
+<ol>
+<li>中间代码变量无限，变量不用定最终地址，非临时变量与部分变量定相对过程地址即可</li>
+<li>中间代码操作更抽象，只表示基本操作-&gt;函数调用对象与参数、跳转、数据计算、赋值、等。而汇编往往指令更多。</li>
+</ol>
+<p>了解中…</p>
 <h3 id="后端"><a href="#后端" class="headerlink" title="后端"></a>后端</h3><p>我还没写。见llvm</p>
 <h2 id="flex"><a href="#flex" class="headerlink" title="flex"></a>flex</h2><p>要点:</p>
 <ol>
@@ -585,7 +591,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译器基本架构"><span class="nav-number">2.</span> <span class="nav-text">编译器基本架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端"><span class="nav-number">2.1.</span> <span class="nav-text">前端</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#词法分析"><span class="nav-number">2.1.1.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语法分析"><span class="nav-number">2.1.2.</span> <span class="nav-text">语法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AST"><span class="nav-number">2.1.3.</span> <span class="nav-text">AST</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语义分析"><span class="nav-number">2.1.4.</span> <span class="nav-text">语义分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后端"><span class="nav-number">2.2.</span> <span class="nav-text">后端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flex"><span class="nav-number">3.</span> <span class="nav-text">flex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bison"><span class="nav-number">4.</span> <span class="nav-text">bison</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译器基本架构–这部分提出单做一篇博客"><span class="nav-number">2.</span> <span class="nav-text">编译器基本架构–这部分提出单做一篇博客</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前端"><span class="nav-number">2.1.</span> <span class="nav-text">前端</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#词法分析"><span class="nav-number">2.1.1.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语法分析"><span class="nav-number">2.1.2.</span> <span class="nav-text">语法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AST"><span class="nav-number">2.1.3.</span> <span class="nav-text">AST</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#语义分析"><span class="nav-number">2.1.4.</span> <span class="nav-text">语义分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中间代码"><span class="nav-number">2.2.</span> <span class="nav-text">中间代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后端"><span class="nav-number">2.3.</span> <span class="nav-text">后端</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flex"><span class="nav-number">3.</span> <span class="nav-text">flex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bison"><span class="nav-number">4.</span> <span class="nav-text">bison</span></a></li></ol></div>
             
 
           </div>
