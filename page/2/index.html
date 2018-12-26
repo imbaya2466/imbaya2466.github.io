@@ -283,6 +283,204 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/06/ELF文件格式详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/06/ELF文件格式详解/" itemprop="url">ELF文件格式详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-06T21:36:01+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..<br>还是因为当初看的时候手太懒了没有动手写啊……….</p>
+<p>于是先从一篇完整的elf文件格式解析写起<br>readelf真的好用……</p>
+<p>hook基本都是c++写的，因此解析也用c++写好点<br>因为我的机子都是64位的，因此解析android arm-64位下的so为目的</p>
+<p>由于许多书籍对elf中的名词描述不同，因此采用如下翻译：</p>
+<table>
+<thead>
+<tr>
+<th>汉语</th>
+<th>英语</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ELF文件头</td>
+<td>ELF header</td>
+</tr>
+<tr>
+<td>基地址</td>
+<td>base address</td>
+</tr>
+<tr>
+<td>动态连接器</td>
+<td>dynamic linker</td>
+</tr>
+<tr>
+<td>全局偏移量表</td>
+<td>global offset table</td>
+</tr>
+<tr>
+<td>初始化函数</td>
+<td>initialization function</td>
+</tr>
+<tr>
+<td>函数连接表</td>
+<td>procedure linkage table</td>
+</tr>
+<tr>
+<td>程序头</td>
+<td>program header</td>
+</tr>
+<tr>
+<td>节</td>
+<td>section</td>
+</tr>
+<tr>
+<td>段</td>
+<td>segment</td>
+</tr>
+</tbody>
+</table>
+<p>此外本篇将地址区分为三种：<br>逻辑地址：指由程序产生的与段相关的偏移地址部分。也就是段*16+的那个值。<br>虚拟地址/线性地址：为进程虚拟的地址空间<br>物理地址：实际地址空间</p>
+<p>现在从逻辑地址到虚拟地址还要经过一次保护模式分段机制。简述就是保护模式将段的信息存于GDT与LDT中，段寄存器存其表的索引值。<br>32位Linux中逻辑地址等于线性地址，因为Linux所有的段（用户代码段、用户数据段、内核代码段、内核数据段）的线性地址都是从 0x00000000 开始，长度4G，这样 线性地址=逻辑地址+ 0x00000000，也就是说逻辑地址等于线性地址了。<br>现在先认为elf中的都是虚拟地址。等搞清保护模式机制时阅读exec与linker再分析地址问题。64位下的机制貌似很不一样…….</p>
+<p>ps:elf不是精灵的意思么….之后根据linker写elf壳的时候就叫darkelf好了….<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/11/06/ELF文件格式详解/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/30/apk自动化加固1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1639,160 +1837,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/27/android8-0-0源码分析-art的启动/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/27/android8-0-0源码分析-art的启动/" itemprop="url">android8-0-0源码分析-art的启动</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-27T21:03:31+08:00">
-                2018-09-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android系统/" itemprop="url" rel="index">
-                    <span itemprop="name">android系统</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>2014年6月25日，Android L-5.0 正式亮相于召开的谷歌I/O大会，Android L 改动幅度较大，谷歌将直接删除Dalvik，代替它的是传闻已久的ART。</p>
-<p>安装后：data/data放应用私有数据，data/app放apk、lib、oat(vdex\odex\art 文件魔数为vdex、elf、art)<br>date/dalvik-cache放虚拟机执行码的(vdex\oat\art)</p>
-<p>旧的优化叫dexopt,现安装时调用/system/bin/dex2oat（8.1.0下存在）编译</p>
-<p>无论是对dex字节码进行优化，还是将dex字节码翻译成本地机器码，最终得到的结果都是保存在相同名称的一个odex文件里面的，但是前者对应的是一个dey文件（表示这是一个优化过的dex），后者对应的是一个oat文件（实际上是一个自定义的elf文件，里面包含的都是本地机器指令）。</p>
-<p>应用程序的安装发生在两个时机，第一个时机是系统启动的时候，第二个时机系统启动完成后用户自行安装的时候。在第一个时机中，系统除了会对/system/app和/data/app目录下的所有APK进行dex字节码到本地机器码的翻译之外，还会对/system/framework目录下的APK或者JAR文件，以及这些APK所引用的外部JAR，进行dex字节码到本地机器码的翻译。这些都挂载在存储中了。</p>
-<p>在ART中，打包在APK里面的Dex字节码是通过LLVM翻译成本地机器指令的–现在的加固也需要研究这个。</p>
-<p>oat结构：<br><img src="https://i.imgur.com/CWhsU0Q.jpg" alt=""><br>加了俩个段oatdata和oatexec，分别用来储存原来打包在APK里面的dex文件和翻译这个dex文件里面的类方法得到本地机器指令。<br>动态段（dymanic section，用于以数组指向动态连接器所需信息，该段在程序头表与节头表中都有指向）中添加了三个符号oatdata、oatexec和oatlastword分别用来描述oatdata和oatexec段加段到内存后的起止地址。<br>在oatdata段中，包含了两个重要的信息，一个信息是原来的classes.dex文件的完整内容，另一个信息引导ART找到classes.dex文件里面的类方法所对应的本地机器指令，这些本地机器指令就保存在oatexec段中。<br>可见oat中含有完整的dex文件。</p>
-<p>我们在classes.dex文件中有一个类A，那么当我们知道类A的名字后，就可以通过保存在oatdata段的dex文件得到类A的所有信息，比如它的父类、成员变量和成员函数等。另一方面，类A在oatdata段中有一个对应的OatClass结构体。这个OatClass结构体描述了类A的每一个方法所对应的本地机器指令在oatexec段的位置。也就是说，当我们知道一个类及其某一个方法的名字（签名）之后，就可以通过oatdata段的dex文件内容和OatClass结构体找到其在oatexec段的本地机器指令，这样就可以执行这个类方法了。</p>
-<p>art加载运行壳时是加载优化后的oat代码，但壳用classloader加载dex时会为其生成oat文件，可能会破坏处理的dex，hook掉可以运行dex但会慢，所以为了提升速度不会阻止dex优化为oat，也就是说原dex尽力保留了，因此采用大块的native化进行加固！</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/09/27/android8-0-0源码分析-art的启动/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1843,7 +1887,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">84</span>
+                <span class="site-state-item-count">85</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

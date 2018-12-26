@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言上次接触c++还是大一…那时看的飞快，现在发现c++的各种需求接踵而来….于是决定这俩个月狠过一遍c++ primer。如果进度允许的话再看看c++的技巧与模式。主要从以下几方面入手：  语法，c++的语法较为复杂，需要比较细节的记录 底层实现，每章对应的语法点看下其反汇编的实现，着重逆向工程方面的问题。汇编以ARMv8与x86-64平台为准，编译器ndk-r16b，linux下为gcc7.3">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-18T15:16:28.095Z">
+<meta property="og:updated_time" content="2018-12-23T10:04:32.210Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cpp学习-第一章-初识">
 <meta name="twitter:description" content="前言上次接触c++还是大一…那时看的飞快，现在发现c++的各种需求接踵而来….于是决定这俩个月狠过一遍c++ primer。如果进度允许的话再看看c++的技巧与模式。主要从以下几方面入手：  语法，c++的语法较为复杂，需要比较细节的记录 底层实现，每章对应的语法点看下其反汇编的实现，着重逆向工程方面的问题。汇编以ARMv8与x86-64平台为准，编译器ndk-r16b，linux下为gcc7.3">
@@ -398,7 +398,7 @@
 <li>文件重定向&gt;与&lt; 命令行下控制标准输入输出流</li>
 <li>.运算符左对象右成员。使用类型与struct时不用加struct类型前缀了</li>
 <li>时刻谨记，编译单元是一个.cpp文件。编译为.o目标(ELF)文件。之后进行连接生成运行或.so。.a是.o的打包。而预处理是在一个编译单元内各自展开处理的。因此头文件的保护宏是为了在一个编译单元内仅被声明定义一次。所以包含的头文件一定会在编译单元中，加入保护宏后防止重复声明定义了。而对于依赖的头文件include的位置，如果放在.h文件中容易使其它单元使用该头文件时含多余的展开，因此除了头必须依赖的.h，其它的.h都放在.cpp文件内</li>
-<li>c/c++的使用模块除了标准库与运行库，都是要手动链接时选择的…因此每个单元(.cpp)编译成.o后链接要手动选择使用的库。java等语言import与导包后会进行一起打包，运行时加载模块使用</li>
+<li>c/c++的使用模块除了标准库与运行库，都是要手动链接时选择的…因此每个单元(.cpp)编译成.o后链接要手动选择使用的库。java等语言import与导包后会进行一起打包，运行时加载模块使用。.h就是提供接口声明的，导出的部分声明都在.h中</li>
 </ol>
 <p>第15条解释了当时我的.l文件应以yylval不正确的问题..在.y内宏定义是不能在另一编译单元内使用的。后来的union将其定义在了.h文件因此可用….yylvalunion中找不到定义的问题可能是lex未导入node头在yacc的头前</p>
 <h2 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h2><p>第一章文件：<br>1.cpp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">int f(int a,int b)</div><div class="line">&#123;</div><div class="line">    std::cout&lt;&lt;a&lt;&lt;&quot;123456&quot;;</div><div class="line">    return a+b;</div><div class="line">&#125;</div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    int a=1;</div><div class="line">    int b=2;</div><div class="line">    int c=f(a,b);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
@@ -539,7 +539,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">84</span>
+                <span class="site-state-item-count">85</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
