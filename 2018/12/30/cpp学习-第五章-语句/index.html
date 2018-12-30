@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpp,反汇编," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="核心简记 表达式语句的作用是执行表达式并丢弃求值结果。语法定义的bnf为:块-语句-表达式 复合语句(块)也是语句，单独作用域，外不访问内，内可访问外。 if、switch、while、for的控制结构内可以定义变量。作用域为相应语句内部。 else if其实就是else下的语句为if语句。语法bnf定义的只有if与if else 。else匹配的是最近尚未匹配的if，块中的不会匹配 switch">
+<meta name="keywords" content="cpp,反汇编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp学习-第五章-语句">
+<meta property="og:url" content="http://yoursite.com/2018/12/30/cpp学习-第五章-语句/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="核心简记 表达式语句的作用是执行表达式并丢弃求值结果。语法定义的bnf为:块-语句-表达式 复合语句(块)也是语句，单独作用域，外不访问内，内可访问外。 if、switch、while、for的控制结构内可以定义变量。作用域为相应语句内部。 else if其实就是else下的语句为if语句。语法bnf定义的只有if与if else 。else匹配的是最近尚未匹配的if，块中的不会匹配 switch">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-30T13:57:18.011Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp学习-第五章-语句">
+<meta name="twitter:description" content="核心简记 表达式语句的作用是执行表达式并丢弃求值结果。语法定义的bnf为:块-语句-表达式 复合语句(块)也是语句，单独作用域，外不访问内，内可访问外。 if、switch、while、for的控制结构内可以定义变量。作用域为相应语句内部。 else if其实就是else下的语句为if语句。语法bnf定义的只有if与if else 。else匹配的是最近尚未匹配的if，块中的不会匹配 switch">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/30/cpp学习-第五章-语句/"/>
+
+
+
+
+
+  <title>cpp学习-第五章-语句 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/30/cpp学习-第五章-语句/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cpp学习-第五章-语句</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-30T21:55:36+08:00">
+                2018-12-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><ol>
+<li>表达式语句的作用是执行表达式并丢弃求值结果。语法定义的bnf为:块-语句-表达式</li>
+<li>复合语句(块)也是语句，单独作用域，外不访问内，内可访问外。</li>
+<li>if、switch、while、for的控制结构内可以定义变量。作用域为相应语句内部。</li>
+<li>else if其实就是else下的语句为if语句。语法bnf定义的只有if与if else 。else匹配的是最近尚未匹配的if，块中的不会匹配</li>
+<li>switch也属于条件语句，每句应加break与{}</li>
+<li>c++规定不允许跨过变量的初始化语句直接跳转到该变量作用域内的另一个位置。</li>
+<li>定义在while条件部分或者循环体内的变量每次迭代都会创建到销毁，之前试的那个基本类型初始化就是赋值所以不明显。类对象在栈中的话会调用构造与析构函数。分配栈中的空间会函数一开始就留好，每次初始化析构就可以了，但是堆中的是由运行时分配的，不会自动执行回收销毁，只是指针会创建销毁，因此堆中要手动释放。</li>
+<li>范围for就是使用迭代器</li>
+<li>do while的最后有分号，条件使用的变量必须定义于循环体之外。</li>
+<li>break只作用于:负责终止离它最近的while、do while、for、switch。只是这些</li>
+<li>continue只作用于:for、while、do while</li>
+<li>goto只能同一函数内</li>
+<li>try与catch的语法、汇编实现见下-重点</li>
+</ol>
+<a id="more"></a>
+<p>范围for等价的是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">for(auto &amp;r:V)</div><div class="line">&#123;</div><div class="line">    r *=2;</div><div class="line">&#125;</div><div class="line"></div><div class="line">for(auto beg=v.begin(),end=v.end();beg!=end;++beg)</div><div class="line">&#123;</div><div class="line">    auto &amp;r=*beg;</div><div class="line">    r*=2;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="try-catch"><a href="#try-catch" class="headerlink" title="try-catch"></a>try-catch</h3><p>异常处理使不同功能的代码分离。c++异常处理包括:<br>throw:异常检测部分使用，表示遇到异常<br>try:异常处理部分使用try-catch处理异常<br>异常类:传递信息</p>
+<h4 id="throw"><a href="#throw" class="headerlink" title="throw"></a>throw</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">throw runtime_error(&quot;123&quot;);</div></pre></td></tr></table></figure>
+<p>throw+表达式，表达式的类型就是抛出的异常类型，必须加分号。<br>抛出异常终止当前函数，并把控制权转移给能处理该异常的代码。</p>
+<h4 id="try"><a href="#try" class="headerlink" title="try"></a>try</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">try</div><div class="line">&#123;</div><div class="line">    </div><div class="line">&#125;</div><div class="line">catch(runtime_error e)</div><div class="line">&#123;</div><div class="line">    std::cout &lt;&lt; e.what() &lt;&lt; &apos;\n&apos;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>try中发生异常中断执行，选中catch执行，之后跳转到最后一个catch子句之后那条语句。<br>try块与catch块独立作用域。</p>
+<p>寻找处理代码过程：搜索抛出异常的函数catch，没找到就终止函数。并向外继续寻找。最终没有匹配将转到terminate标准库函数。</p>
+<p>异常处理应该清理未完成工作。</p>
+<h4 id="标准异常"><a href="#标准异常" class="headerlink" title="标准异常"></a>标准异常</h4><p>每个标准库异常都定义了what成员函数。</p>
+<table>
+<thead>
+<tr>
+<th>标准异常类</th>
+<th>描述</th>
+<th>头文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exception</td>
+<td>最通用的异常类，只报告异常的发生而不提供任何额外的信息</td>
+<td>exception</td>
+</tr>
+<tr>
+<td>runtime_error</td>
+<td>只有在运行时才能检测出的错误</td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>rang_error</td>
+<td>运行时错误：产生了超出有意义值域范围的结果</td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>overflow_error</td>
+<td>运行时错误：计算上溢</td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>underflow_error</td>
+<td>运行时错误：计算下溢</td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>logic_error</td>
+<td>程序逻辑错误</td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>domain_error</td>
+<td>逻辑错误：参数对应的结果值不存在</td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>invalid_argument</td>
+<td>逻辑错误：无效参数</td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>length_error</td>
+<td>逻辑错误：试图创建一个超出该类型最大长度的对象</td>
+<td></td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>out_of_range</td>
+<td>逻辑错误：使用一个超出有效范围的值</td>
+<td>stdexcept</td>
+</tr>
+<tr>
+<td>bad_alloc</td>
+<td>内存动态分配错误</td>
+<td>new</td>
+</tr>
+<tr>
+<td>bad_cast</td>
+<td>dynamic_cast类型转换出错</td>
+<td>type_info</td>
+</tr>
+</tbody>
+</table>
+<p>只能默认初始化exception、bad_alloc、bad_cast。其它用string或c风格字串初始化。</p>
+<h2 id="反汇编"><a href="#反汇编" class="headerlink" title="反汇编"></a>反汇编</h2><p>RISC就是通过优化，选取最常用的指令，剔除了那些不太常用，却会大大增加运算器复杂程度的指令，使得运算器大幅度简化，这样就可以给每个寄存器配备一个独立的运算器。因此叫精简指令集</p>
+<p>Application：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">APP_STL := gnustl_static</div><div class="line">APP_OPTIM := debug</div><div class="line">APP_CPPFLAGS += -fexceptions</div></pre></td></tr></table></figure></p>
+<p>5.cpp:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line">#include&lt;vector&gt;</div><div class="line">#include&lt;exception&gt;</div><div class="line">#include&lt;iostream&gt;</div><div class="line">#include&lt;vector&gt;</div><div class="line">using std::vector;</div><div class="line">#include&lt;stdexcept&gt;</div><div class="line">using std::runtime_error;</div><div class="line">int f(int i)</div><div class="line">&#123;</div><div class="line">    </div><div class="line">    try</div><div class="line">    &#123;</div><div class="line">        throw runtime_error(&quot;12345&quot;);</div><div class="line">    &#125;</div><div class="line">    catch(char* e)</div><div class="line">    &#123;</div><div class="line">        std::cout &lt;&lt; &quot;f-catch&quot; &lt;&lt; &apos;\n&apos;;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line"></div><div class="line">    return 1;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char const *argv[])</div><div class="line">&#123;</div><div class="line">    int b=2;</div><div class="line">    //switch</div><div class="line">    switch(argc)</div><div class="line">    &#123;</div><div class="line">        case 0:</div><div class="line">        &#123;</div><div class="line">            int a=1;</div><div class="line">            break;</div><div class="line">        &#125;        </div><div class="line">        case 1:</div><div class="line">        &#123;</div><div class="line">           b=3;</div><div class="line">           break;</div><div class="line"></div><div class="line">        &#125;</div><div class="line">        default:</div><div class="line">            ;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //while内变量创建与销毁</div><div class="line">    while(b--)</div><div class="line">    &#123;</div><div class="line">        vector&lt;int&gt; v1(3);</div><div class="line">    </div><div class="line">        v1[0]=5;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //异常处理</div><div class="line">    try</div><div class="line">    &#123;</div><div class="line">         f(b);</div><div class="line">    &#125;</div><div class="line">    catch(runtime_error e)</div><div class="line">    &#123;</div><div class="line">        std::cerr &lt;&lt; e.what() &lt;&lt; &apos;\n&apos;;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line"></div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="X86-64"><a href="#X86-64" class="headerlink" title="X86-64"></a>X86-64</h3><h4 id="指令简记"><a href="#指令简记" class="headerlink" title="指令简记"></a>指令简记</h4><p>传参是di、si–更多见函数章节</p>
+<p>endp是过程结束</p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div></pre></td><td class="code"><pre><div class="line">.text:0000000000008020 ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:0000000000008020 main            proc near               ; DATA XREF: start+2E↑o</div><div class="line">.text:0000000000008020</div><div class="line">.text:0000000000008020 var_9C          = dword ptr -9Ch</div><div class="line">.text:0000000000008020 var_70          = qword ptr -70h</div><div class="line">.text:0000000000008020 var_64          = dword ptr -64h</div><div class="line">.text:0000000000008020 var_60          = dword ptr -60h</div><div class="line">.text:0000000000008020 var_5C          = dword ptr -5Ch</div><div class="line">.text:0000000000008020 var_58          = qword ptr -58h</div><div class="line">.text:0000000000008020 var_50          = dword ptr -50h</div><div class="line">.text:0000000000008020 var_4C          = dword ptr -4Ch</div><div class="line">.text:0000000000008020 var_48          = qword ptr -48h</div><div class="line">.text:0000000000008020 var_40          = dword ptr -40h</div><div class="line">.text:0000000000008020 var_3C          = dword ptr -3Ch</div><div class="line">.text:0000000000008020 var_28          = byte ptr -28h</div><div class="line">.text:0000000000008020 var_20          = byte ptr -20h</div><div class="line">.text:0000000000008020 var_8           = qword ptr -8</div><div class="line">.text:0000000000008020</div><div class="line">.text:0000000000008020 ; FUNCTION CHUNK AT .text:0000000000008204 SIZE 0000001E BYTES</div><div class="line">.text:0000000000008020</div><div class="line">.text:0000000000008020 ; __unwind &#123; // sub_9760</div><div class="line">//栈帧</div><div class="line">.text:0000000000008020                 push    rbp</div><div class="line">.text:0000000000008021                 mov     rbp, rsp</div><div class="line">.text:0000000000008024                 sub     rsp, 0A0h</div><div class="line">//溢出保护</div><div class="line">.text:000000000000802B                 mov     rax, fs:28h</div><div class="line">.text:0000000000008034                 mov     [rbp+var_8], rax</div><div class="line">.text:0000000000008038                 mov     [rbp+var_3C], 0</div><div class="line">//edi是argc</div><div class="line">.text:000000000000803F                 mov     [rbp+var_40], edi</div><div class="line">.text:0000000000008042                 mov     [rbp+var_48], rsi</div><div class="line">//int b=2;</div><div class="line">.text:0000000000008046                 mov     [rbp+var_4C], 2</div><div class="line"></div><div class="line">//switch(argc)</div><div class="line">.text:000000000000804D                 mov     edi, [rbp+var_40]</div><div class="line">.text:0000000000008050                 test    edi, edi</div><div class="line">.text:0000000000008052                 mov     [rbp+var_60], edi</div><div class="line">.text:0000000000008055                 jz      loc_8074</div><div class="line">.text:000000000000805B                 jmp     $+5</div><div class="line">.text:0000000000008060 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008060</div><div class="line"></div><div class="line">.text:0000000000008060 loc_8060:                               ; CODE XREF: main+3B↑j</div><div class="line">.text:0000000000008060                 mov     eax, [rbp+var_60]</div><div class="line">.text:0000000000008063                 sub     eax, 1</div><div class="line">.text:0000000000008066                 mov     [rbp+var_64], eax</div><div class="line">.text:0000000000008069                 jz      loc_8080 //case 1</div><div class="line">.text:000000000000806F                 jmp     loc_808C</div><div class="line">.text:0000000000008074 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008074</div><div class="line">//case 0</div><div class="line">.text:0000000000008074 loc_8074:                               ; CODE XREF: main+35↑j</div><div class="line">.text:0000000000008074                 mov     [rbp+var_50], 1</div><div class="line">.text:000000000000807B                 jmp     loc_8091</div><div class="line">.text:0000000000008080 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008080</div><div class="line">//case 1</div><div class="line">.text:0000000000008080 loc_8080:                               ; CODE XREF: main+49↑j</div><div class="line">.text:0000000000008080                 mov     [rbp+var_4C], 3</div><div class="line">.text:0000000000008087                 jmp     loc_8091</div><div class="line">.text:000000000000808C ; ---------------------------------------------------------------------------</div><div class="line">.text:000000000000808C</div><div class="line">//defult</div><div class="line">.text:000000000000808C loc_808C:                               ; CODE XREF: main+4F↑j</div><div class="line">.text:000000000000808C                 jmp     $+5</div><div class="line">.text:0000000000008091 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008091</div><div class="line">//switch出口</div><div class="line">.text:0000000000008091 loc_8091:                               ; CODE XREF: main+5B↑j</div><div class="line">.text:0000000000008091                                         ; main+67↑j ...</div><div class="line">.text:0000000000008091                 jmp     $+5</div><div class="line">.text:0000000000008096 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008096</div><div class="line">//while(b--)</div><div class="line">.text:0000000000008096 loc_8096:                               ; CODE XREF: main:loc_8091↑j</div><div class="line">.text:0000000000008096                                         ; main+D8↓j</div><div class="line">.text:0000000000008096                 mov     eax, [rbp+var_4C]</div><div class="line">.text:0000000000008099                 mov     ecx, eax</div><div class="line">//+(0-1)=-1</div><div class="line">.text:000000000000809B                 add     ecx, 0FFFFFFFFh</div><div class="line">.text:000000000000809E                 mov     [rbp+var_4C], ecx</div><div class="line">.text:00000000000080A1                 cmp     eax, 0</div><div class="line">.text:00000000000080A4                 jz      loc_8114</div><div class="line">.text:00000000000080AA                 lea     rax, [rbp+var_28]</div><div class="line">.text:00000000000080AE                 mov     rdi, rax</div><div class="line">.text:00000000000080B1                 mov     [rbp+var_70], rax</div><div class="line">.text:00000000000080B5                 call    sub_8230</div><div class="line">// vector&lt;int&gt; v1(3);</div><div class="line">.text:00000000000080BA                 mov     ecx, 3</div><div class="line">.text:00000000000080BF                 mov     esi, ecx</div><div class="line">.text:00000000000080C1                 lea     rdi, [rbp+var_20]</div><div class="line">.text:00000000000080C5                 mov     rdx, [rbp+var_70]</div><div class="line">.text:00000000000080C9                 call    sub_8250</div><div class="line"></div><div class="line">.text:00000000000080D3                 lea     rdi, [rbp+var_28]</div><div class="line">.text:00000000000080D7                 call    sub_82C0</div><div class="line"></div><div class="line">//v1[0]=5;  var_20是this，esi是0</div><div class="line">.text:00000000000080DC                 lea     rdi, [rbp+var_20]</div><div class="line">.text:00000000000080E0                 xor     eax, eax</div><div class="line">.text:00000000000080E2                 mov     esi, eax</div><div class="line">.text:00000000000080E4                 call    sub_82E0</div><div class="line"></div><div class="line">.text:00000000000080E9                 lea     rdi, [rbp+var_20]</div><div class="line">.text:00000000000080ED                 mov     dword ptr [rax], 5</div><div class="line">//析构？</div><div class="line">.text:00000000000080F3                 call    sub_8310</div><div class="line">.text:00000000000080F8                 jmp     loc_8096</div><div class="line">.text:00000000000080FD ; ---------------------------------------------------------------------------</div><div class="line">//这段并不会调用</div><div class="line">.text:00000000000080FD                 lea     rdi, [rbp+var_28]</div><div class="line">.text:0000000000008101                 mov     ecx, edx</div><div class="line">.text:0000000000008103                 mov     [rbp+var_58], rax</div><div class="line">.text:0000000000008107                 mov     [rbp+var_5C], ecx</div><div class="line">.text:000000000000810A                 call    sub_82C0</div><div class="line">.text:000000000000810F                 jmp     loc_8204</div><div class="line">.text:0000000000008114 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008114</div><div class="line">//while 出口</div><div class="line">.text:0000000000008114 loc_8114:                               ; CODE XREF: main+84↑j</div><div class="line">// f(b);</div><div class="line">.text:0000000000008114                 mov     edi, [rbp+var_4C]</div><div class="line">.text:0000000000008117                 call    sub_7EB0</div><div class="line">.text:000000000000811C ; ---------------------------------------------------------------------------</div><div class="line">.text:000000000000811C                 mov     [rbp-74h], eax</div><div class="line">.text:000000000000811F                 jmp     $+5</div><div class="line">.text:0000000000008124 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008124</div><div class="line">.text:0000000000008124 loc_8124:                               ; CODE XREF: .text:000000000000811F↑j</div><div class="line">.text:0000000000008124                 jmp     loc_81C2</div><div class="line">.text:0000000000008129 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008129                 mov     ecx, edx</div><div class="line">.text:000000000000812B                 mov     [rbp-58h], rax</div><div class="line">.text:000000000000812F                 mov     [rbp-5Ch], ecx</div><div class="line">.text:0000000000008132                 mov     eax, [rbp-5Ch]</div><div class="line">.text:0000000000008135                 mov     ecx, 1</div><div class="line">.text:000000000000813A                 cmp     eax, ecx</div><div class="line">.text:000000000000813C                 jnz     loc_8204</div><div class="line">.text:0000000000008142                 mov     rax, [rbp-58h]</div><div class="line">.text:0000000000008146                 mov     rdi, rax</div><div class="line">.text:0000000000008149                 mov     [rbp-80h], rax</div><div class="line">.text:000000000000814D                 call    sub_8F90</div><div class="line">.text:0000000000008152                 lea     rdi, [rbp-38h]</div><div class="line">.text:0000000000008156                 mov     rsi, rax</div><div class="line">.text:0000000000008159                 call    sub_8380</div><div class="line">.text:000000000000815E                 jmp     $+5</div><div class="line">.text:0000000000008163 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008163</div><div class="line">.text:0000000000008163 loc_8163:                               ; CODE XREF: .text:000000000000815E↑j</div><div class="line">.text:0000000000008163                 mov     rdi, [rbp-80h]</div><div class="line">.text:0000000000008167                 call    sub_8FA0</div><div class="line">.text:000000000000816C                 lea     rdi, [rbp-38h]</div><div class="line">.text:0000000000008170                 mov     [rbp-88h], rax</div><div class="line">.text:0000000000008177                 call    sub_1EA10</div><div class="line">.text:000000000000817C                 lea     rdi, unk_6AB80</div><div class="line">.text:0000000000008183                 mov     rsi, rax</div><div class="line">.text:0000000000008186                 call    sub_1E8F0</div><div class="line">.text:000000000000818B                 mov     [rbp-90h], rax</div><div class="line">.text:0000000000008192                 jmp     $+5</div><div class="line">.text:0000000000008197 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008197</div><div class="line">.text:0000000000008197 loc_8197:                               ; CODE XREF: .text:0000000000008192↑j</div><div class="line">.text:0000000000008197                 mov     esi, 0Ah</div><div class="line">.text:000000000000819C                 mov     rdi, [rbp-90h]</div><div class="line">.text:00000000000081A3                 call    sub_1E8D0</div><div class="line">.text:00000000000081A8                 mov     [rbp-98h], rax</div><div class="line">.text:00000000000081AF                 jmp     $+5</div><div class="line">.text:00000000000081B4 ; ---------------------------------------------------------------------------</div><div class="line">.text:00000000000081B4</div><div class="line">.text:00000000000081B4 loc_81B4:                               ; CODE XREF: .text:00000000000081AF↑j</div><div class="line">.text:00000000000081B4                 lea     rdi, [rbp-38h]</div><div class="line">.text:00000000000081B8                 call    sub_1EA90</div><div class="line">.text:00000000000081BD                 call    sub_9010</div><div class="line">.text:00000000000081C2</div><div class="line">.text:00000000000081C2 loc_81C2:                               ; CODE XREF: .text:loc_8124↑j</div><div class="line">.text:00000000000081C2                 mov     rax, fs:28h</div><div class="line">.text:00000000000081CB                 mov     rcx, [rbp-8]</div><div class="line">.text:00000000000081CF                 cmp     rax, rcx</div><div class="line">.text:00000000000081D2                 jnz     loc_821D</div><div class="line">.text:00000000000081D8                 xor     eax, eax</div><div class="line">.text:00000000000081DA                 add     rsp, 0A0h</div><div class="line">.text:00000000000081E1                 pop     rbp</div><div class="line">.text:00000000000081E2                 retn</div><div class="line">.text:00000000000081E3 ; ---------------------------------------------------------------------------</div><div class="line">.text:00000000000081E3                 mov     ecx, edx</div><div class="line">.text:00000000000081E5                 mov     [rbp-58h], rax</div><div class="line">.text:00000000000081E9                 mov     [rbp-5Ch], ecx</div><div class="line">.text:00000000000081EC                 lea     rdi, [rbp-38h]</div><div class="line">.text:00000000000081F0                 call    sub_1EA90</div><div class="line">.text:00000000000081F5                 call    sub_9010</div><div class="line">.text:00000000000081FA                 jmp     $+5</div><div class="line">.text:00000000000081FF ; ---------------------------------------------------------------------------</div><div class="line">.text:00000000000081FF</div><div class="line">.text:00000000000081FF loc_81FF:                               ; CODE XREF: .text:00000000000081FA↑j</div><div class="line">.text:00000000000081FF                 jmp     $+5</div><div class="line">.text:0000000000008204 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008204 ; START OF FUNCTION CHUNK FOR main</div><div class="line">.text:0000000000008204</div><div class="line">.text:0000000000008204 loc_8204:                               ; CODE XREF: main+EF↑j</div><div class="line">.text:0000000000008204                                         ; .text:000000000000813C↑j ...</div><div class="line">.text:0000000000008204                 mov     rdi, [rbp+var_58]</div><div class="line">.text:0000000000008208                 call    sub_43CCB</div><div class="line">.text:000000000000820D                 mov     ecx, edx</div><div class="line">.text:000000000000820F                 mov     rdi, rax</div><div class="line">.text:0000000000008212                 mov     [rbp+var_9C], ecx</div><div class="line">.text:0000000000008218                 call    sub_8410</div><div class="line">.text:000000000000821D ; ---------------------------------------------------------------------------</div><div class="line">.text:000000000000821D</div><div class="line">.text:000000000000821D loc_821D:                               ; CODE XREF: .text:00000000000081D2↑j</div><div class="line">.text:000000000000821D                 call    ___stack_chk_fail</div><div class="line">.text:000000000000821D ; &#125; // starts at 8020</div><div class="line">.text:000000000000821D ; END OF FUNCTION CHUNK FOR main</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div></pre></td><td class="code"><pre><div class="line">.text:0000000000007EB0 sub_7EB0        proc near               ; CODE XREF: main+F7↓p</div><div class="line">.text:0000000000007EB0</div><div class="line">.text:0000000000007EB0 var_50          = qword ptr -50h</div><div class="line">.text:0000000000007EB0 var_48          = qword ptr -48h</div><div class="line">.text:0000000000007EB0 var_40          = qword ptr -40h</div><div class="line">.text:0000000000007EB0 var_2D          = byte ptr -2Dh</div><div class="line">.text:0000000000007EB0 var_1C          = dword ptr -1Ch</div><div class="line">.text:0000000000007EB0 var_18          = byte ptr -18h</div><div class="line">.text:0000000000007EB0 var_10          = byte ptr -10h</div><div class="line">.text:0000000000007EB0 var_8           = qword ptr -8</div><div class="line">.text:0000000000007EB0</div><div class="line">.text:0000000000007EB0 ; __unwind &#123; // sub_9760</div><div class="line">.text:0000000000007EB0                 push    rbp</div><div class="line">.text:0000000000007EB1                 mov     rbp, rsp</div><div class="line">.text:0000000000007EB4                 sub     rsp, 60h</div><div class="line">.text:0000000000007EB8                 mov     rax, fs:28h</div><div class="line">.text:0000000000007EC1                 mov     [rbp+var_8], rax</div><div class="line">.text:0000000000007EC5                 mov     [rbp+var_1C], edi</div><div class="line"></div><div class="line"></div><div class="line">.text:0000000000007EC8                 mov     edi, 10h</div><div class="line">.text:0000000000007ECD                 call    sub_8DD0</div><div class="line">.text:0000000000007ED2                 mov     rdi, rax</div><div class="line">.text:0000000000007ED5                 mov     [rbp+var_2D], 1</div><div class="line">.text:0000000000007ED9                 lea     rcx, [rbp+var_18]</div><div class="line">.text:0000000000007EDD                 mov     [rbp+var_40], rdi</div><div class="line">.text:0000000000007EE1                 mov     rdi, rcx</div><div class="line">.text:0000000000007EE4                 mov     [rbp+var_48], rcx</div><div class="line">.text:0000000000007EE8                 mov     [rbp+var_50], rax</div><div class="line">.text:0000000000007EEC                 call    nullsub_3</div><div class="line">.text:0000000000007EF1                 lea     rsi, a12345     ; &quot;12345&quot;</div><div class="line">.text:0000000000007EF8                 lea     rdi, [rbp+var_10]</div><div class="line">.text:0000000000007EFC                 mov     rdx, [rbp+var_48]</div><div class="line">.text:0000000000007F00                 call    sub_30880</div><div class="line">.text:0000000000007F05                 jmp     $+5</div><div class="line">.text:0000000000007F0A ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F0A</div><div class="line">.text:0000000000007F0A loc_7F0A:                               ; CODE XREF: sub_7EB0+55↑j</div><div class="line">.text:0000000000007F0A                 lea     rsi, [rbp+var_10]</div><div class="line">.text:0000000000007F0E                 mov     rdi, [rbp+var_50]</div><div class="line">.text:0000000000007F12                 call    sub_1EEC0</div><div class="line">.text:0000000000007F17                 jmp     $+5</div><div class="line">.text:0000000000007F1C ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F1C</div><div class="line">.text:0000000000007F1C loc_7F1C:                               ; CODE XREF: sub_7EB0+67↑j</div><div class="line">.text:0000000000007F1C                 mov     [rbp+var_2D], 0</div><div class="line">.text:0000000000007F20                 lea     rsi, _ZTISt13runtime_error ; `typeinfo for&apos;std::runtime_error</div><div class="line">.text:0000000000007F27                 lea     rdx, sub_1EA90</div><div class="line">.text:0000000000007F2E                 mov     rdi, [rbp+var_40]</div><div class="line">.text:0000000000007F32                 call    sub_9F80</div><div class="line">.text:0000000000007F32 sub_7EB0        endp</div><div class="line">.text:0000000000007F32</div><div class="line">.text:0000000000007F37 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F37                 jmp     loc_800F</div><div class="line">.text:0000000000007F3C ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F3C                 mov     ecx, edx</div><div class="line">.text:0000000000007F3E                 mov     [rbp-28h], rax</div><div class="line">.text:0000000000007F42                 mov     [rbp-2Ch], ecx</div><div class="line">.text:0000000000007F45                 jmp     loc_7F5C</div><div class="line">.text:0000000000007F4A ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F4A                 lea     rdi, [rbp-10h]</div><div class="line">.text:0000000000007F4E                 mov     ecx, edx</div><div class="line">.text:0000000000007F50                 mov     [rbp-28h], rax</div><div class="line">.text:0000000000007F54                 mov     [rbp-2Ch], ecx</div><div class="line">.text:0000000000007F57                 call    sub_30A90</div><div class="line">.text:0000000000007F5C</div><div class="line">.text:0000000000007F5C loc_7F5C:                               ; CODE XREF: .text:0000000000007F45↑j</div><div class="line">.text:0000000000007F5C                 lea     rdi, [rbp-18h]</div><div class="line">.text:0000000000007F60                 call    nullsub_4</div><div class="line">.text:0000000000007F65                 test    byte ptr [rbp-2Dh], 1</div><div class="line">.text:0000000000007F69                 jnz     loc_7F74</div><div class="line">.text:0000000000007F6F                 jmp     loc_7F7D</div><div class="line">.text:0000000000007F74 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F74</div><div class="line">.text:0000000000007F74 loc_7F74:                               ; CODE XREF: .text:0000000000007F69↑j</div><div class="line">.text:0000000000007F74                 mov     rdi, [rbp-40h]</div><div class="line">.text:0000000000007F78                 call    sub_8EC0</div><div class="line">.text:0000000000007F7D</div><div class="line">.text:0000000000007F7D loc_7F7D:                               ; CODE XREF: .text:0000000000007F6F↑j</div><div class="line">.text:0000000000007F7D                 jmp     $+5</div><div class="line">.text:0000000000007F82 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F82</div><div class="line">.text:0000000000007F82 loc_7F82:                               ; CODE XREF: .text:loc_7F7D↑j</div><div class="line">.text:0000000000007F82                 mov     eax, [rbp-2Ch]</div><div class="line">.text:0000000000007F85                 mov     ecx, 1</div><div class="line">.text:0000000000007F8A                 cmp     eax, ecx</div><div class="line">.text:0000000000007F8C                 jnz     loc_8006</div><div class="line">.text:0000000000007F92                 mov     rdi, [rbp-28h]</div><div class="line">.text:0000000000007F96                 call    sub_8FA0</div><div class="line">.text:0000000000007F9B                 mov     [rbp-38h], rax</div><div class="line">.text:0000000000007F9F                 lea     rdi, unk_6ACC0</div><div class="line">.text:0000000000007FA6                 lea     rsi, aFCatch    ; &quot;f-catch&quot;</div><div class="line">.text:0000000000007FAD                 call    sub_1E8F0</div><div class="line">.text:0000000000007FB2                 mov     [rbp-58h], rax</div><div class="line">.text:0000000000007FB6                 jmp     $+5</div><div class="line">.text:0000000000007FBB ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007FBB</div><div class="line">.text:0000000000007FBB loc_7FBB:                               ; CODE XREF: .text:0000000000007FB6↑j</div><div class="line">.text:0000000000007FBB                 mov     esi, 0Ah</div><div class="line">.text:0000000000007FC0                 mov     rdi, [rbp-58h]</div><div class="line">.text:0000000000007FC4                 call    sub_1E8D0</div><div class="line">.text:0000000000007FC9                 mov     [rbp-60h], rax</div><div class="line">.text:0000000000007FCD                 jmp     $+5</div><div class="line">.text:0000000000007FD2 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007FD2</div><div class="line">.text:0000000000007FD2 loc_7FD2:                               ; CODE XREF: .text:0000000000007FCD↑j</div><div class="line">.text:0000000000007FD2                 call    sub_9010</div><div class="line">.text:0000000000007FD7                 mov     rax, fs:28h</div><div class="line">.text:0000000000007FE0                 mov     rcx, [rbp-8]</div><div class="line">.text:0000000000007FE4                 cmp     rax, rcx</div><div class="line">.text:0000000000007FE7                 jnz     loc_800F</div><div class="line">.text:0000000000007FED                 mov     eax, 1</div><div class="line">.text:0000000000007FF2                 add     rsp, 60h</div><div class="line">.text:0000000000007FF6                 pop     rbp</div><div class="line">.text:0000000000007FF7                 retn</div><div class="line">.text:0000000000007FF8 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007FF8                 mov     ecx, edx</div><div class="line">.text:0000000000007FFA                 mov     [rbp-28h], rax</div><div class="line">.text:0000000000007FFE                 mov     [rbp-2Ch], ecx</div><div class="line">.text:0000000000008001                 call    sub_9010</div><div class="line">.text:0000000000008006</div><div class="line">.text:0000000000008006 loc_8006:                               ; CODE XREF: .text:0000000000007F8C↑j</div><div class="line">.text:0000000000008006                 mov     rdi, [rbp-28h]</div><div class="line">.text:000000000000800A                 call    sub_43CCB</div><div class="line">.text:000000000000800F</div><div class="line">.text:000000000000800F loc_800F:                               ; CODE XREF: .text:0000000000007F37↑j</div><div class="line">.text:000000000000800F                                         ; .text:0000000000007FE7↑j</div><div class="line">.text:000000000000800F                 call    ___stack_chk_fail</div><div class="line">.text:000000000000800F ; &#125; // starts at 7EB0</div></pre></td></tr></table></figure>
+<p>if语句汇编效果为:不满足就跳过<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">jxx A</div><div class="line">    if语句块</div><div class="line">A:</div></pre></td></tr></table></figure></p>
+<p>if else语句的汇编效果为:在if块后多加个jmp跳出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">jxx ELSE_B</div><div class="line">    if块</div><div class="line">    jmp END</div><div class="line">ELSE_B</div><div class="line">    else块</div><div class="line">ELSE_E</div><div class="line">END</div></pre></td></tr></table></figure></p>
+<p>else if汇编:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">jxx ELSE_B</div><div class="line">    if块</div><div class="line">    jmp END</div><div class="line">ELSE_B</div><div class="line">    jxx ELSE_B2</div><div class="line">        else if块</div><div class="line">        jmp END</div><div class="line">    ELSE_B2</div><div class="line">        else块</div><div class="line">    ELSE_E2</div><div class="line">ELSE_E</div><div class="line">END</div></pre></td></tr></table></figure></p>
+<p>可见多重条件分支就是else内嵌套。从编译时语法处理看，BNF表示就俩种if语句:条件  true语句  | 条件 true语句  false语句<br>语句可以又是if语句，因此按bnf解析else if将被解析为else的语句是if语句，if语句可以含或不含else，因此最后加不加else都可以。默认先移进，因此else匹配最近的if。<br>构造AST后生成的代码依旧按左到右对应语句的顺序，因此生成的汇编代码如上。分支的基本单位是语句块,只要确定语句块的出入口就可以确定分支。此后就是高中的流程图分析了</p>
+<p>关于switch的汇编：<br>不同于if，所有的case语句块是连在一起的，为了实现语法要求不加break可以继续执行。因此前面依次判断条件跳转。根据条件数字结构不同，可以有:</p>
+<ol>
+<li>case数量小时，直接依次cmp判断，此时效率不如if</li>
+<li>线性且连续时，case地址放于数组中，用下标间接跳转。</li>
+<li>线性且差不太大时，俩个表，地址表存case地址，索引表存地址表下标，内容小、因此索引表可以大点。间接俩次</li>
+<li>差值大时，采用平衡二叉树，采用编译好的连续cmp+跳转实现</li>
+</ol>
+<p>优化时，当子树的叶子节点不大于3时，会编译为ifelse结构而不平衡。当子树可以有1、2、3、4中优化措施时，将对子树采用以上的编译方式。因此判断分发部分常常是混合使用的，case部分是连续的始终。</p>
+<p>函数的块内作用域都是编译器负责检查的，统一分配在栈中实际</p>
+<p>do-while:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">A</div><div class="line">    循环块</div><div class="line">jxx A</div></pre></td></tr></table></figure></p>
+<p>while:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">A:</div><div class="line">jxx END</div><div class="line">    循环块</div><div class="line">    jmp A</div><div class="line">END</div></pre></td></tr></table></figure></p>
+<p>for:实际上ndk编译for的结果与while一样，把计算步长放到jmp B前了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">初始化</div><div class="line">jmp A</div><div class="line">B:</div><div class="line">    步长计算</div><div class="line">A:</div><div class="line">    cmp</div><div class="line">    jxx END</div><div class="line">    循环块</div><div class="line">    jmp B</div><div class="line">END</div></pre></td></tr></table></figure></p>
+<p>计算效率dowhile&gt;while&gt;=for。</p>
+<p>异常处理部分暂时看不懂….收集了一些资料，在18章中深入进行分析….<br>一篇不错的文章：<br><a href="https://monoinfinito.wordpress.com/series/exception-handling-in-c/" target="_blank" rel="external">https://monoinfinito.wordpress.com/series/exception-handling-in-c/</a><br>window下c++的异常机制-比较专业的文档：<br><a href="http://www.ecice06.com/CN/article/downloadArticleFile.do?attachType=PDF&amp;id=10631" target="_blank" rel="external">http://www.ecice06.com/CN/article/downloadArticleFile.do?attachType=PDF&amp;id=10631</a></p>
+<h3 id="ARM64"><a href="#ARM64" class="headerlink" title="ARM64"></a>ARM64</h3><h4 id="指令简记-1"><a href="#指令简记-1" class="headerlink" title="指令简记"></a>指令简记</h4><h4 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div></pre></td><td class="code"><pre><div class="line">.text:0000000000008020 ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:0000000000008020 main            proc near               ; DATA XREF: start+2E↑o</div><div class="line">.text:0000000000008020</div><div class="line">.text:0000000000008020 var_9C          = dword ptr -9Ch</div><div class="line">.text:0000000000008020 var_70          = qword ptr -70h</div><div class="line">.text:0000000000008020 var_64          = dword ptr -64h</div><div class="line">.text:0000000000008020 var_60          = dword ptr -60h</div><div class="line">.text:0000000000008020 var_5C          = dword ptr -5Ch</div><div class="line">.text:0000000000008020 var_58          = qword ptr -58h</div><div class="line">.text:0000000000008020 var_50          = dword ptr -50h</div><div class="line">.text:0000000000008020 var_4C          = dword ptr -4Ch</div><div class="line">.text:0000000000008020 var_48          = qword ptr -48h</div><div class="line">.text:0000000000008020 var_40          = dword ptr -40h</div><div class="line">.text:0000000000008020 var_3C          = dword ptr -3Ch</div><div class="line">.text:0000000000008020 var_28          = byte ptr -28h</div><div class="line">.text:0000000000008020 var_20          = byte ptr -20h</div><div class="line">.text:0000000000008020 var_8           = qword ptr -8</div><div class="line">.text:0000000000008020</div><div class="line">.text:0000000000008020 ; FUNCTION CHUNK AT .text:0000000000008204 SIZE 0000001E BYTES</div><div class="line">.text:0000000000008020</div><div class="line">.text:0000000000008020 ; __unwind &#123; // sub_9760</div><div class="line">.text:0000000000008020                 push    rbp</div><div class="line">.text:0000000000008021                 mov     rbp, rsp</div><div class="line">.text:0000000000008024                 sub     rsp, 0A0h</div><div class="line">.text:000000000000802B                 mov     rax, fs:28h</div><div class="line">.text:0000000000008034                 mov     [rbp+var_8], rax</div><div class="line">.text:0000000000008038                 mov     [rbp+var_3C], 0</div><div class="line">.text:000000000000803F                 mov     [rbp+var_40], edi</div><div class="line">.text:0000000000008042                 mov     [rbp+var_48], rsi</div><div class="line">.text:0000000000008046                 mov     [rbp+var_4C], 2</div><div class="line">.text:000000000000804D                 mov     edi, [rbp+var_40]</div><div class="line">.text:0000000000008050                 test    edi, edi</div><div class="line">.text:0000000000008052                 mov     [rbp+var_60], edi</div><div class="line">.text:0000000000008055                 jz      loc_8074</div><div class="line">.text:000000000000805B                 jmp     $+5</div><div class="line">.text:0000000000008060 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008060</div><div class="line">.text:0000000000008060 loc_8060:                               ; CODE XREF: main+3B↑j</div><div class="line">.text:0000000000008060                 mov     eax, [rbp+var_60]</div><div class="line">.text:0000000000008063                 sub     eax, 1</div><div class="line">.text:0000000000008066                 mov     [rbp+var_64], eax</div><div class="line">.text:0000000000008069                 jz      loc_8080</div><div class="line">.text:000000000000806F                 jmp     loc_808C</div><div class="line">.text:0000000000008074 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008074</div><div class="line">.text:0000000000008074 loc_8074:                               ; CODE XREF: main+35↑j</div><div class="line">.text:0000000000008074                 mov     [rbp+var_50], 1</div><div class="line">.text:000000000000807B                 jmp     loc_8091</div><div class="line">.text:0000000000008080 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008080</div><div class="line">.text:0000000000008080 loc_8080:                               ; CODE XREF: main+49↑j</div><div class="line">.text:0000000000008080                 mov     [rbp+var_4C], 3</div><div class="line">.text:0000000000008087                 jmp     loc_8091</div><div class="line">.text:000000000000808C ; ---------------------------------------------------------------------------</div><div class="line">.text:000000000000808C</div><div class="line">.text:000000000000808C loc_808C:                               ; CODE XREF: main+4F↑j</div><div class="line">.text:000000000000808C                 jmp     $+5</div><div class="line">.text:0000000000008091 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008091</div><div class="line">.text:0000000000008091 loc_8091:                               ; CODE XREF: main+5B↑j</div><div class="line">.text:0000000000008091                                         ; main+67↑j ...</div><div class="line">.text:0000000000008091                 jmp     $+5</div><div class="line">.text:0000000000008096 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008096</div><div class="line">.text:0000000000008096 loc_8096:                               ; CODE XREF: main:loc_8091↑j</div><div class="line">.text:0000000000008096                                         ; main+D8↓j</div><div class="line">.text:0000000000008096                 mov     eax, [rbp+var_4C]</div><div class="line">.text:0000000000008099                 mov     ecx, eax</div><div class="line">.text:000000000000809B                 add     ecx, 0FFFFFFFFh</div><div class="line">.text:000000000000809E                 mov     [rbp+var_4C], ecx</div><div class="line">.text:00000000000080A1                 cmp     eax, 0</div><div class="line">.text:00000000000080A4                 jz      loc_8114</div><div class="line">.text:00000000000080AA                 lea     rax, [rbp+var_28]</div><div class="line">.text:00000000000080AE                 mov     rdi, rax</div><div class="line">.text:00000000000080B1                 mov     [rbp+var_70], rax</div><div class="line">.text:00000000000080B5                 call    sub_8230</div><div class="line">.text:00000000000080BA                 mov     ecx, 3</div><div class="line">.text:00000000000080BF                 mov     esi, ecx</div><div class="line">.text:00000000000080C1                 lea     rdi, [rbp+var_20]</div><div class="line">.text:00000000000080C5                 mov     rdx, [rbp+var_70]</div><div class="line">.text:00000000000080C9                 call    sub_8250</div><div class="line">.text:00000000000080CE                 jmp     $+5</div><div class="line">.text:00000000000080D3 ; ---------------------------------------------------------------------------</div><div class="line">.text:00000000000080D3</div><div class="line">.text:00000000000080D3 loc_80D3:                               ; CODE XREF: main+AE↑j</div><div class="line">.text:00000000000080D3                 lea     rdi, [rbp+var_28]</div><div class="line">.text:00000000000080D7                 call    sub_82C0</div><div class="line">.text:00000000000080DC                 lea     rdi, [rbp+var_20]</div><div class="line">.text:00000000000080E0                 xor     eax, eax</div><div class="line">.text:00000000000080E2                 mov     esi, eax</div><div class="line">.text:00000000000080E4                 call    sub_82E0</div><div class="line">.text:00000000000080E9                 lea     rdi, [rbp+var_20]</div><div class="line">.text:00000000000080ED                 mov     dword ptr [rax], 5</div><div class="line">.text:00000000000080F3                 call    sub_8310</div><div class="line">.text:00000000000080F8                 jmp     loc_8096</div><div class="line">.text:00000000000080FD ; ---------------------------------------------------------------------------</div><div class="line">.text:00000000000080FD                 lea     rdi, [rbp+var_28]</div><div class="line">.text:0000000000008101                 mov     ecx, edx</div><div class="line">.text:0000000000008103                 mov     [rbp+var_58], rax</div><div class="line">.text:0000000000008107                 mov     [rbp+var_5C], ecx</div><div class="line">.text:000000000000810A                 call    sub_82C0</div><div class="line">.text:000000000000810F                 jmp     loc_8204</div><div class="line">.text:0000000000008114 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008114</div><div class="line">.text:0000000000008114 loc_8114:                               ; CODE XREF: main+84↑j</div><div class="line">.text:0000000000008114                 mov     edi, [rbp+var_4C]</div><div class="line">.text:0000000000008117                 call    sub_7EB0</div><div class="line">.text:0000000000008117 main            endp</div><div class="line">.text:0000000000008117</div><div class="line">.text:000000000000811C ; ---------------------------------------------------------------------------</div><div class="line">.text:000000000000811C                 mov     [rbp-74h], eax</div><div class="line">.text:000000000000811F                 jmp     $+5</div><div class="line">.text:0000000000008124 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008124</div><div class="line">.text:0000000000008124 loc_8124:                               ; CODE XREF: .text:000000000000811F↑j</div><div class="line">.text:0000000000008124                 jmp     loc_81C2</div><div class="line">.text:0000000000008129 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008129                 mov     ecx, edx</div><div class="line">.text:000000000000812B                 mov     [rbp-58h], rax</div><div class="line">.text:000000000000812F                 mov     [rbp-5Ch], ecx</div><div class="line">.text:0000000000008132                 mov     eax, [rbp-5Ch]</div><div class="line">.text:0000000000008135                 mov     ecx, 1</div><div class="line">.text:000000000000813A                 cmp     eax, ecx</div><div class="line">.text:000000000000813C                 jnz     loc_8204</div><div class="line">.text:0000000000008142                 mov     rax, [rbp-58h]</div><div class="line">.text:0000000000008146                 mov     rdi, rax</div><div class="line">.text:0000000000008149                 mov     [rbp-80h], rax</div><div class="line">.text:000000000000814D                 call    sub_8F90</div><div class="line">.text:0000000000008152                 lea     rdi, [rbp-38h]</div><div class="line">.text:0000000000008156                 mov     rsi, rax</div><div class="line">.text:0000000000008159                 call    sub_8380</div><div class="line">.text:000000000000815E                 jmp     $+5</div><div class="line">.text:0000000000008163 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008163</div><div class="line">.text:0000000000008163 loc_8163:                               ; CODE XREF: .text:000000000000815E↑j</div><div class="line">.text:0000000000008163                 mov     rdi, [rbp-80h]</div><div class="line">.text:0000000000008167                 call    sub_8FA0</div><div class="line">.text:000000000000816C                 lea     rdi, [rbp-38h]</div><div class="line">.text:0000000000008170                 mov     [rbp-88h], rax</div><div class="line">.text:0000000000008177                 call    sub_1EA10</div><div class="line">.text:000000000000817C                 lea     rdi, unk_6AB80</div><div class="line">.text:0000000000008183                 mov     rsi, rax</div><div class="line">.text:0000000000008186                 call    sub_1E8F0</div><div class="line">.text:000000000000818B                 mov     [rbp-90h], rax</div><div class="line">.text:0000000000008192                 jmp     $+5</div><div class="line">.text:0000000000008197 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008197</div><div class="line">.text:0000000000008197 loc_8197:                               ; CODE XREF: .text:0000000000008192↑j</div><div class="line">.text:0000000000008197                 mov     esi, 0Ah</div><div class="line">.text:000000000000819C                 mov     rdi, [rbp-90h]</div><div class="line">.text:00000000000081A3                 call    sub_1E8D0</div><div class="line">.text:00000000000081A8                 mov     [rbp-98h], rax</div><div class="line">.text:00000000000081AF                 jmp     $+5</div><div class="line">.text:00000000000081B4 ; ---------------------------------------------------------------------------</div><div class="line">.text:00000000000081B4</div><div class="line">.text:00000000000081B4 loc_81B4:                               ; CODE XREF: .text:00000000000081AF↑j</div><div class="line">.text:00000000000081B4                 lea     rdi, [rbp-38h]</div><div class="line">.text:00000000000081B8                 call    sub_1EA90</div><div class="line">.text:00000000000081BD                 call    sub_9010</div><div class="line">.text:00000000000081C2</div><div class="line">.text:00000000000081C2 loc_81C2:                               ; CODE XREF: .text:loc_8124↑j</div><div class="line">.text:00000000000081C2                 mov     rax, fs:28h</div><div class="line">.text:00000000000081CB                 mov     rcx, [rbp-8]</div><div class="line">.text:00000000000081CF                 cmp     rax, rcx</div><div class="line">.text:00000000000081D2                 jnz     loc_821D</div><div class="line">.text:00000000000081D8                 xor     eax, eax</div><div class="line">.text:00000000000081DA                 add     rsp, 0A0h</div><div class="line">.text:00000000000081E1                 pop     rbp</div><div class="line">.text:00000000000081E2                 retn</div><div class="line">.text:00000000000081E3 ; ---------------------------------------------------------------------------</div><div class="line">.text:00000000000081E3                 mov     ecx, edx</div><div class="line">.text:00000000000081E5                 mov     [rbp-58h], rax</div><div class="line">.text:00000000000081E9                 mov     [rbp-5Ch], ecx</div><div class="line">.text:00000000000081EC                 lea     rdi, [rbp-38h]</div><div class="line">.text:00000000000081F0                 call    sub_1EA90</div><div class="line">.text:00000000000081F5                 call    sub_9010</div><div class="line">.text:00000000000081FA                 jmp     $+5</div><div class="line">.text:00000000000081FF ; ---------------------------------------------------------------------------</div><div class="line">.text:00000000000081FF</div><div class="line">.text:00000000000081FF loc_81FF:                               ; CODE XREF: .text:00000000000081FA↑j</div><div class="line">.text:00000000000081FF                 jmp     $+5</div><div class="line">.text:0000000000008204 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008204 ; START OF FUNCTION CHUNK FOR main</div><div class="line">.text:0000000000008204</div><div class="line">.text:0000000000008204 loc_8204:                               ; CODE XREF: main+EF↑j</div><div class="line">.text:0000000000008204                                         ; .text:000000000000813C↑j ...</div><div class="line">.text:0000000000008204                 mov     rdi, [rbp+var_58]</div><div class="line">.text:0000000000008208                 call    sub_43CCB</div><div class="line">.text:000000000000820D                 mov     ecx, edx</div><div class="line">.text:000000000000820F                 mov     rdi, rax</div><div class="line">.text:0000000000008212                 mov     [rbp+var_9C], ecx</div><div class="line">.text:0000000000008218                 call    sub_8410</div><div class="line">.text:000000000000821D ; ---------------------------------------------------------------------------</div><div class="line">.text:000000000000821D</div><div class="line">.text:000000000000821D loc_821D:                               ; CODE XREF: .text:00000000000081D2↑j</div><div class="line">.text:000000000000821D                 call    ___stack_chk_fail</div><div class="line">.text:000000000000821D ; &#125; // starts at 8020</div><div class="line">.text:000000000000821D ; END OF FUNCTION CHUNK FOR main</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div></pre></td><td class="code"><pre><div class="line">.text:0000000000007EB0 sub_7EB0        proc near               ; CODE XREF: main+F7↓p</div><div class="line">.text:0000000000007EB0</div><div class="line">.text:0000000000007EB0 var_50          = qword ptr -50h</div><div class="line">.text:0000000000007EB0 var_48          = qword ptr -48h</div><div class="line">.text:0000000000007EB0 var_40          = qword ptr -40h</div><div class="line">.text:0000000000007EB0 var_2D          = byte ptr -2Dh</div><div class="line">.text:0000000000007EB0 var_1C          = dword ptr -1Ch</div><div class="line">.text:0000000000007EB0 var_18          = byte ptr -18h</div><div class="line">.text:0000000000007EB0 var_10          = byte ptr -10h</div><div class="line">.text:0000000000007EB0 var_8           = qword ptr -8</div><div class="line">.text:0000000000007EB0</div><div class="line">.text:0000000000007EB0 ; __unwind &#123; // sub_9760</div><div class="line">.text:0000000000007EB0                 push    rbp</div><div class="line">.text:0000000000007EB1                 mov     rbp, rsp</div><div class="line">.text:0000000000007EB4                 sub     rsp, 60h</div><div class="line">.text:0000000000007EB8                 mov     rax, fs:28h</div><div class="line">.text:0000000000007EC1                 mov     [rbp+var_8], rax</div><div class="line">.text:0000000000007EC5                 mov     [rbp+var_1C], edi</div><div class="line">.text:0000000000007EC8                 mov     edi, 10h</div><div class="line">.text:0000000000007ECD                 call    sub_8DD0</div><div class="line">.text:0000000000007ED2                 mov     rdi, rax</div><div class="line">.text:0000000000007ED5                 mov     [rbp+var_2D], 1</div><div class="line">.text:0000000000007ED9                 lea     rcx, [rbp+var_18]</div><div class="line">.text:0000000000007EDD                 mov     [rbp+var_40], rdi</div><div class="line">.text:0000000000007EE1                 mov     rdi, rcx</div><div class="line">.text:0000000000007EE4                 mov     [rbp+var_48], rcx</div><div class="line">.text:0000000000007EE8                 mov     [rbp+var_50], rax</div><div class="line">.text:0000000000007EEC                 call    nullsub_3</div><div class="line">.text:0000000000007EF1                 lea     rsi, a12345     ; &quot;12345&quot;</div><div class="line">.text:0000000000007EF8                 lea     rdi, [rbp+var_10]</div><div class="line">.text:0000000000007EFC                 mov     rdx, [rbp+var_48]</div><div class="line">.text:0000000000007F00                 call    sub_30880</div><div class="line">.text:0000000000007F05                 jmp     $+5</div><div class="line">.text:0000000000007F0A ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F0A</div><div class="line">.text:0000000000007F0A loc_7F0A:                               ; CODE XREF: sub_7EB0+55↑j</div><div class="line">.text:0000000000007F0A                 lea     rsi, [rbp+var_10]</div><div class="line">.text:0000000000007F0E                 mov     rdi, [rbp+var_50]</div><div class="line">.text:0000000000007F12                 call    sub_1EEC0</div><div class="line">.text:0000000000007F17                 jmp     $+5</div><div class="line">.text:0000000000007F1C ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F1C</div><div class="line">.text:0000000000007F1C loc_7F1C:                               ; CODE XREF: sub_7EB0+67↑j</div><div class="line">.text:0000000000007F1C                 mov     [rbp+var_2D], 0</div><div class="line">.text:0000000000007F20                 lea     rsi, _ZTISt13runtime_error ; `typeinfo for&apos;std::runtime_error</div><div class="line">.text:0000000000007F27                 lea     rdx, sub_1EA90</div><div class="line">.text:0000000000007F2E                 mov     rdi, [rbp+var_40]</div><div class="line">.text:0000000000007F32                 call    sub_9F80</div><div class="line">.text:0000000000007F32 sub_7EB0        endp</div><div class="line">.text:0000000000007F32</div><div class="line">.text:0000000000007F37 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F37                 jmp     loc_800F</div><div class="line">.text:0000000000007F3C ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F3C                 mov     ecx, edx</div><div class="line">.text:0000000000007F3E                 mov     [rbp-28h], rax</div><div class="line">.text:0000000000007F42                 mov     [rbp-2Ch], ecx</div><div class="line">.text:0000000000007F45                 jmp     loc_7F5C</div><div class="line">.text:0000000000007F4A ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F4A                 lea     rdi, [rbp-10h]</div><div class="line">.text:0000000000007F4E                 mov     ecx, edx</div><div class="line">.text:0000000000007F50                 mov     [rbp-28h], rax</div><div class="line">.text:0000000000007F54                 mov     [rbp-2Ch], ecx</div><div class="line">.text:0000000000007F57                 call    sub_30A90</div><div class="line">.text:0000000000007F5C</div><div class="line">.text:0000000000007F5C loc_7F5C:                               ; CODE XREF: .text:0000000000007F45↑j</div><div class="line">.text:0000000000007F5C                 lea     rdi, [rbp-18h]</div><div class="line">.text:0000000000007F60                 call    nullsub_4</div><div class="line">.text:0000000000007F65                 test    byte ptr [rbp-2Dh], 1</div><div class="line">.text:0000000000007F69                 jnz     loc_7F74</div><div class="line">.text:0000000000007F6F                 jmp     loc_7F7D</div><div class="line">.text:0000000000007F74 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F74</div><div class="line">.text:0000000000007F74 loc_7F74:                               ; CODE XREF: .text:0000000000007F69↑j</div><div class="line">.text:0000000000007F74                 mov     rdi, [rbp-40h]</div><div class="line">.text:0000000000007F78                 call    sub_8EC0</div><div class="line">.text:0000000000007F7D</div><div class="line">.text:0000000000007F7D loc_7F7D:                               ; CODE XREF: .text:0000000000007F6F↑j</div><div class="line">.text:0000000000007F7D                 jmp     $+5</div><div class="line">.text:0000000000007F82 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007F82</div><div class="line">.text:0000000000007F82 loc_7F82:                               ; CODE XREF: .text:loc_7F7D↑j</div><div class="line">.text:0000000000007F82                 mov     eax, [rbp-2Ch]</div><div class="line">.text:0000000000007F85                 mov     ecx, 1</div><div class="line">.text:0000000000007F8A                 cmp     eax, ecx</div><div class="line">.text:0000000000007F8C                 jnz     loc_8006</div><div class="line">.text:0000000000007F92                 mov     rdi, [rbp-28h]</div><div class="line">.text:0000000000007F96                 call    sub_8FA0</div><div class="line">.text:0000000000007F9B                 mov     [rbp-38h], rax</div><div class="line">.text:0000000000007F9F                 lea     rdi, unk_6ACC0</div><div class="line">.text:0000000000007FA6                 lea     rsi, aFCatch    ; &quot;f-catch&quot;</div><div class="line">.text:0000000000007FAD                 call    sub_1E8F0</div><div class="line">.text:0000000000007FB2                 mov     [rbp-58h], rax</div><div class="line">.text:0000000000007FB6                 jmp     $+5</div><div class="line">.text:0000000000007FBB ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007FBB</div><div class="line">.text:0000000000007FBB loc_7FBB:                               ; CODE XREF: .text:0000000000007FB6↑j</div><div class="line">.text:0000000000007FBB                 mov     esi, 0Ah</div><div class="line">.text:0000000000007FC0                 mov     rdi, [rbp-58h]</div><div class="line">.text:0000000000007FC4                 call    sub_1E8D0</div><div class="line">.text:0000000000007FC9                 mov     [rbp-60h], rax</div><div class="line">.text:0000000000007FCD                 jmp     $+5</div><div class="line">.text:0000000000007FD2 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007FD2</div><div class="line">.text:0000000000007FD2 loc_7FD2:                               ; CODE XREF: .text:0000000000007FCD↑j</div><div class="line">.text:0000000000007FD2                 call    sub_9010</div><div class="line">.text:0000000000007FD7                 mov     rax, fs:28h</div><div class="line">.text:0000000000007FE0                 mov     rcx, [rbp-8]</div><div class="line">.text:0000000000007FE4                 cmp     rax, rcx</div><div class="line">.text:0000000000007FE7                 jnz     loc_800F</div><div class="line">.text:0000000000007FED                 mov     eax, 1</div><div class="line">.text:0000000000007FF2                 add     rsp, 60h</div><div class="line">.text:0000000000007FF6                 pop     rbp</div><div class="line">.text:0000000000007FF7                 retn</div><div class="line">.text:0000000000007FF8 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007FF8                 mov     ecx, edx</div><div class="line">.text:0000000000007FFA                 mov     [rbp-28h], rax</div><div class="line">.text:0000000000007FFE                 mov     [rbp-2Ch], ecx</div><div class="line">.text:0000000000008001                 call    sub_9010</div><div class="line">.text:0000000000008006</div><div class="line">.text:0000000000008006 loc_8006:                               ; CODE XREF: .text:0000000000007F8C↑j</div><div class="line">.text:0000000000008006                 mov     rdi, [rbp-28h]</div><div class="line">.text:000000000000800A                 call    sub_43CCB</div><div class="line">.text:000000000000800F</div><div class="line">.text:000000000000800F loc_800F:                               ; CODE XREF: .text:0000000000007F37↑j</div><div class="line">.text:000000000000800F                                         ; .text:0000000000007FE7↑j</div><div class="line">.text:000000000000800F                 call    ___stack_chk_fail</div><div class="line">.text:000000000000800F ; &#125; // starts at 7EB0</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+          
+            <a href="/tags/反汇编/" rel="tag"># 反汇编</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/26/cpp学习-第四章-表达式/" rel="next" title="cpp学习-第四章-表达式">
+                <i class="fa fa-chevron-left"></i> cpp学习-第四章-表达式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">86</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">76</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#try-catch"><span class="nav-number">1.1.</span> <span class="nav-text">try-catch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#throw"><span class="nav-number">1.1.1.</span> <span class="nav-text">throw</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#try"><span class="nav-number">1.1.2.</span> <span class="nav-text">try</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标准异常"><span class="nav-number">1.1.3.</span> <span class="nav-text">标准异常</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反汇编"><span class="nav-number">2.</span> <span class="nav-text">反汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#X86-64"><span class="nav-number">2.1.</span> <span class="nav-text">X86-64</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指令简记"><span class="nav-number">2.1.1.</span> <span class="nav-text">指令简记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析"><span class="nav-number">2.1.2.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM64"><span class="nav-number">2.2.</span> <span class="nav-text">ARM64</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指令简记-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">指令简记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">分析</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>

@@ -283,6 +283,182 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/09/android文件系统目录结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/09/android文件系统目录结构/" itemprop="url">android文件系统目录结构</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T22:14:37+08:00">
+                2018-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="安卓下的文件系统"><a href="#安卓下的文件系统" class="headerlink" title="安卓下的文件系统"></a>安卓下的文件系统</h2><h3 id="安卓的存储"><a href="#安卓的存储" class="headerlink" title="安卓的存储"></a>安卓的存储</h3><p>  一部Android手机存在不同的存储空间类型。512MB ROM和512MB RAM，还有一个SDHC的扩展槽，标配2G内存卡，最大可支持32G内存卡。那么这些数据都是什么意思呢？</p>
+<h4 id="RAM："><a href="#RAM：" class="headerlink" title="RAM："></a>RAM：</h4><p>RAM是Random Access Memory的缩写，中文名称是随机存取存储器。对于大多数的计算机和智能手机来说，RAM可以使一个软件快速并直接地读取和写入数据。当断电的时候RAM中的内容就会丢失，比如手机关机。RAM的大小决定了你能同时运行几个程序，也决定了你最大能加载多大的文件。当RAM不足的时候就会提示“Out of memory”错误。因为Android 2.2能提前预测当需要内存的时候，哪一个程序将要被从RAM中去除，所以RAM的信息并没有显示到“设置”菜单里。Android 2.2之前的版本最大只支持256MB内存，但是Android 2.2可以支持大容量内存，比如512MB RAM。</p>
+<h4 id="ROM："><a href="#ROM：" class="headerlink" title="ROM："></a>ROM：</h4><p>相当于c盘<br>ROM是Read-Only Memory的缩写。以前常用来表示一旦出厂后上面存储的数据就不能被修改，同时即使没有电，数据也不会丢失。后来，一种新型的ROM——EEPROM，代替了原来的ROM。这种EEPROM允许用高一点的电压改写数据以便用于升级。以后Flash Memory（闪存）代替了EEPROM，闪存可以很容易的修改内容。现在我们说智能手机中的ROM一般指的是Flash Memory了。<br>手机中的ROM一般被分成若干区域。在Android中，有一部分被分给了操作系统，分给操作系统的这部分通常被保护起来，用户不能向里面写入数据。通常我们说Rooting指的就是获得操作系统的最高权限，因此我们可以读取和写入到这部分区域。比如替换系统默认的图片。<br>另外ROM还分了一部分空间给用户作为存储数据用，用于存储下载应用程序，保存用户数据等。这部分区域已经完全脱离了“Read-Only”，不再“只读”。在Android 2.2版本中，这部分空间被挂载到/mnt/asec目录下，我们可以进入查看下载的应用程序的APK文件。这部分空间有时被称作“手机内部存储”，想一下Windows中的C盘，windows的文件夹是不可见的并且在系统分区。在我的LG Optimus中，最初有180MB可用，这些可用的空间随着安装的程序的增多而变小。我们可以通过“设置”-“SD卡和手机内存”-“手机内部存储”来查看剩余的空间大小。最后强调一点，当可用空间变得非常小的时候，就不能再下载或者安装应用程序了。</p>
+<h4 id="Micro-SD-SDHC"><a href="#Micro-SD-SDHC" class="headerlink" title="Micro SD/SDHC"></a>Micro SD/SDHC</h4><p>这是增加手机存储空间的唯一方法。他相当于一个计算机的外部硬盘。LG Optimus出厂的时候配置了一个2GB SD卡，我们用32GB及以下的内存卡替换掉他。SD卡目录挂载到/mnt/sdcard目录下，可以去“设置”-“SD卡和手机内存”-“SD卡”查看。<br>在SD卡上，你可以存储任何的数据，电影，音乐，照片等随你。如果你喜欢你可以把手机作为一个（非常昂贵的）读卡器^_^。在Android 2.2手机中，一部分应用程序可以从手机内部存储移动到SD卡上，以便节约宝贵的内部存储空间。不过你得记住，不是所有的程序或者程序的一部分能被移动到SD卡上的。所以，如果你的手机内部存储空间几乎没有空闲，通过一味的增大SD卡的容量，并不会对你有帮助。<br>当你想替换一个SD卡的时候，记得在抠下老的SD卡之前，先去“设置”-“SD卡和手机内存”-“SD卡”-“卸下SD卡”（别忘了Android是基于Linux的）。新插入的SD卡会自动的被加载。</p>
+<h3 id="文件夹"><a href="#文件夹" class="headerlink" title="文件夹"></a>文件夹</h3><p>cache：是缓存临时文件夹，据说是除了T-mobile的OTA更新外，别无用处。</p>
+<p>sdcard：是Android手机中SD卡的文件夹路径。</p>
+<p>etc：指向 /system/etc ，众所周知的配置文件存放目录。</p>
+<p>sys：用于挂载 sysfs文件系统。 在设备模型中，sysfs文件系统用来表示设备的结构。将设备的层次结构形象的反应到用户空间中，用户空间可以修改sysfs中的文件属性来修改设备的属性值 。</p>
+<p>sbin：只放了一个用于调试的adbd程序。</p>
+<p>proc：/proc 文件系统下的多种文件提供的系统信息不是针对某个特定进程的，而是能够在整个系统范围的上下文中使用。</p>
+<p>data：存放用户安装的软件以及各种数据。</p>
+<p>root：空。</p>
+<p>dev：Linux系统常规文件夹，里面的文件很多都是设备模拟的文件系统，一般用户无需理会。</p>
+<p>system：是一个很重要的目录，系统中的大部分东西都在这里了</p>
+<p>udisk/flash/udiskint：都是到/mnt相应目录的软链接（挂载目录）。</p>
+<p>sqlite_stmt_journals：一个根目录下的tmpfs文件系统，用于存放临时文件数据。（Android原生态系统下存在）</p>
+<h4 id="system目录的结构"><a href="#system目录的结构" class="headerlink" title="/system目录的结构"></a>/system目录的结构</h4><p>xbin：下放了很多系统管理工具，这些工具不是到toolbox的链接，每个都是可执行程序。如果你看 到这些命令你会发现他们根本不常用，他们都是为系统管理员准备的，是一些系统管理和配置工具。这个文件夹的作用相当于标准Linux文件系统中的 /sbin。我的手机此目录下有busybox，肯定是改过的，应该是破解者加上的。</p>
+<p>modules：使用来存放内核模块（主要是fs和net）和模块配置文件的地方。</p>
+<p>framework： 是JAVA平台的一些核心文件，属于JAVA平台系统框架文件。里面的文件都是.jar和.odex文件。</p>
+<p>fonts：很显然，这是字体库文件的存放目录。</p>
+<p>etc：这里存放了系统中几乎所有的配置文件，根目录下的/etc就链结于此。</p>
+<p>build.prop：是一个属性文件，在Android系统中.prop文件很重要，记录了系统的设置和改变，类似于/etc中的文件。</p>
+<p>media：里面主要是存放了系统的铃声的，分为 notifications（通知）、ui（界面）、alarms（警告）和ringtones（铃声），里面都是.ogg音频文件。</p>
+<p>bin：众所周知，是存放用户常用的工具程序的，其中大部分是到toolbox的链接（类似嵌入式Linux中的busybox）。toolbox应该是google简化版的busybox，我还没深入研究过。</p>
+<p>usr ：用户的配置文件，如键盘布局、共享、时区文件等等。您可以cat 来看看。</p>
+<p>app：顾名思义，存放的是Android系统自带的JAVA应用程序。在这里的程序会随开机启动。（勒索软件）</p>
+<p>lost+found：yaffs文件系统固有的，类似回收站的文件夹，只有是yaffs文件系统都会有。</p>
+<p>lib：存放几乎所有的共享库（.so）文件。</p>
+<p>sd：SD卡中的EXT2分区的挂载目录。</p>
+<p>init.rc：一个初始化脚本，用于将/system/modules和/system/xbin挂载为cramfs，避免系统被无意破坏。</p>
+<h3 id="非目录的文件："><a href="#非目录的文件：" class="headerlink" title="非目录的文件："></a>非目录的文件：</h3><p>runme.sh用于 SD 卡中 EXT2文件系统的自动挂载动作的脚本。</p>
+<p>init.trout.rc，init.rc，init.goldfish.rc 是初始化文件.</p>
+<p>init是系统启动到文件系统的时候第一个运行的程序。</p>
+<p>从以上的根目录分析来看，Android的根文件系统并非标准的Linux文件系统，所以以后还得仔细分析一下启动过程，才能认识Android系统。</p>
+<h2 id="linux下的文件结构"><a href="#linux下的文件结构" class="headerlink" title="linux下的文件结构"></a>linux下的文件结构</h2><p>待补充</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/08/dex文件格式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1712,158 +1888,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/11/虚拟地址/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/11/虚拟地址/" itemprop="url">虚拟地址</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-11T16:06:58+08:00">
-                2018-03-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h4><h3 id="物理地址"><a href="#物理地址" class="headerlink" title="物理地址"></a>物理地址</h3><p>物理地址 (physical address): 放在寻址总线上的地址。放在寻址总线上，如果是读，电路根据这个地址每位的值就将相应地址的物理内存中的数据放到数据总线中传输。如果是写，电路根据这个地址每位的值就在相应地址的物理内存中放入数据总线上的内容。物理内存是以字节(8位)为单位编址的。<br><strong>物理地址就是cpu寻址总线读取内存设备的地址</strong></p>
-<h3 id="虚拟地址"><a href="#虚拟地址" class="headerlink" title="虚拟地址"></a>虚拟地址</h3><p>虚拟地址 (virtual address): CPU启动保护模式后，程序运行在虚拟地址空间中。注意，并不是所有的“程序”都是运行在虚拟地址中。CPU在启动的时候是运行在实模式的，Bootloader以及内核在初始化页表之前并不使用虚拟地址，而是直接使用物理地址的。<br><strong>虚拟地址是程序机器码中的地址</strong>，cpu寄存器中分页标志开启时，执行内存操作的机器指令时，cpu的内存管理单元会根据页目录和页表的信息把虚拟地址化为物理地址从而完成指令<br>例子：mov eax，[00400000h]这个值就是虚拟地址，cpu转换该值去实际物理地址中取值</p>
-<h3 id="页表"><a href="#页表" class="headerlink" title="页表"></a>页表</h3><p>页表，一个页表的大小为4K字节，放在一个物理页中。由1024个4字节的页表项组成。页表项的大小为4个字节(32bit)，所以一个页表中有1024个页表项。页表中的每一项的内容（每项4个字节,32bit）高20bit用来放一个物理页的物理地址，低12bit放着一些标志。<br><strong>页表项可以锁定一个物理页</strong></p>
-<h3 id="物理页"><a href="#物理页" class="headerlink" title="物理页"></a>物理页</h3><p>物理内存也被分页，来映射地址空间——为了对应虚拟地址分页4k将物理内存分为4k大小的页<br>第0个物理页从物理地址 0x00000000 处开始。由于页的大小为4KB，就是0x1000字节，所以第1页从物理地址0x00001000 处开始。第2页从物理地址 0x00002000 处开始。可以看到由于页的大小是4KB，所以只需要32bit的地址中高20bit来寻址物理页。</p>
-<h3 id="页目录"><a href="#页目录" class="headerlink" title="页目录"></a>页目录</h3><p>一个页目录有1024项，<br>对于x86系统，页目录的物理地址放在CPU的CR3寄存器中。<strong>页目录中存的是页表的物理位置</strong></p>
-<h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><p>Windows 2000 使用基于分页机制的虚拟内存。<strong>每个进程有4GB的虚拟地址空间</strong>。基于分页机制，这4GB地址空间的一些部分被映射了物理内存，一些部分映射硬盘上的交换文件，一些部分什么也没有映射。程序中使用的都是4GB地址空间中的虚拟地址。<br>使用了分页标志，4g地址被分成固定大小的页。每一页或者被映射到物理内存，或者被映射到硬盘上的交换文件中，或者没有映射任何东西。对于一般程序来说，4G的地址空间，只有一小部分映射了物理内存，大片大片的部分是没有映射任何东西。<br>CPU用来把虚拟地址转换成物理地址的信息存放在叫做页目录和页表的结构里。对于32bit的Win2k，页的大小是4K字节。</p>
-<h4 id="具体做法："><a href="#具体做法：" class="headerlink" title="具体做法："></a>具体做法：</h4><p>一个虚拟地址，大小4个字节(32bit)，包含着找到物理地址的信息，分为3个部分：<br>第22位到第31位这10位（最高10位）是页目录中的索引，<br>第12位到第21位这10位是页表中的索引，<br>第0位到第11位这12位（低12位）是页内偏移。</p>
-<h3 id="cpu具体做法："><a href="#cpu具体做法：" class="headerlink" title="cpu具体做法："></a>cpu具体做法：</h3><p>对于一个要转换成物理地址的虚拟地址，CPU首先根据CR3中的值，找到页目录所在的物理页。然后根据虚拟地址的第22位到第31位这10位（最高的10bit)的值作为索引，找到相应的页目录项(PDE,page directory entry),页目录项中有这个虚拟地址所对应页表的物理地址。有了页表的物理地址，根据虚拟地址的第12位到第21位这10位的值作为索引，找到该页表中相应的页表项(PTE,page table entry),页表项中就有这个虚拟地址所对应物理页的物理地址。最后用虚拟地址的最低12位，也就是页内偏移，加上这个物理页的物理地址，就得到了该虚拟地址所对应的物理地址。<br>计算：<br>一个虚拟地址转换成物理地址的计算过程就是，处理器通过CR3找到当前页目录所在物理页，取虚拟地址的高10bit,然后把这10bit左移2bit（因为每个页目录项4个字节长，左移2bit相当于乘4）得到在该页中的地址，取出该地址处PDE（4个字节），就找到了该虚拟地址对应页表所在物理页，取虚拟地址第12位到第21位这10位，然后把这10bit左移2bit（因为每个页表项4个字节长，左移2bit相当于乘4）得到在该页中的地址，取出该地址处的PTE（4个字节），就找到了该虚拟地址对应物理页的地址，最后加上12bit的页内偏移得到了物理地址。</p>
-<h4 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h4><p>32bit的一个指针，可以寻址范围0x00000000-0xFFFFFFFF,4GB大小。也就是说一个32bit的指针可以寻址整个4GB地址空间的每一个字节。一个页表项负责4K的地址空间和物理内存的映射，一个页表1024项，也就是负责1024<em>4k=4M的地址空间的映射。一个页目录项，对应一个页表。一个页目录有1024项，也就对应着1024个页表，每个页表负责4M地址空间的映射。1024个页表负责1024</em>4M=4G的地址空间映射。一个进程有一个页目录。所以以页为单位，页目录和页表可以保证4G的地址空间中的每页和物理内存的映射。</p>
-<p>每个进程都有自己的4G地址空间，从 0x00000000-0xFFFFFFFF 。通过每个进程自己的一套页目录和页表来实现。由于每个进程有自己的页目录和页表，所以每个进程的地址空间映射的物理内存是不一样的。两个进程的同一个虚拟地址处（如果都有物理内存映射）的值一般是不同的，因为他们往往对应不同的物理页。</p>
-<p>在windows下4G地址空间中低2G，0x00000000-0x7FFFFFFF 是用户地址空间，4G地址空间中高2G，<br>0x80000000-0xFFFFFFFF 是系统地址空间。访问系统地址空间需要程序有ring0的权限。而Linux对4G空间的划分不同与windows。linux将最高的1G 字节（从虚拟地址0xC0000000 到0xFFFFFFFF），供内核使用，称为“内核空间”。而将较低的3G 字节（从虚拟地址0x00000000 到0xBFFFFFFF），供各个进程使用，称为“用户空间”。<br>每个4g空间都分用户与系统权限，系统地址空间被所有系统进程共享</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1914,7 +1938,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">85</span>
+                <span class="site-state-item-count">86</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
