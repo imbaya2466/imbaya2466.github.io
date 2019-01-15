@@ -283,6 +283,202 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/xposed概观与初步使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/31/xposed概观与初步使用/" itemprop="url">xposed概观与初步使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T00:31:51+08:00">
+                2018-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近先后尝试了各种手写nativehook，开始还好，写到后面越发艰难，最后参看2011年的古河代码后无果，于是决定先使用好常用的hook框架，再针对开源的代码去研究轮子。<br>hook的好处十分多，如可以不修改不重打包逆向程序，而且可以避免反调试和各种壳，但hook时需要详细知道目标函数的符号等信息。</p>
+<p>目前认准有三：<br>1、<strong>XPOSED 开源</strong><br>优点：<br>1）、代码编写方便，开发速度较快。<br>2）、有许多现成的模块可以用，而且很多模块也是开源的，方便学习研究。<br>缺点：<br>1）、每次编写代码需要重启手机生效。<br>2）、不支持native的HOOK。<br>3）、独立性较差，需要依赖XPOSED installer，不易单独分发。</p>
+<p>2、<strong>cydia substrate 不开源</strong><br>这个Supported on versions 2.3 through 4.3的android。在ios上表现很好，android的2013年就停更了。<br>优点：<br>1）、比较擅长在native层的HOOK。<br>2）、独立性较好，实现的功能可以封装在单独APP里分发给用户使用，因此也是较大型外挂辅助工具的首选。<br>缺点：<br>1）、每次编写代码需要重启手机生效。<br>2）、开发效率较低，成本较高。</p>
+<p>3、<strong>frida 开源</strong><br>优点：<br>1）、无须重启手机和目标APP，这个可以节省很多时间，如果APP测试的点需要很复杂地搭建好环境，一旦重新启动就意味着很麻烦地再重新搭建环境，例如账号登录，进入特定关卡等。<br>2）、JS脚本编写，灵活方便，再也不用担心多参数个数和类型问题了。<br>3）、可以直接使用或修改对象的成员变量，非常方便。<br>4）、配合PC终端命令行使用，脚本编写出错也不会导致APP崩溃，只需修改后重新来过即可，有时会有问题，这个时候需要重启下APP或手机即可。</p>
+<p>缺点：<br>1）、JS脚本套在python脚本里面，编写JS脚本时候不是很方便，容易出错，好在即使出错也不会导致APP崩溃掉，修改后重新来过即可。<br>2）、该工具配合PC终端使用，更适合专业者，不利于分发给用户使用。</p>
+<p>接下来依次尝试之。</p>
+<h2 id="Xposed-原理"><a href="#Xposed-原理" class="headerlink" title="Xposed 原理"></a>Xposed 原理</h2><p>通过替换/system/bin/app_process程序控制zygote进程，使得app_process在启动过程中会加载XposedBridge.jar这个jar包，从而完成对Zygote进程及其创建的Dalvik虚拟机的劫持。</p>
+<p>项目梳理：<br>XposedBridge.jar：XposedBridge.jar是Xposed提供的jar文件，负责在Native层与FrameWork层进行交互。/system/bin/app_process进程启动过程中会加载该jar包，其它的Modules的开发与运行都是基于该jar包的。<br>Xposed：Xposed的C++部分，主要是用来替换/system/bin/app_process，并为XposedBridge提供JNI方法。<br>XposedInstaller：Xposed的安装包，负责配置Xposed工作的环境并且提供对基于Xposed框架的Modules的管理。在安装XposedInstaller之后，app_process与XposedBridge.jar放置在了/data/data/de.robv.android.xposed.installer。</p>
+<h2 id="Xposed-安装"><a href="#Xposed-安装" class="headerlink" title="Xposed 安装"></a>Xposed 安装</h2><p>因为要修改系统文件，所以前提需要root<br>经实践发现supersu卡刷非常管用。</p>
+<p>root后安装xposed installer ，进入应用，点击install安装框架（via那个是通过recovery模式安装）</p>
+<p>到此hook框架已经安装完成。可以自己编写模块使用了</p>
+<h2 id="AS下的Xposed编程"><a href="#AS下的Xposed编程" class="headerlink" title="AS下的Xposed编程"></a>AS下的Xposed编程</h2><h3 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h3><p>不必有activity，一个空项目就好</p>
+<h3 id="1导入包"><a href="#1导入包" class="headerlink" title="1导入包"></a>1导入包</h3><p>俩种方式：</p>
+<ol>
+<li>把下好的api-82.jar放到lib下，并添加到build.gradle路径中</li>
+<li>由于以传至jcenter()库所以在build.gradle的dependencies下直接写compileOnly ‘de.robv.android.xposed:api:82’</li>
+</ol>
+<p>注意接口包不能包含到插件项目的生成包中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])</div><div class="line">    implementation &apos;com.android.support:appcompat-v7:27.1.1&apos;</div><div class="line">    testImplementation &apos;junit:junit:4.12&apos;</div><div class="line">    androidTestImplementation &apos;com.android.support.test:runner:1.0.2&apos;</div><div class="line">    androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.2&apos;</div><div class="line">    compileOnly &apos;de.robv.android.xposed:api:82&apos;</div><div class="line">	compileOnly &apos;de.robv.android.xposed:api:82:sources&apos; 方便Ctrl+Q快速查阅</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意为compileOnly，区别：<br>2.x（3.x）</p>
+<ol>
+<li>（implementation）：只能在内部使用此模块,会参与打包，比如我在一个libiary中使用implementation依赖了gson库，然后我的主项目依赖了libiary，那么，我的主项目就无法访问gson库中的方法。</li>
+<li>compile（api）：使用该方式依赖的库将会参与编译和打包。 也就是全部包含进dex中。又打包又用</li>
+<li>provided（compileOnly）：只在编译时有效，不会参与打包 。运行时寻找android平台上的，只用不打包</li>
+<li>apk（runtimeOnly）：只在生成apk的时候参与打包，编译时不会参与。不用只打包。</li>
+<li>testCompile（testImplementation）：testCompile 只在单元测试代码的编译以及最终打包测试apk时有效。</li>
+<li>debugCompile（debugImplementation）:debugCompile 只在debug模式的编译和最终的debug apk打包时有效</li>
+<li>releaseCompile:Release compile 仅仅针对Release 模式的编译和最终的Release apk打包。</li>
+</ol>
+<p>API 类真正的实现则在 Xposed FramWork中。所以选择compileOnly<br>jar为.class集合。</p>
+<h3 id="2改manifest"><a href="#2改manifest" class="headerlink" title="2改manifest"></a>2改manifest</h3><p>AndroidManifest.xml中添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;application</div><div class="line">    android:allowBackup=&quot;true&quot;</div><div class="line">    android:icon=&quot;@mipmap/ic_launcher&quot;</div><div class="line">    android:label=&quot;@string/app_name&quot;</div><div class="line">    android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;</div><div class="line">    android:supportsRtl=&quot;true&quot;</div><div class="line">    android:theme=&quot;@style/AppTheme&quot;&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposedmodule&quot;</div><div class="line">    android:value=&quot;true&quot;/&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposeddescription&quot;</div><div class="line">    android:value=&quot;Easy example&quot;/&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposedminversion&quot;</div><div class="line">    android:value=&quot;54&quot;/&gt;</div><div class="line">&lt;/application&gt;</div></pre></td></tr></table></figure></p>
+<p>xposedmodule：代表的是Android程序作为Xposed中的一个模块，所以值为true；<br>xposeddescription：代表的是对本模块的功能的描述，可以自己简单叙述下就可以了；项目名是插件名，这是底下的描述<br>xposedminversion：代表的是本模块开发时用到的xposed的jar包的最低版本号；</p>
+<h3 id="3java中写类"><a href="#3java中写类" class="headerlink" title="3java中写类"></a>3java中写类</h3><p>只要新建一个实现IXposedHookLoadPackage接口的类，然后在handleLoadPackage回调方法中进行拦截操作即可，详细见下文。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import de.robv.android.xposed.IXposedHookLoadPackage;</div><div class="line">import de.robv.android.xposed.XposedBridge;</div><div class="line">import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;</div><div class="line"></div><div class="line">public class main implements IXposedHookLoadPackage &#123;</div><div class="line">    public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable &#123;</div><div class="line">        XposedBridge.log(&quot;Loaded app: &quot; + lpparam.packageName);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="4添加模块入口"><a href="#4添加模块入口" class="headerlink" title="4添加模块入口"></a>4添加模块入口</h3><p>告诉Xposed框架一个模块中Hook的入口</p>
+<ol>
+<li>main下建assets文件夹</li>
+<li>assets文件夹下建xposed_init文件</li>
+<li>xposed_init中写包名.类名</li>
+</ol>
+<p><strong>main文件夹下的东西都会被打包</strong></p>
+<h3 id="构建安装"><a href="#构建安装" class="headerlink" title="构建安装"></a>构建安装</h3><p>构建安装apk至手机中，框架即可自动识别到模块，点击启动，重启后即可生效。</p>
+<p>注意AS的Instant Run（闪电）是加快apk安装速度的功能，可能涉及的方面有：</p>
+<ol>
+<li>优化apk大小，可能把不用的类优化掉了（xposed时小心）</li>
+<li>热更新方法内代码</li>
+<li>热更新资源</li>
+<li>热更新新方法</li>
+</ol>
+<h2 id="api详解"><a href="#api详解" class="headerlink" title="api详解"></a>api详解</h2><p>首先是api官网：<br><a href="https://api.xposed.info/reference/packages.html" target="_blank" rel="external">https://api.xposed.info/reference/packages.html</a></p>
+<p>android.app:有关当前应用程序信息的方法。<br>android.content.res:包含替换资源所需的类。<br>de.robv.android.xposed:包含Xposed框架的主要类。<br>de.robv.android.xposed.callbacks:包含回调的基类。<br>de.robv.android.xposed.services:包含Xposed框架提供的文件访问服务。<br><img src="https://i.imgur.com/nhQbI7d.png" alt=""></p>
+<h4 id="android-app"><a href="#android-app" class="headerlink" title="android.app"></a>android.app</h4><p>就一个AndroidAppHelper类，用于查询当前应用程序信息的各种方法</p>
+<h4 id="de-robv-android-xposed"><a href="#de-robv-android-xposed" class="headerlink" title="de.robv.android.xposed"></a>de.robv.android.xposed</h4><p>这个是主要功能包<br>IXposedHookLoadPackage接口：这个接口应该由模块的主类来实现。Xposed会自动注册为回叫。在每个app加载时收到通知。其唯一方法在加载时调用：void handleLoadPackage （XC_LoadPackage.LoadPackageParam lpparam）参数为de.robv.android.xposed.callbacks包中XC_LoadPackage的子类，其为包装关于正在加载的应用程序的信息的类。可返回packageName，classLoader等</p>
+<p>里面还有：XposedHelpers静态类用于简化hook如：findAndHookMethod<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">public static XC_MethodHook.Unhook findAndHookMethod (String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback)</div><div class="line">参数为：</div><div class="line">1. 类名</div><div class="line">2. 类加载器</div><div class="line">3. 目标方法名称</div><div class="line">4. 参数类型与回调函数</div><div class="line"></div><div class="line">官方示例：</div><div class="line"></div><div class="line">public class Tutorial implements IXposedHookLoadPackage &#123;</div><div class="line">	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable &#123;</div><div class="line">		if (!lpparam.packageName.equals(&quot;com.android.systemui&quot;))</div><div class="line">			return;</div><div class="line"></div><div class="line">		findAndHookMethod(&quot;com.android.systemui.statusbar.policy.Clock&quot;, lpparam.classLoader, &quot;updateClock&quot;, new XC_MethodHook() &#123;</div><div class="line">  		 @Override</div><div class="line"> 		  protected void beforeHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">    			 String oldText = (String) param.args[0];</div><div class="line">     			Log.d(&quot;MyModule&quot;, oldText);</div><div class="line">    			 param.args[0] = &quot;test&quot;;</div><div class="line">    			 param.args[1] = 42; // auto-boxing is working here</div><div class="line">    			 setBooleanField(param.args[2], &quot;great&quot;, true);//设置类的字段XposedHelpers中</div><div class="line">			     // 这样写不行，因为myclass编译时未知</div><div class="line">    			 //   MyClass myClass = (MyClass) param.args[2];</div><div class="line">   			  //   myClass.great = true;</div><div class="line">			@Override</div><div class="line">			protected void afterHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">				TextView tv = (TextView) param.thisObject;</div><div class="line">				String text = tv.getText().toString();</div><div class="line">				tv.setText(text + &quot; :)&quot;);</div><div class="line">				tv.setTextColor(Color.RED);</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>XC_MethodHook钩子类，其含俩个方法用于目标方法之前与之后调用，其有俩个内部类：<br>MethodHookParam可获得参数（字段args数组）与返回信息（方法）<br>XC_MethodHook.Unhook管理hook用。可用来删除回调</p>
+<p>具体灵活使用还是需要系统框架源码知识和xposed源码实现原理。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/26/android-hook/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1707,171 +1903,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/androidNDK逆向初步/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/08/androidNDK逆向初步/" itemprop="url">androidNDK逆向初步</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T23:01:48+08:00">
-                2018-05-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h2><ol>
-<li>elf，linux下程序执行，连接等需要详细补充。</li>
-</ol>
-<h2 id="原生程序启动流程概述-2013"><a href="#原生程序启动流程概述-2013" class="headerlink" title="原生程序启动流程概述 2013"></a>原生程序启动流程概述 2013</h2><p>注意这里是原生可执行程序，不是动态库so的加载运行过程<br><strong>静态链接出的可执行文件</strong>：<br>_start(crtbegin_static.S)调用__libc_init(bionic\lib\bionic\libc_init_static.c)调用main</p>
-<p><strong>*动态连接出的可执行文件</strong>（.interp段指定加载器默认为system/bin/linker）：<br>linker(begin.S)调用<strong>linker_init(linker.c)返回入口函数并执行_start(crtbegin_dynamic.S)调用</strong>libc_init(libc_init_dtnamic.c)调用main</p>
-<p>动态连接库文件：<br><strong>on_dlclose(crtbegin_so.c)调用</strong>cxa_finalize记录计数</p>
-<p>说明：</p>
-<ol>
-<li>目前静态动态_start都一样</li>
-<li>__libc_init动态的少点因为大部分工作linker做了</li>
-</ol>
-<h2 id="原生文件格式"><a href="#原生文件格式" class="headerlink" title="原生文件格式"></a>原生文件格式</h2><p>不同系统、架构下的elf有所不同。android下的elf遵循了arm的标准，不同版本ndk与连接器脚本生成的elf有所不同。具体的格式需要阅读源码：NDK的platforms\android-14\arch-arm\usr\include\sys\exec_elf.h<br>目前简单百度了下，大概可理解为由头部决定节头和段头的位置，由段头和节头分别决定段与节的位置，节用来存储数据代码等给link用的，而段是内存中用来执行的。<br><img src="https://i.imgur.com/wP0XSIH.png" alt=""></p>
-<h2 id="原生c的逆向分析"><a href="#原生c的逆向分析" class="headerlink" title="原生c的逆向分析"></a>原生c的逆向分析</h2><p>注意主要用寄存器传参 R0 R1 R2 依次左到右（不同于栈的右到左压，右在高地址）。返回用R0<br>R11常作为栈帧<br>ida蓝色表示顺序执行，绿色满足时，红色不满足时执行<br>全局变量从全局偏移表里取（具体？详细了解elf结构和内存布局后）</p>
-<p>switch依旧依靠跳转表</p>
-<p>gcc的-O2优化效果好，取消了栈的存储操作，基本全用寄存器，而且逻辑上也省去了许多无用的部分</p>
-<h2 id="原生c-的逆向分析"><a href="#原生c-的逆向分析" class="headerlink" title="原生c++的逆向分析"></a>原生c++的逆向分析</h2><p>c++的类被解析为结构体的空间分配，而各函数代码都是直接化在流程中了，不是分成块的存储调用方式。<br>c++的各种特性库slt（如gunslt、stlport、gabi++、system）都分别支持各种不同的c++功能，其中前俩个提供容器类，默认为system自动连接，其它的都分为动态和静态连接方式。详见ndk高级编程中</p>
-<p>动态连接时ida可以解析出函数的来源，而静态时ida只能识别出子程序调用，无法识别出具体的函数。因此静态分析难度更大，只有动态分析好用</p>
-<h2 id="JNI"><a href="#JNI" class="headerlink" title="JNI"></a>JNI</h2><p>而DNK中最为常用的就是jni中的交互函数：JNIEnv和JavaVM<br>前者是原生与java交互用，后者代表虚拟机常用于多线程中。<br>c中都是指向函数表结构体的指针，c++中为类对象指针。为了方便ida识别出JNI的结构体，需要导入jni头文件用来看出具体调用的函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">struct _JNIEnv;</div><div class="line">struct _JavaVM;</div><div class="line">typedef const struct JNINativeInterface* C_JNIEnv;</div><div class="line"></div><div class="line">#if defined(__cplusplus)</div><div class="line">typedef _JNIEnv JNIEnv;</div><div class="line">typedef _JavaVM JavaVM;</div><div class="line">#else</div><div class="line">typedef const struct JNINativeInterface* JNIEnv;</div><div class="line">typedef const struct JNIInvokeInterface* JavaVM;</div><div class="line">#endif</div><div class="line"></div><div class="line">在定义完JNI俩个函数指针集合结构体之后</div><div class="line"></div><div class="line">定义c++用的类</div><div class="line">struct _JNIEnv &#123;</div><div class="line">    /* do not rename this; it does not seem to be entirely opaque */</div><div class="line">    const struct JNINativeInterface* functions;</div><div class="line"></div><div class="line">......定义类的方法调用该结构体。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>以下为ida解析头文件结构体方法：<br>进入ida，点击文件-&gt;读取文件-&gt;解析c头文件<br>这里选择ndk的jni文件(已修改并存入工具库中)，需要删除报错的俩个include和1107的#define JNIEXPORT  …改为#define JNIEXPORT<br>然后结构体选项卡按insert-&gt;Add standard structure<br>之后反汇编窗口中选中env函数偏移的量右键中会出现解析为该结构体的内容</p>
-<p><strong> java与c的native函数可以手动映射</strong></p>
-<p>因此下坑的地方很多，比如init数组加密操作，javaload加密操作，so中一般名字的native方法不能说明什么。要全部分析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">static JNINativeMethod methods[] = &#123;</div><div class="line">	&#123;&quot;initSN&quot;, &quot;()V&quot;, (void*)n1&#125;,</div><div class="line">	&#123;&quot;saveSN&quot;, &quot;(Ljava/lang/String;)V&quot;, (void*)n2&#125;,</div><div class="line">	&#123;&quot;work&quot;, &quot;()V&quot;, (void*)n3&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">/*</div><div class="line"> * 库加载时注册native函数</div><div class="line"> */</div><div class="line">jint JNI_OnLoad(JavaVM* vm, void* reserved)&#123;</div><div class="line">	if(JNI_OK != (*vm)-&gt;GetEnv(vm, (void**)&amp;g_env, JNI_VERSION_1_6))&#123;</div><div class="line">		return -1;</div><div class="line">	&#125;</div><div class="line">	LOGV(&quot;JNI_OnLoad()&quot;);</div><div class="line">	native_class = (*g_env)-&gt;FindClass(g_env, &quot;com/droider/ndkapp/MyApp&quot;);</div><div class="line">	if (JNI_OK ==(*g_env)-&gt;RegisterNatives(g_env,</div><div class="line">			native_class, methods, NELEM(methods)))&#123;//把java类的native函数对应到原生函数中,手动。自动的话是按javah生成的对应，这里没有包含javah生成的头文件</div><div class="line">		LOGV(&quot;RegisterNatives() --&gt; nativeMethod() ok&quot;);</div><div class="line">	&#125; else &#123;</div><div class="line">		LOGE(&quot;RegisterNatives() --&gt; nativeMethod() failed&quot;);</div><div class="line">		return -1;</div><div class="line">	&#125;</div><div class="line">	return JNI_VERSION_1_6;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void JNI_OnUnLoad(JavaVM* vm, void* reserved)&#123;</div><div class="line">	LOGV(&quot;JNI_OnUnLoad()&quot;);</div><div class="line">	(*g_env)-&gt;UnregisterNatives(g_env, native_class);</div><div class="line">	LOGV(&quot;UnregisterNatives()&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>编写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)</div><div class="line">&#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">    return JNI_VERSION_1_6;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//init函数定义，必须为_init</div><div class="line">extern &quot;C&quot;  void _init(void)&#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">__attribute__((constructor,visibility(&quot;hidden&quot;))) void init_array_0(void) &#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">__attribute__((constructor,visibility(&quot;hidden&quot;))) void  init_array_1(void) &#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">extern &quot;C&quot; void preinit(int argc, char **argv, char **envp) &#123;</div><div class="line">    LOGD(&quot;preinit_array never be called in so&quot;);</div><div class="line">&#125;</div><div class="line">__attribute__((section(&quot;.preinit_array&quot;))) typeof(preinit) *__preinit = preinit;</div></pre></td></tr></table></figure></p>
-<p><a href="https://blog.csdn.net/qq1084283172/article/details/54233552" target="_blank" rel="external">https://blog.csdn.net/qq1084283172/article/details/54233552</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1922,7 +1953,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">88</span>
+                <span class="site-state-item-count">89</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
