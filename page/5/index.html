@@ -283,6 +283,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/01/frida概观与初步使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/01/frida概观与初步使用/" itemprop="url">frida概观与初步使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-01T23:52:41+08:00">
+                2018-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="随笔"><a href="#随笔" class="headerlink" title="随笔"></a>随笔</h2><p>ARMv7（我的小米3/4）是32位的<br>linux命令 &amp;  表示任务在后台执行。<br>python3\Scripts被自动加入路径<br>python3被自动加入路径</p>
+<h2 id="frida原理"><a href="#frida原理" class="headerlink" title="frida原理"></a>frida原理</h2><p>Frida可以“将你自己的JavaScript代码片段或代码库注入到Windows，MACOS，Linux， iOS，Android和QNX 的本地应用中”。多平台可注非常强大，重点研究。</p>
+<p>具体过程实现未看…之后记得看看源码</p>
+<h2 id="frida安装"><a href="#frida安装" class="headerlink" title="frida安装"></a>frida安装</h2><p>只看官方：<a href="https://www.frida.re/docs/home/" target="_blank" rel="external">https://www.frida.re/docs/home/</a><br>前提：</p>
+<ol>
+<li>python 3</li>
+<li>ptyhon自带的pip</li>
+</ol>
+<p>运行pip install frida即可</p>
+<p>为了调试android需要下载frida-server对应android上的。adb push并777运行之</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>frida的运行依靠py脚本，其核心用c写的，注入代码为js。<br>基本用法为编写python脚本实现输入，里面提供的一些工具也是py脚本+js代码注入写出的。因此可参考api写出自己的工具。</p>
+<p>注入用js的api：<a href="https://www.frida.re/docs/javascript-api/" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/</a><br>针对android多看它的java部分。<a href="https://www.frida.re/docs/javascript-api/#java" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/#java</a></p>
+<p>还有非常多功能，比如dump等</p>
+<p>一般分析流程</p>
+<ol>
+<li>反编译apk，分析代码寻找hook点。</li>
+<li>编写js代码，调用类的方法或者替换。</li>
+<li>在python中执行即可。</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/01/frida概观与初步使用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/xposed概观与初步使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1733,176 +1897,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/AS下cmake使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/10/AS下cmake使用/" itemprop="url">AS下cmake使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T22:02:24+08:00">
-                2018-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>首先将以前写的搬出来方便看</p>
-<h2 id="AS下编辑native—较新方法-使用cmake（常用！）"><a href="#AS下编辑native—较新方法-使用cmake（常用！）" class="headerlink" title="AS下编辑native—较新方法-使用cmake（常用！）"></a>AS下编辑native—较新方法-使用cmake（常用！）</h2><p>AS可以先写好java类，然后点击错误修正可以自动生成对应c文件与原生函数头。<br><strong> AS生成的：注意as下如果是cpp文件extern “C” 必加 </strong><br>当你使用错误修正时是生成c版本的时自动不加，当是cpp文件中错误修正时自动加 </p>
-<p><strong>AS所有配置文件基础目录都是当前同一目录下</strong><br>例如AndroidManifest.xml中指明了java代码路径<br>build.gradle中的文件cmakelist从当前下找</p>
-<h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><p>创建支持原生代码的项目与创建任何其他 Android Studio 项目类似，不过前者还需要额外几个步骤：</p>
-<ol>
-<li>在向导的 Configure your new project 部分，选中 Include C++ Support 复选框。点击 Next。</li>
-<li>正常填写所有其他字段并完成向导接下来的几个部分。</li>
-<li>在向导的 Customize C++ Support 部分，您可以使用下列选项自定义项目：<br>C++ Standard：使用下拉列表选择您希望使用哪种 C++ 标准。选择 Toolchain Default 会使用默认的 CMake 设置。<br>Exceptions Support：如果您希望启用对 C++ 异常处理的支持，请选中此复选框。如果启用此复选框，Android Studio 会将 -fexceptions 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>Runtime Type Information Support：如果您希望支持 RTTI，请选中此复选框。如果启用此复选框，Android Studio 会将 -frtti 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>点击 Finish。</li>
-</ol>
-<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ol>
-<li>在 cpp 组中，您可以找到属于项目的所有原生源文件、标头和预构建库。对于新项目，Android Studio 会创建一个示例 C++ 源文件 native-lib.cpp，并将其置于应用模块的 src/main/cpp/ 目录中。本示例代码提供了一个简单的 C++ 函数 stringFromJNI()，此函数可以返回字符串“Hello from C++”。</li>
-<li>在 External Build Files 组中，您可以找到 CMake 或 ndk-build 的构建脚本。与 build.gradle 文件指示 Gradle 如何构建应用一样，CMake 和 ndk-build 需要一个构建脚本来了解如何构建您的原生库。对于新项目，Android Studio 会创建一个 CMake 构建脚本 CMakeLists.txt，并将其置于模块的根目录中。且必须叫这个名字。</li>
-<li>cmake与ndk-build的配置都在build.gradle的管理配置下。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">使用cmake构建，指定文件</div><div class="line">    externalNativeBuild &#123;</div><div class="line">        cmake &#123;</div><div class="line">            path &quot;CMakeLists.txt&quot;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="运行过程"><a href="#运行过程" class="headerlink" title="运行过程"></a>运行过程</h3><ol>
-<li>Gradle 调用您的外部构建脚本 CMakeLists.txt。</li>
-<li>CMake 按照构建脚本中的命令将 C++ 源文件 native-lib.cpp 编译到共享的对象库中，并命名为 libnative-lib.so，Gradle 随后会将其打包到 APK 中。</li>
-<li>运行时，应用的 MainActivity 会使用 System.loadLibrary() 加载原生库。现在，应用可以使用库的原生函数 stringFromJNI()。</li>
-<li>MainActivity.onCreate() 调用 stringFromJNI()，这将返回“Hello from C++”并使用这些文字更新 TextView。</li>
-</ol>
-<h3 id="CMakeLists-txt"><a href="#CMakeLists-txt" class="headerlink" title="CMakeLists.txt"></a>CMakeLists.txt</h3><p>cmake_minimum_required(VERSION 3.4.1)<br>CMake最小版本使用的是3.4.1。</p>
-<h4 id="add-library"><a href="#add-library" class="headerlink" title="add_library()"></a>add_library()</h4><p><strong>这个就是往项目中添加要生成的东西</strong> 即使是第三方库生成或使用也要先生成目标文件，这里决定最后lib中有什么<br>配置so库信息（为当前当前脚本文件添加库）<br>参一：这个是声明引用so库的名称，在项目中，如果需要使用这个so文件，引用的名称就是这个。生成的会加前后缀<br>参二：<br>STATIC：静态库，是目标文件的归档文件，在链接其它目标的时候使用。<br>SHARED：动态库，会被动态链接，在运行时被加载。<br>MODULE：模块库，是不会被链接到其它目标中的插件，但是可能会在运行时使用dlopen-系列的函数动态链接。<br>参三：构建so库的源文件路径，注意是相对cmakelist的。</p>
-<p>还可以用来构建有源代码的库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">add_library( app-glue</div><div class="line">             STATIC</div><div class="line">             $&#123;ANDROID_NDK&#125;/sources/android/native_app_glue/android_native_app_glue.c )</div><div class="line"></div><div class="line"># You need to link static libraries against your shared native library.</div><div class="line">target_link_libraries( native-lib app-glue $&#123;log-lib&#125; )</div></pre></td></tr></table></figure></p>
-<p>还可以用来构建使用已有so的库,set_target_properties用于设置查找so库的路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">add_library( imported-lib</div><div class="line">             SHARED</div><div class="line">             IMPORTED )</div><div class="line">set_target_properties(target1 target2 ...</div><div class="line">                      PROPERTIES prop1 value1</div><div class="line">                      prop2 value2 ...)</div></pre></td></tr></table></figure></p>
-<h4 id="include-directories"><a href="#include-directories" class="headerlink" title="include_directories"></a>include_directories</h4><p>配置头文件路径,注意这里指定的是目录而非文件</p>
-<h4 id="find-library"><a href="#find-library" class="headerlink" title="find_library()"></a>find_library()</h4><p><strong>这个就是用来使用android上提供的</strong><br>这个方法与我们要创建的so库无关而是使用NDK的Apis或者库，默认情况下Android平台集成了很多NDK库文件，所以这些文件是没有必要打包到apk里面去的。直接声明想要使用的库名称即可<br>参一：出口，存放库的路径<br>参二：指定使用的库</p>
-<h4 id="target-link-libraries"><a href="#target-link-libraries" class="headerlink" title="target_link_libraries()"></a>target_link_libraries()</h4><p><strong>这个就是一个连接操作，将后面的连接到第一个文件中</strong></p>
-<p>如果你本地的库（native-lib）想要调用log库的方法，那么就需要配置这个属性，意思是把NDK库关联到本地库。<br>参一：要被关联的库名称<br>其它参：要关联的库名称。${log-lib}为取找到的路径</p>
-<h4 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">#添加一个库，可用于目标</div><div class="line">add_library( # 指定库的名称。生成后会加前后缀根据下面的设置</div><div class="line">             native-lib</div><div class="line"></div><div class="line">             # 将库设置为共享库。</div><div class="line">             SHARED</div><div class="line"></div><div class="line">             # 提供源文件的相对路径。可以多个文件编译为一个库</div><div class="line">             src/main/jni/native-lib.cpp )</div><div class="line">#添加头文件</div><div class="line">include_directories(src/main/cpp/include/)</div><div class="line"></div><div class="line">______________________________________________________________________</div><div class="line"></div><div class="line">#从源码形式的库获取</div><div class="line">add_library( app-glue</div><div class="line">             STATIC</div><div class="line">             $&#123;ANDROID_NDK&#125;/sources/android/native_app_glue/android_native_app_glue.c )</div><div class="line"></div><div class="line">______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line">#添加一个已有的库</div><div class="line">add_library( imported-lib</div><div class="line">             SHARED</div><div class="line">			 #表示这个已经存在，只要导入就可以，set_target_properties()指定路径</div><div class="line">             IMPORTED )</div><div class="line">#指定目标库的位置</div><div class="line">set_target_properties( # Specifies the target library.</div><div class="line">                       imported-lib</div><div class="line"></div><div class="line">                       # Specifies the parameter you want to define.</div><div class="line">                       PROPERTIES IMPORTED_LOCATION</div><div class="line"></div><div class="line">                       # Provides the path to the library you want to import.</div><div class="line">                       imported-lib/src/$&#123;ANDROID_ABI&#125;/libimported-lib.so )</div><div class="line">#编译时定位标头文件</div><div class="line">include_directories( imported-lib/include/ )</div><div class="line"></div><div class="line">_______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line">#使用android上存在的</div><div class="line">find_library( # find用来找到库，这个变量被赋予要找的库的路径</div><div class="line">              log-lib</div><div class="line"></div><div class="line">              # 这里是你要找的库的名字，该库已存在于android中</div><div class="line">              log )</div><div class="line"></div><div class="line"></div><div class="line">_______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#第一个参数是最终要生成的，其它都是需要连接进去的</div><div class="line">target_link_libraries( # 指定目标库</div><div class="line">                       native-lib</div><div class="line"></div><div class="line">					   #连接已有的库</div><div class="line">					   imported-lib</div><div class="line">					   #连接自己建的库 </div><div class="line">                       app-glue</div><div class="line">                       # 连接的android ndk平台已存在目标，将找到的路径传入即可</div><div class="line">                       $&#123;log-lib&#125; )</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1953,7 +1947,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">89</span>
+                <span class="site-state-item-count">90</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

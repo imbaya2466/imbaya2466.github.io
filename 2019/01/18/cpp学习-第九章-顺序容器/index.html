@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpp," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="核心简记容器分为顺序容器(不依赖值，与元素加入位置对应)、有序与无序关联容器(根据关键字的值存储)。标准库的容器性能很好 顺序容器类型:在添加删除与查找方面代价侧重不同。     vector:可变大小数组，随机访问，尾部插入快。  空间不够时分配更大的，并拷贝 deque:双端队列，随机访问，头尾插入快   。 一段一段的连续空间链接起来，deque采用一块map（非STL中的map）作为主控，">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp学习-第九章-顺序容器">
+<meta property="og:url" content="http://yoursite.com/2019/01/18/cpp学习-第九章-顺序容器/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="核心简记容器分为顺序容器(不依赖值，与元素加入位置对应)、有序与无序关联容器(根据关键字的值存储)。标准库的容器性能很好 顺序容器类型:在添加删除与查找方面代价侧重不同。     vector:可变大小数组，随机访问，尾部插入快。  空间不够时分配更大的，并拷贝 deque:双端队列，随机访问，头尾插入快   。 一段一段的连续空间链接起来，deque采用一块map（非STL中的map）作为主控，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-17T17:35:40.217Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp学习-第九章-顺序容器">
+<meta name="twitter:description" content="核心简记容器分为顺序容器(不依赖值，与元素加入位置对应)、有序与无序关联容器(根据关键字的值存储)。标准库的容器性能很好 顺序容器类型:在添加删除与查找方面代价侧重不同。     vector:可变大小数组，随机访问，尾部插入快。  空间不够时分配更大的，并拷贝 deque:双端队列，随机访问，头尾插入快   。 一段一段的连续空间链接起来，deque采用一块map（非STL中的map）作为主控，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/18/cpp学习-第九章-顺序容器/"/>
+
+
+
+
+
+  <title>cpp学习-第九章-顺序容器 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/18/cpp学习-第九章-顺序容器/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cpp学习-第九章-顺序容器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-18T01:33:54+08:00">
+                2019-01-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>容器分为顺序容器(不依赖值，与元素加入位置对应)、有序与无序关联容器(根据关键字的值存储)。标准库的容器性能很好</p>
+<p>顺序容器类型:在添加删除与查找方面代价侧重不同。   </p>
+<ol>
+<li>vector:可变大小数组，随机访问，尾部插入快。  空间不够时分配更大的，并拷贝</li>
+<li>deque:双端队列，随机访问，头尾插入快   。 一段一段的连续空间链接起来，deque采用一块map（非STL中的map）作为主控，map是一块小的连续空间，其中每个元素都是指针，指向一块较大的线性连续空 间，称为缓冲区。而缓冲区才是存储deque元素的空间主体。</li>
+<li>list:双向链表，双向顺序访问，任意插入快  。  底层数据结构为双向循环链表</li>
+<li>forward_list:单向链表，单向顺序访问，任意插入快</li>
+<li>array:固定大小数组，随机访问，不可改动大小</li>
+<li>string:与vector相似，专门保存字符。</li>
+</ol>
+<p>容器上的操作层次:</p>
+<ol>
+<li>所有容器类型提供</li>
+<li>仅针对顺序、关联或无序容器</li>
+<li>只适用小部分容器</li>
+</ol>
+<p>每个容器定义在头文件中，文件名与类型名相同。均为模板类</p>
+<a id="more"></a>
+<h3 id="所有容器都适用的操作"><a href="#所有容器都适用的操作" class="headerlink" title="所有容器都适用的操作"></a>所有容器都适用的操作</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">类型别名:</div><div class="line">    iterator 此容器的迭代器类型</div><div class="line">    const_iterator 只可读取的迭代器</div><div class="line">    size_type 无符号整行，足够保存容器大小</div><div class="line">    difference_type 带符号整形，俩个迭代器的距离</div><div class="line">    value_type 元素类型</div><div class="line">    reference 元素左值类型 为value_type&amp;</div><div class="line">    const_reference 元素的const左值类型</div><div class="line">构造函数:</div><div class="line">    C c 默认构造，空容器</div><div class="line">    C c(c1) 拷贝构造  与C c=c1构造没区别，不是类型转化拷贝，直接构造</div><div class="line">    C c(b,e) 迭代器b-e拷贝构造，array不可</div><div class="line">    C c&#123;...&#125; 列表初始化  =&#123;...&#125;相同</div><div class="line">    顺序容器才有的:</div><div class="line">        C c(n) 接受大小参数，值初始化</div><div class="line">        C c(n,t) 大小初始化，值为t</div><div class="line">赋值与swap 整体</div><div class="line">    c1=c2 c1元素替换为c2</div><div class="line">    c1=&#123;a,b,c&#125; c1元素替换为列表中元素</div><div class="line">    c1.swap(c2) 交换元素，整体</div><div class="line">    swap(c1,c2) 同上</div><div class="line">    assign不适用于关联容器与array  作用是从一个不同但相容的类型赋值</div><div class="line">        c.assign(b,e) 替换为迭代器范围</div><div class="line">        c.assign(&#123;...&#125;) 替换为列表内容</div><div class="line">        c.assign(n,t) 替换为n个t </div><div class="line">大小</div><div class="line">    c.size() c中元素的数目</div><div class="line">    c.max_size() c可保存最大元素数目</div><div class="line">    c.empty() 判断是否空，空为true</div><div class="line">添加删除</div><div class="line">    c.insert(...) 拷贝元素进c</div><div class="line">    c.emplace(...) 构造c中的一个元素</div><div class="line">    c.erase(...) 删除指定元素</div><div class="line">    c.clear() 删除c中所有元素</div><div class="line">关系</div><div class="line">    == !=</div><div class="line">    &lt; &lt;= &gt; &gt;=</div><div class="line">迭代器</div><div class="line">    c.begin() c.end() 返回首与尾后迭代器，含const重载</div><div class="line">    c.cbegin() c.cend() 返回const_iterator</div><div class="line">反向</div><div class="line">    reverse_iterator 逆序迭代器</div><div class="line">    const_reverse_iterator 只读逆序迭代器</div><div class="line">    c.rbegin() c.rend() 返回首前与尾迭代器，含const重载</div><div class="line">    c.crbegin() c.crend() 返回const_reverse_iterator</div></pre></td></tr></table></figure>
+<p>迭代器是仿指针的类实现，标准库使用范围是左闭右开[)，原因:</p>
+<ol>
+<li>begin与end相等则范围为空</li>
+<li>b与e不等则至少含一个元素</li>
+<li>b递增若干可等于e</li>
+</ol>
+<p>这样在许多算法实现中都不用考虑区间问题。一旦改变容器大小，迭代器失效。虽然有的不会失效但防止错误需要时再细看。</p>
+<p>拷贝构造类型必须相同，不过用迭代器构造时不必相同，可转化即可。<br>array的模板中大小也是类型一部分 array&lt; int , 42 &gt; 类型一部分。</p>
+<p>容器的比较是进行元素的逐个比较，空&lt;一切。元素以第一个不同的为整体比较结果。元素需要定义==与&lt;</p>
+<h3 id="顺序容器操作"><a href="#顺序容器操作" class="headerlink" title="顺序容器操作"></a>顺序容器操作</h3><p>顺序容器添加:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">forward_list有自己版本的添加删除,不支持back操作。</div><div class="line">vector与string不支持front操作</div><div class="line">c.push_back(t) 在c的尾部创建t</div><div class="line">c.emplace_back(args) 在c的尾部由args构造元素</div><div class="line"></div><div class="line">c.push_front(t) 头部</div><div class="line">c.emplace_front(args) </div><div class="line"></div><div class="line">c.insert(p,t)  迭代器p前插入t，返回指向新添加元素的迭代器</div><div class="line">c.emplace(p,args) 由参数构造</div><div class="line"></div><div class="line">c.insert(p,n,t) n个t返回添加的第一个的迭代器</div><div class="line">c.insert(p,b,e) b-e添加。</div><div class="line"></div><div class="line">c.insert(p,&#123;&#125;) 列表插入</div></pre></td></tr></table></figure></p>
+<p>传入元素对象时传入的是拷贝。emplace版本是直接构造。<br>deque保证容器首尾插入删除都是常数时间。</p>
+<p>访问操作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">下标只适用于string、vector、deque、array</div><div class="line">back不适用于forward_list</div><div class="line">    c.back() 返回c中尾元素的引用</div><div class="line">    c.front() 返回c中首元素引用</div><div class="line">    c[n] 返回下标为n的引用。</div><div class="line">    c.at(n) 带检查的下标使用</div></pre></td></tr></table></figure></p>
+<p>引用，为左值。auto只能当类型的前半部分，不会自动加&amp;。左值给auto时防止拷贝要加&amp;。</p>
+<p>删除元素:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">forward_list 不支持back操作，vector与string不支持front</div><div class="line">    c.pop_back() 删除尾</div><div class="line">    c.pop_front() 删除首</div><div class="line">    c.erase(p) 删除迭代器p所指的元素，返回被删元素之后的迭代器</div><div class="line">    c.erase(b,e) 删除区间[b,e)返回之后</div><div class="line">    c.clean() 删除c中所有</div></pre></td></tr></table></figure></p>
+<p>特殊的forward_list操作<br>因为forwa_list想添加删除必须改前节点，因此只能决定后节点动作。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">lst.before_begin()　返回指向链表首元素之前并不存在的元素的迭代器，此迭代器不能解引用。</div><div class="line">lst.cbefore_begin()　cbefore_begin()返回一个const_iterator</div><div class="line"></div><div class="line">lst.insert_after(p,t)　在迭代器p之后的位置插入元素。t是一个对象，n是数量，b和e是表示范围的一对迭代器（b和e不能指向lst内），il是一个花括号列表。返回一个指向最后一个插入lst.insert_after(p,n,t) 元素的迭代器。如果范围为空，则返回p，若p为尾后迭代器，则函数行为未定义。</div><div class="line">lst.insert_after(p,b,e)</div><div class="line">lst.insert_after(p,il)</div><div class="line"></div><div class="line">emplace_after(p,args)　使用args在p指定的位置之后创建一个元素，返回一个指向这个新元素的迭代器。若p为尾后迭代器，则函数的行为未定义</div><div class="line"></div><div class="line">lst.erase_after(p)　　 删除p指向的位置之后的元素，或删除从b之后直到（但不包含）e之间的元素。返回一个指向被删除元素之后元素的迭代器，若不存在这样的元素，则返回尾后迭代</div><div class="line">lst.erase_after(b,e)　　器，如果p指向lst的尾元素或者是一个尾后迭代器，则函数的行为未定义</div></pre></td></tr></table></figure></p>
+<p>改变容器大小<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">c.resize(n) 调整大小为n，多余的元素被丢弃，不足的值初始化。可再加个参数t设初始值</div></pre></td></tr></table></figure></p>
+<h4 id="vector特有"><a href="#vector特有" class="headerlink" title="vector特有"></a>vector特有</h4><p>vector、string分配空间时往往分配比需求大的，因为每次超出都将全部拷贝，这样有效防止拷贝次数。<br>因此有:capacity操作告诉我们容器在不扩张内存空间的情况下可以容纳多少个元素<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">shrink_to_fit只适用于vector、string和deque</div><div class="line">capacity和reserve只适用于vector和string</div><div class="line">c.shrink_to_fit()    请将capacity减少为size相同大小</div><div class="line">c.capacity()　　不重新分配内存空间的话，c可以保存多少元素</div><div class="line">c.reserve(n)　　分配至少能容纳n个元素的内存空间,总大小</div></pre></td></tr></table></figure></p>
+<p>超过才分配</p>
+<h4 id="string特有"><a href="#string特有" class="headerlink" title="string特有"></a>string特有</h4><p>构造string的方法还有<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">n、len2和pos2都是无符号值</div><div class="line">string s(cp,n) 　　　　s是cp指向的数组中的前n个字符的拷贝，此数组至少应该包含n个字符</div><div class="line">string s(s2,pos2)　　  s是string s2从下标pos2开始的字符的拷贝。若pos2&gt;s2.size(),构造函数的行为未定义</div><div class="line">string s(s2,pos2,len2) s是string s2从下标pos2开始len2个字符的拷贝。若pos2&gt;s2.size()，构造函数的行为未定义。不管len2的值是多少，构造函数至多拷贝s2.size()-pos2个字符</div></pre></td></tr></table></figure></p>
+<p>子字串<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">s.substr(pos,n)　返回一个string，包含s中从pos开始的n个字符的拷贝。pos的默认值为0。n的默认值的s.size()-pos，即拷贝从pos开始的所以字符</div></pre></td></tr></table></figure></p>
+<p>改变str其它方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">s.insert(pos,args)　　　　在pos之前插入args指定的字符，pos可以是一个下标或者一个迭代器。接受下标的版本返回一个指向s的引用；接受迭代器的版本返回指向第一个插入字符的迭代器</div><div class="line">s.erase(pos,len)　　　　  删除从位置pos开始的len个字符。如果len被省略，则删除从pos开始直至s末尾的所有字符。返回一个指向s的引用</div><div class="line">s.assign(args)　　　　　  将s中的字符替换为args指定的字符。返回一个指向s的引用</div><div class="line">s.append(args)　　　　　将args追加到s。返回以指向s的引用</div><div class="line">s.replace(range,args)     删除s中范围range内的字符，替换为args指定的字符。range或者是一个下标和一个长度，或者是一对指向s的迭代器，返回一个指向s的引用</div><div class="line"></div><div class="line"> </div><div class="line">args可以是下列形式之一：append和assign可以使用所有形式：</div><div class="line">str不能与s相同，迭代器b和e不能指向s</div><div class="line"></div><div class="line">str 　　　　　　　　　　　字符串str</div><div class="line">str,pos,len　　　　　　　str中从pos开始最多len个字符</div><div class="line">cp,len　　　　　　　　　 从cp指向的字符数组的前（最多）len个字符</div><div class="line">cp　　　　　　　　　　　cp指向的以空字符串结尾的字符数组</div><div class="line">n,c　　　　　　　　　　  n个字符c</div><div class="line">b,e　　　　　　　　　　 迭代器b和e指定的范围内的字符</div><div class="line">初始化列表　　　　　　　花括号包围，以逗号分隔的字符列表</div><div class="line"></div><div class="line">replace和insert所允许的args形式依赖于range和pos是如何指定的</div><div class="line">replace　　　　　　replace　　　　　　insert　　　　　　　　insert　　　　　　　　　　args可以是</div><div class="line">(pos,len,args)       (b,e,args)　　　　　(pos,args)　　　　　 (iter,args)</div><div class="line">是　　　　　　　　　是　　　　　　　　　是　　　　　　　　　　否　　　　　　　　　　　　str</div><div class="line">是　　　　　　　　　否　　　　　　　　　是　　　　　　　　　　否　　　　　　　　　　　　str,pos,len</div><div class="line">是　　　　　　　　　是　　　　　　　　　是　　　　　　　　　　否　　　　　　　　　　　　cp,len</div><div class="line">是　　　　　　　　　是　　　　　　　　　否　　　　　　　　　　否　　　　　　　　　　　　cp</div><div class="line">是　　　　　　　　　是　　　　　　　　　是　　　　　　　　　　是　　　　　　　　　　　　n,c</div><div class="line">否　　　　　　　　　是　　　　　　　　　否　　　　　　　　　　是　　　　　　　　　　　　b2,e2</div><div class="line">否　　　　　　　　　是　　　　　　　　　否　　　　　　　　　　是　　　　　　　　　　　　初始化列表</div></pre></td></tr></table></figure></p>
+<p>搜索操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">搜索操作返回指定字符出现的下标，如果未找到则返回npos无符号-1</div><div class="line">s.find(args)　　　　　　　　　　查找s中args第一次出现的位置</div><div class="line">s.rfind(args)　　　　　　　　　 查找s中args最后一次出现的位置</div><div class="line">s.find_first_of(args)　 　　　　在s中查找args中任何一个字符第一次出现的位置</div><div class="line">s.find_last_of(args)    　　　　在s中查找args中任何一个字符最后一次出现的位置</div><div class="line">s.find_first_not_of(args)　　  在s中查找第一个不存在args 中的字符</div><div class="line">s.find_last_not_of(args)　　　在s中查找最后一个不在args中的字符</div><div class="line"></div><div class="line">args必须是以下形式之一</div><div class="line">c,pos 　　　　　　　　　　　　从s中位置pos开始查找字符c，pos默认为0</div><div class="line">s2,pos　　　　　　　　　　　 从s中位置pos开始查找字符串s2，pos默认为0</div><div class="line">cp,pos　　　　　　　　　　　 从s中位置pos开始查找指针cp指向的空字符结尾的C风格字符串，pos默认为0</div><div class="line">cp,pos,n　　　　　　　　　　 从s中位置pos开始查找指针cp指向的数组的前n个字符。pos和n无默认值</div></pre></td></tr></table></figure></p>
+<p>compare<br>类似strcmp，根据s是等于、大于还是小于参数指定的字符串，s.compare返回0，正数和负数。其参数:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">s2　　　　　　　　　　　比较s和s2</div><div class="line">pos1,n1,s2　　　　　　 将s中从pos1开始的n1个字符与s2进行比较</div><div class="line">pos1,,n1,s2,pos2,n2    将s中从pos1开始的n1个字符与s2中从pos2开始的n2个字符进行比较</div><div class="line">cp　　　　　　　　　　　比较s与cp指向的以空字符结尾的字符数组</div><div class="line">pos1,n1,cp　　　　　　 将s中从pos1开始的n1个字符和cp指向的以空字符结尾的字符数组进行比较</div><div class="line">pos1,n1,cp,n2　　　　  将s中从pos开始的n1个字符与指针cp指向的地址开始的n2个字符进行比较</div></pre></td></tr></table></figure></p>
+<p>数据转化<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">to_string(val)　　　　　　　　　　一组重载函数，返回数值val的string表示。val可以是任何算术类型。对每个浮点类型和int或更大的整型，都有相应版本的to_string。</div><div class="line"></div><div class="line">stoi(s,p,b)　　　　　　　　　　　　返回s的起始子串（表示整数内容）的数值。返回值类型是int、long、unsigned long、long long、unsigned long long。b表示转换所用的基数，默认值是10.p是size_t指针，用来stol(s,p,b)　　　　保存s中第一个非数值字符的下标，p默认是0，即，函数不保存下标</div><div class="line">stoul(s,p,b)</div><div class="line">stoll(s,p,b)</div><div class="line">stoull(s,p,b)</div><div class="line"></div><div class="line">stof(s,p) 　　　　　　　　　　　　返回s的起始子串（表示浮点数内容）的数值，返回值类型分别是float、double和long double，参数p的作用与整数转换中相同</div><div class="line">stod(s,p)</div><div class="line">stold(s,p)</div></pre></td></tr></table></figure></p>
+<h3 id="容器适配器"><a href="#容器适配器" class="headerlink" title="容器适配器"></a>容器适配器</h3><p>三个顺序容器适配器:<br>stack 栈，要求back操作<br>queue 对列，要求back、front  先进先出<br>priority_queue 优先级队列，还要求随机访问   加入的会按优先级排序，使用元素的&lt;确定<br>一个容器适配器接受已有的容器类型，使其行为看起来像不同的类型。只能使用适配器的操作，不能用原本容器的。</p>
+<p>所以容器适配器都支持的操作和类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">size_type　　　　　　一种类型，足以保存当前类型的最大对象的大小</div><div class="line">value_type　　　　　元素类型</div><div class="line">container_type　　   实现适配器的底层容器类型</div><div class="line">A a;　　　　　　　　  创建一个名为a的空适配器</div><div class="line">A a(c);　　　　　　　创建一个名为a的适配器，带有容器c的一个拷贝</div><div class="line">关系运算符　　　　　 每个适配器都支持所有关系运算符：==、！=、&lt;、&lt;=、&gt;和&gt;=，这些运算符返回底层容器的比较结果</div><div class="line">a.empty() 　　　　　若a包含任何元素，返回false，否则返回true</div><div class="line">a.size()　　　　　　 返回a中的元素数目</div><div class="line">swap(a,b)　　　　　　　交换a和b的内容，a和b必须有相同的类型，包括底层容器类型也必须相同</div><div class="line">a.swap(a,b)</div></pre></td></tr></table></figure></p>
+<p>使用: stack&lt; int ,vector&lt; int &gt;&gt;    第二个模板参数可选，stack、queue默认基于deque。priority_queue默认vector。</p>
+<p>栈操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">栈默认是基于deque实现，也可以在list或vector上实现</div><div class="line">s.pop() 　　　　　　删除栈顶元素，但不返回该元素的值</div><div class="line">s.push(item)　　　 创建一个新元素压人栈顶，该元素通过拷贝或移动item而来，或者由args构造</div><div class="line">s.emplace(args)　　</div><div class="line">s.top()　　　　　　返回栈顶元素，但不将元素弹出栈</div></pre></td></tr></table></figure></p>
+<p>对列操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">queue默认基于deque实现，priority_queue默认基于vector实现；</div><div class="line">queue也可以由list或vector实现，priority_queue也可以用deque实现</div><div class="line">q.pop()  　　 　　　　删除queue的首元素或priority_queue的最高优先级的元素，但不删除此元素</div><div class="line">q.front()  　　　　　　返回首元素或尾元素，但不删除此元素，只适用于queue</div><div class="line">q.back()　　　　　　  </div><div class="line"></div><div class="line">q.top()　　　　　　　返回最高优先级元素，但不删除该元素，只适用于priority_queue</div><div class="line"></div><div class="line">q.push(item)　　　　在queue末尾或priority_queue中恰当的位置创建一个元素。其值为item，或者由args构造</div><div class="line">q.emplace(args)</div></pre></td></tr></table></figure></p>
+<h2 id="反汇编"><a href="#反汇编" class="headerlink" title="反汇编"></a>反汇编</h2><p>这里没什么汇编上的新知识…主要是模板的汇编，在自定义模板时再分析。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/16/cpp学习-第八章-IO库/" rel="next" title="cpp学习-第八章-IO库">
+                <i class="fa fa-chevron-left"></i> cpp学习-第八章-IO库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">90</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">76</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#所有容器都适用的操作"><span class="nav-number">1.1.</span> <span class="nav-text">所有容器都适用的操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#顺序容器操作"><span class="nav-number">1.2.</span> <span class="nav-text">顺序容器操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#vector特有"><span class="nav-number">1.2.1.</span> <span class="nav-text">vector特有</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#string特有"><span class="nav-number">1.2.2.</span> <span class="nav-text">string特有</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器适配器"><span class="nav-number">1.3.</span> <span class="nav-text">容器适配器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反汇编"><span class="nav-number">2.</span> <span class="nav-text">反汇编</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>

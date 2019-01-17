@@ -283,6 +283,166 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/29/apk签名/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/29/apk签名/" itemprop="url">apk签名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-29T19:48:40+08:00">
+                2018-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="数据摘要"><a href="#数据摘要" class="headerlink" title="数据摘要"></a>数据摘要</h4><p>消息摘要算法（Message Digest Algorithm）是一种能产生特殊输出格式的算法，其原理是根据一定的运算规则对原始数据进行某种形式的信息提取，被提取出的信息就被称作原始数据的消息摘要。<br>著名的摘要算法有RSA公司的MD5算法和SHA-1算法及其大量的变体。<br>特点：</p>
+<ol>
+<li>无论输入的消息有多长，计算出来的消息摘要的长度总是固定的。</li>
+<li>一般来说（不考虑碰撞的情况下），只要输入的原始数据不同，对其进行摘要以后产生的消息摘要也必不相同，即使原始数据稍有改变，输出的消息摘要便完全不同。但是，相同的输入必会产生相同的输出。</li>
+<li>具有不可逆性，即只能进行正向的信息摘要，而无法从摘要中恢复出任何的原始消息。</li>
+</ol>
+<p>例子：MD5相当于超损压缩。128位<br>用途:</p>
+<ol>
+<li>防止被篡改：<br>1）比如发送一个电子文档，发送前，我先得到MD5的输出结果a。然后在对方收到电子文档后，对方也得到一个MD5的输出结果b。如果a与b一样就代表中途未被篡改。<br>2）比如我提供文件下载，为了防止不法分子在安装程序中添加木马，我可以在网站上公布由安装文件得到的MD5输出结果。<br>3）SVN在检测文件是否在CheckOut后被修改过，也是用到了MD5.</li>
+<li>防止直接看到明文：<br>现在很多网站在数据库存储用户的密码的时候都是存储用户密码的MD5值。这样就算不法分子得到数据库的用户密码的MD5值，也无法知道用户的密码。（比如在UNIX系统中用户的密码就是以MD5（或其它类似的算法）经加密后存储在文件系统中。当用户登录的时候，系统把用户输入的密码计算成MD5值，然后再去和保存在文件系统中的MD5值进行比较，进而确定输入的密码是否正确。通过这样的步骤，系统在并不知道用户密码的明码的情况下就可以确定用户登录系统的合法性。这不但可以避免用户的密码被具有系统管理员权限的用户知道，而且还在一定程度上增加了密码被破解的难度。）</li>
+<li>防止抵赖（数字签名）：<br>这需要一个第三方认证机构。例如A写了一个文件，认证机构对此文件用MD5算法产生摘要信息并做好记录。若以后A说这文件不是他写的，权威机构只需对此文件重新产生摘要信息，然后跟记录在册的摘要信息进行比对，相同的话，就证明是A写的了。这就是所谓的“数字签名”。</li>
+</ol>
+<h4 id="签名文件和证书"><a href="#签名文件和证书" class="headerlink" title="签名文件和证书"></a>签名文件和证书</h4><p>数字签名技术：<br>生成一对公私钥对，将公钥给消息的接收者。<br>私匙加密的只能用公匙解，其他人无法篡改私匙加密的内容，因此保证发出的唯一。<br>那么如何保证公钥的安全可信呢？这就要靠数字证书来解决了。<br>数字证书其实也用到了数字签名技术.<br><img src="https://i.imgur.com/lzrjA7X.png" alt=""></p>
+<h4 id="jarsign和signapk工具"><a href="#jarsign和signapk工具" class="headerlink" title="jarsign和signapk工具"></a>jarsign和signapk工具</h4><p>jarsign是Java本生自带的一个工具，他可以对jar进行签名的。而signapk是后面专门为了Android应用程序apk进行签名的工具，他们两的签名算法没什么区别，主要是签名时使用的文件不一样（第4点）<br>二者都是签名apk</p>
+<h4 id="keystore文件和pk8，x509-pem文件的区别"><a href="#keystore文件和pk8，x509-pem文件的区别" class="headerlink" title="keystore文件和pk8，x509.pem文件的区别"></a>keystore文件和pk8，x509.pem文件的区别</h4><p>jarsign工具签名时使用的是keystore文件<br>signapk工具签名时使用的是pk8,x509.pem文件<br>ide生成debug版时有个默认的keystore，默认用的是jarsign工具进行签名的，它有有MD5和SHA1的摘要，这个就是keystore文件中私钥的数据摘要，这个信息也是我们在申请很多开发平台账号的时候需要填入的信息，比如申请百度地图，微信SDK等，会需要填写应用的MD5或者是SHA1信息。从而确定是谁生成的应用在使用。</p>
+<p>pk8是私钥文件<br>x509.pem是含有公钥的文件</p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>只要修改了Apk中的任何内容，就必须重新签名，不然会提示安装失败，保证了apk未修改。且旧软件与新软件签名使用签名文件不同不可安装，即只有签名文件拥有者可以更新自己的软件<br><strong>签名标明了软件作者和软件内容</strong></p>
+<p>连接：<br><a href="https://blog.csdn.net/jiangwei0910410003/article/details/50402000" title="详解" target="_blank" rel="external">https://blog.csdn.net/jiangwei0910410003/article/details/50402000</a></p>
+<p>2018.9.2更新学习密码学后的理解：<br>对app进行散列，base64编码后字节化为字符，再用数字签名加密，公匙以证书形式发放。<br>效果：app与某个私匙绑定。<br>RSA之所以成立可解密用了欧拉函数的性质。之所以保密用了离散下幂与底难求（不连续无法逼近求解）</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/24/思考/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1626,154 +1786,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/02/第一次CTF参赛/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/02/第一次CTF参赛/" itemprop="url">第一次CTF参赛</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-02T22:36:51+08:00">
-                2017-11-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="第一次参加ctf，负责划水逆向题…虽然学长说这次的题水分很大（并且很快被他们做完了）但我觉得我仍然收获了很多"><a href="#第一次参加ctf，负责划水逆向题…虽然学长说这次的题水分很大（并且很快被他们做完了）但我觉得我仍然收获了很多" class="headerlink" title="第一次参加ctf，负责划水逆向题…虽然学长说这次的题水分很大（并且很快被他们做完了）但我觉得我仍然收获了很多"></a>第一次参加ctf，负责划水逆向题…虽然学长说这次的题水分很大（并且很快被他们做完了）但我觉得我仍然收获了很多</h3><h4 id="1-首先是心得："><a href="#1-首先是心得：" class="headerlink" title="1.首先是心得："></a>1.首先是心得：</h4><p>开始下下来题后，是一道输入flag经过判断函数判断正确的题，习惯暴力破解的我一直在找简单方法避免分析判断函数，最后得到的结果是….不行，必须分析这种偷懒的心思浪费了不少时间</p>
-<h4 id="2-关于工具"><a href="#2-关于工具" class="headerlink" title="2.关于工具"></a>2.关于工具</h4><p>首先用的od….虽然很快定位到了主函数和判断函数..但是纯汇编的算法让我分析了一阵子就崩溃了……于是该用xdbg反汇编…结果…也很难懂….最后用了不太熟的ida….md简直是神器..反出来的代码真好读……</p>
-<h4 id="3-关于解题法"><a href="#3-关于解题法" class="headerlink" title="3.关于解题法"></a>3.关于解题法</h4><p>来看看反汇编出的代码吧：<br>main:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line">int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">&#123;</div><div class="line">  void *v3; // eax@1</div><div class="line">  int v4; // edx@1</div><div class="line">  void *v5; // eax@3</div><div class="line">  int result; // eax@3</div><div class="line">  size_t v7; // eax@5</div><div class="line">  void *v8; // eax@7</div><div class="line">  void *v9; // eax@10</div><div class="line">  void *v10; // eax@12</div><div class="line">  void *v11; // eax@13</div><div class="line">  char v12; // [sp+Ch] [bp-CCh]@1</div><div class="line">  unsigned int i; // [sp+4Ch] [bp-8Ch]@4</div><div class="line">  char v14[4]; // [sp+50h] [bp-88h]@4</div><div class="line">  char v15[28]; // [sp+58h] [bp-80h]@1</div><div class="line">  char v16; // [sp+74h] [bp-64h]@9</div><div class="line"></div><div class="line">  memset(&amp;v12, 0xCCu, 0xCCu);</div><div class="line">  v3 = (void *)sub_402B30(&amp;unk_446360, &quot;Give me your flag:&quot;);</div><div class="line">  sub_4013F0(v3, (int (__cdecl *)(void *))sub_403670);</div><div class="line">  sub_401440((int)&amp;dword_4463F0, v4, (int)v15, 127);</div><div class="line">  if ( strlen(v15) &lt; 0x1E &amp;&amp; strlen(v15) &gt; 4 )</div><div class="line">  &#123;</div><div class="line">    strcpy(v14, &quot;EIS&#123;&quot;);</div><div class="line">    for ( i = 0; ; ++i )</div><div class="line">    &#123;</div><div class="line">      v7 = strlen(v14);</div><div class="line">      if ( i &gt;= v7 )</div><div class="line">        break;</div><div class="line">      if ( v15[i] != v14[i] )</div><div class="line">      &#123;</div><div class="line">        v8 = (void *)sub_402B30(&amp;unk_446360, &quot;Sorry, keep trying! &quot;);</div><div class="line">        sub_4013F0(v8, (int (__cdecl *)(void *))sub_403670);</div><div class="line">        return 0;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    if ( v16 == 125 )</div><div class="line">    &#123;</div><div class="line">      if ( sub_4011C0(v15) )</div><div class="line">      &#123;</div><div class="line">        v11 = (void *)sub_402B30(&amp;unk_446360, &quot;Congratulations! &quot;);</div><div class="line">        sub_4013F0(v11, (int (__cdecl *)(void *))sub_403670);</div><div class="line">        result = 0;</div><div class="line">      &#125;</div><div class="line">      else</div><div class="line">      &#123;</div><div class="line">        v10 = (void *)sub_402B30(&amp;unk_446360, &quot;Sorry, keep trying! &quot;);</div><div class="line">        sub_4013F0(v10, (int (__cdecl *)(void *))sub_403670);</div><div class="line">        result = 0;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">      v9 = (void *)sub_402B30(&amp;unk_446360, &quot;Sorry, keep trying! &quot;);</div><div class="line">      sub_4013F0(v9, (int (__cdecl *)(void *))sub_403670);</div><div class="line">      result = 0;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  else</div><div class="line">  &#123;</div><div class="line">    v5 = (void *)sub_402B30(&amp;unk_446360, &quot;Sorry, keep trying!&quot;);</div><div class="line">    sub_4013F0(v5, (int (__cdecl *)(void *))sub_403670);</div><div class="line">    result = 0;</div><div class="line">  &#125;</div><div class="line">  return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>判断函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">bool __cdecl sub_4011C0(char *a1)</div><div class="line">&#123;</div><div class="line">  bool result; // al@2</div><div class="line">  size_t v2; // eax@4</div><div class="line">  size_t v3; // eax@7</div><div class="line">  char v4; // [sp+Ch] [bp-F4h]@1</div><div class="line">  int v5; // [sp+4Ch] [bp-B4h]@15</div><div class="line">  int v6; // [sp+50h] [bp-B0h]@6</div><div class="line">  char v7[32]; // [sp+54h] [bp-ACh]@6</div><div class="line">  int v8; // [sp+74h] [bp-8Ch]@6</div><div class="line">  int i; // [sp+78h] [bp-88h]@3</div><div class="line">  unsigned int j; // [sp+7Ch] [bp-84h]@3</div><div class="line">  char v11[128]; // [sp+80h] [bp-80h]@5</div><div class="line"></div><div class="line">  memset(&amp;v4, 0xCCu, 0xF4u);</div><div class="line">  if ( strlen(a1) &gt; 4 )</div><div class="line">  &#123;</div><div class="line">    j = 4;</div><div class="line">    for ( i = 0; ; ++i )</div><div class="line">    &#123;</div><div class="line">      v2 = strlen(a1);</div><div class="line">      if ( j &gt;= v2 - 1 )</div><div class="line">        break;</div><div class="line">      v11[i] = a1[j++];</div><div class="line">    &#125;</div><div class="line">    v11[i] = 0;</div><div class="line">    v8 = 0;</div><div class="line">    v6 = 0;</div><div class="line">    memset(v7, 0, 0x20u);</div><div class="line">    for ( j = 0; ; ++j )</div><div class="line">    &#123;</div><div class="line">      v3 = strlen(v11);</div><div class="line">      if ( j &gt;= v3 )</div><div class="line">        break;</div><div class="line">      if ( v11[j] &gt;= 97 &amp;&amp; v11[j] &lt;= 122 )</div><div class="line">      &#123;</div><div class="line">        v11[j] -= 32;</div><div class="line">        v6 = 1;</div><div class="line">      &#125;</div><div class="line">      if ( !v6 &amp;&amp; v11[j] &gt;= 65 &amp;&amp; v11[j] &lt;= 90 )</div><div class="line">        v11[j] += 32;</div><div class="line">      v5 = sub_4013C0(v11[j]);</div><div class="line">      v7[j] = byte_4420B0[j] ^ v5;</div><div class="line">      v6 = 0;</div><div class="line">    &#125;</div><div class="line">    result = strcmp(&quot;GONDPHyGjPEKruv&#123;&#123;pj]X@rF&quot;, v7) == 0;</div><div class="line">  &#125;</div><div class="line">  else</div><div class="line">  &#123;</div><div class="line">    result = 0;</div><div class="line">  &#125;</div><div class="line">  return result;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">int __cdecl sub_4013C0(int a1)</div><div class="line">&#123;</div><div class="line">  return (a1 ^ 0x55) + 72;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>注意俩个已有的串：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> GONDPHyGjPEKruv&#123;&#123;pj]X@rF</div><div class="line">byte_4420B0[j]=(0x0D, 0x13, 0x17, 0x11, 0x2, 0x1, 0x20, 0x1D, 0x0C, 0x2, 0x19, 0x2F, 0x17, 0x2B, 0x24, 0x1F, 0x1E, 0x16, 0x9, 0x0F, 0x15, 0x27, 0x13, 0x26, 0x0A, 0x2F, 0x1E, 0x1A, 0x2D, 0x0C, 0x22, 0x4)</div></pre></td></tr></table></figure></p>
-<p>开始的时候没看出第二个是已有的…..<br>好了，步骤：<br>设输入的串（答案）为s。已有的串q1，q2<br>1.看懂流程(画出流程图)<br>2.详细分析函数正向过程：比如此题为(1)大变小小变大(2)(s[i]^0x55+72)^q2[i]<br>3.结果与q1比较，一样就对。<br><strong>好了，接下来是重点</strong><br>设上述步骤为F(x);<br>接下来就是写出其<strong>反函数</strong><br>这里涉及的离散知识为：若A=B^C，那么B=A^C;C=A^B<br>证明：A^C=B^C^C,C^C=0,B^0=B<br>于是写出逆向算法<br>1.((q1[i] ^ q2[i]) - 0x48) ^ 0x55;<br>2.大变小小变大<br>代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">#include &quot;stdio.h&quot;</div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">	char y[25] = &#123; &quot;GONDPHyGjPEKruv&#123;&#123;pj]X@rF&quot; &#125;;</div><div class="line">	unsigned char x[0x20] = &#123; 0x0D, 0x13, 0x17, 0x11, 0x2, 0x1, 0x20, 0x1D, 0x0C, 0x2, 0x19, 0x2F, 0x17, 0x2B, 0x24, 0x1F, 0x1E, 0x16, 0x9, 0x0F, 0x15, 0x27, 0x13, 0x26, 0x0A, 0x2F, 0x1E, 0x1A, 0x2D, 0x0C, 0x22, 0x4 &#125;;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">	for (int i = 0; i &lt; 24; i++)</div><div class="line">	&#123;</div><div class="line">		x[i] = ((x[i] ^ y[i]) - 0x48) ^ 0x55;</div><div class="line">		if (x[i] &gt;= &apos;A&apos; &amp;&amp; x[i] &lt;= &apos;Z&apos;)</div><div class="line">			x[i] += 0x20;</div><div class="line">		else if(x[i] &gt;= &apos;a&apos; &amp;&amp; x[i] &lt;= &apos;z&apos;)</div><div class="line">			x[i] -=0x20;</div><div class="line">		else</div><div class="line">			;</div><div class="line">	&#125;</div><div class="line">	x[24] = 0;</div><div class="line">	printf(&quot;EIS&#123;%s&#125;&quot;, x);</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>虽然鄙视了自己一天….但最终还算看到点希望….逆向的硬功夫就是分析机器代码，多想多写。话说寻找反函数这或许就是加密解密之间的战争吧……嘛…..该去看看加密解密算法之类的了……<br><strong>ctf的加密算法大多的已经存在的！！！！系统学习密码学</strong></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1824,7 +1836,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">89</span>
+                <span class="site-state-item-count">90</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
