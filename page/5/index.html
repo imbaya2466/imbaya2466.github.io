@@ -283,6 +283,172 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/android源码编译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/25/android源码编译/" itemprop="url">android源码编译</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T20:09:35+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本次基于google官方文档下载编译：<br><a href="https://source.android.com/setup/build/requirements" target="_blank" rel="external">https://source.android.com/setup/build/requirements</a><br>还有一篇详细的博客：<br><a href="https://blog.csdn.net/dd864140130/article/details/51718187" target="_blank" rel="external">https://blog.csdn.net/dd864140130/article/details/51718187</a></p>
+<h2 id="相关准备"><a href="#相关准备" class="headerlink" title="相关准备"></a>相关准备</h2><p>master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。<br>master 分支事最少，带有预编译版本的 OpenJDK；因此无需另行安装。较低的版本则需要单独进行安装。</p>
+<h3 id="vpn"><a href="#vpn" class="headerlink" title="vpn"></a>vpn</h3><p>因为要下载的是谷歌官方的，所以必不可少。采用购买ssr。<br>先用shadowsocks启动：<a href="https://blog.csdn.net/u011774239/article/details/53905702" target="_blank" rel="external">https://blog.csdn.net/u011774239/article/details/53905702</a><br>在应用中使用：<a href="https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md" target="_blank" rel="external">https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md</a></p>
+<p>此后需要外网的指令加前缀</p>
+<h3 id="putty-telnet"><a href="#putty-telnet" class="headerlink" title="putty+telnet"></a>putty+telnet</h3><p>远程操控：<br>telnet在linux的设置：<a href="https://blog.csdn.net/linux_ever/article/details/50519028" target="_blank" rel="external">https://blog.csdn.net/linux_ever/article/details/50519028</a></p>
+<h2 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h2><p>python 2.7<br>make3.81<br>git<br>java环境1.8对于ubuntu14.04特殊，参考官方安装：<br><a href="https://source.android.com/setup/build/initializing#installing-the-jdk" target="_blank" rel="external">https://source.android.com/setup/build/initializing#installing-the-jdk</a><br>安装所需的软件包 (Ubuntu 14.04)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc unzip</div></pre></td></tr></table></figure></p>
+<h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><p><a href="https://source.android.com/setup/build/downloading" target="_blank" rel="external">https://source.android.com/setup/build/downloading</a><br>用Repo管理git指定要下载的分支。<br>android-8.1.0_r1支持机型较多而且较新。目前下了这个，61G</p>
+<p>可以用shell脚本错误时自动sync<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#FileName source_asyn.sh</div><div class="line">PATH=~/bin:$PATH</div><div class="line"># 注意修改成你要编译的版本，比如这里我在mac上编译的是Android-7.1.1——r6</div><div class="line">repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-7.1.1_r6</div><div class="line">repo sync</div><div class="line">while [$? = 1]: do</div><div class="line">echo &quot;=========download failed,again============&quot;</div><div class="line">sleep 5</div><div class="line">repo sync</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>学习linux脚本！</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><a href="https://source.android.com/setup/build/building" target="_blank" rel="external">https://source.android.com/setup/build/building</a><br>先找到对应版本设备的二进制文件：<a href="https://developers.google.com/android/drivers" target="_blank" rel="external">https://developers.google.com/android/drivers</a><br><strong>俩个都</strong>下载按说明添加到源代码树的 vendor/ 层次结构中。<br>之后步骤按照官方。<br>遇到的错误：<br>jack未启动错误：jack-admin start-server再接着make<br>Out of memory error：<br>输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m&quot;</div><div class="line">out/host/linux-x86/bin/jack-admin kill-server</div><div class="line">out/host/linux-x86/bin/jack-admin start-server</div></pre></td></tr></table></figure></p>
+<h2 id="虚拟机运行"><a href="#虚拟机运行" class="headerlink" title="虚拟机运行"></a>虚拟机运行</h2><p>source build/envsetup.sh这句就是在配置环境变量，可以使用jack、emulator等<br>编译完成后直接emulator等较长时间即可在虚拟机中运行android了</p>
+<h2 id="fastboot刷机"><a href="#fastboot刷机" class="headerlink" title="fastboot刷机"></a>fastboot刷机</h2><p>编译后配置好的fastboot直接刷到实体机（因此购买谷歌官方机十分方便测试cm的mi3编译时失败…..买个google垃圾机吧…）<br>购买后：<br>google机开启设备锁编译完成后使用fastboot flashall -w直接刷机成功。</p>
+<p>刷机后android无法访问网络：<br>显示已连接，但无法正常访问网络是正常的，但所有网络请求失败原因是系统时间不正确，导致服务器无法通过时间验证，在设置处设置时间即可。</p>
+<h2 id="打包rom"><a href="#打包rom" class="headerlink" title="打包rom"></a>打包rom</h2><h3 id="几个补充知识"><a href="#几个补充知识" class="headerlink" title="几个补充知识"></a>几个补充知识</h3><p><strong>Android基于Permission的安全机制</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/17131835" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/17131835</a><br>简记：系统文件与目录被用uid、gid划分，进程持有uid/gid，从而决定进程能否使用api或者访问文件等操作，android root后所有的root操作一定要用su提权，所以在su时检测是否给权。<br>system/build.prop:系统信息<br>default.prop：系统配置.debugger选项所在<br>当你获得了android的应用shell时，可以用run-as变成开了debugger权限进程的uid shell。从而越权。</p>
+<p><strong>android开源项目的管理</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18195205" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18195205</a><br>未看完</p>
+<p><strong>android编译系统</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18466779" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18466779</a><br>android的make由一个mk文件，include其它mk文件组成。只执行一个。</p>
+<p><strong>android系统的各镜像分析</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/20501657" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/20501657</a><br>一个是正常的系统，它由boot.img、system.img、ramdisk.img和userdata.img等组成，另外一个就是recovery系统，由recovery.img组成。<br>boot.img启动其它几个，另一个系统是由recovery启动全部。<br>通过对比Android正常使用时的系统和进行升级时使用的Recovery系统，我们就可以对运行Linux系统的移动设备（或者说嵌入式设备）世界窥一斑而知全豹，实际上我们只需要有一个BootLoader、一个Linux Kernel，以及一个Ramdisk，就可以将它们运行起来。Ramdisk属于用户空间的范畴，它里面主要包含了Linux Kernel启动完成时所要加载的根文件系统。这个根文件系统的作用就是为整个系统提供一个init程序，以便Linux Kernel可以将控制权从内核空间转移到用户空间。系统提供什么样的功能给用户使用主要取决于在用户空间层运行了哪些服务和守护进程。这些服务守护进程都是直接或者间接地由init进程启动的。例如，对于recovery系统来说，它最主要提供的功能就是让用户升级系统，也就是它的主要用户空间服务就是负责执行长级任务的recovery程序。又如，我们正常使用的Android系统，它的主要用户空间服务和守护进程都是由system.img镜像提供的，此外，我们还可以通过userdata.img镜像来安装第三方应用来丰富手机的功能。因此，我们也可以说，init进程启动的服务决定了系统的功能。当然 ，这些功能是建立是硬件的基础之上的。</p>
+<h3 id="CM-ROM"><a href="#CM-ROM" class="headerlink" title="CM ROM"></a>CM ROM</h3><p><strong>androidROM刷机</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/29688041" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/29688041</a><br>下载编译需要前几篇的知识：repo和编译系统<br>用户正常使用Android设备时的系统，主要是包含有两个分区：System分区和Boot分区。System分区包含有Android运行时框架、系统APP以及预装的第三方APP等，而Boot分区包含有Kernel和Rootfs<br>fastboot为bootloader的一种交互启动方式，可以刷recover和普通模式，recovery则是可以刷普通模式。<br>recover与普通模式则是俩个系统。<br>关于cm：<br>2016年12月23日，Cyanogen公司宣布他们关闭CyanogenMod的服务器<br>CyanogenMod随即宣布会进行转移，并更名为LineageOS</p>
+<p>于是编译小米3的lineageos</p>
+<p>Cancro是mi3/4  ：小米3的电信版和小米4移动版，刷机包前缀都是cancro<br><a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a>  好的下载编译教程<br><a href="https://github.com/LineageOS" target="_blank" rel="external">https://github.com/LineageOS</a>  其git仓库<br><a href="https://www.lineageos.org/" target="_blank" rel="external">https://www.lineageos.org/</a>   其官网<br><a href="https://download.lineageos.org/cancro" target="_blank" rel="external">https://download.lineageos.org/cancro</a>  lineageos对小米的支持<br><a href="https://wiki.lineageos.org/devices/cancro" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro</a> lineageos对mi3的信息<br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a> 官方构建方法<br><a href="https://wiki.lineageos.org/devices/cancro/install" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/install</a> 官方刷机方法</p>
+<p>一：找到目标测试：<br>在官网的支持<a href="https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源" target="_blank" rel="external">https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源</a><br>刷机-adb可以在Android和恢复模式下工作<br>因为这个机子只能支持到14.1也就是android7.0.想测试更高版本的源代码请买google官方机<br>测试刷机成功</p>
+<p>二：下载源代码<br>参考：<a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a><br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a><br>远程连接telent<br>下载构建包，注意和官方的环境有所不同，不要重用<br>sudo apt-get install bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libwxgtk2.8-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev<br>由于需要vpn所以一直用root权操作，注意PATH配置，环变与变量是和shell绑定的，不是用户。<br>其它步骤一样。直到repo sync</p>
+<p>三：编译<br>获取设备文件除了breakfast。还有单独的项目提供各设备的文件<br><a href="https://github.com/TheMuppets" target="_blank" rel="external">https://github.com/TheMuppets</a><br>  在.repo/loccal_mainifest/roomsevice.xml 文件中新增一行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;project name=&quot;TheMuppets/proprietary_vendor_xiaomi&quot; path=&quot;vendor/xiaomi&quot; remote=&quot;github&quot; revision=&quot;cm-14.1&quot;/&gt;</div></pre></td></tr></table></figure></p>
+<p>  然后执行repo sync 同步</p>
+<p>编译失败，java-doc:错误找不到okhttp.connectionpool的类文件。<br>未找到解决方法。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/15/frida官方文档/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1728,171 +1894,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/17/android软件破解初步/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/17/android软件破解初步/" itemprop="url">android软件破解初步</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-17T21:14:52+08:00">
-                2018-05-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>此文总结于看雪安卓安全白皮书第9章</p>
-<p>破解重点于核心功能存在于那端，若在服务端只能尽可能分析交互数据手动仿造</p>
-<h3 id="1-试用版软件"><a href="#1-试用版软件" class="headerlink" title="1.试用版软件"></a>1.试用版软件</h3><p>常见类型<br>免费试用:过一定期限后无法使用，理论上存在完整数据，可破解<br>演示版:只有部分功能演示用,本地无数据，不可破解<br>限制版:部分功能付费开启，视情况定，看是否有功能数据。</p>
-<p>关于示例1:</p>
-<ol>
-<li>createPackageContext用于获取其它程序的context，甚至可执行其它软件的代码，要求有相同的用户id(manifest标签中的android:sharedUserID)与签名。当俩个程序用户id相同时，这俩个程序运行在同一个进程空间。</li>
-<li>java的加密解密类：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">取key  参数为种子</div><div class="line">public static byte[] getRawKey(byte[] seed) throws Exception &#123;    </div><div class="line">	KeyGenerator kgen = KeyGenerator.getInstance(&quot;AES&quot;);    //key生产者，生成指定算法的key</div><div class="line">	SecureRandom sr = SecureRandom.getInstance(&quot;SHA1PRNG&quot;);    //安全随机</div><div class="line">	sr.setSeed(seed);    //设置seed</div><div class="line">	kgen.init(128, sr); // 192 and 256 bits may not be available    //指定密匙大小和随机源</div><div class="line">	SecretKey skey = kgen.generateKey();    //生成一个密钥   同一个key同一次使用生成的是一个，但一次运行多次生成的不同</div><div class="line">	byte[] raw = skey.getEncoded();    //返回基本编码格式的密钥</div><div class="line">	return raw;    </div><div class="line">&#125;  </div><div class="line">加密 参数1：key  参数2：明文   返回密文</div><div class="line">private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception &#123;    </div><div class="line">	SecretKeySpec skeySpec = new SecretKeySpec(raw, &quot;AES&quot;); //key的规格与值   </div><div class="line">	Cipher cipher = Cipher.getInstance(&quot;AES&quot;);    //密码初始</div><div class="line">	cipher.init(Cipher.ENCRYPT_MODE, skeySpec);    //密码设置key</div><div class="line">	byte[] encrypted = cipher.doFinal(clear);    </div><div class="line">	return encrypted;    </div><div class="line">&#125;    </div><div class="line">   </div><div class="line">   解密 参数1：key 参数2密文    返回明文</div><div class="line">private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception &#123;    </div><div class="line">	SecretKeySpec skeySpec = new SecretKeySpec(raw, &quot;AES&quot;);    //key的规格与值</div><div class="line">	Cipher cipher = Cipher.getInstance(&quot;AES&quot;);    //密码实例</div><div class="line">	cipher.init(Cipher.DECRYPT_MODE, skeySpec);    //用key设置密码</div><div class="line">	byte[] decrypted = cipher.doFinal(encrypted);    //解密</div><div class="line">	return decrypted;    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="2-序列号保护"><a href="#2-序列号保护" class="headerlink" title="2.序列号保护"></a>2.序列号保护</h3><p>用户提供机器码，厂商用注册机生成注册码，用户用注册码使用软件，一般软件注册码保证机器/用户对应</p>
-<h3 id="3-网络验证"><a href="#3-网络验证" class="headerlink" title="3.网络验证"></a>3.网络验证</h3><p>未成功<br>网络分析可以使用android移植版的tcpdump工具。位于模拟器下的/system/xbin/下。<br>adb shell tcpdump -p -vv -s 0 -w /sdcard/xxx.pcap<br>之后用 adb pull /scard/xxx.pcap取出用wireshark分析即可</p>
-<p>网上还有种思路是pc开热点用wireshark分析虚拟网卡即可。但我的ws识别不出虚拟网卡……？</p>
-<h3 id="4-应用内付费"><a href="#4-应用内付费" class="headerlink" title="4.应用内付费"></a>4.应用内付费</h3><p>这个建议写一个应用试试。<br>应用实现一个服务与广播接收器，该服务与付费服务（由支付宝等提供）沟通，用户操作结果通过广播/服务返回，应用再随意处理。</p>
-<h3 id="5-向商店查询"><a href="#5-向商店查询" class="headerlink" title="5.向商店查询"></a>5.向商店查询</h3><p>通过应用商点app接口向商店查询用户已买app</p>
-<h3 id="6-重启验证"><a href="#6-重启验证" class="headerlink" title="6.重启验证"></a>6.重启验证</h3><p>将得到的信息保存本地。之后应用在执行各种功能，步骤时检验文件核心的检验步骤可放在native层。<br>示例中：</p>
-<ol>
-<li>JNI_OnLoad加载时调用。JNIEnv表示java环境，不可跨线程，因此设置java native函数对应地址表没问题，JavaVM代表虚拟机，主要就是线程相关</li>
-<li>由native层验证判断后调用java层代码实现功能。</li>
-<li>JNI中对应的java native函数的名字不一定是javah生成的那样。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(*env)-&gt;RegisterNatives(env,native_class, methods, num)&#123;</div><div class="line">//把java类的native函数对应到原生函数中,手动。自动的话是按javah生成的对应，这里没有包含javah生成的头文件</div><div class="line">//参1：jclass：要对应的java类</div><div class="line">//参2：JNINativeMethod数组，表明了java类中方法的名字，元数据，原生函数地址</div><div class="line">//参3：参数2数组length</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="7-Mono初探"><a href="#7-Mono初探" class="headerlink" title="7.Mono初探"></a>7.Mono初探</h3><p>Mono使linux上可运行.NET c#程序。untiy使用该方法跨平台，游戏安全中重点了解。<br>目前只找到官网资料：<a href="http://www.mono-project.com/" title="Mono" target="_blank" rel="external">http://www.mono-project.com/</a><br>基本原理与java同，就是c#脚本编译为il语言的dll之后用mono实现的clr运行时jit（时时编译为原生）或者aot（提前编译为原生）运行。<br>此时就可以动态修改代码实现热更新。crl虚拟机也是基于栈的。</p>
-<p>现在unity又实现了IL2CPP功能，可以讲IL再编译为c++代码，由于c++有许多跨平台编译器，所以可以编译成多平台运行。但是由于内存管理等语言特性需要小虚拟机管理，同时由于可执行代码的复杂度增加失去热更新。</p>
-<p>总结：学好c++与c++逆向，什么都好说</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1943,7 +1944,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">91</span>
+                <span class="site-state-item-count">92</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

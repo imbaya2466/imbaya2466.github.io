@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpp," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="核心简记 泛型算法作用于各种容器，大多数定义在algorithm中 指针可以当做迭代器传入泛型算法中。 泛型算法本身不执行容器的操作，只运行于迭代器上，因此不会改变底层容器的大小。除非改变是迭代器的效果 copy版本的算法将结果放入新序列 using namespace name; 将name下的名字都引入  算法查表可以参考:https://blog.csdn.net/strint/articl">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp学习-第十章-泛型算法">
+<meta property="og:url" content="http://yoursite.com/2019/01/20/cpp学习-第十章-泛型算法/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="核心简记 泛型算法作用于各种容器，大多数定义在algorithm中 指针可以当做迭代器传入泛型算法中。 泛型算法本身不执行容器的操作，只运行于迭代器上，因此不会改变底层容器的大小。除非改变是迭代器的效果 copy版本的算法将结果放入新序列 using namespace name; 将name下的名字都引入  算法查表可以参考:https://blog.csdn.net/strint/articl">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-19T17:43:18.836Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp学习-第十章-泛型算法">
+<meta name="twitter:description" content="核心简记 泛型算法作用于各种容器，大多数定义在algorithm中 指针可以当做迭代器传入泛型算法中。 泛型算法本身不执行容器的操作，只运行于迭代器上，因此不会改变底层容器的大小。除非改变是迭代器的效果 copy版本的算法将结果放入新序列 using namespace name; 将name下的名字都引入  算法查表可以参考:https://blog.csdn.net/strint/articl">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/20/cpp学习-第十章-泛型算法/"/>
+
+
+
+
+
+  <title>cpp学习-第十章-泛型算法 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/20/cpp学习-第十章-泛型算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cpp学习-第十章-泛型算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-20T01:41:36+08:00">
+                2019-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><ol>
+<li>泛型算法作用于各种容器，大多数定义在algorithm中</li>
+<li>指针可以当做迭代器传入泛型算法中。</li>
+<li>泛型算法本身不执行容器的操作，只运行于迭代器上，因此不会改变底层容器的大小。除非改变是迭代器的效果</li>
+<li>copy版本的算法将结果放入新序列</li>
+<li>using namespace name; 将name下的名字都引入</li>
+</ol>
+<p>算法查表可以参考:<br><a href="https://blog.csdn.net/strint/article/details/45308001" target="_blank" rel="external">https://blog.csdn.net/strint/article/details/45308001</a></p>
+<a id="more"></a>
+<h3 id="定制操作"><a href="#定制操作" class="headerlink" title="定制操作"></a>定制操作</h3><p>算法有额外的参数可以指定操作代替元素&lt;=等操作<br>可调用对象&gt;谓词(可调用的表达式、返回为条件值)  函数的指针可以做谓词。</p>
+<p>传函数指针谓词时参数被限定了，不能加控制参数。使用lambda可以传入其它参数。<br>lambda:适用于一俩个地方使用的简单操作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">[捕捉列表](参数列表)-&gt;返回类型&#123;函数体&#125;</div><div class="line"></div><div class="line">捕获列表:</div><div class="line">[] 空，不使用所在函数变量</div><div class="line">[names] ,分割局部变量，默认为拷贝，加&amp;为引用</div><div class="line"></div><div class="line">[&amp;]隐式引用，根据函数体代码自动推断使用的变量，但都是引用</div><div class="line">[=]隐式拷贝，同上，都是拷贝值</div><div class="line"></div><div class="line">[&amp;,names] 指定的采用值捕获，其它引用捕获，方式必须不同</div><div class="line">[=,names] 与上相反</div></pre></td></tr></table></figure></p>
+<p>忽略参数列表与()为空参数<br>忽略返回类型根据函数体推断，但体仅一个return。 返回类型必须尾置</p>
+<p>lambda只能使用明确指明的外层函数局部变量。指明通过捕捉列表。可以直接使用所在函数外的名字与局部静态变量</p>
+<p>lambda实际上是定义了一个新类型与其对象。该对象含捕获变量的数据成员，创建对象时初始化。<br>捕获的变量为lambda创建时拷贝，若要引用则[&amp;a]即可。因为函数可以返回lambda对象因此作用域与生存期当心。</p>
+<p>默认下不会改变捕获的值，想要在lambda中改变捕获的值要在参数列表后加mutable</p>
+<p>函数也可以使用包装来达到多传参数的效果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;functional&gt;</div><div class="line">auto newcall=bind(oldcall,args)</div><div class="line"></div><div class="line">如：</div><div class="line">auto g=bind(f,a,b,_2,c,_1);</div><div class="line">调用 g(_1,_2)</div><div class="line">等价为 f(a,b,_2,c,_1)</div></pre></td></tr></table></figure></p>
+<p>生成一个新的函数适应参数列表。默认为拷贝，因为是传参而不是定义，因此引用也会化为拷贝，非占位符的参想引用传入要用库函数ref()返回可拷贝的引用对象。</p>
+<h3 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h3><p>头文件iterator定义了额外的集中迭代器。</p>
+<p>插入迭代器:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">it=t 在it当前位置插入t</div><div class="line">* ++ 都是返回本身</div></pre></td></tr></table></figure></p>
+<p>是对容器的包装，使用插入迭代器可以对容器插入元素，有三种插入迭代器:尾、头、指定位置。</p>
+<p>流迭代器:<br>输入与输出流的迭代器。可以使流使用泛型算法。<br>输入流的操作多些:使用*返回读取的值，使用++读取下一个。<br>输出使用=输出</p>
+<p>反向迭代器:<br>反向操作，容器必须同时支持++与–<br>调用反向迭代器的.base()方法可以返回正常迭代器，不过位置不同，因为[)要向后挪一个</p>
+<p>移动迭代器:之后介绍</p>
+<h3 id="泛型算法结构"><a href="#泛型算法结构" class="headerlink" title="泛型算法结构"></a>泛型算法结构</h3><p>算法的基本特性是要求迭代器提供哪些操作，可分为5个迭代器类别:其功能逐层增加<br>输入迭代器：只读，不写，单遍递增。如流输入迭代器<br>输出迭代器：只写，不读，单遍递增。如流输出迭代器<br>前向迭代器：读写，多遍递增。如forward_list的迭代器<br>双向迭代器：读写，多遍，可增可减。除了fl的库迭代器<br>随机访问迭代器：读写，多遍，随机读写。array、deque、string、vector都是</p>
+<p>算法的参数模式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">be,ed,args  一个输入</div><div class="line">be,ed,dest,args   一个输入，一个输出</div><div class="line">be,ed,be2,args  俩个输入</div><div class="line">be,ed,be2,ed2,args  俩个输入</div></pre></td></tr></table></figure></p>
+<ol>
+<li>一些有接受谓词的重载实现，如unique</li>
+<li>后缀_if的版本可以接受谓词代替原元素值，如find</li>
+<li>写回另一个指定输出目的的拷贝版本，后缀_copy</li>
+</ol>
+<p>list与fl不用通用版本，其以成员函数形式实现了自己的版本，因为不拷贝效率更高。如:merge、remove、reverse、sort、unique。splice用于俩个之间移动元素。链表特有的会改变容器。</p>
+<h2 id="反汇编"><a href="#反汇编" class="headerlink" title="反汇编"></a>反汇编</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">int main(int argc, char const *argv[])</div><div class="line">&#123;</div><div class="line">    int a=2;</div><div class="line">    auto f=[a](int i,int j)-&gt;int&#123;int d=a+i+j;return j;&#125;;</div><div class="line"></div><div class="line">    int d=f(2,3);</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="x86-64"><a href="#x86-64" class="headerlink" title="x86-64"></a>x86-64</h3><p>FS——附加段寄存器(Extra Segment Register)，其值为附加数据段的段值；<br>GS——附加段寄存器(Extra Segment Register)，其值为附加数据段的段值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">.text:0000000000007A70 ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:0000000000007A70 main            proc near               ; DATA XREF: start+2E↑o</div><div class="line">.text:0000000000007A70</div><div class="line">.text:0000000000007A70 var_28          = dword ptr -28h</div><div class="line">.text:0000000000007A70 var_24          = dword ptr -24h</div><div class="line">.text:0000000000007A70 var_20          = qword ptr -20h</div><div class="line">.text:0000000000007A70 var_18          = dword ptr -18h</div><div class="line">.text:0000000000007A70 var_14          = dword ptr -14h</div><div class="line">.text:0000000000007A70 var_10          = dword ptr -10h</div><div class="line">.text:0000000000007A70 var_8           = qword ptr -8</div><div class="line">.text:0000000000007A70</div><div class="line">.text:0000000000007A70 ; __unwind &#123;</div><div class="line">.text:0000000000007A70                 push    rbp</div><div class="line">.text:0000000000007A71                 mov     rbp, rsp</div><div class="line">.text:0000000000007A74                 sub     rsp, 30h</div><div class="line">.text:0000000000007A78                 mov     rax, fs:28h</div><div class="line">.text:0000000000007A81                 mov     [rbp+var_8], rax</div><div class="line">.text:0000000000007A85                 mov     [rbp+var_14], 0</div><div class="line">.text:0000000000007A8C                 mov     [rbp+var_18], edi</div><div class="line">.text:0000000000007A8F                 mov     [rbp+var_20], rsi</div><div class="line">//var_24为a</div><div class="line">.text:0000000000007A93                 mov     [rbp+var_24], 2</div><div class="line">//拷贝a构建对象在当前栈中</div><div class="line">.text:0000000000007A9A                 mov     edi, [rbp+var_24]</div><div class="line">.text:0000000000007A9D                 mov     [rbp+var_10], edi</div><div class="line">//获取对象的this  传this、其它参数</div><div class="line">.text:0000000000007AA0                 lea     rdi, [rbp+var_10]</div><div class="line">.text:0000000000007AA4                 mov     esi, 2</div><div class="line">.text:0000000000007AA9                 mov     edx, 3</div><div class="line">.text:0000000000007AAE                 call    sub_7AE0</div><div class="line">.text:0000000000007AB3                 mov     [rbp+var_28], eax</div><div class="line"></div><div class="line">.text:0000000000007AB6                 mov     rdi, fs:28h</div><div class="line">.text:0000000000007ABF                 mov     rcx, [rbp+var_8]</div><div class="line">.text:0000000000007AC3                 cmp     rdi, rcx</div><div class="line">.text:0000000000007AC6                 jnz     loc_7AD4</div><div class="line">.text:0000000000007ACC                 xor     eax, eax</div><div class="line">.text:0000000000007ACE                 add     rsp, 30h</div><div class="line">.text:0000000000007AD2                 pop     rbp</div><div class="line">.text:0000000000007AD3                 retn</div><div class="line">.text:0000000000007AD4 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000007AD4</div><div class="line">.text:0000000000007AD4 loc_7AD4:                               ; CODE XREF: main+56↑j</div><div class="line">.text:0000000000007AD4                 call    ___stack_chk_fail</div><div class="line">.text:0000000000007AD4 ; &#125; // starts at 7A70</div><div class="line">.text:0000000000007AD4 main            endp</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">.text:0000000000007AE0 sub_7AE0        proc near               ; CODE XREF: main+3E↑p</div><div class="line">.text:0000000000007AE0</div><div class="line">.text:0000000000007AE0 var_14          = dword ptr -14h</div><div class="line">.text:0000000000007AE0 var_10          = dword ptr -10h</div><div class="line">.text:0000000000007AE0 var_C           = dword ptr -0Ch</div><div class="line">.text:0000000000007AE0 var_8           = qword ptr -8</div><div class="line">.text:0000000000007AE0</div><div class="line">.text:0000000000007AE0 ; __unwind &#123;</div><div class="line">.text:0000000000007AE0                 push    rbp</div><div class="line">.text:0000000000007AE1                 mov     rbp, rsp</div><div class="line">//函数体</div><div class="line">.text:0000000000007AE4                 mov     [rbp+var_8], rdi</div><div class="line">.text:0000000000007AE8                 mov     [rbp+var_C], esi</div><div class="line">.text:0000000000007AEB                 mov     [rbp+var_10], edx</div><div class="line">.text:0000000000007AEE                 mov     rdi, [rbp+var_8]</div><div class="line">.text:0000000000007AF2                 mov     edx, [rdi]</div><div class="line">.text:0000000000007AF4                 add     edx, [rbp+var_C]</div><div class="line">.text:0000000000007AF7                 add     edx, [rbp+var_10]</div><div class="line">.text:0000000000007AFA                 mov     [rbp+var_14], edx</div><div class="line">.text:0000000000007AFD                 mov     eax, [rbp+var_10]</div><div class="line">.text:0000000000007B00                 pop     rbp</div><div class="line">.text:0000000000007B01                 retn</div><div class="line">.text:0000000000007B01 ; &#125; // starts at 7AE0</div><div class="line">.text:0000000000007B01 sub_7AE0        endp</div></pre></td></tr></table></figure>
+<h3 id="ARM-64"><a href="#ARM-64" class="headerlink" title="ARM-64"></a>ARM-64</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">.text:0000000000008BD0 ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:0000000000008BD0                 EXPORT main</div><div class="line">.text:0000000000008BD0 main                                    ; DATA XREF: LOAD:0000000000000DB8↑o</div><div class="line">.text:0000000000008BD0                                         ; .got:main_ptr↓o</div><div class="line">.text:0000000000008BD0</div><div class="line">.text:0000000000008BD0 var_28          = -0x28</div><div class="line">.text:0000000000008BD0 var_24          = -0x24</div><div class="line">.text:0000000000008BD0 var_20          = -0x20</div><div class="line">.text:0000000000008BD0 var_18          = -0x18</div><div class="line">.text:0000000000008BD0 var_14          = -0x14</div><div class="line">.text:0000000000008BD0 var_10          = -0x10</div><div class="line">.text:0000000000008BD0 var_8           = -8</div><div class="line">.text:0000000000008BD0 var_s0          =  0</div><div class="line">.text:0000000000008BD0</div><div class="line">.text:0000000000008BD0 ; __unwind &#123;</div><div class="line">.text:0000000000008BD0                 SUB             SP, SP, #0x40</div><div class="line">.text:0000000000008BD4                 STP             X29, X30, [SP,#0x30+var_s0]</div><div class="line">.text:0000000000008BD8                 ADD             X29, SP, #0x30</div><div class="line">.text:0000000000008BDC                 SUB             X8, X29, #-var_10</div><div class="line">.text:0000000000008BE0                 MOV             W9, #2</div><div class="line">.text:0000000000008BE4                 MOV             W2, #3</div><div class="line">.text:0000000000008BE8                 MRS             X10, #3, c13, c0, #2</div><div class="line">.text:0000000000008BEC                 LDR             X10, [X10,#0x28]</div><div class="line">.text:0000000000008BF0                 STUR            X10, [X29,#var_8]</div><div class="line">.text:0000000000008BF4                 STUR            WZR, [X29,#var_14]</div><div class="line">.text:0000000000008BF8                 STR             W0, [SP,#0x30+var_18]</div><div class="line">.text:0000000000008BFC                 STR             X1, [SP,#0x30+var_20]</div><div class="line">//a</div><div class="line">.text:0000000000008C00                 STR             W9, [SP,#0x30+var_24]</div><div class="line">//构造对象</div><div class="line">.text:0000000000008C04                 LDR             W0, [SP,#0x30+var_24]</div><div class="line">.text:0000000000008C08                 STUR            W0, [X29,#var_10]</div><div class="line">// x8为var_10的地址，</div><div class="line">.text:0000000000008C0C                 MOV             X0, X8</div><div class="line">.text:0000000000008C10                 MOV             W1, W9</div><div class="line">.text:0000000000008C14                 BL              sub_8C48</div><div class="line">.text:0000000000008C18                 STR             W0, [SP,#0x30+var_28]</div><div class="line">.text:0000000000008C1C                 MRS             X8, #3, c13, c0, #2</div><div class="line">.text:0000000000008C20                 LDR             X8, [X8,#0x28]</div><div class="line">.text:0000000000008C24                 LDUR            X10, [X29,#var_8]</div><div class="line">.text:0000000000008C28                 CMP             X8, X10</div><div class="line">.text:0000000000008C2C                 B.NE            loc_8C44</div><div class="line">.text:0000000000008C30                 MOV             W8, WZR</div><div class="line">.text:0000000000008C34                 MOV             W0, W8</div><div class="line">.text:0000000000008C38                 LDP             X29, X30, [SP,#0x30+var_s0]</div><div class="line">.text:0000000000008C3C                 ADD             SP, SP, #0x40</div><div class="line">.text:0000000000008C40                 RET</div><div class="line">.text:0000000000008C44 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000008C44</div><div class="line">.text:0000000000008C44 loc_8C44                                ; CODE XREF: main+5C↑j</div><div class="line">.text:0000000000008C44                 BL              .__stack_chk_fail</div><div class="line">.text:0000000000008C44 ; &#125; // starts at 8BD0</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">.text:0000000000008C48 sub_8C48                                ; CODE XREF: main+44↑p</div><div class="line">.text:0000000000008C48</div><div class="line">.text:0000000000008C48 var_14          = -0x14</div><div class="line">.text:0000000000008C48 var_10          = -0x10</div><div class="line">.text:0000000000008C48 var_C           = -0xC</div><div class="line">.text:0000000000008C48 var_8           = -8</div><div class="line">.text:0000000000008C48</div><div class="line">.text:0000000000008C48 ; __unwind &#123;</div><div class="line">.text:0000000000008C48                 SUB             SP, SP, #0x20</div><div class="line">.text:0000000000008C4C                 STR             X0, [SP,#0x20+var_8]</div><div class="line">.text:0000000000008C50                 STR             W1, [SP,#0x20+var_C]</div><div class="line">.text:0000000000008C54                 STR             W2, [SP,#0x20+var_10]</div><div class="line">.text:0000000000008C58                 LDR             X0, [SP,#0x20+var_8]</div><div class="line">.text:0000000000008C5C                 LDR             W1, [X0]</div><div class="line">.text:0000000000008C60                 LDR             W2, [SP,#0x20+var_C]</div><div class="line">.text:0000000000008C64                 ADD             W1, W1, W2</div><div class="line">.text:0000000000008C68                 LDR             W2, [SP,#0x20+var_10]</div><div class="line">.text:0000000000008C6C                 ADD             W1, W1, W2</div><div class="line">.text:0000000000008C70                 STR             W1, [SP,#0x20+var_14]</div><div class="line">.text:0000000000008C74                 LDR             W0, [SP,#0x20+var_10]</div><div class="line">.text:0000000000008C78                 ADD             SP, SP, #0x20</div><div class="line">.text:0000000000008C7C                 RET</div><div class="line">.text:0000000000008C7C ; &#125; // starts at 8C48</div><div class="line">.text:0000000000008C7C ; End of function sub_8C48</div></pre></td></tr></table></figure>
+<p>可见lambda在c++中实现的本质就是一个类与对象，自定义的类代码位于code，捕获的数据作为对象成员，创建lambda时创建对象，并用指定的局部变量初始化对象成员，之后使用该对象重载的调用运算符使用该部分数据。会传入this</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/19/cpp对象基本反汇编补充/" rel="next" title="cpp对象基本反汇编补充">
+                <i class="fa fa-chevron-left"></i> cpp对象基本反汇编补充
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">92</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">76</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定制操作"><span class="nav-number">1.1.</span> <span class="nav-text">定制操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代器"><span class="nav-number">1.2.</span> <span class="nav-text">迭代器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#泛型算法结构"><span class="nav-number">1.3.</span> <span class="nav-text">泛型算法结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反汇编"><span class="nav-number">2.</span> <span class="nav-text">反汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#x86-64"><span class="nav-number">2.1.</span> <span class="nav-text">x86-64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM-64"><span class="nav-number">2.2.</span> <span class="nav-text">ARM-64</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
