@@ -283,6 +283,235 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/02/Dalvik字节码及相关/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/02/Dalvik字节码及相关/" itemprop="url">Dalvik字节码及相关</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-02T22:18:40+08:00">
+                2018-04-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong> 首先建议参考谷歌官方文档<a href="https://source.android.com/devices/tech/dalvik/dex-format" target="_blank" rel="external">https://source.android.com/devices/tech/dalvik/dex-format</a> </strong></p>
+<h3 id="一：前备知识"><a href="#一：前备知识" class="headerlink" title="一：前备知识"></a>一：前备知识</h3><h4 id="1-dex文件"><a href="#1-dex文件" class="headerlink" title="1.dex文件"></a>1.dex文件</h4><p>Android平台上可执行文件的类型。是由jar(class)通过dx转化而来。使用打包工具和资源一起打包成apk于android上运行。</p>
+<h4 id="1-1-apk的生成"><a href="#1-1-apk的生成" class="headerlink" title="1.1 apk的生成"></a>1.1 apk的生成</h4><p>具体过程：</p>
+<ol>
+<li>aapt程序将资源标记生成R.java，并生成resources.arsc用来索引，并加密xml将后二者打包为.ap</li>
+<li>aidl程序将.aidl（为了进程通信分割出的描述语言，进程通信需要信息化为系统所需）生成java接口</li>
+<li>javac程序编译源码及上述1.2.的java文件为.class。同时编译native代码</li>
+<li>dx程序转化所有class为dex字节码文件（化为一个dex）</li>
+<li>apkbuilder程序打包1的.ap，向主文件写入依赖库，添加资源，添加native库，添加dex（一个）</li>
+<li>签名</li>
+<li>用zipalign对齐处理（所有偏移均为4字节倍数32位cpu访问快）</li>
+</ol>
+<p>apk目录：</p>
+<ol>
+<li>AndroidManifest：配置文件</li>
+<li>classes.dex:代码文件</li>
+<li>resources.arsc:二进制资源文件，通过加密res/value下的xml生成，其用id对应各种字串，字串可能是string等value文件夹下的存其本身；或者layout、图片的路径，按value区分。简单来讲就是id对应资源。</li>
+<li>res文件夹:图片，layout，图片等资源</li>
+<li>META-INF文件夹：签名文件</li>
+<li>lib文件夹：native原生文件</li>
+</ol>
+<h4 id="1-2apk的安装"><a href="#1-2apk的安装" class="headerlink" title="1.2apk的安装"></a>1.2apk的安装</h4><p>手机存储分为俩部分：ROM与外部存储（相当于分了俩个盘），其中ROM分为内部存储、系统存储、系统缓存。系统程序（在rom /system/app）下的开机后自动安装，外部来源通过packageinstaller.apk来安装，(这个安装器的源码另分析，用于脱壳？)将外部程序apk复制到date/app date/date放数据  date/dalvik-cache放dex从而安装外部apk</p>
+<h4 id="1-3ROM"><a href="#1-3ROM" class="headerlink" title="1.3ROM"></a>1.3ROM</h4><p>ROM 是 ROM image（只读内存镜像）的简称，常用于手机定制系统玩家的圈子中。<br>智能手机配置中的ROM指的是 EEProm (电擦除可写只读存储器)，类似于计算机的硬盘，一般手机刷机的过程，就是将只读内存镜像（ROM image）写入只读内存（ROM）的过程。智能手机的ROM指的是其存储空间，一般是由UFS等闪存制作，其硬件不是只读的，所谓只读是指软件层面对系统分区的读写权限设置。<br>常见的 ROM image 有 img、zip 等格式，前者通常用fastboot程序通过数据线刷入（线刷），后者通常用 recovery 模式从 sd刷入（卡刷），固 img 镜像也被称为线刷包，zip 镜像也被称为卡刷包。<br>因为 ROM image 是定制系统最常见的发布形式，所以通常玩家会使用 ROM 这个词指代手机的操作系统。<br>国内的定制系统开发者，经常会陷入自己的产品究竟是应该称为OS 还是UI 的争论，为了避免此类争论和表示谦虚，会自称为 ROM。很多定制系统玩家也会统一将定制系统称为 ROM。<br>因为系统源码需要打包才能成为镜像，所以 ROM 也会被称为「包」。</p>
+<h4 id="2-Dalvik虚拟机"><a href="#2-Dalvik虚拟机" class="headerlink" title="2.Dalvik虚拟机"></a>2.Dalvik虚拟机</h4><p>作用：运行dex文件于linux下。<br>每一个Android应用都运行在一个Dalvik虚拟机实例里，而每一个虚拟机实例都是一个独立的进程空间。虚拟机的线程机制，内存分配和管理，Mutex等等都是依赖底层操作系统而实现的。<br>所有Android应用的线程都对应一个Linux线程，虚拟机因而可以更多的依赖操作系统的线程调度和管理机制。<br>Zygote是一个虚拟机进程，同时也是一个虚拟机实例的孵化器，每当系统要求执行一个 Android应用程序，Zygote就会FORK出一个子进程来执行该应用程序。这样做的好处显而易见：Zygote进程是在系统启动时产生的，它会完成虚拟机的初始化，库的加载，预置类库的加载和初始化等等操作，而在系统需要一个新的虚拟机实例时。<br>Zygote通过复制自身，最快速的提供个系统。另外，对于一些只读的系统库，所有虚拟机实例都和Zygote共享一块内存区域，大大节省了内存开销。<br>dalvik为每个线程维护一个pc计数器（x86的ip）和调用栈。调用栈负责函数栈及虚拟寄存器（传参，变量使用，计算等用）。<strong> 调用栈具体如何处理函数调用的呢？ </strong><br>dalvik的jit（即时编译）将dex化为可执行机器码于真实cpu上运行(具体dex指令执行方式见dalvik实现)对于ART下，安装后的dex文件会被编译为oat文件，这个oat文件其实是一个ELF文件。<strong> 看dvm源码！ </strong></p>
+<h4 id="3-jvm和dalvik的区别"><a href="#3-jvm和dalvik的区别" class="headerlink" title="3.jvm和dalvik的区别"></a>3.jvm和dalvik的区别</h4><p>jvm基于栈架构。操作都是基于栈的（具体见jvm的实现）。而dalvik基于寄存器的每个寄存器都是32位。（具体见下指令）</p>
+<h4 id="4-smali"><a href="#4-smali" class="headerlink" title="4.smali"></a>4.smali</h4><p>只是dex字节码化为助记符的一种形式。可由它再编译为dex文件 <strong> 具体的编译方法与映射关系？ </strong></p>
+<h3 id="二：Dalvik与dex规则"><a href="#二：Dalvik与dex规则" class="headerlink" title="二：Dalvik与dex规则"></a>二：Dalvik与dex规则</h3><ol>
+<li>Dalvik最多支持65536个寄存器(编号从0~65535)。.registers确定函数用到的寄存器数目。使用m个寄存器(m=局部变量寄存器个数l+参数寄存器个数n)</li>
+<li>参数放在最后的几个寄存器。v字命名法：以小写字母v开头的方式表示方法中使用的局部变量和参数。p字命名法：以小写字母p开头的方式表示参数,参数名称从p0开始,依次增大.局部变量能够使用的寄存器仍然是以v开头.</li>
+<li>#+X表示常量数字，vX表示寄存器，+X表示相对指令地址的偏移，kind@X表示常量池索引（kind可取string字串常量，type类型常量，field字段常量，meth方法常量）</li>
+</ol>
+<h3 id="三：dalvik语法"><a href="#三：dalvik语法" class="headerlink" title="三：dalvik语法"></a>三：dalvik语法</h3><h4 id="1-描述符"><a href="#1-描述符" class="headerlink" title="1.描述符"></a>1.描述符</h4><p>Davilk字节码只有两种类型:基本类型和引用类型.对象和数组都是引用类型,Davilk中对字节码类型的描述和JVM中的描述符规则一致:对于基本类型和无返回值的void类型都是用一个大写字母表示,对象类型则用字母L加对象的全限定名(/代替.)来表示.数组则用[来表示,具体规则如下所示:<br><img src="https://i.imgur.com/Ti7761P.png" alt=""><br>每个寄存器都是32位。J，D使用2个寄存器存<br>L可以表示java类型中的任何类.在java代码中以package.name.ObjectName的方式引用,而在Davilk中其描述则是以Lpackage/name/ObjectName;的形式表示.L即上面定义的java类类型,表示后面跟着的是累的全限定名.比如java中的java.lang.String对应的描述是Ljava/lang/String;  <strong> 注意最后有个分号 </strong><br>[类型用来表示所有基本类型的数组,[后跟着是基本类型的描述符.每一维度使用一个前置的[.<br>比如java中的int[] 用汇编码表示便是[I;.二维数组int[][]为[[I;,三维数组则用[[[I;表示。对于对象数组来说,[后跟着对应类的全限定符.比如java当中的String[]对应的是[java/lang/String;</p>
+<h4 id="2-描述字段-方法"><a href="#2-描述字段-方法" class="headerlink" title="2.描述字段.方法"></a>2.描述字段.方法</h4><h5 id="字段"><a href="#字段" class="headerlink" title="字段"></a>字段</h5><p>Lpackage/name/Objectname;-&gt;FieldName:类型<br>类-&gt;字段名-&gt;字段的类型<br>使用时由汇编指令区分，指令携带寄存器指定对象的引用。</p>
+<p>Davilk中对字段的描述分为两种,对基本类型字段的描述和对引用类型的描述,但两者的描述格式一样:<br>对象类型描述符-&gt;字段名:类型描述符;<br>比如com.sbbic.Test类中存在String类型的name字段及int类型的age字段,那么其描述为:<br>Lcom/sbbic/Test;-&gt;name:Ljava/lang/String;<br>Lcom/sbbic/test;-&gt;age:I</p>
+<h5 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h5><p>Lpackage/name/Objectname;-&gt;MethodName(III)Z<br>那个类的方法-&gt;方法名（参数类型）返回类型<br>注意一般使用方法时第一个参数是使用该方法的对象的引用</p>
+<p>java中方法的签名包括方法名,参数及返回值,在Davilk相应的描述规则为:<br>对象类型描述符-&gt;方法名(参数类型描述符)返回值类型描述符<br>下面我们通过几个例子来说明,以java.lang.String为例:<br>java方法:public char charAt(int index){…}<br>Davilk描述:Ljava/lang/String;-&gt;charAt(I)C<br>java方法:public void getChars(int srcBegin,int srcEnd,char dst[],int dstBegin){…}<br>Davilk描述:Ljava/lang/String;-&gt;getChars(II[CI)V<br>java方法:public boolean equals(Object anObject){…}<br>Davilk描述:Ljava/lang/String;-&gt;equals(Ljava/lang/Object)Z</p>
+<h4 id="3-Dalvik指令集"><a href="#3-Dalvik指令集" class="headerlink" title="3.Dalvik指令集"></a>3.Dalvik指令集</h4><p><strong> 指令集特点：</strong></p>
+<ol>
+<li>模仿了c语言的调用约定</li>
+<li>参数采用目标到源的方式</li>
+<li>-后缀用来区分字节码大小与类型：32位不加，64位加wide，特殊的根据类型加：-boolean -byte -char -short -int -long -object -class等，用来区别数据一般</li>
+<li>/后缀用来区分字节码的布局和选项。表示寄存器的取值范围一般</li>
+<li>每个大写字母表示4位。</li>
+</ol>
+<h5 id="1-空操作指令"><a href="#1-空操作指令" class="headerlink" title="1.空操作指令"></a>1.空操作指令</h5><p>nop，对齐代码用</p>
+<h5 id="2-数据操作指令"><a href="#2-数据操作指令" class="headerlink" title="2.数据操作指令"></a>2.数据操作指令</h5><p><img src="https://i.imgur.com/ET73kFM.png" alt=""><br>move系列指令以及move-result用于处理小于等于 32 位的基本类型。move-wide系列指令和move-result-wide用于处理long和double类型。move-object系列指令和move-result-object用于处理对象引用。<br>另外不同后缀（无、/from16、/16）只影响字节码的位数和寄存器的范围，不影响指令的逻辑。</p>
+<h5 id="3-返回指令"><a href="#3-返回指令" class="headerlink" title="3.返回指令"></a>3.返回指令</h5><p>return-void:返回void<br>return vAA：返回32位非对象类型<br>return-wide vAA ：64位非对象类型<br>retunr-object vAA：返回对象类型的</p>
+<h5 id="4-数据定义指令"><a href="#4-数据定义指令" class="headerlink" title="4.数据定义指令"></a>4.数据定义指令</h5><p><img src="https://i.imgur.com/fJQrNqz.png" alt=""><br>可用来定义常量，字串，类。<br>对于中文字串采用unicode编码。\uxxxx需要转化。</p>
+<h5 id="5-锁指令"><a href="#5-锁指令" class="headerlink" title="5.锁指令"></a>5.锁指令</h5><p>锁指令针对多线程同一对象的<br>monitor-enter vAA获取锁<br>monitor-exit vAA释放锁</p>
+<h5 id="6-对象操作"><a href="#6-对象操作" class="headerlink" title="6.对象操作"></a>6.对象操作</h5><p>与实例相关的操作包括实例的类型转换、检查及新建等<br>check-cast vAA,type@BBBB 将vAA寄存器中的对象引用转换成指定的类型，如果失败会抛出ClassCastException 异常。如果类型B 指定的是基本类型，对于非基本类型的A来说，运行时始终会失败。<br>instance-of vA,vB,type@CCCC 判断vB寄存器中的对象引用是否可以转换成指定的类型，如果可以vA寄存赋值为1，否则vA寄存器为0<br>new-instance vAA,type@BBBB 构造一个指定类型对象的新实例,并将对象引用赋值给vAA寄存器,类型符号type指定的类型不能是数组类。<br>check-cast/jumbo vAAAA,type@BBBBBBBB    instance-of vAAAA, vBBBB, type@CCCCCCCC   new-instance/jumbo vAAAA, type@BBBBBBBB这三个指令功能分别与 上面三个指令分对应 相同，只是寄存器值与指令的索引取值范围坑大（Android4.0中新增的命令）</p>
+<h5 id="7-数组操作"><a href="#7-数组操作" class="headerlink" title="7.数组操作"></a>7.数组操作</h5><p>数组操作包括读取数组长度、新建数组、数组赋值、数组元素取值与赋值等操作。<br>array-length vA,vB 获取给定vB寄存器中数组的长度并将值赋给vA寄存器，数组长度指的是数组的条目个数。<br>new-array vA,vB,type@CCCC 构造指定类型（type@CCCC）与大小（vB）的数组，并将值赋给vA寄存器。<br>new-array/jumbo vAAAA,vBBBB,type@CCCCCCCC 指令功能与上一条指令相同，只是寄存器与指令的索引取值范围更大（Android4.0中新增的指令）<br>filled-new-array {vC,vD,vE,vF,vG},type@BBBB 构造指定类型（type@BBBB）与大小（vA）的数组并填充数组内容。vA寄存器是隐含使用的，除了指定数组的大小外还制订了参数的个数，vC~vG是使用到的参数寄存器序列<br>filled-new-array/range {vCCCC, … ,vNNNN},type@BBBB 指定功能与上一条指令相同，只是参数寄存器使用range字节码后缀指定了取值范围，vC是第一个参数寄存器， N=A+C-1。<br>filled-new-array/jumbo {vCCCC, … ,vNNNN},type@BBBBBBBB 指令功能与上一条指令相同，只是寄存器与指令的索引取值范围更大（Android4.0中新增的指令）<br>fill-array-data vAA, +BBBBBBBB 用指定的数据来填充数组，vAA寄存器为数组引用，引用必须为基础类型的数组，在指令后面会紧跟一个数据表<br>arrayop vAA,vBB,vCC 对vBB寄存器指定的数组元素进入取值与赋值。vCC寄存器指定数组元素索引，vAA寄存器用来寄放读取的或需要设置的数组元素的值。读取元素使用aget类指令，元素赋值使用aput指令，元素赋值使用aput类指令，根据数组中存储的类型指令后面会紧跟不同的指令后缀，指令列表有aget、aget-wide、aget-object、aget-boolean、aget-byte、aget-char、aget-short、aput、aput-wide、aput-boolean、aput-byte、aput-char、aput-short。</p>
+<h5 id="8-异常指令"><a href="#8-异常指令" class="headerlink" title="8.异常指令"></a>8.异常指令</h5><p>throw vAA 抛出vAA寄存器中指定类型的异常。<br>try-catch:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">   :try_start_0</div><div class="line">   invoke-static &#123;p2&#125;, Ljava/lang/Integer;-&gt;parseInt(Ljava/lang/String;)I</div><div class="line">   :try_end_0</div><div class="line">之后跟catch&lt;异常类型&gt;&#123;try开始结束标号&#125;&lt;catch标号&gt;</div><div class="line"> .catch Ljava/lang/NumberFormatException; &#123;:try_start_0 .. :try_end_0&#125; :catch_1</div><div class="line">......</div><div class="line">:catch_0</div><div class="line">......</div><div class="line">:catch_1</div></pre></td></tr></table></figure></p>
+<p>当try中遇到异常跳到后面对应的catch中。有一点注意：当遇到try1中套try2时编译器为了内层catch2中发生的异常能被外层catch1捕捉到会在内层catch2中加一层try1，命名为try3。<br>而try-catch的信息存储在Dexcode结构体中，指令集后面，存了每个try的开始和长度以及对应encoded_catch_handler_list （表示hander的数量及位置）中的encoded_catch_handler[handlers_size]的位置。encoded_catch_handler 中有catch的类型及代码偏移</p>
+<h5 id="9-跳转指令"><a href="#9-跳转指令" class="headerlink" title="9.跳转指令"></a>9.跳转指令</h5><p>跳转指令用于从当前地址跳转到孩子定的偏移处。Dalvik指令集中有三种跳转指令：无条件跳转（goto）、分支跳转（switch）与条件跳转（if）。<br>goto +AA 无条件跳转到指定偏移处，偏移量AA不能为0<br>goto/16 +AAAA 无条件跳转到指定偏移处，偏移量AAAA不能为0。<br>goto/32 +AAAAAAAA 无条件跳转到指定偏移处。<br>packed-switch vAA,+BBBBBBBB 分支跳转指令。vAA寄存器为switch分支中需要判断的值，BBBBBBBB指向一个packed-switch-payload格式的偏移表，表中的值是有规律递增的。<br>sparse-switch vAA,+BBBBBBBB 分支跳转指令。vAA寄存器为switch分支中需要判断的值，BBBBBBBB指向一个sparse-switch-payload格式的偏移表，表中的值是无规律的偏移表，表中的值是无规律的偏移量。<br>if-test vA,vB,+CCCC 条件跳转指令。比较vA寄存器与vB寄存器的值，如果比较结果满足就跳转到CCCC指定的偏移处。偏移量CCCC不能为0。if-test类型的指令有以下几条：</p>
+<pre><code>+ if-eq 如果vA不等于vB则跳转。Java语法表示为 if(vA == vB)
++ if-ne 如果vA不等于vB则跳转。Java语法表示为 if(vA != vB)
++ if-lt 如果vA小于vB则跳转。Java语法表示为 if(vA &lt; vB)
++ if-le 如果vA小于等于vB则跳转。Java语法表示为 if(vA &lt;= vB)
++ if-gt 如果vA大于vB则跳转。Java语法表示为 if(vA &gt; vB)
++ if-ge 如果vA大于等于vB则跳转。Java语法表示为 if(vA &gt;= vB)
+</code></pre><p>if-testz vAA,+BBBB 条件跳转指令。拿vAA寄存器与 0 比较，如果比较结果满足或值为0时就跳转到BBBB指定的偏移处。偏移量BBBB不能为0。 if-testz类型的指令有一下几条：</p>
+<pre><code>+ if-nez 如果vAA为 0 则跳转。Java语法表示为 if(vAA == 0)
++ if-eqz 如果vAA不为 0 则跳转。Java语法表示为 if(vAA != )
++ if-ltz 如果vAA小于 0 则跳转。Java语法表示为 if(vAA &lt; 0)
++ if-lez 如果vAA小于等于 0 则跳转。Java语法表示为 if(vAA &lt;= 0)
++ if-gtz 如果vAA大于 0 则跳转。Java语法表示为 if(vAA &gt; 0)
++ if-gez 如果vAA大于等于 0 则跳转。Java语法表示为 if(vAA &gt;= 0)
+</code></pre><p>switch-有规律举例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">    packed-switch p1, :pswitch_data_0</div><div class="line">	#紧接着就是defult</div><div class="line">    .line 36</div><div class="line">    const-string v0, &quot;she is a person&quot;</div><div class="line"></div><div class="line">    .line 39</div><div class="line">    :goto_0</div><div class="line">    return-object v0</div><div class="line">......</div><div class="line">:pswitch_data_0   这里就是packed-switch-payload格式的偏移表。存有：第一个case的值，case数目，每个case相对switch的偏移数组。</div><div class="line">.pached-switch 0x0</div><div class="line">	:xxxxx        字节码中直接存的packed-switch的偏移（要*2）通过序号匹对数组中的地址计算并跳转。</div><div class="line">.end packed-switch</div></pre></td></tr></table></figure></p>
+<p>switch-无规律表举例<br>case的值无规律<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">sparse-switch p1, :sswitch_data_0</div><div class="line">#defult处。</div><div class="line">......</div><div class="line"> :sswitch_data_0   sparse-switch-payload格式的偏移表。存有：case数目，每个case的值。每个case相对switch的偏移（与前相对,同*2）</div><div class="line">    .sparse-switch</div><div class="line">        0x5 -&gt; :sswitch_0</div><div class="line">        0xf -&gt; :sswitch_1</div><div class="line">        0x23 -&gt; :sswitch_2</div><div class="line">        0x41 -&gt; :sswitch_3</div><div class="line">    .end sparse-switch</div></pre></td></tr></table></figure></p>
+<p>一般跳转的地方用:XXX标识。在字节码中0x1表示当前位置偏移0x2——计算偏移以俩个字节为单位。</p>
+<h5 id="10-比较指令"><a href="#10-比较指令" class="headerlink" title="10.比较指令"></a>10.比较指令</h5><p>比较指令用于两个寄存器的值（浮点型或长整型）进行比较。它的格式为 cmpkind vAA,vBB,vCC，其中vBB寄存器与vCC寄存器是需要比较的两个寄存器或者两个寄存器对，比较的结果放到vAA寄存器。Dalvik指令集中共有 5 条比较指令。<br>cmpl-float 比较两个单精度浮点数。如果vBB寄存器小于vCC寄存器，则结果为1，相等则结果为0，大于的话结果为-1。<br>cmpg-float 比较两个单精度浮点数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。<br>cmpl-double  比较两个双精度浮点数。如果vBB寄存器小于vCC寄存器，则结果为1，相等则结果为0，大于的话结果为-1。<br>cmpg-double 比较两个双精度浮点数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。<br>cmp-long 比较两个长整型数。如果vBB寄存器大于vCC寄存器，则结果为1，相等则结果为0，小于的话结果为-1。</p>
+<h5 id="11-字段操作指令"><a href="#11-字段操作指令" class="headerlink" title="11.字段操作指令"></a>11.字段操作指令</h5><p><img src="https://i.imgur.com/UuIIhAn.png" alt=""><br><img src="https://i.imgur.com/4rFBjnX.png" alt=""></p>
+<p>对象的子段需要一个对象参数。</p>
+<h5 id="12-方法调用指令"><a href="#12-方法调用指令" class="headerlink" title="12.方法调用指令"></a>12.方法调用指令</h5><p>方法的第一个参数一般为this。<br><img src="https://i.imgur.com/7ReGTLb.png" alt=""><br>调用格式：<br>invoke-* {params}, type-&gt;method(params_type)return_type<br>如果需要传递this引用，将其放置在param的第一个位置。</p>
+<p>那么这些指令有什么不同呢？首先要分辨两个概念，虚方法和直接方法（JVM 里面叫特殊方法）。其实 Java 是没有虚方法这个概念的，但是 DVM 里面有，直接方法是指类的（type为某个类）所有实例构造器和private实例方法。反之protected或者public方法都叫做虚方法。</p>
+<p>invoke-static比较好分辨，当且仅当调用静态方法时，才会使用它。</p>
+<p>invoke-direct（在 JVM 中叫做invokespecial）用于调用直接方法，invoke-virtual用于调用虚方法。除了一种情况，显式使用super调用超类的虚方法时，使用invoke-super（直接方法仍然使用invoke-direct）。</p>
+<p>方法返回的数据通过 move-result指令获取。</p>
+<h5 id="13-数据转化指令"><a href="#13-数据转化指令" class="headerlink" title="13.数据转化指令"></a>13.数据转化指令</h5><p>数据转换指令用于将一种类型的数值转换成另一种类型，它的格式为 unop vA,vB 。 vB寄存器或vB寄存器对存放需要转换的数据，转换后的结果保存在vA寄存器或vA寄存器对中。<br>neg-int 对整型数求补<br>not-int  对整型数求反<br>neg-long 对长整型求补<br>not-long 对长整型求反<br>neg-float 对单精度浮点型数求补<br>neg-double 对双精度浮点型数求补<br>int-to-long 将整型数转换为长整型<br>int-to-float 将整型数转换为单精度浮点型<br>int-to-double 将整型数转换为双精度浮点型<br>long-to-int 将长整型数转换为整型<br>long-to-float 将长整型数转换为单精度浮点型<br>long-to-double 将长整型数转换为双精度浮点型<br>float-to-int 将单精度浮点型数转换为整型<br>float-to-long 将单精度浮点型数转换为长整型<br>float-to-double 将单精度浮点型数转换为双精度浮点型<br>double-to-int 将双精度浮点型数转换为整型<br>double-to-long 将双精度浮点型数转换为长整型<br>double-to-float 将双精度浮点型数转换为单精度浮点型<br>int-to-byte 将整型转换为字节型<br>int-to-char 将整型转换为字符串<br>int-to-short 将整型转换为短整型<br>check-cast v0,L….  强制类型转化</p>
+<h5 id="14-数据运算"><a href="#14-数据运算" class="headerlink" title="14.数据运算"></a>14.数据运算</h5><p>binop vAA,vBB,vCC 将vBB寄存器与vCC寄存器进行运算，结果保存到vAA寄存器<br>binop/2addr vA,vB 将vA寄存器与vB寄存器进行运算，结果保存到vA寄存器<br>binop/lit16 vA,vB,#+CCCC 将vB寄存器与常量CCCC进行运算，结果保存到vA寄存器<br>binop/lit8 vAA,vBB,#+CC 将vBB寄存器与常量CC进行运算，结果保存到vAA寄存器<br>后面3类指令比第1类指令分别多了addr、lit16、lit8等指令后缀。四类指令中基础字节码后面加上数据类型后缀，如-int或-long分别表示操作的数据类型那个为整型与长整型。第1类指令可归类如下：<br>add-type     vBB寄存器与vCC寄存器值进行加法运算（vBB  + vCC）<br>sub-type     vBB寄存器与vCC寄存器值进行减法运算（vBB  - vCC）<br>mul-type     vBB寄存器与vCC寄存器值进行乘法运算（vBB  * vCC）<br>div-type     vBB寄存器与vCC寄存器值进除法运算（vBB  / vCC）<br>rem-type     vBB寄存器与vCC寄存器值进行模运算（vBB  % vCC）<br>and-type     vBB寄存器与vCC寄存器值进行与运算（vBB  &amp; vCC）<br>or-type     vBB寄存器与vCC寄存器值进行或运算（vBB  | vCC）<br>xor-type     vBB寄存器与vCC寄存器值进行异或运算（vBB  ^ vCC）<br>shl-type     vBB寄存器（有符号数）左移vCC位（vBB &lt;&lt; vCC）<br>shr-type     vBB寄存器（有符号数）右移vCC位（vBB &gt;&gt; vCC）<br>ushr-type     vBB寄存器（无符号数）右移vCC位（vBB &gt;&gt; vCC）<br>其中基础字节码后面的-type可以是-int、-long、-float、-double。后面3类指令与之类似。</p>
+<h3 id="四：具体实现"><a href="#四：具体实现" class="headerlink" title="四：具体实现"></a>四：具体实现</h3><p>.XXXX都是辅助信息</p>
+<h4 id="1-类定义"><a href="#1-类定义" class="headerlink" title="1.类定义"></a>1.类定义</h4><p>一个 smali 文件中存放一个类，文件开头保存类的各种信息。类的定义是这样的。<br>.class &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;完全限定名称&gt;<br>.super &lt;超类的完全限定名称&gt;<br>.source &lt;源文件名&gt;<br>例子：MainActivity：<br>.class public Lnet/flygon/myapplication/MainActivity;<br>.super Landroid/app/Activity;<br>.source “MainActivity.java”<br>类可以实现接口，如果类实现了接口，那么这三条语句下面会出现.implements &lt;接口的完全限定名称&gt;。比如通常用于回调的匿名类中会出现.implements Landroid/view/View$OnClickListener;。<br>类还可以拥有注解<br>.annotation &lt;完全限定名称&gt;<br>    键 = 值<br>    …<br>.end annotation</p>
+<p>.synthetic 表示由编译器合成的，用于jvm内部调用的字段，方法，类等<br>比如内部类为了能调用外面类的方法会自动含一个指向外部的this$x<br>不用存自己的，因为自己的都是在方法调用时自动传过来，（一个存有数据的结构体）而该结构体内存有指向外部的this指针。<br>内部类构造过程：保存外部类对象的引用，调用父构造，调用自己的构造。注意是内部类，匿名类没有自己的构造函数（不知道名字）</p>
+<p>R与BuildConfig都是自动生成的类<br>前者将名称与int对应。后者只是标志发布的类型</p>
+<h4 id="2-字段定义"><a href="#2-字段定义" class="headerlink" title="2.字段定义"></a>2.字段定义</h4><p>.field &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;名称&gt;:&lt;类型&gt;<br>非权限修饰符可以为final或者abstract<br>比如我在MainActivity中定义一个按钮：<br>.field private button1:Landroid/widget/Button;</p>
+<h4 id="3-方法定义"><a href="#3-方法定义" class="headerlink" title="3.方法定义"></a>3.方法定义</h4><p>.method &lt;权限修饰符&gt; &lt;非权限修饰符&gt; &lt;名称&gt;(&lt;参数类型&gt;)&lt;返回值类型&gt;<br>    …<br>.end method</p>
+<p>可以含有：<br>.parameter指定参数<br>.registers指定使用的寄存器个数或者.locals<br>.prologue开启代码<br>.line用来标识java代码的行</p>
+<p>.local用与方法内局部变量的范围定义与命名(如for内的int i)</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/31/jvm的-class文件格式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1633,154 +1862,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/16/windows内存逐渐升高的解决/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/16/windows内存逐渐升高的解决/" itemprop="url">windows内存逐渐升高的解决</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-16T19:29:34+08:00">
-                2017-12-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/windows/" itemprop="url" rel="index">
-                    <span itemprop="name">windows</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p> 更新win10 1709后就一直发现自己的内存占用莫名奇妙的高，即使认识的进程全关也依然百分之百，而且在任务管理器中没有发现占内存特别大的东西，无病毒</p>
-<h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p> 初步推测为memory compression的鬼，但也不是绝对确定，同时也不确定究竟是什么原因和什么冲突所致，目前猜测为服务superfetch<br> 初步解决(感谢文章：<a href="https://appuals.com/100-disk-usage-by-system-and-compressed-memory-in-windows-10/" target="_blank" rel="external">https://appuals.com/100-disk-usage-by-system-and-compressed-memory-in-windows-10/</a>)</p>
-<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><p>尝试：</p>
-<ol>
-<li>RunFullMemoryDiagnostic计划禁用</li>
-<li>Superfetch服务禁用<br>未使用注册表值3改0而是直接禁用服务</li>
-</ol>
-<h2 id="2018-3-30更新：经过一段时间观察发现是百度网盘的锅，我现在怀疑它内存溢出"><a href="#2018-3-30更新：经过一段时间观察发现是百度网盘的锅，我现在怀疑它内存溢出" class="headerlink" title="2018.3.30更新：经过一段时间观察发现是百度网盘的锅，我现在怀疑它内存溢出"></a>2018.3.30更新：经过一段时间观察发现是百度网盘的锅，我现在怀疑它内存溢出</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1831,7 +1912,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">92</span>
+                <span class="site-state-item-count">93</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
