@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="核心简记按p5的子章节记">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-05T08:43:14.914Z">
+<meta property="og:updated_time" content="2019-01-22T10:03:27.963Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cpp学习-第六章-函数">
 <meta name="twitter:description" content="核心简记按p5的子章节记">
@@ -394,7 +394,7 @@
 <li>底层const不可忽略，常量引用可接受范围比引用广，因为普通引用不可接受常量。这是底层const</li>
 <li>传递数组时实际传递的是首元素指针。形参的第一维将被忽略掉，见下。传递大小常用:标记、尾后指针、大小参数</li>
 <li>多维数组时，数组的第二维及之后的大小都是数组类型一部分，也是指针类型一部分。不能省略</li>
-<li>参数数量未知类型相同可用initializer_list类型的形参接受，但传入还需要{}。c的…形参也支持</li>
+<li>参数数量未知类型相同可用initializer_list类型的形参接受，但传入还需要{}。c的…形参也支持。接受单一的initializer_list类型参数，此函数可以传入一个花括号列表，而c的实现需要前面的参确定类型，依据类型大小可以从栈中取出其它参使用。</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">以下三个等价，形参都是int *</div><div class="line">void p(int *p);</div><div class="line">void p(int p[]);</div><div class="line">void p(int p[10]);</div><div class="line">以下俩个等价</div><div class="line">void p(int (*p)[10]);</div><div class="line">void p(int p[][10]);</div></pre></td></tr></table></figure>
 <h3 id="返回类型与return"><a href="#返回类型与return" class="headerlink" title="返回类型与return"></a>返回类型与return</h3><ol>
@@ -583,7 +583,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">93</span>
+                <span class="site-state-item-count">94</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

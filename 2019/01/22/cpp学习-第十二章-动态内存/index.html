@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpp,反汇编," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="核心简记非动态的内存管理:由位置决定生存期，编译器自动释放动态内存管理:自定义生存期，手动释放。 c++的动态内存管理运算符:new,在堆中分配对象空间并返回指针，可以选择进行初始化。delete，接受动态对象的指针，销毁对象，释放内存。 在memory头文件，标准库提供了俩种智能指针帮助管理动态对象，它依据指针生存期自动释放其指向的对象。shared_ptr共享对象，unique_ptr独占对象">
+<meta name="keywords" content="cpp,反汇编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp学习-第十二章-动态内存">
+<meta property="og:url" content="http://yoursite.com/2019/01/22/cpp学习-第十二章-动态内存/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="核心简记非动态的内存管理:由位置决定生存期，编译器自动释放动态内存管理:自定义生存期，手动释放。 c++的动态内存管理运算符:new,在堆中分配对象空间并返回指针，可以选择进行初始化。delete，接受动态对象的指针，销毁对象，释放内存。 在memory头文件，标准库提供了俩种智能指针帮助管理动态对象，它依据指针生存期自动释放其指向的对象。shared_ptr共享对象，unique_ptr独占对象">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-22T15:21:46.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp学习-第十二章-动态内存">
+<meta name="twitter:description" content="核心简记非动态的内存管理:由位置决定生存期，编译器自动释放动态内存管理:自定义生存期，手动释放。 c++的动态内存管理运算符:new,在堆中分配对象空间并返回指针，可以选择进行初始化。delete，接受动态对象的指针，销毁对象，释放内存。 在memory头文件，标准库提供了俩种智能指针帮助管理动态对象，它依据指针生存期自动释放其指向的对象。shared_ptr共享对象，unique_ptr独占对象">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/22/cpp学习-第十二章-动态内存/"/>
+
+
+
+
+
+  <title>cpp学习-第十二章-动态内存 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/22/cpp学习-第十二章-动态内存/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cpp学习-第十二章-动态内存</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-22T23:18:12+08:00">
+                2019-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>非动态的内存管理:由位置决定生存期，编译器自动释放<br>动态内存管理:自定义生存期，手动释放。</p>
+<p>c++的动态内存管理运算符:<br>new,在堆中分配对象空间并返回指针，可以选择进行初始化。<br>delete，接受动态对象的指针，销毁对象，释放内存。</p>
+<p>在memory头文件，标准库提供了俩种智能指针帮助管理动态对象，它依据指针生存期自动释放其指向的对象。shared_ptr共享对象，unique_ptr独占对象。</p>
+<p>杂记:</p>
+<ol>
+<li>编译器除了没有构造时生成默认构造外，还会在没有拷贝构造函数时自动生成拷贝构造函数。此外还有赋值、析构。其行为为对每个成员拷贝、赋值、析构。</li>
+<li>默认初始化-依据位置，可能不进行初始化。值初始化-基本类型初始为0。对类类型来说都一样。</li>
+<li>合成默认构造函数对未指定值的成员是默认初始化！因为不管且不在全局，因此数据不由elf定</li>
+<li>auto可以自动出指针，不过引用要加&amp;</li>
+</ol>
+<a id="more"></a>
+<h3 id="智能指针与new-delete"><a href="#智能指针与new-delete" class="headerlink" title="智能指针与new\delete"></a>智能指针与new\delete</h3><p>shared_ptr与unique_ptr都支持的操作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">shared_ptr&lt;T&gt; sp 空指针，指向T类型对象</div><div class="line">unique_ptr&lt;T&gt; up</div><div class="line">P                可做条件判断，有指向时为true</div><div class="line">*p               解引用p，获得对象</div><div class="line">p-&gt;men           解引用取成员</div><div class="line">p.get()          返回p中保存的指针。</div><div class="line">swap(p,q)        交换p与q的指针</div><div class="line">p.swap(q)</div></pre></td></tr></table></figure></p>
+<p>使用动态内存原因:</p>
+<ol>
+<li>不知道使用对象个数</li>
+<li>不知道对象准确类型</li>
+<li>多个对象见共享数据</li>
+</ol>
+<h4 id="shared-ptr类"><a href="#shared-ptr类" class="headerlink" title="shared_ptr类"></a>shared_ptr类</h4><p>智能指针也是模板，默认初始化为空指针。</p>
+<p>shared_ptr独有的操作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">make_shared&lt;T&gt;(args)   用args初始化一个动态对象，返回其shared_ptr</div><div class="line"></div><div class="line">shared_ptr&lt;T&gt;p(q)      p是shared_ptr q的拷贝，会递增计数器。计数器在共享的公共区域</div><div class="line">p=q                    递减p的计数，递增q的计数。计数为0时释放对象。</div><div class="line"></div><div class="line">p.unique()             如果计数为1，返回true，否则false</div><div class="line">p.use_count()          返回计数</div></pre></td></tr></table></figure></p>
+<p>拷贝与赋值时都会记录有对少个指向相同对象，具体实现由库决定。一旦一个计数为0(所有导致递减的操作都可)，它会自动释放管理的对象。<br>递减的操作如:sp的析构、赋值。</p>
+<h4 id="直接管理内存"><a href="#直接管理内存" class="headerlink" title="直接管理内存"></a>直接管理内存</h4><p>动态分配的内存是默认初始化的，加()为值初始化，使用new还可以直接初始化、列表初始化。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">int *p=new int;         //默认初始化</div><div class="line">int *p=new int();       //值初始化</div><div class="line">int *p=new int(123);    //传统构造</div><div class="line">vector&lt;int&gt; *p=new vector&lt;int&gt;&#123;0,1,2&#125;;  //列表初始化</div></pre></td></tr></table></figure></p>
+<p>因此称new为可选择初始化，不过类类型一定初始化了。</p>
+<p>分配const的对象:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const int *p=new const int(123);</div></pre></td></tr></table></figure></p>
+<p>返回指向const的指针。<br>默认情况下，如果new不能分配所要求的内存空间，抛出bad_alloc异常。可以使用new(nothrow) int分配失败时返回空指针。</p>
+<p>delete接受指针，销毁对象释放内存。指针必须是new分配的或者空指针，可释放const指针，非new或二次释放都未定义。<br>delete之后指针内容不变。<br>手动管理当心:</p>
+<ol>
+<li>忘记delete，内存泄漏。</li>
+<li>使用已经释放的对象</li>
+<li>同一区域释放俩次，可能破坏空间</li>
+</ol>
+<h4 id="shared-ptr与new结合使用"><a href="#shared-ptr与new结合使用" class="headerlink" title="shared_ptr与new结合使用"></a>shared_ptr与new结合使用</h4><p>可以用new返回的指针初始化智能指针，必须使用直接初始化，不能使用=构造，即不可转化。传参、返回时都要手动构造。<br>智能指针默认使用delete释放管理的对象。可自定义<br>sp的其它方法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">shared_ptr&lt;T&gt; p(q)  p管理内置指针q的对象。</div><div class="line">shared_ptr&lt;T&gt; p(u)  从unique_ptr接管对象所有权，u被置空。</div><div class="line">shared_ptr&lt;T&gt; p(q,d) p管理内置指针q的对象。使用可调用对象d代替delete</div><div class="line">shared_ptr&lt;T&gt; p(p2,d) p是p2的拷贝，使用d代替delete</div><div class="line">p.reset()           将这个p独立出来，给予新的指针或置空，原计数会递减，当为0时释放，可传d代替delete。</div><div class="line">p.reset(q)</div><div class="line">p.reset(q,d)</div></pre></td></tr></table></figure></p>
+<p>调用get返回的指针不能delete对象，否则一定会产生二次释放。因为智能指针保证指针在就可用。</p>
+<h4 id="智能指针和异常"><a href="#智能指针和异常" class="headerlink" title="智能指针和异常"></a>智能指针和异常</h4><p>函数正常结束或者发生异常，无论如何，局部对象都会被销毁—-这部分反编译还未研究。<br>因此智能指针在异常发生时仍可以释放，但自己管理的指针销毁不会影响对象。</p>
+<p>因为这种某长生存期对象绑定某对象自动生存期的行为不仅发生在动态内存管理上，某些资源如网络连接，也需要这种管理方式。因此可以使用智能指针的自定义delete来管理资源。</p>
+<p>智能指针注意:</p>
+<ol>
+<li>不使用相同的内置指针初始化/reset多个智能指针</li>
+<li>不delste get返回的指针</li>
+<li>不使用get返回的指针初始化/reset另一个智能指针</li>
+</ol>
+<h4 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h4><p>这种智能指针某时刻只能指向一个给定的对象。<br>特有操作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">unique_ptr&lt;T&gt; u     空指针</div><div class="line">unique_ptr&lt;T,D&gt; u   释放指针使用类型D的可调用对象。</div><div class="line">unique_ptr&lt;T,D&gt; u(d) 传入D类型的d</div><div class="line"></div><div class="line">u=nullptr           释放u的对象，置空u</div><div class="line">u.release()         u放弃指针的控制权，返回指针，并置空u</div><div class="line">u.reset()           释放u所指对象，提供内置指针q就将u指向q，否则空</div><div class="line">u.reset(q)</div></pre></td></tr></table></figure></p>
+<p>不可赋值、拷贝uq，但可以拷贝赋值一个快销毁的unique_ptr。编译器分辨出并实行特殊拷贝…下一章介绍<br>uq与sq管理删除器的方式也不同，原因在16章</p>
+<h4 id="weak-ptr"><a href="#weak-ptr" class="headerlink" title="weak_ptr"></a>weak_ptr</h4><p>这是一种不控制所指对象周期的智能指针，指向sp的对象。将wp绑定sp不会改变计数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">weak_ptr&lt;T&gt; w       空weak</div><div class="line">weak_ptr&lt;T&gt; w(sp)   与sp指向相同对象的wp</div><div class="line"></div><div class="line">w=p                 p可以是sp或wp，赋值后共享对象</div><div class="line"></div><div class="line">w.reset()           w置空</div><div class="line">w.use_count()       返回对象的sp数量</div><div class="line">w.expired()         sp数量为0返回true，否则false</div><div class="line">w.lock()            上为true，返回空sp，否则返回一个指向其对象的sp。</div></pre></td></tr></table></figure></p>
+<p>主要用于不影响一个给定的sp生存期，但可以阻止用户访问一个不存在的企图。不可以直接解引用，要使用lock使用。</p>
+<h3 id="动态数组"><a href="#动态数组" class="headerlink" title="动态数组"></a>动态数组</h3><p>new可以分配数组，allocator类是标准库实现。</p>
+<h4 id="new数组"><a href="#new数组" class="headerlink" title="new数组"></a>new数组</h4><p>分配动态数组的类必须有自己定义版本的拷贝、赋值、销毁，来管理内存。因为这些默认操作不会处理好内存<br>使用vector往往更好，更安全，效率也很高。</p>
+<p>使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int *p=new int[数量];    //默认初始化</div><div class="line">int *p=new int[数量]();  //值初始化</div></pre></td></tr></table></figure></p>
+<p>返回的是元素类型的指针。可以用[]，但并不是数组类型。只能默认、值初始化，或者列表<br>普通数组长度不可为0，但动态数组可以。</p>
+<p>释放要用deleate[]  p;按逆序销毁释放。<br>库提供了可以管理new数组的up:unique_ptr<t[]><br>不支持访问运算符，但可以使用[]访问<br>sp不支持动态数组，想用必须自己加删除器。</t[]></p>
+<h4 id="allocator"><a href="#allocator" class="headerlink" title="allocator"></a>allocator</h4><p>头文件memory中的实现，将内存分配与对象构造分离。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">allocator&lt;T&gt; a       空对象</div><div class="line">a.allocate(n)        分配内存，未构造，保存n个T，返回其指针。</div><div class="line">a.deallocate(p,n)    释放p开始的n个内存，p必须是前返回的，n必须是前大小。使用前先destory</div><div class="line">a.construct(p,args)  在p指针的位置用参数构造对象</div><div class="line">a.destory(p)         对p指向的对象析构</div><div class="line"></div><div class="line">同时定义了四个批量创建、拷贝函数</div></pre></td></tr></table></figure></p>
+<h2 id="反汇编"><a href="#反汇编" class="headerlink" title="反汇编"></a>反汇编</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">#include&lt;memory&gt;</div><div class="line">#include&lt;string&gt;</div><div class="line">using namespace std;</div><div class="line"></div><div class="line">class A&#123;</div><div class="line">public:</div><div class="line">    string a;</div><div class="line">    A()&#123;</div><div class="line">        a=&quot;构造函数&quot;;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">int main(int argc, char const *argv[])</div><div class="line">&#123;</div><div class="line">    A *p=new A();</div><div class="line">    string ls=p-&gt;a;</div><div class="line">    shared_ptr&lt;A&gt; sp(p);//sp接管p了</div><div class="line">    ls=sp-&gt;a;</div><div class="line">    //delete</div><div class="line">    A *p2=new A();</div><div class="line">    delete p2;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="X86-64"><a href="#X86-64" class="headerlink" title="X86-64"></a>X86-64</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div></pre></td><td class="code"><pre><div class="line">.text:0000000000003040 ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:0000000000003040 main            proc near               ; DATA XREF: start+2E↑o</div><div class="line">.text:0000000000003040</div><div class="line">.text:0000000000003040 var_64          = dword ptr -64h</div><div class="line">.text:0000000000003040 ptr             = qword ptr -60h</div><div class="line">.text:0000000000003040 var_58          = qword ptr -58h</div><div class="line">.text:0000000000003040 var_50          = qword ptr -50h</div><div class="line">.text:0000000000003040 var_48          = qword ptr -48h</div><div class="line">.text:0000000000003040 var_40          = qword ptr -40h</div><div class="line">.text:0000000000003040 var_38          = qword ptr -38h</div><div class="line">.text:0000000000003040 var_30          = qword ptr -30h</div><div class="line">.text:0000000000003040 var_28          = dword ptr -28h</div><div class="line">.text:0000000000003040 var_24          = dword ptr -24h</div><div class="line">.text:0000000000003040 var_20          = byte ptr -20h</div><div class="line">.text:0000000000003040 var_10          = byte ptr -10h</div><div class="line">.text:0000000000003040 var_8           = qword ptr -8</div><div class="line">.text:0000000000003040</div><div class="line">.text:0000000000003040 ; __unwind &#123;</div><div class="line">.text:0000000000003040                 push    rbp</div><div class="line">.text:0000000000003041                 mov     rbp, rsp</div><div class="line">.text:0000000000003044                 sub     rsp, 70h</div><div class="line">.text:0000000000003048                 mov     eax, 8</div><div class="line">.text:000000000000304D                 mov     ecx, eax</div><div class="line">.text:000000000000304F                 mov     rdx, fs:28h</div><div class="line">.text:0000000000003058                 mov     [rbp+var_8], rdx</div><div class="line">.text:000000000000305C                 mov     [rbp+var_24], 0</div><div class="line">.text:0000000000003063                 mov     [rbp+var_28], edi</div><div class="line">.text:0000000000003066                 mov     [rbp+var_30], rsi</div><div class="line">//调用new，传了一个参数表示需要空间大小。内部使用malloc</div><div class="line">.text:000000000000306A                 mov     rdi, rcx        ; unsigned __int64</div><div class="line">.text:000000000000306D                 call    _Znwm           ; operator new(ulong)</div><div class="line">//返回指针</div><div class="line">.text:0000000000003072                 mov     rdi, rax</div><div class="line">.text:0000000000003075                 mov     [rbp+var_48], rax</div><div class="line">//调用构造函数....传入this</div><div class="line">.text:0000000000003079                 call    sub_3150</div><div class="line">//在var_10上构造string</div><div class="line">.text:000000000000307E                 lea     rdi, [rbp+var_10]</div><div class="line">.text:0000000000003082                 mov     rax, [rbp+var_48]</div><div class="line">.text:0000000000003086                 mov     [rbp+var_38], rax</div><div class="line">.text:000000000000308A                 mov     rsi, [rbp+var_38]</div><div class="line">.text:000000000000308E                 call    sub_3D00</div><div class="line">//在var_20上构造shared_ptr</div><div class="line">.text:0000000000003093                 lea     rdi, [rbp+var_20]</div><div class="line">.text:0000000000003097                 mov     rsi, [rbp+var_38]</div><div class="line">.text:000000000000309B                 call    sub_3190</div><div class="line">//解引用var_20</div><div class="line">.text:00000000000030A0                 lea     rax, [rbp+var_20]</div><div class="line">.text:00000000000030A4                 mov     rdi, rax</div><div class="line">.text:00000000000030A7                 call    sub_31C0</div><div class="line">//返回的是管理对象的指针 使用其赋值ls</div><div class="line">.text:00000000000030AC                 lea     rdi, [rbp+var_10]</div><div class="line">.text:00000000000030B0                 mov     rsi, rax</div><div class="line">.text:00000000000030B3                 call    sub_3D70</div><div class="line">//new 8字节大小</div><div class="line">.text:00000000000030B8                 mov     r8d, 8  //64位多出的通用寄存器</div><div class="line">.text:00000000000030BE                 mov     edi, r8d        ; unsigned __int64   //e与d都是4字节</div><div class="line">.text:00000000000030C1                 mov     [rbp+var_50], rax</div><div class="line">.text:00000000000030C5                 call    _Znwm           ; operator new(ulong)</div><div class="line">.text:00000000000030CA                 mov     rdi, rax</div><div class="line">.text:00000000000030CD                 mov     [rbp+var_58], rax</div><div class="line">//构造函数</div><div class="line">.text:00000000000030D1                 call    sub_3150</div><div class="line">.text:00000000000030D6                 mov     rax, [rbp+var_58]</div><div class="line">.text:00000000000030DA                 mov     [rbp+var_40], rax</div><div class="line">.text:00000000000030DE                 mov     rcx, [rbp+var_40]</div><div class="line">//指针==0</div><div class="line">.text:00000000000030E2                 cmp     rcx, 0</div><div class="line">.text:00000000000030E6                 mov     [rbp+ptr], rcx</div><div class="line">//等于0就跳</div><div class="line">.text:00000000000030EA                 jz      loc_3102</div><div class="line">//析构函数</div><div class="line">.text:00000000000030F0                 mov     rdi, [rbp+ptr]</div><div class="line">.text:00000000000030F4                 call    sub_31E0</div><div class="line">//delete  内部使用free</div><div class="line">.text:00000000000030F9                 mov     rdi, [rbp+ptr]  ; ptr</div><div class="line">.text:00000000000030FD                 call    _ZdlPv          ; operator delete(void *)</div><div class="line">.text:0000000000003102</div><div class="line">.text:0000000000003102 loc_3102:                               ; CODE XREF: main+AA↑j</div><div class="line">.text:0000000000003102                 mov     [rbp+var_24], 0</div><div class="line">//析构shared_ptr</div><div class="line">.text:0000000000003109                 lea     rdi, [rbp+var_20]</div><div class="line">.text:000000000000310D                 call    sub_3200</div><div class="line">//析构string</div><div class="line">.text:0000000000003112                 lea     rdi, [rbp+var_10]</div><div class="line">.text:0000000000003116                 call    sub_3800</div><div class="line">.text:000000000000311B                 mov     eax, [rbp+var_24]</div><div class="line">.text:000000000000311E                 mov     rdi, fs:28h</div><div class="line">.text:0000000000003127                 mov     rcx, [rbp+var_8]</div><div class="line">.text:000000000000312B                 cmp     rdi, rcx</div><div class="line">.text:000000000000312E                 mov     [rbp+var_64], eax</div><div class="line">.text:0000000000003131                 jnz     loc_3140</div><div class="line">.text:0000000000003137                 mov     eax, [rbp+var_64]</div><div class="line">.text:000000000000313A                 add     rsp, 70h</div><div class="line">.text:000000000000313E                 pop     rbp</div><div class="line">.text:000000000000313F                 retn</div><div class="line">.text:0000000000003140 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000003140</div><div class="line">.text:0000000000003140 loc_3140:                               ; CODE XREF: main+F1↑j</div><div class="line">.text:0000000000003140                 call    ___stack_chk_fail</div><div class="line">.text:0000000000003140 ; &#125; // starts at 3040</div><div class="line">.text:0000000000003140 main            endp</div></pre></td></tr></table></figure>
+<h3 id="ARM-64"><a href="#ARM-64" class="headerlink" title="ARM-64"></a>ARM-64</h3><h4 id="指令简记"><a href="#指令简记" class="headerlink" title="指令简记"></a>指令简记</h4><p>arm的判断条件主要由每条指令的后缀判断的，这种条件是对指令通用的。</p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div></pre></td><td class="code"><pre><div class="line">.text:000000000000370C ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:000000000000370C                 EXPORT main</div><div class="line">.text:000000000000370C main                                    ; DATA XREF: LOAD:0000000000000540↑o</div><div class="line">.text:000000000000370C                                         ; .got:main_ptr↓o</div><div class="line">.text:000000000000370C</div><div class="line">.text:000000000000370C var_6C          = -0x6C</div><div class="line">.text:000000000000370C var_68          = -0x68</div><div class="line">.text:000000000000370C var_60          = -0x60</div><div class="line">.text:000000000000370C var_58          = -0x58</div><div class="line">.text:000000000000370C var_50          = -0x50</div><div class="line">.text:000000000000370C var_48          = -0x48</div><div class="line">.text:000000000000370C var_40          = -0x40</div><div class="line">.text:000000000000370C var_38          = -0x38</div><div class="line">.text:000000000000370C var_30          = -0x30</div><div class="line">.text:000000000000370C var_28          = -0x28</div><div class="line">.text:000000000000370C var_24          = -0x24</div><div class="line">.text:000000000000370C var_20          = -0x20</div><div class="line">.text:000000000000370C var_10          = -0x10</div><div class="line">.text:000000000000370C var_8           = -8</div><div class="line">.text:000000000000370C var_s0          =  0</div><div class="line">.text:000000000000370C</div><div class="line">.text:000000000000370C ; __unwind &#123;</div><div class="line">.text:000000000000370C                 SUB             SP, SP, #0x80</div><div class="line">.text:0000000000003710                 STP             X29, X30, [SP,#0x70+var_s0]</div><div class="line">.text:0000000000003714                 ADD             X29, SP, #0x70</div><div class="line">.text:0000000000003718                 MOV             X8, #8</div><div class="line">.text:000000000000371C                 MRS             X9, #3, c13, c0, #2</div><div class="line">.text:0000000000003720                 LDR             X9, [X9,#0x28]</div><div class="line">.text:0000000000003724                 STUR            X9, [X29,#var_8]</div><div class="line">.text:0000000000003728                 STUR            WZR, [X29,#var_24]</div><div class="line">.text:000000000000372C                 STUR            W0, [X29,#var_28]</div><div class="line">.text:0000000000003730                 STUR            X1, [X29,#var_30]</div><div class="line">// A *p=new A();</div><div class="line">.text:0000000000003734                 MOV             X0, X8  ; unsigned __int64</div><div class="line">.text:0000000000003738                 BL              _Znwm   ; operator new(ulong)</div><div class="line">.text:000000000000373C                 STR             X0, [SP,#0x70+var_48]</div><div class="line">.text:0000000000003740                 BL              sub_3804</div><div class="line">// string ls=p-&gt;a;</div><div class="line">//调用和访问对象直接使用指针，所以在堆和栈分配对象调用方式没区别</div><div class="line">.text:0000000000003744                 SUB             X0, X29, #-var_10</div><div class="line">.text:0000000000003748                 LDR             X8, [SP,#0x70+var_48]</div><div class="line">.text:000000000000374C                 STR             X8, [SP,#0x70+var_38]</div><div class="line">.text:0000000000003750                 LDR             X1, [SP,#0x70+var_38]</div><div class="line">.text:0000000000003754                 BL              sub_44D4</div><div class="line">// shared_ptr&lt;A&gt; sp(p);</div><div class="line">.text:0000000000003758                 SUB             X0, X29, #-var_20</div><div class="line">.text:000000000000375C                 LDR             X1, [SP,#0x70+var_38]</div><div class="line">.text:0000000000003760                 BL              sub_3840</div><div class="line">//取sp的this</div><div class="line">.text:0000000000003764                 SUB             X8, X29, #-var_20</div><div class="line">.text:0000000000003768                 MOV             X0, X8</div><div class="line">.text:000000000000376C                 BL              sub_386C</div><div class="line">.text:0000000000003770                 SUB             X8, X29, #-var_10</div><div class="line">.text:0000000000003774                 STR             X0, [SP,#0x70+var_50]</div><div class="line">//取this的a赋值string</div><div class="line">.text:0000000000003778                 MOV             X0, X8</div><div class="line">.text:000000000000377C                 LDR             X1, [SP,#0x70+var_50]</div><div class="line">.text:0000000000003780                 BL              sub_4564</div><div class="line">// A *p2=new A();</div><div class="line">.text:0000000000003784                 MOV             X8, #8</div><div class="line">.text:0000000000003788                 STR             X0, [SP,#0x70+var_58]</div><div class="line">.text:000000000000378C                 MOV             X0, X8  ; unsigned __int64</div><div class="line">.text:0000000000003790                 BL              _Znwm   ; operator new(ulong)</div><div class="line">.text:0000000000003794                 STR             X0, [SP,#0x70+var_60]</div><div class="line">.text:0000000000003798                 BL              sub_3804</div><div class="line">.text:000000000000379C                 LDR             X8, [SP,#0x70+var_60]</div><div class="line">.text:00000000000037A0                 STR             X8, [SP,#0x70+var_40]</div><div class="line">.text:00000000000037A4                 LDR             X9, [SP,#0x70+var_40]</div><div class="line">.text:00000000000037A8                 STR             X9, [SP,#0x70+var_68]</div><div class="line">//判断指针是否为0 是0就跳</div><div class="line">.text:00000000000037AC                 CBZ             X9, loc_37C0</div><div class="line">//析构</div><div class="line">.text:00000000000037B0                 LDR             X0, [SP,#0x70+var_68]</div><div class="line">.text:00000000000037B4                 BL              sub_3884</div><div class="line">.text:00000000000037B8                 LDR             X0, [SP,#0x70+var_68] ; void *</div><div class="line">.text:00000000000037BC                 BL              _ZdlPv  ; operator delete(void *)</div><div class="line">.text:00000000000037C0</div><div class="line">.text:00000000000037C0 loc_37C0                                ; CODE XREF: main+A0↑j</div><div class="line">.text:00000000000037C0                 SUB             X0, X29, #-var_20</div><div class="line">.text:00000000000037C4                 STUR            WZR, [X29,#var_24]</div><div class="line">.text:00000000000037C8                 BL              sub_38A8</div><div class="line">.text:00000000000037CC                 SUB             X0, X29, #-var_10</div><div class="line">.text:00000000000037D0                 BL              sub_3F60</div><div class="line">.text:00000000000037D4                 LDUR            W0, [X29,#var_24]</div><div class="line">.text:00000000000037D8                 MRS             X30, #3, c13, c0, #2</div><div class="line">.text:00000000000037DC                 LDR             X30, [X30,#0x28]</div><div class="line">.text:00000000000037E0                 LDUR            X8, [X29,#var_8]</div><div class="line">.text:00000000000037E4                 CMP             X30, X8</div><div class="line">.text:00000000000037E8                 STR             W0, [SP,#0x70+var_6C]</div><div class="line">.text:00000000000037EC                 B.NE            loc_3800</div><div class="line">.text:00000000000037F0                 LDR             W0, [SP,#0x70+var_6C]</div><div class="line">.text:00000000000037F4                 LDP             X29, X30, [SP,#0x70+var_s0]</div><div class="line">.text:00000000000037F8                 ADD             SP, SP, #0x80</div><div class="line">.text:00000000000037FC                 RET</div><div class="line">.text:0000000000003800 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000003800</div><div class="line">.text:0000000000003800 loc_3800                                ; CODE XREF: main+E0↑j</div><div class="line">.text:0000000000003800                 BL              .__stack_chk_fail</div><div class="line">.text:0000000000003800 ; &#125; // starts at 370C</div><div class="line">.text:0000000000003800 ; End of function main</div></pre></td></tr></table></figure>
+<p>这里是先用new分配内存，再对返回调用构造函数。不是在new内构造。<br>销毁也是先对this调用析构，再使用delete释放内存。不是在delete内析构的。此外，delete前自动判断了指针是否为null。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+          
+            <a href="/tags/反汇编/" rel="tag"># 反汇编</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/21/cpp学习-第十一章-关联容器/" rel="next" title="cpp学习-第十一章-关联容器">
+                <i class="fa fa-chevron-left"></i> cpp学习-第十一章-关联容器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">94</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">76</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#智能指针与new-delete"><span class="nav-number">1.1.</span> <span class="nav-text">智能指针与new\delete</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#shared-ptr类"><span class="nav-number">1.1.1.</span> <span class="nav-text">shared_ptr类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#直接管理内存"><span class="nav-number">1.1.2.</span> <span class="nav-text">直接管理内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shared-ptr与new结合使用"><span class="nav-number">1.1.3.</span> <span class="nav-text">shared_ptr与new结合使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#智能指针和异常"><span class="nav-number">1.1.4.</span> <span class="nav-text">智能指针和异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#unique-ptr"><span class="nav-number">1.1.5.</span> <span class="nav-text">unique_ptr</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#weak-ptr"><span class="nav-number">1.1.6.</span> <span class="nav-text">weak_ptr</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态数组"><span class="nav-number">1.2.</span> <span class="nav-text">动态数组</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#new数组"><span class="nav-number">1.2.1.</span> <span class="nav-text">new数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#allocator"><span class="nav-number">1.2.2.</span> <span class="nav-text">allocator</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反汇编"><span class="nav-number">2.</span> <span class="nav-text">反汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#X86-64"><span class="nav-number">2.1.</span> <span class="nav-text">X86-64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM-64"><span class="nav-number">2.2.</span> <span class="nav-text">ARM-64</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指令简记"><span class="nav-number">2.2.1.</span> <span class="nav-text">指令简记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析"><span class="nav-number">2.2.2.</span> <span class="nav-text">分析</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
