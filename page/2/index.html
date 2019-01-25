@@ -283,6 +283,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/26/cpp学习-第四章-表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/26/cpp学习-第四章-表达式/" itemprop="url">cpp学习-第四章-表达式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-26T21:49:23+08:00">
+                2018-12-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><ol>
+<li>内置类型的运算符操作由语言定义</li>
+<li>重载运算符的操作对象类型与返回值类型可以自己定义，但是运算对象的个数、优先级、结合律无法改变</li>
+<li>表达式的求值结果分为左值与右值，记住左身份右内容就可以了</li>
+<li>优先级与结合律只是规定了当前表达式对象的求值顺序。但是运算对象的求值顺序是没有指定的。比如(i++)*(i–)的结果是不定义的，因为*的左右对象求值顺序并不指定，只要求在*之前求出俩运算对象的值即可。规定求值顺序的有：&amp;&amp;||?:  从编译过程来看的话就是左右子树的求值顺序不定，但保证在该节点求值时子树节点处理完，翻译时为直线翻译但顺序不定，此外给予优化以方便。从一个表达式整体来看，其用到的对象只要保证表达式求值时前求好值即可，顺序都不定。优先级和结合性是编译时概念，与求值顺序独立，后者是运行时概念。</li>
+<li>数学规定(m/n)*n+m%n=m因此m/n符号不同为负，m%n符号与m相同。且整数商一律向0取整。</li>
+<li>逻辑运算规定先求左侧的值再求右侧的值，为短路求值。具体实现为翻译时采用用条件跳转优化。</li>
+<li>测试非布尔值的布尔就直接写在条件里，否则非布尔值会使布尔向上提升。</li>
+<li>列表初始化或列表赋值的要求：使用参数为std::initializer_list的构造函数或赋值运算符，或者是这个类满足 aggregate class 的条件。对于类来说，赋值运算的细节由定义定。</li>
+<li>++–前置与后置：前置为先改变对象再返回改变后的对象，后置为改变对象再返回改变前的值的副本。与赋值操作使用要小心，因为赋值左右的求值顺序不定。</li>
+<li>变量是一个具名的、可操作的存储空间，有其数据类型。数据类型决定变量的空间及操作。点运算符针对变量，箭头针对指针变量。变量在编译原理下就是分配的一块地址中的内容。*是取这个内容作为地址再将地址所在内容作为对象。.是寻找该内容中的某对象或操作。这些语法大多是给编译器认识的，具体到汇编层面只有地址:值，寄存器。针对这些地址、值做操作。</li>
+<li>条件运算符的俩个表达式只会求值一个。</li>
+<li>位运算符没有规定符号位，因此不用于有符号类型。且小整形会被提升。</li>
+<li>sizeof有俩种:sizeof (type)求类型的对象所占大小与 sizeof exp求表达式结果类型的大小，表达式并不求值。对引用为被引用的对象所占大小，指针为指针本身大小，解指针为指针指向对象所占大小，对数组为整个数组所占大小(数组这里含义特殊，不当指针了)，string与vector只返回固定部分的大小。返回结果为size_t类型的常量表达式-编译时确定。</li>
+<li>算数类型之间的隐式转化被设计的尽可能少损失精度，发生于:表达式类型统一，条件中化为布尔，赋值中左变右，小整数会被提升为int，有符号与无符号混合化为无符号</li>
+<li>大多数数组的表达式中，数组自动转化为指向数组首元素的指针。例外是:decltype、取地址(所以&amp;a返回的不是指针地址而是数组地址)、sizeof、typeid。</li>
+<li>类类型的转化由类类型自己定义，从类转化出去或是别的转化过来都可以定义。</li>
+<li>显示转化见下</li>
+<li>优先级表见下</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/12/26/cpp学习-第四章-表达式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/21/cpp学习-第三章-字符串向量与数组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1722,204 +1887,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/06/ELF文件格式详解/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/06/ELF文件格式详解/" itemprop="url">ELF文件格式详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-06T21:36:01+08:00">
-                2018-11-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h1><p>需求想写不落地加载dex的壳，但是想要加载dex的同时还可以oat就必须涉及到hook了，于是决定彻底扫一遍hook。但看了几篇文后发现….ELF文件格式都忘了差不多了、linker与exec还没看…..<br>还是因为当初看的时候手太懒了没有动手写啊……….</p>
-<p>于是先从一篇完整的elf文件格式解析写起<br>readelf真的好用……</p>
-<p>hook基本都是c++写的，因此解析也用c++写好点<br>因为我的机子都是64位的，因此解析android arm-64位下的so为目的</p>
-<p>由于许多书籍对elf中的名词描述不同，因此采用如下翻译：</p>
-<table>
-<thead>
-<tr>
-<th>汉语</th>
-<th>英语</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ELF文件头</td>
-<td>ELF header</td>
-</tr>
-<tr>
-<td>基地址</td>
-<td>base address</td>
-</tr>
-<tr>
-<td>动态连接器</td>
-<td>dynamic linker</td>
-</tr>
-<tr>
-<td>全局偏移量表</td>
-<td>global offset table</td>
-</tr>
-<tr>
-<td>初始化函数</td>
-<td>initialization function</td>
-</tr>
-<tr>
-<td>函数连接表</td>
-<td>procedure linkage table</td>
-</tr>
-<tr>
-<td>程序头</td>
-<td>program header</td>
-</tr>
-<tr>
-<td>节</td>
-<td>section</td>
-</tr>
-<tr>
-<td>段</td>
-<td>segment</td>
-</tr>
-</tbody>
-</table>
-<p>此外本篇将地址区分为三种：<br>逻辑地址：指由程序产生的与段相关的偏移地址部分。也就是段*16+的那个值。<br>虚拟地址/线性地址：为进程虚拟的地址空间<br>物理地址：实际地址空间</p>
-<p>现在从逻辑地址到虚拟地址还要经过一次保护模式分段机制。简述就是保护模式将段的信息存于GDT与LDT中，段寄存器存其表的索引值。<br>32位Linux中逻辑地址等于线性地址，因为Linux所有的段（用户代码段、用户数据段、内核代码段、内核数据段）的线性地址都是从 0x00000000 开始，长度4G，这样 线性地址=逻辑地址+ 0x00000000，也就是说逻辑地址等于线性地址了。<br>现在先认为elf中的都是虚拟地址。等搞清保护模式机制时阅读exec与linker再分析地址问题。64位下的机制貌似很不一样…….</p>
-<p>ps:elf不是精灵的意思么….之后根据linker写elf壳的时候就叫darkelf好了….<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/11/06/ELF文件格式详解/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1970,7 +1937,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">94</span>
+                <span class="site-state-item-count">95</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

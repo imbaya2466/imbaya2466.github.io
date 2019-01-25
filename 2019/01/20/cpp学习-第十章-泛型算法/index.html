@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="核心简记 泛型算法作用于各种容器，大多数定义在algorithm中 指针可以当做迭代器传入泛型算法中。 泛型算法本身不执行容器的操作，只运行于迭代器上，因此不会改变底层容器的大小。除非改变是迭代器的效果 copy版本的算法将结果放入新序列 using namespace name; 将name下的名字都引入  算法查表可以参考:https://blog.csdn.net/strint/articl">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-19T17:43:18.836Z">
+<meta property="og:updated_time" content="2019-01-25T16:32:40.749Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cpp学习-第十章-泛型算法">
 <meta name="twitter:description" content="核心简记 泛型算法作用于各种容器，大多数定义在algorithm中 指针可以当做迭代器传入泛型算法中。 泛型算法本身不执行容器的操作，只运行于迭代器上，因此不会改变底层容器的大小。除非改变是迭代器的效果 copy版本的算法将结果放入新序列 using namespace name; 将name下的名字都引入  算法查表可以参考:https://blog.csdn.net/strint/articl">
@@ -394,7 +394,8 @@
 <p>是对容器的包装，使用插入迭代器可以对容器插入元素，有三种插入迭代器:尾、头、指定位置。</p>
 <p>流迭代器:<br>输入与输出流的迭代器。可以使流使用泛型算法。<br>输入流的操作多些:使用*返回读取的值，使用++读取下一个。<br>输出使用=输出</p>
 <p>反向迭代器:<br>反向操作，容器必须同时支持++与–<br>调用反向迭代器的.base()方法可以返回正常迭代器，不过位置不同，因为[)要向后挪一个</p>
-<p>移动迭代器:之后介绍</p>
+<p>移动迭代器:移动迭代器的解引用返回右值引用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">make_move_iterator(begin());</div></pre></td></tr></table></figure></p>
+<p>对其的解引用将使用右值引用。普通的是返回左值引用</p>
 <h3 id="泛型算法结构"><a href="#泛型算法结构" class="headerlink" title="泛型算法结构"></a>泛型算法结构</h3><p>算法的基本特性是要求迭代器提供哪些操作，可分为5个迭代器类别:其功能逐层增加<br>输入迭代器：只读，不写，单遍递增。如流输入迭代器<br>输出迭代器：只写，不读，单遍递增。如流输出迭代器<br>前向迭代器：读写，多遍递增。如forward_list的迭代器<br>双向迭代器：读写，多遍，可增可减。除了fl的库迭代器<br>随机访问迭代器：读写，多遍，随机读写。array、deque、string、vector都是</p>
 <p>算法的参数模式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">be,ed,args  一个输入</div><div class="line">be,ed,dest,args   一个输入，一个输出</div><div class="line">be,ed,be2,args  俩个输入</div><div class="line">be,ed,be2,ed2,args  俩个输入</div></pre></td></tr></table></figure></p>
 <ol>
@@ -529,7 +530,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">94</span>
+                <span class="site-state-item-count">95</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

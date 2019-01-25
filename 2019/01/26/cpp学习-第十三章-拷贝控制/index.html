@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpp," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="核心简记类型的构造、拷贝、移动、赋值、销毁可被显示或隐式定义。有5种特殊的成员函数:拷贝构造函数、拷贝赋值运算符、移动构造函数、移动赋值运算符、析构函数，称为拷贝控制操作。一般来说，若一个类定义了5个操作的任意一个，就应该定义所有五个操作。移动操作当对性能需求不大时可以先不加，可以先实现拷贝操作与析构，最后优化时再加移动操作。不影响结果。">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp学习-第十三章-拷贝控制">
+<meta property="og:url" content="http://yoursite.com/2019/01/26/cpp学习-第十三章-拷贝控制/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="核心简记类型的构造、拷贝、移动、赋值、销毁可被显示或隐式定义。有5种特殊的成员函数:拷贝构造函数、拷贝赋值运算符、移动构造函数、移动赋值运算符、析构函数，称为拷贝控制操作。一般来说，若一个类定义了5个操作的任意一个，就应该定义所有五个操作。移动操作当对性能需求不大时可以先不加，可以先实现拷贝操作与析构，最后优化时再加移动操作。不影响结果。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-25T19:08:29.334Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp学习-第十三章-拷贝控制">
+<meta name="twitter:description" content="核心简记类型的构造、拷贝、移动、赋值、销毁可被显示或隐式定义。有5种特殊的成员函数:拷贝构造函数、拷贝赋值运算符、移动构造函数、移动赋值运算符、析构函数，称为拷贝控制操作。一般来说，若一个类定义了5个操作的任意一个，就应该定义所有五个操作。移动操作当对性能需求不大时可以先不加，可以先实现拷贝操作与析构，最后优化时再加移动操作。不影响结果。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/26/cpp学习-第十三章-拷贝控制/"/>
+
+
+
+
+
+  <title>cpp学习-第十三章-拷贝控制 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/26/cpp学习-第十三章-拷贝控制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cpp学习-第十三章-拷贝控制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-26T03:07:18+08:00">
+                2019-01-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>类型的构造、拷贝、移动、赋值、销毁可被显示或隐式定义。有5种特殊的成员函数:拷贝构造函数、拷贝赋值运算符、移动构造函数、移动赋值运算符、析构函数，称为拷贝控制操作。<br>一般来说，若一个类定义了5个操作的任意一个，就应该定义所有五个操作。<br>移动操作当对性能需求不大时可以先不加，可以先实现拷贝操作与析构，最后优化时再加移动操作。不影响结果。</p>
+<a id="more"></a>
+<h3 id="拷贝控制"><a href="#拷贝控制" class="headerlink" title="拷贝控制"></a>拷贝控制</h3><p>自定义时机:</p>
+<ol>
+<li>当需要自定义析构函数时，往往需要自定义拷贝构造函数与拷贝赋值运算符。</li>
+<li>需要拷贝构造函数，往往需要拷贝赋值运算符。相反也是</li>
+</ol>
+<p>可以对任意具有合成版本的成员函数使用=default，生成默认版本。</p>
+<h4 id="拷贝构造函数"><a href="#拷贝构造函数" class="headerlink" title="拷贝构造函数"></a>拷贝构造函数</h4><p>第一个参数是自身类型的引用、额外参数都有默认值的构造函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">public:</div><div class="line">    A();</div><div class="line">    A(const A&amp;);//拷贝构造函数   初始化少的成员使用默认初始化</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>需要是const的，应用更广。不应该是explicit的，因为隐式使用会是=(拷贝初始化)，且拷贝初始化就是使用=。必须是引用，因为不是引用要拷贝构造。</p>
+<p>合成的拷贝构造函数:如果没有定义拷贝构造函数，就会合成，合成的操作为逐成员拷贝。非static<br>类类型成员-调用其拷贝构造函数<br>内置类型成员-直接拷贝<br>数组-逐元素拷贝，元素是类类型则使用元素拷贝构造函数。<br>等价于:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">A::A(const A &amp;ls):a(ls.a),b(ls.b)&#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>拷贝初始化与直接初始化的差异:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">string a(10,&quot; &quot;);   //直接初始化</div><div class="line">string b(a);        //直接初始化</div><div class="line"></div><div class="line">string c=a;         //拷贝初始化</div><div class="line">string d=&quot;123&quot;;     //拷贝初始化</div><div class="line">//拷贝初始化的其它发生处:非引用传参、非引用返回、数组或聚合类的列表初始化</div><div class="line">//可以理解为使用=的初始化就是拷贝初始化</div></pre></td></tr></table></figure></p>
+<p>直接初始化要求编译器使用普通的函数匹配。<br>拷贝初始化则可能使用:</p>
+<ol>
+<li>拷贝构造函数</li>
+<li>移动构造函数</li>
+<li>隐式转化构造函数-类的列表构造也在其中</li>
+</ol>
+<p>隐式转化使用隐式转化构造函数构造对象、之后再使用拷贝/移动构造函数。这个阶段编译器可以跳过，直接使用转化构造函数创建对象，即使略过，这个时候拷贝/移动构造函数必须是存在且可访问的。</p>
+<h4 id="拷贝赋值运算符"><a href="#拷贝赋值运算符" class="headerlink" title="拷贝赋值运算符"></a>拷贝赋值运算符</h4><p>重载运算符本质为函数:由operator关键字后接运算符。如果重载运算符是一个成员函数，其左侧对象绑定到隐式的this参数，其余对象显示传递。<br>拷贝赋值运算符接受一个与其所在类同类型的参数:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">public:</div><div class="line">    A&amp; operator=(const A&amp;);//赋值运算符  自定义时少的成员就不变了，因为左右都是对象</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>应该返回指向其左侧对象的引用，const的范围更大，且参数并不要求引用。</p>
+<p>合成的拷贝赋值运算符:如果没有定义自己的拷贝赋值运算符，编译器就会合成。<br>合成行为逐成员(非static)赋予。对于数组，逐元素赋值。相当于<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">A&amp; A::operator=(const A &amp;ls)</div><div class="line">&#123;</div><div class="line">    a=ls.a;</div><div class="line">    b=ls.b;</div><div class="line">    return *this;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="析构函数"><a href="#析构函数" class="headerlink" title="析构函数"></a>析构函数</h4><p>名字由波浪号接类名构成，没有返回值、参数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">public:</div><div class="line">    ~A();//析构函数</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>不能被重载。析构函数有函数体和析构部分。构造函数，先初始化再执行函数体。析构函数，先执行函数体再销毁成员。成员按初始化的逆序销毁(初始化顺序是按成员类内出现先后)。<br>构造函数可以显式用初始化列表控制初始化。但是析构函数的析构部分是隐式的，类类型成员执行自己的析构函数、内置类型什么也不做。也就是说析构自动调用成员析构。</p>
+<p>析构自动执行时机:</p>
+<ol>
+<li>变量离开作用域时自动销毁</li>
+<li>对象销毁时成员销毁</li>
+<li>容器销毁时元素销毁，包括数组</li>
+<li>动态分配的对象指针执行delete时</li>
+<li>临时对象，完整表达式结束时</li>
+</ol>
+<p>合成析构函数:一个类未定义析构函数时，编译器合成。<br>函数体为空，等价于<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">public:</div><div class="line">    ~A()&#123;&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h4 id="阻止拷贝"><a href="#阻止拷贝" class="headerlink" title="阻止拷贝"></a>阻止拷贝</h4><p>可以将拷贝构造函数、拷贝赋值运算符定义为删除的函数来阻止拷贝。如io类，定义为删除函数也是定义。<br>删除的函数声明了但是不能使用，在函数参数列表后加=delete定义为删除。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    A(const A&amp;)=delete;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>delete必须出现在函数第一次声明时，可以对任意函数指定delete。<br>析构函数不能删除，否则只可动态分配且不能释放。</p>
+<p>合成的拷贝控制成员可能是删除的:</p>
+<ol>
+<li>如果某个成员的析构函数是删除或不可访问的，则类的合成析构函数为删除的</li>
+<li>如果某个成员的拷贝构造函数是删除或不可访问、或成员析构函数是删除或不访问的，则类合成的拷贝构造函数为删除的。</li>
+<li>某成员拷贝赋值运算符删除/不可访问，或类有const/引用的成员，则类的合成拷贝赋值运算符为删除的。</li>
+<li>某成员析构函数删除/不可访问，或类有引用成员但没有类内初始化，或有const成员但没有类内初始化。且未定义默认构造函数，则默认构造函数定义为删除的。</li>
+</ol>
+<p>本质上，当不可拷贝、赋值、销毁成员时，类的合成拷贝控制成员就被定义为删除的。</p>
+<p>旧时的阻止是使用private声明且不定义。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p>定义拷贝操作使类的行为像值或指针</p>
+<h5 id="像值的类"><a href="#像值的类" class="headerlink" title="像值的类"></a>像值的类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">public:</div><div class="line">    A():a(new string()),b(0)&#123;&#125;</div><div class="line"></div><div class="line">    A(const A &amp;p):a(new string(*p.a)),b(p.b)&#123;&#125;//拷贝构造</div><div class="line">    A &amp;operator(const A&amp;);//拷贝赋值声明</div><div class="line">    ~A()&#123;deleate a;&#125;//析构</div><div class="line">private:</div><div class="line">    string *a;</div><div class="line">    int b;</div><div class="line">&#125;</div><div class="line">//拷贝赋值运算符，通常结合了构与析构的工作</div><div class="line">A&amp; A::operator=(const A &amp;r)</div><div class="line">&#123;</div><div class="line">    auto newp=new string(*r.a);</div><div class="line">    delete a;</div><div class="line">    a=newp;</div><div class="line">    b=r.b;</div><div class="line">    return *this;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>赋值运算符注意:</p>
+<ol>
+<li>自身赋予自身也能正确工作</li>
+<li>组合构与析构</li>
+<li>少处理的成员不改变</li>
+</ol>
+<h5 id="像指针的类"><a href="#像指针的类" class="headerlink" title="像指针的类"></a>像指针的类</h5><p>类似智能指针，应该使用引用计数:构造函数初始化其为1、拷贝构造递增共享的计数器、析构递减、赋值增右减左。计数器分配在动态内存中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">public:</div><div class="line">    A():a(new string()),b(0),use(new std::size_t(1))&#123;&#125;</div><div class="line"></div><div class="line">    A(const A&amp;p):a(p.a),b(p.b),use(p.use)&#123;++*use;&#125;//拷贝构造</div><div class="line">    A &amp;operator=(const A&amp;);//拷贝赋值声明</div><div class="line">    ~A();//析构</div><div class="line">private:</div><div class="line">    string *a;</div><div class="line">    int b;</div><div class="line">    std::size_t *use;</div><div class="line">&#125;</div><div class="line">//析构函数</div><div class="line">A::~A()</div><div class="line">&#123;</div><div class="line">    if(--*use==0)</div><div class="line">    &#123;</div><div class="line">        delete a;</div><div class="line">        delete use;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">//拷贝赋值运算符，通常结合了构与析构的工作</div><div class="line">A&amp; A::operator=(const A &amp;r)</div><div class="line">&#123;</div><div class="line">    ++*r.use;</div><div class="line">    if(--*use==0)</div><div class="line">    &#123;</div><div class="line">        delete a;</div><div class="line">        delete use;</div><div class="line">    &#125;</div><div class="line">    a=r.a;</div><div class="line">    b=r.b;</div><div class="line">    use=r.use;</div><div class="line">    return *this;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以用swap操作简化拷贝赋值运算符。</p>
+<h3 id="对象移动"><a href="#对象移动" class="headerlink" title="对象移动"></a>对象移动</h3><p>可以将一个对象数据移动到另一个对象。在很多情况下不需要拷贝操作，比如源即将销毁的时候，使用移动操作效率更高。<br>std中的容器、string、sp移动与拷贝都支持。io和up只支持移动。</p>
+<h4 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a>右值引用</h4><p>左值-使用变量的位置<br>右值-使用变量的内容<br>不论左值还是右值，在汇编下都是地址上的数据，全部都被编译为数据对象。只是编译时处理不同而已，运行时生存期也不同。</p>
+<p>右值引用使用&amp;&amp;，只能绑定到一个将要销毁的对象，用来将资源移动到另一个对象中。<br>与任何引用相同，不过是某对象的另一个名字。右值引用与左值引用有着完全相反的绑定特性:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">int i=21;           </div><div class="line">int &amp;r=i;           //正确</div><div class="line">int &amp;&amp;rr=i;         //错误，不可绑定左值</div><div class="line">int &amp;r2=i*42;       //错误，不可绑定右值</div><div class="line">const int &amp;r3=i*42; //正确，可以将const引用绑定右值</div><div class="line">int &amp;&amp;rr2=i*42;     //正确</div><div class="line">int &amp;&amp;rr3=123;      //正确，字面值常量是右值</div><div class="line">int &amp;&amp;rr4=rr3;      //错误，变量是左值</div></pre></td></tr></table></figure></p>
+<p>返回左值引用的函数、赋值、下标、解引用、前置+-都是返回左值表达式。可以绑定左值引用。左值有持久的形态。<br>返回非引用类型的函数、算数、关系、位、后置+-都是右值表达式。我们可以把右值引用与const左值引用绑定到这类表达式上，右值引用可以更改它获取资源，左值引用只能读取拷贝它。右值为临时对象或字面常量。</p>
+<p>分别为可控内存区与自动内存区，都是汇编内存区的内容。</p>
+<p>因此右值引用:引用的对象即将销毁、该对象没有其它用户。因此使用右值引用的代码可以自由接管所引用对象的资源。</p>
+<p>标准库move:<br>使用move将左值化为右值引用类型，定义在utility。其机制见后<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int &amp;&amp;rr4=std::move(rr3);</div></pre></td></tr></table></figure></p>
+<p>使用move意味着:对rr3赋值或销毁之外，不在使用它。</p>
+<h4 id="移动构造函数-amp-移动赋值运算符"><a href="#移动构造函数-amp-移动赋值运算符" class="headerlink" title="移动构造函数&amp;移动赋值运算符"></a>移动构造函数&amp;移动赋值运算符</h4><p>定义移动构造函数与移动赋值运算符使类型支持移动操作。移动资源而不拷贝资源。如果没有移动操作，通过正常的函数匹配会使用对应的拷贝操作。<br>移动构造函数第一个参数是该类型的右值引用，额外参数都有默认实参。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">A::A(A &amp;&amp;ls) noexcept //表示不抛出异常，必须在声明与定义中都指定，在参数列表后，初始化列表前。</div><div class="line">:a(ls.a),b(ls.b)</div><div class="line">&#123;</div><div class="line">    ls.a=ls.b=nullptr;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>移动后应该保证销毁源是无害的。除非标准库知道我们的移动构造函数不会抛出异常，否则它会认为会抛出异常并做额外处理。如vector，会在重新分配内存时使用拷贝构造而不是移动构造。</p>
+<p>移动赋值运算符:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">A &amp;A::operator=(A &amp;&amp;ls) noexcept &#123;</div><div class="line">    if(this!=&amp;ls)  //是引用就能当原对象使，只是别名</div><div class="line">    &#123;</div><div class="line">        free(); //释放左的内容</div><div class="line">        a=ls.a;</div><div class="line">        b=ls.b;</div><div class="line">        ls.a=ls.b=nullptr;</div><div class="line">    &#125;</div><div class="line">    return *this;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>仍是构造与析构的结合。<br>移动操作后，源必须是有效、可析构的。但用户不能对其值有任何假设。</p>
+<p>合成的移动操作:<br>只有当没有定义任何自定义版本的拷贝控制成员时，且每个非static成员都可以移动时，编译器才会为它合成移动操作。移动操作不会自动为删除的函数，但如果显示定义为default但又不可生成时，为delete。如果类定义了一个移动操作，则类合成的拷贝构造与拷贝赋值为删除的。也就是说默认不互容。</p>
+<p>对于移动与拷贝构造都有的类，使用普通的函数匹配机制确定使用。传入右值先用右值版本，传入左值使用左值版本，因为精确匹配。若没有移动版本就使用拷贝版本，因为右值到左值有一次到const的转化。</p>
+<h4 id="右值引用与成员函数"><a href="#右值引用与成员函数" class="headerlink" title="右值引用与成员函数"></a>右值引用与成员函数</h4><p>成员函数参数类型可以提供拷贝与移动版本，一个const A &amp;一个A&amp;&amp;。</p>
+<p>指定this的类型:引用限定符<br>为了防止 a+a=1这样的使用<br>可以在参数列表后加&amp;使其*this只能是可修改的左值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">A &amp;operator=(const A&amp;) &amp;;//指定this指向左值。&amp;&amp;表示指向右值</div></pre></td></tr></table></figure></p>
+<p>类似const限定，&amp;表示调用对象只能是左值,&amp;&amp;表示只能是右值。引用限定符在const之后</p>
+<p>底层的const、&amp;、&amp;&amp;可以区分重载版本。范围都不同:普通与const类型、左值类型、右值类型。<br>不过当定义俩个及以上同名同参的成员函数，必须所有函数加引用限定，或都不加</p>
+<h2 id="反汇编"><a href="#反汇编" class="headerlink" title="反汇编"></a>反汇编</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line">#include&lt;utility&gt;</div><div class="line"></div><div class="line">class A</div><div class="line">&#123;</div><div class="line">private:</div><div class="line">    int a1;</div><div class="line">    int *a2;</div><div class="line">public:</div><div class="line">    A(int a=1,int b=2):a1(a),a2(new int(b))&#123;&#125;</div><div class="line">    ~A()&#123;delete a2;&#125;//析构</div><div class="line"></div><div class="line"></div><div class="line">    A(const A&amp;);//拷贝构造</div><div class="line">    A &amp;operator=(const A&amp;);//拷贝赋值</div><div class="line"></div><div class="line">    //后俩个对性能需求不大时可以先不加</div><div class="line">    A(A&amp;&amp;) noexcept;//移动构造</div><div class="line">    A &amp;operator=(A&amp;&amp;) noexcept;//移动赋值</div><div class="line">&#125;;</div><div class="line"></div><div class="line">A::A(const A &amp;ls)</div><div class="line">:a1(ls.a1),a2(new int(*ls.a2))</div><div class="line">&#123;&#125;</div><div class="line"></div><div class="line">A&amp; A::operator=(const A &amp;r)</div><div class="line">&#123;</div><div class="line">    auto newp=new int(*r.a2);</div><div class="line">    delete a2;</div><div class="line">    a2=newp;</div><div class="line">    a1=r.a1;</div><div class="line">    return *this;</div><div class="line">&#125;</div><div class="line">//移动操作省去了分配新空间</div><div class="line">A::A(A &amp;&amp;ls) noexcept</div><div class="line">:a1(ls.a1),a2(ls.a2)</div><div class="line">&#123;</div><div class="line">    ls.a2=nullptr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">A &amp;A::operator=(A &amp;&amp;r) noexcept</div><div class="line">&#123;</div><div class="line">    if(this!=&amp;r)</div><div class="line">    &#123;</div><div class="line">        delete a2;</div><div class="line">        a1=r.a1;</div><div class="line">        a2=r.a2;</div><div class="line">        r.a2=nullptr;</div><div class="line">    &#125;</div><div class="line">    return *this;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">    int i=9;</div><div class="line">    int &amp;&amp;rr1=123;</div><div class="line">    int &amp;&amp;rr2=i*10;</div><div class="line"></div><div class="line">    A a;</div><div class="line">    A b;</div><div class="line">    A &amp;&amp;rra=std::move(a);</div><div class="line">    //使用拷贝  违反了规则，不应该使用a了</div><div class="line">    b=a;</div><div class="line">    //使用移动</div><div class="line">    b=rra;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ARM-64"><a href="#ARM-64" class="headerlink" title="ARM-64"></a>ARM-64</h3><h4 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h4><p>MADD Multiply-add<br>MADD <xd>, <xn>, <xm>, <xa>; Rd = Ra + Rn * Rm</xa></xm></xn></xd></p>
+<p>来自一个外国博客:<a href="https://quequero.org/2014/04/introduction-to-arm-architecture/" target="_blank" rel="external">https://quequero.org/2014/04/introduction-to-arm-architecture/</a></p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>main:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line">.text:0000000000002DC4 ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:0000000000002DC4                 EXPORT main</div><div class="line">.text:0000000000002DC4 main                                    ; DATA XREF: LOAD:0000000000000518↑o</div><div class="line">.text:0000000000002DC4                                         ; .got:main_ptr↓o</div><div class="line">.text:0000000000002DC4</div><div class="line">.text:0000000000002DC4 var_60          = -0x60</div><div class="line">.text:0000000000002DC4 var_58          = -0x58</div><div class="line">.text:0000000000002DC4 var_50          = -0x50</div><div class="line">.text:0000000000002DC4 var_48          = -0x48</div><div class="line">.text:0000000000002DC4 var_40          = -0x40</div><div class="line">.text:0000000000002DC4 var_34          = -0x34</div><div class="line">.text:0000000000002DC4 var_30          = -0x30</div><div class="line">.text:0000000000002DC4 var_20          = -0x20</div><div class="line">.text:0000000000002DC4 var_10          = -0x10</div><div class="line">.text:0000000000002DC4 var_C           = -0xC</div><div class="line">.text:0000000000002DC4 var_8           = -8</div><div class="line">.text:0000000000002DC4 var_s0          =  0</div><div class="line">.text:0000000000002DC4</div><div class="line">.text:0000000000002DC4 ; __unwind &#123;</div><div class="line">.text:0000000000002DC4                 SUB             SP, SP, #0x70</div><div class="line">.text:0000000000002DC8                 STP             X29, X30, [SP,#0x60+var_s0]</div><div class="line">.text:0000000000002DCC                 ADD             X29, SP, #0x60</div><div class="line"></div><div class="line">.text:0000000000002DD0                 SUB             X0, X29, #-var_20</div><div class="line">.text:0000000000002DD4                 MOV             W1, #1</div><div class="line">.text:0000000000002DD8                 MOV             W2, #2</div><div class="line">.text:0000000000002DDC                 SUB             X8, X29, #-var_10</div><div class="line">.text:0000000000002DE0                 MOV             W9, #0xA</div><div class="line">.text:0000000000002DE4                 SUB             X10, X29, #-var_C</div><div class="line">.text:0000000000002DE8                 MOV             W11, #0x7B</div><div class="line">.text:0000000000002DEC                 MOV             W12, #9</div><div class="line">.text:0000000000002DF0                 MRS             X13, #3, c13, c0, #2</div><div class="line">.text:0000000000002DF4                 LDR             X13, [X13,#0x28]</div><div class="line">.text:0000000000002DF8                 STUR            X13, [X29,#var_8]</div><div class="line">// var_34存i</div><div class="line">.text:0000000000002DFC                 STR             W12, [SP,#0x60+var_34]</div><div class="line">// var_C存123字面值</div><div class="line">.text:0000000000002E00                 STUR            W11, [X29,#var_C]</div><div class="line">//var_40存var_C地址 为rr1</div><div class="line">.text:0000000000002E04                 STR             X10, [SP,#0x60+var_40]</div><div class="line">//W9=W9*i+0  结果存于var_10</div><div class="line">.text:0000000000002E08                 LDR             W11, [SP,#0x60+var_34]</div><div class="line">.text:0000000000002E0C                 MADD            W9, W11, W9, WZR</div><div class="line">.text:0000000000002E10                 STUR            W9, [X29,#var_10]</div><div class="line">//var_48为var_10的指针 为rr2</div><div class="line">.text:0000000000002E14                 STR             X8, [SP,#0x60+var_48]</div><div class="line"></div><div class="line">//var_20为a的this，默认构造</div><div class="line">.text:0000000000002E18                 BL              sub_2EA0</div><div class="line">//var_30为b的地址，默认构造-当带默认实参时就是调用时自动传入。</div><div class="line">.text:0000000000002E1C                 ADD             X0, SP, #0x60+var_30</div><div class="line">.text:0000000000002E20                 MOV             W1, #1</div><div class="line">.text:0000000000002E24                 MOV             W2, #2</div><div class="line">.text:0000000000002E28                 BL              sub_2EA0</div><div class="line">//A &amp;&amp;rra=std::move(a);</div><div class="line">.text:0000000000002E2C                 SUB             X0, X29, #-var_20</div><div class="line">.text:0000000000002E30                 BL              sub_2EF4</div><div class="line"></div><div class="line">//b=a  直接传的左右地址，引用就是指针。</div><div class="line">.text:0000000000002E34                 ADD             X8, SP, #0x60+var_30</div><div class="line">.text:0000000000002E38                 SUB             X1, X29, #-var_20</div><div class="line">.text:0000000000002E3C                 STR             X0, [SP,#0x60+var_50]</div><div class="line">.text:0000000000002E40                 MOV             X0, X8</div><div class="line">.text:0000000000002E44                 BL              sub_2D40</div><div class="line">//b=rra;  var_50是rra</div><div class="line">.text:0000000000002E48                 ADD             X8, SP, #0x60+var_30</div><div class="line">.text:0000000000002E4C                 LDR             X1, [SP,#0x60+var_50]</div><div class="line">.text:0000000000002E50                 STR             X0, [SP,#0x60+var_58]</div><div class="line">.text:0000000000002E54                 MOV             X0, X8</div><div class="line">.text:0000000000002E58                 BL              sub_2D40</div><div class="line">//析构</div><div class="line">.text:0000000000002E5C                 ADD             X8, SP, #0x60+var_30</div><div class="line">.text:0000000000002E60                 STR             X0, [SP,#0x60+var_60]</div><div class="line">.text:0000000000002E64                 MOV             X0, X8</div><div class="line">.text:0000000000002E68                 BL              sub_2F08</div><div class="line">.text:0000000000002E6C                 SUB             X0, X29, #-var_20</div><div class="line">.text:0000000000002E70                 BL              sub_2F08</div><div class="line">.text:0000000000002E74                 MRS             X8, #3, c13, c0, #2</div><div class="line">.text:0000000000002E78                 LDR             X8, [X8,#0x28]</div><div class="line">.text:0000000000002E7C                 LDUR            X10, [X29,#var_8]</div><div class="line">.text:0000000000002E80                 CMP             X8, X10</div><div class="line">.text:0000000000002E84                 B.NE            loc_2E9C</div><div class="line">.text:0000000000002E88                 MOV             W8, WZR</div><div class="line">.text:0000000000002E8C                 MOV             W0, W8</div><div class="line">.text:0000000000002E90                 LDP             X29, X30, [SP,#0x60+var_s0]</div><div class="line">.text:0000000000002E94                 ADD             SP, SP, #0x70</div><div class="line">.text:0000000000002E98                 RET</div><div class="line">.text:0000000000002E9C ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000002E9C</div><div class="line">.text:0000000000002E9C loc_2E9C                                ; CODE XREF: main+C0↑j</div><div class="line">.text:0000000000002E9C                 BL              .__stack_chk_fail</div><div class="line">.text:0000000000002E9C ; &#125; // starts at 2DC4</div><div class="line">.text:0000000000002E9C ; End of function main</div><div class="line">.text:0000000000002E9C</div></pre></td></tr></table></figure></p>
+<p>sub_2EA0<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">.text:0000000000002EA0 sub_2EA0                                ; CODE XREF: main+54↑p</div><div class="line">.text:0000000000002EA0                                         ; main+64↑p</div><div class="line">.text:0000000000002EA0</div><div class="line">.text:0000000000002EA0 var_18          = -0x18</div><div class="line">.text:0000000000002EA0 var_10          = -0x10</div><div class="line">.text:0000000000002EA0 var_C           = -0xC</div><div class="line">.text:0000000000002EA0 var_8           = -8</div><div class="line">.text:0000000000002EA0 var_s0          =  0</div><div class="line">.text:0000000000002EA0</div><div class="line">.text:0000000000002EA0 ; __unwind &#123;</div><div class="line">.text:0000000000002EA0                 SUB             SP, SP, #0x30</div><div class="line">.text:0000000000002EA4                 STP             X29, X30, [SP,#0x20+var_s0]</div><div class="line">.text:0000000000002EA8                 ADD             X29, SP, #0x20</div><div class="line">.text:0000000000002EAC                 MOV             X8, #4</div><div class="line">.text:0000000000002EB0                 STUR            X0, [X29,#var_8]</div><div class="line">.text:0000000000002EB4                 STUR            W1, [X29,#var_C]</div><div class="line">.text:0000000000002EB8                 STR             W2, [SP,#0x20+var_10]</div><div class="line">.text:0000000000002EBC                 LDUR            X0, [X29,#var_8]</div><div class="line">.text:0000000000002EC0                 LDUR            W1, [X29,#var_C]</div><div class="line">//放a1</div><div class="line">.text:0000000000002EC4                 STR             W1, [X0]</div><div class="line">.text:0000000000002EC8                 STR             X0, [SP,#0x20+var_18]</div><div class="line">//分配4字节大小</div><div class="line">.text:0000000000002ECC                 MOV             X0, X8  ; unsigned __int64</div><div class="line">.text:0000000000002ED0                 BL              _Znwm   ; operator new(ulong)</div><div class="line">.text:0000000000002ED4                 MOV             X8, X0</div><div class="line">//放入刚分配的内存中数据</div><div class="line">.text:0000000000002ED8                 LDR             W1, [SP,#0x20+var_10]</div><div class="line">.text:0000000000002EDC                 STR             W1, [X0]</div><div class="line">.text:0000000000002EE0                 LDR             X0, [SP,#0x20+var_18]</div><div class="line">//放入a2，刚new的地址</div><div class="line">.text:0000000000002EE4                 STR             X8, [X0,#8]</div><div class="line">.text:0000000000002EE8                 LDP             X29, X30, [SP,#0x20+var_s0]</div><div class="line">.text:0000000000002EEC                 ADD             SP, SP, #0x30</div><div class="line">.text:0000000000002EF0                 RET</div><div class="line">.text:0000000000002EF0 ; &#125; // starts at 2EA0</div></pre></td></tr></table></figure></p>
+<p>sub_2D40<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line">.text:0000000000002D40 sub_2D40                                ; CODE XREF: main+80↓p</div><div class="line">.text:0000000000002D40                                         ; main+94↓p</div><div class="line">.text:0000000000002D40</div><div class="line">.text:0000000000002D40 var_28          = -0x28</div><div class="line">.text:0000000000002D40 var_20          = -0x20</div><div class="line">.text:0000000000002D40 var_18          = -0x18</div><div class="line">.text:0000000000002D40 var_10          = -0x10</div><div class="line">.text:0000000000002D40 var_8           = -8</div><div class="line">.text:0000000000002D40 var_s0          =  0</div><div class="line">.text:0000000000002D40</div><div class="line">.text:0000000000002D40 ; __unwind &#123;</div><div class="line">.text:0000000000002D40                 SUB             SP, SP, #0x40</div><div class="line">.text:0000000000002D44                 STP             X29, X30, [SP,#0x30+var_s0]</div><div class="line">.text:0000000000002D48                 ADD             X29, SP, #0x30</div><div class="line">.text:0000000000002D4C                 MOV             X8, #4</div><div class="line">//左右this</div><div class="line">.text:0000000000002D50                 STUR            X0, [X29,#var_8]</div><div class="line">.text:0000000000002D54                 STUR            X1, [X29,#var_10]</div><div class="line">// auto newp=new int(*r.a2);</div><div class="line">.text:0000000000002D58                 LDUR            X0, [X29,#var_8]</div><div class="line">.text:0000000000002D5C                 STR             X0, [SP,#0x30+var_20]</div><div class="line">.text:0000000000002D60                 MOV             X0, X8  ; unsigned __int64</div><div class="line">.text:0000000000002D64                 BL              _Znwm   ; operator new(ulong)</div><div class="line">.text:0000000000002D68                 MOV             X8, X0</div><div class="line">.text:0000000000002D6C                 LDUR            X1, [X29,#var_10]</div><div class="line">.text:0000000000002D70                 LDR             X1, [X1,#8]</div><div class="line">.text:0000000000002D74                 LDR             W9, [X1]</div><div class="line">.text:0000000000002D78                 STR             W9, [X0]</div><div class="line">.text:0000000000002D7C                 STR             X8, [SP,#0x30+var_18]</div><div class="line">//删左 delete自带nullptr检验</div><div class="line">.text:0000000000002D80                 LDR             X8, [SP,#0x30+var_20]</div><div class="line">.text:0000000000002D84                 LDR             X0, [X8,#8]</div><div class="line">.text:0000000000002D88                 STR             X0, [SP,#0x30+var_28]</div><div class="line">.text:0000000000002D8C                 CBZ             X0, loc_2D9C</div><div class="line">.text:0000000000002D90                 LDR             X8, [SP,#0x30+var_28]</div><div class="line">.text:0000000000002D94                 MOV             X0, X8  ; void *</div><div class="line">.text:0000000000002D98                 BL              _ZdlPv  ; operator delete(void *)</div><div class="line">.text:0000000000002D9C</div><div class="line">.text:0000000000002D9C loc_2D9C                                ; CODE XREF: sub_2D40+4C↑j</div><div class="line">//a2=newp;</div><div class="line">.text:0000000000002D9C                 LDR             X8, [SP,#0x30+var_18]</div><div class="line">.text:0000000000002DA0                 LDR             X9, [SP,#0x30+var_20]</div><div class="line">.text:0000000000002DA4                 STR             X8, [X9,#8]</div><div class="line">//a1=r.a1;</div><div class="line">.text:0000000000002DA8                 LDUR            X8, [X29,#var_10]</div><div class="line">.text:0000000000002DAC                 LDR             W10, [X8]</div><div class="line">.text:0000000000002DB0                 STR             W10, [X9]</div><div class="line">//返回指针</div><div class="line">.text:0000000000002DB4                 MOV             X0, X9</div><div class="line">.text:0000000000002DB8                 LDP             X29, X30, [SP,#0x30+var_s0]</div><div class="line">.text:0000000000002DBC                 ADD             SP, SP, #0x40</div><div class="line">.text:0000000000002DC0                 RET</div><div class="line">.text:0000000000002DC0 ; &#125; // starts at 2D40</div><div class="line">.text:0000000000002DC0 ; End of function sub_2D40</div><div class="line">.text:0000000000002DC0</div></pre></td></tr></table></figure></p>
+<p>new只是分配了内存。初始化还是在new外完成的。delete也是<br>不管左值还是右值引用汇编下都是指针。引用就是指针。<br>这里不知道为啥我使用了右值引用的拷贝编译出来用的函数左值的……看完move的原理再分析。</p>
+<p>还有就是这里arm的返回地址和旧栈帧在变量的上方，以X29分割返回地址与变量</p>
+<h3 id="x86-64"><a href="#x86-64" class="headerlink" title="x86-64"></a>x86-64</h3><p>困了，不分析86的了</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/22/cpp学习-第十二章-动态内存/" rel="next" title="cpp学习-第十二章-动态内存">
+                <i class="fa fa-chevron-left"></i> cpp学习-第十二章-动态内存
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">76</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#拷贝控制"><span class="nav-number">1.1.</span> <span class="nav-text">拷贝控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#拷贝构造函数"><span class="nav-number">1.1.1.</span> <span class="nav-text">拷贝构造函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拷贝赋值运算符"><span class="nav-number">1.1.2.</span> <span class="nav-text">拷贝赋值运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#析构函数"><span class="nav-number">1.1.3.</span> <span class="nav-text">析构函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#阻止拷贝"><span class="nav-number">1.1.4.</span> <span class="nav-text">阻止拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#示例"><span class="nav-number">1.1.5.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#像值的类"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">像值的类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#像指针的类"><span class="nav-number">1.1.5.2.</span> <span class="nav-text">像指针的类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象移动"><span class="nav-number">1.2.</span> <span class="nav-text">对象移动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#右值引用"><span class="nav-number">1.2.1.</span> <span class="nav-text">右值引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移动构造函数-amp-移动赋值运算符"><span class="nav-number">1.2.2.</span> <span class="nav-text">移动构造函数&移动赋值运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#右值引用与成员函数"><span class="nav-number">1.2.3.</span> <span class="nav-text">右值引用与成员函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反汇编"><span class="nav-number">2.</span> <span class="nav-text">反汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM-64"><span class="nav-number">2.1.</span> <span class="nav-text">ARM-64</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指令"><span class="nav-number">2.1.1.</span> <span class="nav-text">指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分析"><span class="nav-number">2.1.2.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x86-64"><span class="nav-number">2.2.</span> <span class="nav-text">x86-64</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
