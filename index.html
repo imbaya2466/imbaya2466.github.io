@@ -283,6 +283,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/28/cpp学习-第十四章-重载运算与类型转化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/01/28/cpp学习-第十四章-重载运算与类型转化/" itemprop="url">cpp学习-第十四章-重载运算与类型转化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-28T00:56:33+08:00">
+                2019-01-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>重载运算符是有特殊名称的函数，有返回类型、参数列表、函数体:关键字operator+要定义的符号。参数与运算符作用的运算对象数量一样多，除了重载调用运算符，不能有默认实参。如果运算符函数是成员函数，则第一个运算对象绑定到隐式的this上。<br>运算符函数，或者是类的成员，或者至少含有一个类类型的参数。意味着不能更改内置类型的运算符。<br>既是一元又是二元的都能重载，根据参数数量自动判断。<br>运算符的优先级与结合律不变。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">可重载:</div><div class="line">+ - * / % ^ &amp; | ~ ! , =</div><div class="line">&lt; &gt; &lt;= =&gt; ++ -- &lt;&lt; &gt;&gt; ==</div><div class="line">!= &amp;&amp; || += -= /= %= ^= &amp;=</div><div class="line">|= *= &lt;&lt;= &gt;&gt;= [] () -&gt; -&gt;*</div><div class="line">new new[] delete delete[]</div><div class="line">不能被重载的</div><div class="line">:: .* . ?:</div></pre></td></tr></table></figure>
+<p>示例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">外部函数</div><div class="line">int operator+(A a,A a)</div><div class="line">&#123;...&#125;</div><div class="line">使用方式:</div><div class="line">a+a;            //普通表达式</div><div class="line">operator+(a,a); //函数调用</div><div class="line">成员函数</div><div class="line">class A&#123;</div><div class="line">    int operator+(A a)&#123;...&#125;</div><div class="line">&#125;;</div><div class="line">使用:</div><div class="line">a+a;</div><div class="line">a.operator+(a);</div></pre></td></tr></table></figure></p>
+<p>重载应该与内置意义一致:</p>
+<ol>
+<li>io操作，定义位移使其io一直</li>
+<li>检查相等，定义==，通常也有!=</li>
+<li>有比较操作，定义&lt;，同样应该定义其它。</li>
+<li>返回类型与内置应该兼容。</li>
+</ol>
+<p>成员还是非成员:</p>
+<ol>
+<li>= [] () -&gt; 必须是成员</li>
+<li>复合一般是成员，不是必须</li>
+<li>改变对象状态或与给定类型密切相关的，如++ – *解引用，应该是成员。</li>
+<li>具有对称性质的运算符，如算数、相等、关系、位。通常为了左右参数可通过自动转化而通用，因此非成员</li>
+</ol>
+<p>如s+”” 若是成员+改成 “”+s则不正确。因为是先定+的意义，再转化类型，这里+的意义没有找到合适的函数。</p>
+<p>当对象为const时，内部成员的成员也不可修改，直接不可，用成员函数的话会要求为const函数，而const的函数中a.f时a也是const的，因此要求f为const。可见<br>对象是const的，其成员均带const属性，这个属性递归传递！！！</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/01/28/cpp学习-第十四章-重载运算与类型转化/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/26/cpp学习-第十三章-拷贝控制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1647,166 +1811,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/30/cpp学习-第五章-语句/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/12/30/cpp学习-第五章-语句/" itemprop="url">cpp学习-第五章-语句</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-30T21:55:36+08:00">
-                2018-12-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp/" itemprop="url" rel="index">
-                    <span itemprop="name">cpp</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><ol>
-<li>表达式语句的作用是执行表达式并丢弃求值结果。语法定义的bnf为:块-语句-表达式</li>
-<li>复合语句(块)也是语句，单独作用域，外不访问内，内可访问外。</li>
-<li>if、switch、while、for的控制结构内可以定义变量。作用域为相应语句内部。</li>
-<li>else if其实就是else下的语句为if语句。语法bnf定义的只有if与if else 。else匹配的是最近尚未匹配的if，块中的不会匹配</li>
-<li>switch也属于条件语句，每句应加break与{}</li>
-<li>c++规定不允许跨过变量的初始化语句直接跳转到该变量作用域内的另一个位置。</li>
-<li>定义在while条件部分或者循环体内的变量每次迭代都会创建到销毁，之前试的那个基本类型初始化就是赋值所以不明显。类对象在栈中的话会调用构造与析构函数。分配栈中的空间会函数一开始就留好，每次初始化析构就可以了，但是堆中的是由运行时分配的，不会自动执行回收销毁，只是指针会创建销毁，因此堆中要手动释放。</li>
-<li>范围for就是使用迭代器</li>
-<li>do while的最后有分号，条件使用的变量必须定义于循环体之外。</li>
-<li>break只作用于:负责终止离它最近的while、do while、for、switch。只是这些</li>
-<li>continue只作用于:for、while、do while</li>
-<li>goto只能同一函数内</li>
-<li>try与catch的语法、汇编实现见下-重点</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/12/30/cpp学习-第五章-语句/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1857,7 +1861,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-count">96</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpp," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="核心简记重载运算符是有特殊名称的函数，有返回类型、参数列表、函数体:关键字operator+要定义的符号。参数与运算符作用的运算对象数量一样多，除了重载调用运算符，不能有默认实参。如果运算符函数是成员函数，则第一个运算对象绑定到隐式的this上。运算符函数，或者是类的成员，或者至少含有一个类类型的参数。意味着不能更改内置类型的运算符。既是一元又是二元的都能重载，根据参数数量自动判断。运算符的优先级">
+<meta name="keywords" content="cpp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp学习-第十四章-重载运算与类型转化">
+<meta property="og:url" content="http://yoursite.com/2019/01/28/cpp学习-第十四章-重载运算与类型转化/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="核心简记重载运算符是有特殊名称的函数，有返回类型、参数列表、函数体:关键字operator+要定义的符号。参数与运算符作用的运算对象数量一样多，除了重载调用运算符，不能有默认实参。如果运算符函数是成员函数，则第一个运算对象绑定到隐式的this上。运算符函数，或者是类的成员，或者至少含有一个类类型的参数。意味着不能更改内置类型的运算符。既是一元又是二元的都能重载，根据参数数量自动判断。运算符的优先级">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-27T16:59:07.637Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp学习-第十四章-重载运算与类型转化">
+<meta name="twitter:description" content="核心简记重载运算符是有特殊名称的函数，有返回类型、参数列表、函数体:关键字operator+要定义的符号。参数与运算符作用的运算对象数量一样多，除了重载调用运算符，不能有默认实参。如果运算符函数是成员函数，则第一个运算对象绑定到隐式的this上。运算符函数，或者是类的成员，或者至少含有一个类类型的参数。意味着不能更改内置类型的运算符。既是一元又是二元的都能重载，根据参数数量自动判断。运算符的优先级">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/28/cpp学习-第十四章-重载运算与类型转化/"/>
+
+
+
+
+
+  <title>cpp学习-第十四章-重载运算与类型转化 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/28/cpp学习-第十四章-重载运算与类型转化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cpp学习-第十四章-重载运算与类型转化</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-28T00:56:33+08:00">
+                2019-01-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>重载运算符是有特殊名称的函数，有返回类型、参数列表、函数体:关键字operator+要定义的符号。参数与运算符作用的运算对象数量一样多，除了重载调用运算符，不能有默认实参。如果运算符函数是成员函数，则第一个运算对象绑定到隐式的this上。<br>运算符函数，或者是类的成员，或者至少含有一个类类型的参数。意味着不能更改内置类型的运算符。<br>既是一元又是二元的都能重载，根据参数数量自动判断。<br>运算符的优先级与结合律不变。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">可重载:</div><div class="line">+ - * / % ^ &amp; | ~ ! , =</div><div class="line">&lt; &gt; &lt;= =&gt; ++ -- &lt;&lt; &gt;&gt; ==</div><div class="line">!= &amp;&amp; || += -= /= %= ^= &amp;=</div><div class="line">|= *= &lt;&lt;= &gt;&gt;= [] () -&gt; -&gt;*</div><div class="line">new new[] delete delete[]</div><div class="line">不能被重载的</div><div class="line">:: .* . ?:</div></pre></td></tr></table></figure>
+<p>示例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">外部函数</div><div class="line">int operator+(A a,A a)</div><div class="line">&#123;...&#125;</div><div class="line">使用方式:</div><div class="line">a+a;            //普通表达式</div><div class="line">operator+(a,a); //函数调用</div><div class="line">成员函数</div><div class="line">class A&#123;</div><div class="line">    int operator+(A a)&#123;...&#125;</div><div class="line">&#125;;</div><div class="line">使用:</div><div class="line">a+a;</div><div class="line">a.operator+(a);</div></pre></td></tr></table></figure></p>
+<p>重载应该与内置意义一致:</p>
+<ol>
+<li>io操作，定义位移使其io一直</li>
+<li>检查相等，定义==，通常也有!=</li>
+<li>有比较操作，定义&lt;，同样应该定义其它。</li>
+<li>返回类型与内置应该兼容。</li>
+</ol>
+<p>成员还是非成员:</p>
+<ol>
+<li>= [] () -&gt; 必须是成员</li>
+<li>复合一般是成员，不是必须</li>
+<li>改变对象状态或与给定类型密切相关的，如++ – *解引用，应该是成员。</li>
+<li>具有对称性质的运算符，如算数、相等、关系、位。通常为了左右参数可通过自动转化而通用，因此非成员</li>
+</ol>
+<p>如s+”” 若是成员+改成 “”+s则不正确。因为是先定+的意义，再转化类型，这里+的意义没有找到合适的函数。</p>
+<p>当对象为const时，内部成员的成员也不可修改，直接不可，用成员函数的话会要求为const函数，而const的函数中a.f时a也是const的，因此要求f为const。可见<br>对象是const的，其成员均带const属性，这个属性递归传递！！！</p>
+<a id="more"></a>
+<h3 id="重载运算"><a href="#重载运算" class="headerlink" title="重载运算"></a>重载运算</h3><h4 id="输入输出运算符"><a href="#输入输出运算符" class="headerlink" title="输入输出运算符"></a>输入输出运算符</h4><p>&lt;&lt;输出<br>第一个参数是非常量ostream对象的引用。因为向流写东西会改变其状态<br>第二个参数一般是常量引用<br>返回流对象引用<br>输入输出运算符必须是非成员函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ostream &amp;operator&lt;&lt;(ostream &amp;os,const A &amp;a)</div><div class="line">&#123;</div><div class="line">    os&lt;&lt;a.a&lt;&lt;a.b;</div><div class="line">    return os;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<blockquote>
+<blockquote>
+<p>输入<br>参数1:读取流的引用<br>参数2:要读入的非常量对象引用<br>返回流的引用<br>必须是非成员函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">istream &amp;operator&gt;&gt;(istream &amp;is,A &amp;a)</div><div class="line">&#123;</div><div class="line">    is&gt;&gt;a.a&gt;&gt;a.b;</div><div class="line">    if(is)//读完一次性检测</div><div class="line">    &#123;</div><div class="line">        //读入成功的处理</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        //读入失败a的恢复</div><div class="line">    &#125;</div><div class="line">    return is;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
+</blockquote>
+<p>输入运算符必须处理输入可能失败的情况，如类型错误、尾等。输出不需要。<br>当输入流读取成功但格式不符合时，需要手动修改流的状态标出失败信息，通常置于failbit。</p>
+<h4 id="算数与关系运算符"><a href="#算数与关系运算符" class="headerlink" title="算数与关系运算符"></a>算数与关系运算符</h4><p>通常定义为非成员函数，便于左右侧的转化，因为一般不修改状态，所以为常量引用。<br>算数运算通常返回临时副本作为结果。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">A operator+(A a,A b)</div><div class="line">&#123;</div><div class="line">    A sum=a;</div><div class="line">    sum+=b;</div><div class="line">    retuen sum;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>同时定义了复合与算数则用复合实现算数。</p>
+<p>定义==准则:</p>
+<ol>
+<li>如果一个类有判断相等的操作，则定义==。且方便使用库算法</li>
+<li>定义== 应该能判断重复数据</li>
+<li>有传递性</li>
+<li>应该定义!=</li>
+</ol>
+<p>关系运算符准则:</p>
+<ol>
+<li>定义顺序关系</li>
+<li>应该与==/!=的关系一致，如俩对象!=则俩对象应该有&lt;关系。无法一致时不要定义</li>
+</ol>
+<h4 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h4><p>必须是成员函数，如支持列表赋值:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    public:</div><div class="line">    A &amp;operator=(std::initializer_list&lt;int&gt; il)</div><div class="line">    &#123;</div><div class="line">        free();//释放原本</div><div class="line">        //可以使用il的迭代器等操作</div><div class="line">        return *this;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>复合运算符不要求是成员，但应该这样。</p>
+<h4 id="下标运算符"><a href="#下标运算符" class="headerlink" title="下标运算符"></a>下标运算符</h4><p>必须是成员函数<br>参数类型任意，是[]内传入的。<br>通常以访问元素的引用作为返回值，左值。最好定义const与非const的，作用范围广。</p>
+<h4 id="递增递减运算符"><a href="#递增递减运算符" class="headerlink" title="递增递减运算符"></a>递增递减运算符</h4><p>应同时定义前置与后置版本。通常为成员函数。</p>
+<p>前置返回对象的引用，后置返回原值。</p>
+<p>区分前置后置定义使用一个不使用的int参数:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    public:</div><div class="line">    A operator++(int) //后置</div><div class="line">    &#123;</div><div class="line">        auto ls=*this;</div><div class="line">        ++*this;</div><div class="line">        return ls;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="成员访问运算符"><a href="#成员访问运算符" class="headerlink" title="成员访问运算符"></a>成员访问运算符</h4><p>箭头必须是类的成员，解引用通常是成员。</p>
+<p>箭头运算符只能改变从哪个对象获取成员:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">类内:</div><div class="line">A &amp;operator*() const</div><div class="line">&#123;</div><div class="line">    return *p;//const对象中的指针指向不是const的，指针本身是const的</div><div class="line">&#125;</div><div class="line"></div><div class="line">//必须返回可以使用-&gt;的对象</div><div class="line">A *operator-&gt;() const  //只有一个参数。单目</div><div class="line">&#123;</div><div class="line">    return p;//只能修改从哪个指针获取成员。</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>p-&gt;a对于p类型不同，等价于:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(*p).a //内置指针</div><div class="line">p.operator-&gt;()-&gt;a; //类指针 会递归为内置指针形式</div></pre></td></tr></table></figure></p>
+<h4 id="函数调用运算符"><a href="#函数调用运算符" class="headerlink" title="函数调用运算符"></a>函数调用运算符</h4><p>如果类重载了函数调用运算符，可以像函数一样使用类的对象。可以存储状态。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    int operator()(int a=0) </div><div class="line">    &#123;</div><div class="line">        return a;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">使用 </div><div class="line">A a;</div><div class="line">a(1);//运行调用重载</div></pre></td></tr></table></figure></p>
+<p>必须是成员函数，可重载。成为函数对象。</p>
+<p>lambda:<br>lambda是函数对象，编译器生成未命名类与对象，含有重载函数调用。<br>默认下不可改变捕获的变量，因此默认生成的函数调用是const的。<br>通过引用捕获时编译器可以直接使用无需存为数据成员，相反，捕获的值要建立数据成员。</p>
+<p>functional头文件中定义了大量的表示基本运算、关系等的函数对象，可用于算法库。指针之间&lt;没有意义，但是用标准库less比较指针可以。</p>
+<p>可调用对象有:<br>函数、函数指针、lambda、函数对象。不同的类型可能有一样的调用形式-返回值与参数相同。<br>functional头文件中的function类可以统一调用形式使用不同的类型。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function&lt;T&gt; f  f用来存储可调用对象的空function对象。T的形式：返回类型(参数类型列表)</div><div class="line">function&lt;T&gt; f(obj) f中存储可调用对象obj的副本</div><div class="line">f             f当条件，有可调用对象时为真。</div><div class="line">f(args)       调用f中的对象</div><div class="line">类型:</div><div class="line">result_type  返回类型</div><div class="line">argument_type 一个参时的类型</div><div class="line"></div><div class="line">first_argument_type     俩个参时的类型</div><div class="line">second_argument_type</div></pre></td></tr></table></figure></p>
+<p>function类型重载了调用运算符，接受自己的实参将其传递给存好的可调用对象。<br>不要直接传有重载的函数名，其无法区分，可手动传指针。<br>使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">funtiction&lt;int(int,int)&gt; f1=add; //函数指针</div><div class="line">... f2=A(); //函数对象</div><div class="line">... [](int i,int j)&#123;return i+j;&#125;; //lambda</div><div class="line"></div><div class="line">使用是都是 f(1,2);</div></pre></td></tr></table></figure></p>
+<h3 id="类型转化"><a href="#类型转化" class="headerlink" title="类型转化"></a>类型转化</h3><p>转化构造函数与类型转化运算符共同定义了类型转化。<br>类型转化运算符是类的一种特殊成员函数，负责将类化为其它类型:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    A(int i=0):a(i)&#123;&#125; //转化构造函数，表示从</div><div class="line">    operator int() const&#123;return a;&#125; //类型转化运算符，表示向</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>operator 向的类型() const;<br>除了向void都可定义，没有显示的返回类型，没有形参，必须为类的成员函数，一般为const。但要返回指定的类型。</p>
+<p>使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">a=4;//4化为A，之后调用A的=   只有自定义的=作用与a</div><div class="line">a+3;//a化为int，之后调用整数+     没有自定义+</div></pre></td></tr></table></figure></p>
+<p>若a重载了+会有二义性。<br>定义向bool的转化普遍。但是很容易引起自动转化的冲突和隐式的错误。因此使用显示类型转化符:<br>explicit operator ….<br>使用时必须强制转化，不过当用作条件时，显示类型转化会被隐式执行，不必强制。</p>
+<h4 id="避免二义"><a href="#避免二义" class="headerlink" title="避免二义"></a>避免二义</h4><p><strong>向与从重复</strong>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">class A&#123; </div><div class="line">    A(const B&amp;);</div><div class="line">&#125;</div><div class="line">class B&#123;</div><div class="line">    operator A() const;</div><div class="line">&#125;</div><div class="line">A f(const A&amp;);</div><div class="line">B b;</div><div class="line">f(b); //二义性错误</div></pre></td></tr></table></figure></p>
+<p><strong>从与从向与向重复</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    A(int);</div><div class="line">    A(double);</div><div class="line">    operator int();</div><div class="line">    operator double();</div><div class="line">&#125;</div><div class="line">f(long)</div><div class="line">f(a)//二义</div><div class="line">A a((long)1)//二义</div></pre></td></tr></table></figure></p>
+<p>不要自己定义多种到内置类型的，由编译器自己转化类型最好</p>
+<p><strong>不同类型重载冲突</strong>:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    A(int);</div><div class="line">&#125;</div><div class="line">class B&#123;</div><div class="line">    B(int);</div><div class="line">&#125;</div><div class="line">class C&#123;</div><div class="line">    C(double);</div><div class="line">&#125;</div><div class="line">void f(A);</div><div class="line">void f(B);</div><div class="line">f(10);//冲突</div><div class="line">void f2(A);</div><div class="line">void f2(C);</div><div class="line">f2(10);//冲突！</div></pre></td></tr></table></figure></p>
+<p>转化的级别判定只有当同一个类时才有用，类型转化不止一个时，二义性。即使有一个精确匹配。</p>
+<p><strong>函数候选集扩大的冲突</strong>:<br>a+b 使用普通函数/成员函数均可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    int operator+(int b); //左为类</div><div class="line">&#125;</div><div class="line">int operator+(A a,int b); //左可使用化为类的</div></pre></td></tr></table></figure></p>
+<p>俩个的作用范围不同，可以重载，但范围有交集，调用时可能冲突。<br>当左内置右类对象时，选择范围为非成员与内置。<br>当左为类对象时，范围为内置、非成员、成员。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    operator+(int)</div><div class="line">    A(int)</div><div class="line">&#125;</div><div class="line">a+1 //冲突，转化使用内置或使用成员都可</div></pre></td></tr></table></figure></p>
+<p>在选择范围内不要有任何的可行方案冲突。决定调用的版本时，左右参数与其转化在函数可选范围内，不要有冲突</p>
+<h2 id="反汇编"><a href="#反汇编" class="headerlink" title="反汇编"></a>反汇编</h2><p>debug下不会使用inline。<br>这次观察下全局构造的位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    public:</div><div class="line">    A():a(10)&#123;&#125;</div><div class="line"></div><div class="line">    int a;</div><div class="line">&#125;;</div><div class="line">A a;</div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">    A b; </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="ARM64"><a href="#ARM64" class="headerlink" title="ARM64"></a>ARM64</h3><p>init-arry:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">.init_array:0000000000010D60 ; ELF Initialization Function Table</div><div class="line">.init_array:0000000000010D60 ; ===========================================================================</div><div class="line">.init_array:0000000000010D60</div><div class="line">.init_array:0000000000010D60 ; Segment type: Pure data</div><div class="line">.init_array:0000000000010D60                 AREA .init_array, DATA, ALIGN=3</div><div class="line">.init_array:0000000000010D60                 ; ORG 0x10D60</div><div class="line">.init_array:0000000000010D60                 EXPORT __INIT_ARRAY__</div><div class="line">.init_array:0000000000010D60 __INIT_ARRAY__  DCB 0xFF                ; DATA XREF: LOAD:0000000000000448↑o</div><div class="line">.init_array:0000000000010D60                                         ; .got:__INIT_ARRAY___ptr↓o</div><div class="line">.init_array:0000000000010D61                 DCB 0xFF</div><div class="line">.init_array:0000000000010D62                 DCB 0xFF</div><div class="line">.init_array:0000000000010D63                 DCB 0xFF</div><div class="line">.init_array:0000000000010D64                 DCB 0xFF</div><div class="line">.init_array:0000000000010D65                 DCB 0xFF</div><div class="line">.init_array:0000000000010D66                 DCB 0xFF</div><div class="line">.init_array:0000000000010D67                 DCB 0xFF</div><div class="line">.init_array:0000000000010D68                 DCQ sub_69C</div><div class="line">.init_array:0000000000010D70                 DCB    0</div><div class="line">.init_array:0000000000010D71                 DCB    0</div><div class="line">.init_array:0000000000010D72                 DCB    0</div><div class="line">.init_array:0000000000010D73                 DCB    0</div><div class="line">.init_array:0000000000010D74                 DCB    0</div><div class="line">.init_array:0000000000010D75                 DCB    0</div><div class="line">.init_array:0000000000010D76                 DCB    0</div><div class="line">.init_array:0000000000010D77                 DCB    0</div><div class="line">.init_array:0000000000010D77 ; .init_array   ends</div></pre></td></tr></table></figure></p>
+<p>构造函数被调用处:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">.text:0000000000000680 sub_680                                 ; CODE XREF: sub_69C+8↓p</div><div class="line">.text:0000000000000680                                         ; DATA XREF: LOAD:0000000000000370↑o</div><div class="line">.text:0000000000000680</div><div class="line">.text:0000000000000680 var_s0          =  0</div><div class="line">.text:0000000000000680</div><div class="line">.text:0000000000000680 ; __unwind &#123;</div><div class="line">.text:0000000000000680                 STP             X29, X30, [SP,#-0x10+var_s0]!</div><div class="line">.text:0000000000000684                 MOV             X29, SP</div><div class="line">//获取全局变量的地址，调用构造   .bss段，未初始化的</div><div class="line">.text:0000000000000688                 ADRP            X8, #unk_11008@PAGE</div><div class="line">.text:000000000000068C                 ADD             X0, X8, #unk_11008@PAGEOFF</div><div class="line">.text:0000000000000690                 BL              sub_728</div><div class="line">.text:0000000000000694                 LDP             X29, X30, [SP+var_s0],#0x10</div><div class="line">.text:0000000000000698                 RET</div><div class="line">.text:0000000000000698 ; &#125; // starts at 680</div><div class="line">.text:0000000000000698 ; End of function sub_680</div><div class="line">.text:0000000000000698</div><div class="line">.text:000000000000069C</div><div class="line">.text:000000000000069C ; =============== S U B R O U T I N E =======================================</div><div class="line">.text:000000000000069C</div><div class="line">.text:000000000000069C ; Attributes: bp-based frame</div><div class="line">.text:000000000000069C</div><div class="line">.text:000000000000069C sub_69C                                 ; DATA XREF: .init_array:0000000000010D68↓o</div><div class="line">.text:000000000000069C</div><div class="line">.text:000000000000069C var_s0          =  0</div><div class="line">.text:000000000000069C</div><div class="line">//initarry中存的函数地址</div><div class="line">.text:000000000000069C ; __unwind &#123;</div><div class="line">.text:000000000000069C                 STP             X29, X30, [SP,#-0x10+var_s0]!</div><div class="line">.text:00000000000006A0                 MOV             X29, SP</div><div class="line">//调用构造代理</div><div class="line">.text:00000000000006A4                 BL              sub_680</div><div class="line">.text:00000000000006A8                 LDP             X29, X30, [SP+var_s0],#0x10</div><div class="line">.text:00000000000006AC                 RET</div><div class="line">.text:00000000000006AC ; &#125; // starts at 69C</div><div class="line">.text:00000000000006AC ; End of function sub_69C</div></pre></td></tr></table></figure></p>
+<p>通过对linker的分析可以发现，在execve将linker与应用程序都加载了，之后linker解析动态段，加载so后调用所有的init_array。这时初始化全局变量。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/26/cpp学习-第十三章-拷贝控制/" rel="next" title="cpp学习-第十三章-拷贝控制">
+                <i class="fa fa-chevron-left"></i> cpp学习-第十三章-拷贝控制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">96</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">76</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#重载运算"><span class="nav-number">1.1.</span> <span class="nav-text">重载运算</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#输入输出运算符"><span class="nav-number">1.1.1.</span> <span class="nav-text">输入输出运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#算数与关系运算符"><span class="nav-number">1.1.2.</span> <span class="nav-text">算数与关系运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#赋值运算符"><span class="nav-number">1.1.3.</span> <span class="nav-text">赋值运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下标运算符"><span class="nav-number">1.1.4.</span> <span class="nav-text">下标运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#递增递减运算符"><span class="nav-number">1.1.5.</span> <span class="nav-text">递增递减运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#成员访问运算符"><span class="nav-number">1.1.6.</span> <span class="nav-text">成员访问运算符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数调用运算符"><span class="nav-number">1.1.7.</span> <span class="nav-text">函数调用运算符</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型转化"><span class="nav-number">1.2.</span> <span class="nav-text">类型转化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#避免二义"><span class="nav-number">1.2.1.</span> <span class="nav-text">避免二义</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反汇编"><span class="nav-number">2.</span> <span class="nav-text">反汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM64"><span class="nav-number">2.1.</span> <span class="nav-text">ARM64</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
