@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="核心简记重载运算符是有特殊名称的函数，有返回类型、参数列表、函数体:关键字operator+要定义的符号。参数与运算符作用的运算对象数量一样多，除了重载调用运算符，不能有默认实参。如果运算符函数是成员函数，则第一个运算对象绑定到隐式的this上。运算符函数，或者是类的成员，或者至少含有一个类类型的参数。意味着不能更改内置类型的运算符。既是一元又是二元的都能重载，根据参数数量自动判断。运算符的优先级">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-27T16:59:07.637Z">
+<meta property="og:updated_time" content="2019-01-27T17:10:44.229Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cpp学习-第十四章-重载运算与类型转化">
 <meta name="twitter:description" content="核心简记重载运算符是有特殊名称的函数，有返回类型、参数列表、函数体:关键字operator+要定义的符号。参数与运算符作用的运算对象数量一样多，除了重载调用运算符，不能有默认实参。如果运算符函数是成员函数，则第一个运算对象绑定到隐式的this上。运算符函数，或者是类的成员，或者至少含有一个类类型的参数。意味着不能更改内置类型的运算符。既是一元又是二元的都能重载，根据参数数量自动判断。运算符的优先级">
@@ -393,11 +393,7 @@
 <p>当对象为const时，内部成员的成员也不可修改，直接不可，用成员函数的话会要求为const函数，而const的函数中a.f时a也是const的，因此要求f为const。可见<br>对象是const的，其成员均带const属性，这个属性递归传递！！！</p>
 <a id="more"></a>
 <h3 id="重载运算"><a href="#重载运算" class="headerlink" title="重载运算"></a>重载运算</h3><h4 id="输入输出运算符"><a href="#输入输出运算符" class="headerlink" title="输入输出运算符"></a>输入输出运算符</h4><p>&lt;&lt;输出<br>第一个参数是非常量ostream对象的引用。因为向流写东西会改变其状态<br>第二个参数一般是常量引用<br>返回流对象引用<br>输入输出运算符必须是非成员函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ostream &amp;operator&lt;&lt;(ostream &amp;os,const A &amp;a)</div><div class="line">&#123;</div><div class="line">    os&lt;&lt;a.a&lt;&lt;a.b;</div><div class="line">    return os;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<blockquote>
-<blockquote>
 <p>输入<br>参数1:读取流的引用<br>参数2:要读入的非常量对象引用<br>返回流的引用<br>必须是非成员函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">istream &amp;operator&gt;&gt;(istream &amp;is,A &amp;a)</div><div class="line">&#123;</div><div class="line">    is&gt;&gt;a.a&gt;&gt;a.b;</div><div class="line">    if(is)//读完一次性检测</div><div class="line">    &#123;</div><div class="line">        //读入成功的处理</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        //读入失败a的恢复</div><div class="line">    &#125;</div><div class="line">    return is;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-</blockquote>
-</blockquote>
 <p>输入运算符必须处理输入可能失败的情况，如类型错误、尾等。输出不需要。<br>当输入流读取成功但格式不符合时，需要手动修改流的状态标出失败信息，通常置于failbit。</p>
 <h4 id="算数与关系运算符"><a href="#算数与关系运算符" class="headerlink" title="算数与关系运算符"></a>算数与关系运算符</h4><p>通常定义为非成员函数，便于左右侧的转化，因为一般不修改状态，所以为常量引用。<br>算数运算通常返回临时副本作为结果。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">A operator+(A a,A b)</div><div class="line">&#123;</div><div class="line">    A sum=a;</div><div class="line">    sum+=b;</div><div class="line">    retuen sum;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>同时定义了复合与算数则用复合实现算数。</p>
