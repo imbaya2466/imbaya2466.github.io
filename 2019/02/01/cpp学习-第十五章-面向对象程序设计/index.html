@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cpp,反编译," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="核心简记面向对象的核心思想是数据抽象、继承、动态绑定。数据抽象:接口与实现分离继承:定义相似的类型与关系建模动态绑定:忽略类型区别、统一使用对象 c++中将要由子适应自己而改变的函数记为虚函数，子不应该改变的函数则为普通函数。1virtual int f(); 派生类列表指明从哪些类继承而来。形式: 冒号+访问说明符+类名 逗号分隔1class A : public B,public C&amp;#123">
+<meta name="keywords" content="cpp,反编译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpp学习-第十五章-面向对象程序设计">
+<meta property="og:url" content="http://yoursite.com/2019/02/01/cpp学习-第十五章-面向对象程序设计/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="核心简记面向对象的核心思想是数据抽象、继承、动态绑定。数据抽象:接口与实现分离继承:定义相似的类型与关系建模动态绑定:忽略类型区别、统一使用对象 c++中将要由子适应自己而改变的函数记为虚函数，子不应该改变的函数则为普通函数。1virtual int f(); 派生类列表指明从哪些类继承而来。形式: 冒号+访问说明符+类名 逗号分隔1class A : public B,public C&amp;#123">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-31T17:22:35.878Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cpp学习-第十五章-面向对象程序设计">
+<meta name="twitter:description" content="核心简记面向对象的核心思想是数据抽象、继承、动态绑定。数据抽象:接口与实现分离继承:定义相似的类型与关系建模动态绑定:忽略类型区别、统一使用对象 c++中将要由子适应自己而改变的函数记为虚函数，子不应该改变的函数则为普通函数。1virtual int f(); 派生类列表指明从哪些类继承而来。形式: 冒号+访问说明符+类名 逗号分隔1class A : public B,public C&amp;#123">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/01/cpp学习-第十五章-面向对象程序设计/"/>
+
+
+
+
+
+  <title>cpp学习-第十五章-面向对象程序设计 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/01/cpp学习-第十五章-面向对象程序设计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cpp学习-第十五章-面向对象程序设计</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-01T01:20:31+08:00">
+                2019-02-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>面向对象的核心思想是数据抽象、继承、动态绑定。<br>数据抽象:接口与实现分离<br>继承:定义相似的类型与关系建模<br>动态绑定:忽略类型区别、统一使用对象</p>
+<p>c++中将要由子适应自己而改变的函数记为虚函数，子不应该改变的函数则为普通函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">virtual int f();</div></pre></td></tr></table></figure></p>
+<p>派生类列表指明从哪些类继承而来。形式: 冒号+访问说明符+类名 逗号分隔<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">class A : public B,public C&#123;&#125;</div></pre></td></tr></table></figure></p>
+<p>虚函数必须定义，派生类不是必须定义父的全部虚函数，没定义的会名字找到父的实现。后加override表示编译器检查，必须这个成员改写了基类虚函数。</p>
+<p>基类的引用指针可以绑定到派生类，反之不可，当使用基类的引用或指针调用虚函数时发生动态绑定，实际调用的函数由运行时对象决定。不加虚的由指针类型静态决定。不用指针的是拷贝赋值函数调用，会砍掉子的部分。</p>
+<p>一个类控制自己可被访问的部分，继承只是在黑盒上再进行黑盒封装。不能控制父的私有部分。</p>
+<a id="more"></a>
+<h3 id="定义基类与派生类"><a href="#定义基类与派生类" class="headerlink" title="定义基类与派生类"></a>定义基类与派生类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    public:</div><div class="line">    virtual int f(int n)</div><div class="line">    &#123;</div><div class="line">        ...</div><div class="line">    &#125;</div><div class="line">    virtual ~A()=default;</div><div class="line">    int a;</div><div class="line">    protected:</div><div class="line">    int b;</div><div class="line">    private:</div><div class="line">    int c;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>基类应该定义虚析构函数，为了按动态类型释放对象。<br>希望派生类实现的函数定义为虚函数-运行时解析，不希望改变直接继承的为普通函数-编译时解析。<br>虚函数通过声明前加virtual关键字。可以是构造函数与静态函数之外的函数，因为这俩个函数都不是对象绑定的。<br>关键字virtual只能出现在类内部的声明语句之前，不能用于外部函数定义，因为其是调用方的事-使用声明查找接口，不是实现方的事。<br>基类的虚函数在子类中隐式的也是虚函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">class B:public A&#123;</div><div class="line">    public:</div><div class="line">    int f(int n) override</div><div class="line">    &#123;</div><div class="line">        return a+b;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">A *a;</div><div class="line">B b;</div><div class="line">a=&amp;b;</div></pre></td></tr></table></figure>
+<p>派生类可以访问基类的公有、受保护的成员。基类的访问修饰符同样是三个，用于控制派生类的用户对派生类继承自基类的成员的访问权。<br>不是必须覆盖基类的虚函数，没覆盖的行为类似普通函数。默认继承virtual，可用override。</p>
+<p>一个派生类对象含有自己的成员以及基类的对象，c++标准没有规定对象在内存的分布。<br>派生类到基类的转化式隐式的。</p>
+<p>每个类控制自己的成员初始化过程，派生使用基类的构造函数初始化基类部分。都是在初始化阶段执行的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">class A:B&#123;</div><div class="line">    A(a,b,c,d):B(a,b),ac(c),ad(d)&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>执行顺序是先基类的构造函数、再自己的，顺序按类内声明的，不写就是默认初始化。<br>派生类可以访问基类公有与保护成员，为的是不改变原封装性。每个类负责定义各自的接口。</p>
+<p>如果类定义了一个静态成员，则整个继承体系中只存在该成员的唯一定义，静态成员初始化必在外，也是作为全局只能有一份，声明是供人连接的。访问使用基类、派生类均可。</p>
+<p>声明语句目的是令程序知道某个名字的存在和表示什么实体，声明派生类直接写 class A;即可，不用加基类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">class A&#123;&#125;;</div><div class="line">class B:A&#123;&#125;;</div><div class="line">class C:B&#123;&#125;;</div></pre></td></tr></table></figure>
+<p>B是C的直接基类、A是C的间接基类。</p>
+<p>防止继承的发生:类名后加final<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">class B final:A&#123;&#125;;</div></pre></td></tr></table></figure></p>
+<p>B不能当基类。</p>
+<p>智能指针也支持派生向基类转化。</p>
+<p>表达式有俩种类型:静态类型与动态类型。<br>静态类型编译时已知，是声明或表达式生成的类型。动态类型则是内存中对象的类型。<br>如果表达式既不是引用也不是指针，则他的动态类型与静态类型一致。</p>
+<p>不可将基类转化为派生类，即使一个基类的指针绑定在派生类对象上，也不能将基类化为派生类。编译器无法确定运行时安全，只能检查静态类型。</p>
+<p>初始化或赋值对象时是在调用函数，此时子赋给父是执行父的赋值，会切掉子的部分。</p>
+<p>类型规则:</p>
+<ol>
+<li>从派生到基只对指针与引用有效。</li>
+<li>基到派生不存在隐式</li>
+<li>转化可能受限不可执行-由于访问受限</li>
+</ol>
+<h3 id="虚函数"><a href="#虚函数" class="headerlink" title="虚函数"></a>虚函数</h3><p>当且仅当使用指针/引用调用虚函数时执行动态绑定，所有虚函数都必须有定义。也只有这时静态与动态类型可能不同。<br>对非虚函数的调用在编译时绑定，对象进行函数调用(无论是否虚)也是编译时定。<br>一旦声明某个函数为虚函数，则所有派生类中都是虚函数。覆盖时形参、返回类型必须完全一致，有一个列外:当返回类型是类本身的指针或引用时，返回类型可以不一致。</p>
+<p>override标记的函数没有覆盖虚函数将报错:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void f()const override;</div></pre></td></tr></table></figure></p>
+<p>该关键字是接口的部分，放于声明。出现在形参列表(引用与const修饰符是形参表的一部分)与尾置返回之后。</p>
+<p>final标记函数不可被覆盖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">void f()const final;</div></pre></td></tr></table></figure></p>
+<p>出现在形参列表(引用与const修饰符是形参表的一部分)与尾置返回之后。</p>
+<p>虚函数可以有默认实参，但是函数调用使用默认实参由静态类型决定-因为实参是调用时定。因此基类派生类的默认实参最好一致。</p>
+<p>可以回避虚函数机制使用特定的版本:类似super<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">A *a=new B();</div><div class="line">a-&gt;A::f();</div></pre></td></tr></table></figure></p>
+<p>不管对象类型，在编译时完成解析，使用类的实现。<br>通常在成员函数、友元中使用作用域运算符回避虚函数机制，为了在子的实现中调用父的实现。直接调用分析的是this的类型，子的一般是子会无限递归，此时可以执行父的。</p>
+<h3 id="抽象基类"><a href="#抽象基类" class="headerlink" title="抽象基类"></a>抽象基类</h3><p>定义纯虚函数，该函数无需定义，在函数体的位置写=0，只能出现在类内的虚函数声明语句处。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    virtual int f()const=0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>不可定义有纯虚函数的类的对象，但是派生可使用其构造来构建基类部分。<br>可为纯虚函数提供定义，不过函数体必须在类的外部。</p>
+<p>含有纯虚函数的类是抽象基类，不能创建抽象基类的对象。负责定义接口。子类不定义父的纯虚函数则仍是抽象基类。</p>
+<p>派生类构造函数只能初始化他的直接基类。向上调用后向下完成。</p>
+<h3 id="访问控制与继承"><a href="#访问控制与继承" class="headerlink" title="访问控制与继承"></a>访问控制与继承</h3><p>每个类控制自己的成员初始化、成员的可访问性。<br>protected关键字:类用户不可见、派生类可访问。<br>注意:派生类的成员只能通过派生类的对象访问基类受保护的成员，而不能通过基类对象访问。即-可访问的是派生中含的基类，单独的不可。为了防止间接访问保护成员。</p>
+<p>继承的成员可访问性受俩个因素影响:基类中的可访问性、派生列表中的访问说明符。我接下来称其为1与2<br>2对派生类访问直接基类没有影响，其只有1控制。<br>外部对基类的访问只看1,2是决定继承后的1是什么样的。<br>2对1不会造成权限提升，public的2使1不变，protect的2使1的pub变为pro，pre的2使1的pub与pro变为pre。</p>
+<p>派生向基类转化的可访问性:</p>
+<ol>
+<li>只有D公有的继承B时，用户代码才可使用派生向基类的转化。</li>
+<li>不论D怎么继承B，D的成员函数与友元都能使用转化。</li>
+<li>继承方式是公有或保护，则D的派生类可以使用转化。</li>
+</ol>
+<p>对于某个节点，基类的公有成员可访问则转化可访问。</p>
+<p>友元:<br>友元的关系不可传递，同样不可继承。友元只能访问指定友元关系的类，与单独声明的成员函数范围类似。<br>当类A将类B声明为友元时，这种友元关系只对B与A有效，A的子类不能访问B，B的子类不能访问A。<br>每个类控制自己的成员的被访问权限。</p>
+<p>改变个别的访问权限:使用using。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class B:private A&#123;</div><div class="line">    public :</div><div class="line">    using A::a;//可使protected变为public</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>使用using将直接、间接基类中的可访问成员标记出来，继承后的访问权限由所在位置访问说明符决定。<br>注意这个是可以提升访问权的。</p>
+<p>class默认派生访问是private，struct是public<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">class A&#123;&#125;;</div><div class="line">class B:A&#123;&#125;;  //默认private继承</div><div class="line">struct C:A&#123;&#125;; //默认public继承</div></pre></td></tr></table></figure></p>
+<p>这俩个关键字的唯一区别就是默认成员访问说明符与默认派生访问说明符。</p>
+<h3 id="继承中的作用域"><a href="#继承中的作用域" class="headerlink" title="继承中的作用域"></a>继承中的作用域</h3><p>派生类的作用域嵌套在基类作用域之内，内访问外，访问符是单独控制。</p>
+<p>解析名字:a.b</p>
+<ol>
+<li>先在A类中查找名字b</li>
+<li>在A的直接基类中查找名字b</li>
+<li>继续向上。</li>
+</ol>
+<p>作用域：编译时处理用，主要供编译器查找名称。</p>
+<p>在编译时进行名字查找，对象、指针的静态类型决定对象的那些成员是可见的。只有可见的编译时才可访问使用，动态只是决定实际执行那个。</p>
+<p>子的成员名将隐藏外层基类相同的名字。可以使用::访问<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">class A&#123;int a;&#125;</div><div class="line">class B:A&#123;</div><div class="line">    int a;</div><div class="line">    int f()&#123;</div><div class="line">        int b=a;   //a是B的</div><div class="line">        return A::a;    //a是A的</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>成员都不会被消除，只是各种形式的覆盖了。</p>
+<p>重要！！！<br>函数调用的解析过程:p-&gt;mem();</p>
+<ol>
+<li>确定p的静态类型，因为是调用成员，所以必须是类类型</li>
+<li>在p的静态类型对应的类中查找mem，如果找不到就从直接基类中找，直至继承链的顶端。找到就下一步</li>
+<li>找到men后进行类型检查，参数是否正确等，确定调用是否合法。</li>
+<li>合法时，将根据是否是虚函数生成不同代码:虚函数且通过指针/引用使用，将运行时决定。不是时将产生常规函数调用。</li>
+</ol>
+<p>注意名字优先于类型检查，此时内不会重载外部，在内中找到名字后经过类型检查不合适也不会再找了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">class A&#123;</div><div class="line">    int f();</div><div class="line">    virtual void f2()&#123;&#125;</div><div class="line">&#125;</div><div class="line">class B:A&#123;</div><div class="line">    int f(int);</div><div class="line">    void f2(int);</div><div class="line">&#125;</div><div class="line">B b;</div><div class="line">b.f(); //错误，找到但不合适</div><div class="line">b.A::f(); //正确，强制使用作用域</div><div class="line">A a=new B();</div><div class="line">a.f2();  //虚调用，使用的是A的，因为a的静态类型是A，所以从A找起，找到虚函数，动态决定，动态还是继承父的(因为子没覆盖)</div></pre></td></tr></table></figure></p>
+<p>虚函数有重载时，可选择覆盖0或多个。使用using可以将同名的所有重载添加到作用域中。</p>
+<h3 id="构造函数与拷贝控制"><a href="#构造函数与拷贝控制" class="headerlink" title="构造函数与拷贝控制"></a>构造函数与拷贝控制</h3><p>析构函数的执行需要看对象的动态类型，因此应该是virtual的。因此总应该写上。子析构会继承父析构的虚属性</p>
+<p>合成的构造、赋值、析构，会直接使用基类中对应的操作对基类部分进行初始化、赋值、析构。</p>
+<p>自定义时:<br>默认下都是使用默认的构造函数初始化基类部分，因此必须显示使用拷贝/移动构造。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">class B:A&#123;</div><div class="line">    B(const B&amp;b):A(b),其它成员&#123;&#125;  //合成的也是这样的</div><div class="line">    B(B &amp;&amp;b):A(std::move(b)),...&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>派生类的赋值也必须显示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">B &amp;B::operator=(const B &amp;ls)</div><div class="line">&#123;</div><div class="line">    A::operator=(ls); //为基类赋值,合成的是带的</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>析构会隐式执行父的析构。顺序是派生类的析构先执行、之后是基类的。</p>
+<p>当作用于构造函数时，using将产生代码:<br>子类名(参数):父类名(参数){}<br>这样来调用父构造。且不会改变访问级别。</p>
+<h3 id="容器与继承"><a href="#容器与继承" class="headerlink" title="容器与继承"></a>容器与继承</h3><p>容器中的类型不能是对象类型，因为会被切掉。通常放指针、智能指针。</p>
+<p>注意 new A(b) 时会切掉b的部分，这是在运行拷贝构造。</p>
+<p>注意:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">f(A &amp;&amp;a)</div><div class="line">&#123;</div><div class="line">    ls=new A(std::move(a));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里要使用move的原因是，尽管a是右值引用，但是a本身是变量，是个左值，因此要使用move来传递。<br>这也是我当时反汇编出没有调用移动方法的原因。</p>
+<h2 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div></pre></td><td class="code"><pre><div class="line">#include&lt;iostream&gt;</div><div class="line"></div><div class="line">using namespace std;</div><div class="line"></div><div class="line">class A&#123;</div><div class="line">public:</div><div class="line">    int a;</div><div class="line"></div><div class="line">    //看构造函数对虚表等的操作</div><div class="line">    A()</div><div class="line">    &#123;</div><div class="line">        a=2;</div><div class="line">        f3(1);</div><div class="line">    &#125;</div><div class="line">    //子重写虚方法</div><div class="line">    virtual int f(int b)</div><div class="line">    &#123;</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">    //子重写纯虚</div><div class="line">    virtual int f2(int b)=0;</div><div class="line">    //父有实现的纯虚</div><div class="line">    virtual int f3(int b)=0;</div><div class="line"></div><div class="line">    //子不实现的虚--是不是直接写在子的虚表里和父一样的函数</div><div class="line">    virtual int f7(int b)</div><div class="line">    &#123;</div><div class="line">        return 7;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //子没有的静态</div><div class="line">    int f4(int b)&#123;</div><div class="line">        return a+b;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //析构函数的步骤</div><div class="line">    virtual ~A()&#123;</div><div class="line">        a=2;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">int A::f3(int b)</div><div class="line">&#123;</div><div class="line">    return 5;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//默认构造是public的 自己定义按位置改变了</div><div class="line">class B:public A&#123;</div><div class="line">public:</div><div class="line">//子的成员--若覆盖了父的就看名字查找顺序</div><div class="line">    int Ba;</div><div class="line"></div><div class="line"></div><div class="line">    //子调用父构造、虚表操作</div><div class="line">    B()</div><div class="line">    &#123;</div><div class="line">        Ba=1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">//子重写虚</div><div class="line">    int f(int b)</div><div class="line">    &#123;</div><div class="line">        return 2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">//子重写纯虚</div><div class="line">    int f2(int b)</div><div class="line">    &#123;</div><div class="line">        return 3;</div><div class="line">    &#125;</div><div class="line">//子重写纯虚</div><div class="line">    int f3(int b)&#123;</div><div class="line">        b=A::f3(1);</div><div class="line"></div><div class="line">        return 4;</div><div class="line">    &#125;</div><div class="line">//子独立的静态</div><div class="line">    int f5(int b)</div><div class="line">    &#123;</div><div class="line">        return Ba+a+b;</div><div class="line">    &#125;</div><div class="line">//子独立的虚</div><div class="line">    virtual int f6(int b)</div><div class="line">    &#123;</div><div class="line">        return 6;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ~B()&#123;</div><div class="line">        Ba=2;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line">B qwe;//全局的注销位置</div><div class="line"></div><div class="line">//虚表的位置、虚表指针的位置</div><div class="line">int main(void)</div><div class="line">&#123;</div><div class="line">   </div><div class="line">    B b;</div><div class="line">    </div><div class="line">//父的调用-静态动态不一致</div><div class="line">    A *pa=&amp;b;</div><div class="line">    int ls=pa-&gt;f(1);</div><div class="line">    ls=pa-&gt;f2(1);</div><div class="line">    ls=pa-&gt;f3(1);</div><div class="line">    ls=pa-&gt;f4(1);</div><div class="line">    ls=pa-&gt;f7(1);</div><div class="line"></div><div class="line">//子的调用-静态动态一致</div><div class="line">    B *pb=&amp;b;</div><div class="line">    ls=pb-&gt;f(1);</div><div class="line">    ls=pb-&gt;f2(1);</div><div class="line">    ls=pb-&gt;f3(1);</div><div class="line">    ls=pb-&gt;f4(1);</div><div class="line">    ls=pb-&gt;f5(1);</div><div class="line">    ls=pb-&gt;f6(1);</div><div class="line">    ls=pb-&gt;f7(1);</div><div class="line"></div><div class="line">//对象的静态调用-一致</div><div class="line">    ls=b.f(1);</div><div class="line">    ls=b.f2(1);</div><div class="line">    ls=b.f3(1);</div><div class="line">    ls=b.f4(1);</div><div class="line">    ls=b.f5(1);</div><div class="line">    ls=b.f6(1);</div><div class="line">    ls=b.f7(1);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="ARM-64"><a href="#ARM-64" class="headerlink" title="ARM-64"></a>ARM-64</h3><p>简单对比:</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>ARM V8</th>
+<th>ARM V7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>指令集</td>
+<td>64位指令集 AArch64， 并且兼容32位指令集 AArch32</td>
+<td>32位指令集 A32 和16位指令集 T16</td>
+</tr>
+<tr>
+<td>支持地址长度</td>
+<td>64位</td>
+<td>32位</td>
+</tr>
+<tr>
+<td>通用寄存器</td>
+<td>31个 x0-x30（64位）或者 w0-w30（32位）</td>
+<td>15个, r0-r14 (32位)</td>
+</tr>
+<tr>
+<td>异常模式</td>
+<td>4层结构 EL0-EL3</td>
+<td>2层结构vector table</td>
+</tr>
+<tr>
+<td>NEON</td>
+<td>默认支持</td>
+<td>可选支持</td>
+</tr>
+<tr>
+<td>LAPE</td>
+<td>默认支持</td>
+<td>可选支持</td>
+</tr>
+<tr>
+<td>Virtualization</td>
+<td>默认支持</td>
+<td>可选支持</td>
+</tr>
+<tr>
+<td>big.LITTLE</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>TrustZone</td>
+<td>默认支持</td>
+<td>默认支持</td>
+</tr>
+<tr>
+<td>SIMD寄存器</td>
+<td>32个 X 128位</td>
+<td>32个 X 64位</td>
+</tr>
+</tbody>
+</table>
+<p>ARM-v7A中常使用32位ARM指令集并且支持thumb指令集与arm的切换。<br>而在ARMV8中使用的是64位ARM指令集且不再有thumb指令集状态的切换了！</p>
+<p>因此64位下的ARM是:<br>B:直接跳转<br>BL:连接返回地址并跳转<br>BR:直接跳转到寄存器指定<br>BLR:连接并跳转寄存器指定</p>
+<p>32位下的ARM:<br>B:直接跳转<br>BL:连接跳转<br>BX:指令切换跳转<br>BLX:连接且指令切换跳转</p>
+<p>详细的ARM64指令将再开一篇分析。</p>
+<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>main:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div></pre></td><td class="code"><pre><div class="line">.text:0000000000008E04 ; int __cdecl main(int argc, const char **argv, const char **envp)</div><div class="line">.text:0000000000008E04                 EXPORT main</div><div class="line">.text:0000000000008E04 main                                    ; DATA XREF: LOAD:0000000000000DB8↑o</div><div class="line">.text:0000000000008E04                                         ; .got:main_ptr↓o</div><div class="line">.text:0000000000008E04</div><div class="line">.text:0000000000008E04 var_38          = -0x38</div><div class="line">.text:0000000000008E04 var_30          = -0x30</div><div class="line">.text:0000000000008E04 var_24          = -0x24</div><div class="line">.text:0000000000008E04 var_20          = -0x20</div><div class="line">.text:0000000000008E04 var_18          = -0x18</div><div class="line">.text:0000000000008E04 var_8           = -8</div><div class="line">.text:0000000000008E04 var_s0          =  0</div><div class="line">.text:0000000000008E04</div><div class="line">.text:0000000000008E04 ; __unwind &#123;</div><div class="line">.text:0000000000008E04                 SUB             SP, SP, #0x50</div><div class="line">.text:0000000000008E08                 STP             X29, X30, [SP,#0x40+var_s0]</div><div class="line">.text:0000000000008E0C                 ADD             X29, SP, #0x40</div><div class="line">.text:0000000000008E10                 SUB             X0, X29, #-var_18</div><div class="line">.text:0000000000008E14                 MRS             X8, #3, c13, c0, #2</div><div class="line">.text:0000000000008E18                 LDR             X8, [X8,#0x28]</div><div class="line">.text:0000000000008E1C                 STUR            X8, [X29,#var_8]</div><div class="line">//构造b，b位置在var_18</div><div class="line">.text:0000000000008E20                 BL              sub_8D70</div><div class="line">.text:0000000000008E24                 MOV             W1, #1</div><div class="line">.text:0000000000008E28                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008E2C                 STR             X8, [SP,#0x40+var_20]</div><div class="line">.text:0000000000008E30                 LDR             X8, [SP,#0x40+var_20]</div><div class="line"></div><div class="line">父调用</div><div class="line">//取得虚表指针。</div><div class="line">.text:0000000000008E34                 LDR             X0, [X8]</div><div class="line">//取第一项</div><div class="line">.text:0000000000008E38                 LDR             X0, [X0]</div><div class="line">.text:0000000000008E3C                 STR             X0, [SP,#0x40+var_38]</div><div class="line">//传this、寄存器跳转   f</div><div class="line">.text:0000000000008E40                 MOV             X0, X8</div><div class="line">.text:0000000000008E44                 LDR             X8, [SP,#0x40+var_38]</div><div class="line">.text:0000000000008E48                 BLR             X8</div><div class="line">//调用偏移8的  f2</div><div class="line">.text:0000000000008E4C                 MOV             W1, #1</div><div class="line">.text:0000000000008E50                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008E54                 LDR             X8, [SP,#0x40+var_20]</div><div class="line">.text:0000000000008E58                 LDR             X30, [X8]</div><div class="line">.text:0000000000008E5C                 LDR             X30, [X30,#8]</div><div class="line">.text:0000000000008E60                 MOV             X0, X8</div><div class="line">.text:0000000000008E64                 BLR             X30</div><div class="line">//调用偏移16的  f3</div><div class="line">.text:0000000000008E68                 MOV             W1, #1</div><div class="line">.text:0000000000008E6C                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008E70                 LDR             X8, [SP,#0x40+var_20]</div><div class="line">.text:0000000000008E74                 LDR             X30, [X8]</div><div class="line">.text:0000000000008E78                 LDR             X30, [X30,#0x10]</div><div class="line">.text:0000000000008E7C                 MOV             X0, X8</div><div class="line">.text:0000000000008E80                 BLR             X30</div><div class="line">//子没有的普通直接调用，因为分析为普通函数不生成虚表访问   f4</div><div class="line">.text:0000000000008E84                 MOV             W1, #1</div><div class="line">.text:0000000000008E88                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008E8C                 LDR             X0, [SP,#0x40+var_20]</div><div class="line">.text:0000000000008E90                 BL              sub_9034</div><div class="line">//调用偏移24的  f7</div><div class="line">.text:0000000000008E94                 MOV             W1, #1</div><div class="line">.text:0000000000008E98                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008E9C                 LDR             X8, [SP,#0x40+var_20]</div><div class="line">.text:0000000000008EA0                 LDR             X30, [X8]</div><div class="line">.text:0000000000008EA4                 LDR             X30, [X30,#0x18]</div><div class="line">.text:0000000000008EA8                 MOV             X0, X8</div><div class="line">.text:0000000000008EAC                 BLR             X30</div><div class="line"></div><div class="line">子调用</div><div class="line">//偏移0  f</div><div class="line">.text:0000000000008EB0                 MOV             W1, #1</div><div class="line">.text:0000000000008EB4                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008EB8                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008EBC                 STR             X8, [SP,#0x40+var_30]</div><div class="line">.text:0000000000008EC0                 LDR             X8, [SP,#0x40+var_30]</div><div class="line">.text:0000000000008EC4                 LDR             X30, [X8]</div><div class="line">.text:0000000000008EC8                 LDR             X30, [X30]</div><div class="line">.text:0000000000008ECC                 MOV             X0, X8</div><div class="line">.text:0000000000008ED0                 BLR             X30</div><div class="line">//偏移8 f2</div><div class="line">.text:0000000000008ED4                 MOV             W1, #1</div><div class="line">.text:0000000000008ED8                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008EDC                 LDR             X8, [SP,#0x40+var_30]</div><div class="line">.text:0000000000008EE0                 LDR             X30, [X8]</div><div class="line">.text:0000000000008EE4                 LDR             X30, [X30,#8]</div><div class="line">.text:0000000000008EE8                 MOV             X0, X8</div><div class="line">.text:0000000000008EEC                 BLR             X30</div><div class="line">//偏移16 f3</div><div class="line">.text:0000000000008EF0                 MOV             W1, #1</div><div class="line">.text:0000000000008EF4                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008EF8                 LDR             X8, [SP,#0x40+var_30]</div><div class="line">.text:0000000000008EFC                 LDR             X30, [X8]</div><div class="line">.text:0000000000008F00                 LDR             X30, [X30,#0x10]</div><div class="line">.text:0000000000008F04                 MOV             X0, X8</div><div class="line">.text:0000000000008F08                 BLR             X30</div><div class="line">//子没有的普通，直接调用  f4</div><div class="line">.text:0000000000008F0C                 MOV             W1, #1</div><div class="line">.text:0000000000008F10                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008F14                 LDR             X8, [SP,#0x40+var_30]</div><div class="line">.text:0000000000008F18                 MOV             X0, X8</div><div class="line">.text:0000000000008F1C                 BL              sub_9034</div><div class="line">//子独立的普通，直接调用  f5</div><div class="line">.text:0000000000008F20                 MOV             W1, #1</div><div class="line">.text:0000000000008F24                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008F28                 LDR             X0, [SP,#0x40+var_30]</div><div class="line">.text:0000000000008F2C                 BL              sub_9058</div><div class="line">//偏移48子独立的虚        f6</div><div class="line">.text:0000000000008F30                 MOV             W1, #1</div><div class="line">.text:0000000000008F34                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008F38                 LDR             X8, [SP,#0x40+var_30]</div><div class="line">.text:0000000000008F3C                 LDR             X30, [X8]</div><div class="line">.text:0000000000008F40                 LDR             X30, [X30,#0x30]</div><div class="line">.text:0000000000008F44                 MOV             X0, X8</div><div class="line">.text:0000000000008F48                 BLR             X30</div><div class="line">//偏移24 </div><div class="line">.text:0000000000008F4C                 MOV             W1, #1</div><div class="line">.text:0000000000008F50                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008F54                 LDR             X8, [SP,#0x40+var_30]</div><div class="line">.text:0000000000008F58                 MOV             X30, X8</div><div class="line">.text:0000000000008F5C                 LDR             X8, [X8]</div><div class="line">.text:0000000000008F60                 LDR             X8, [X8,#0x18]</div><div class="line">.text:0000000000008F64                 MOV             X0, X30</div><div class="line">.text:0000000000008F68                 BLR             X8</div><div class="line"></div><div class="line">//子对象的调用</div><div class="line">//静态调用子的f</div><div class="line">.text:0000000000008F6C                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008F70                 MOV             W1, #1</div><div class="line">.text:0000000000008F74                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008F78                 MOV             X0, X8</div><div class="line">.text:0000000000008F7C                 BL              sub_9084</div><div class="line">//静态子的f2</div><div class="line">.text:0000000000008F80                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008F84                 MOV             W1, #1</div><div class="line">.text:0000000000008F88                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008F8C                 MOV             X0, X8</div><div class="line">.text:0000000000008F90                 BL              sub_90A0</div><div class="line">//静态子的f3</div><div class="line">.text:0000000000008F94                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008F98                 MOV             W1, #1</div><div class="line">.text:0000000000008F9C                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008FA0                 MOV             X0, X8</div><div class="line">.text:0000000000008FA4                 BL              sub_90BC</div><div class="line">//父的普通f4</div><div class="line">.text:0000000000008FA8                 MOV             W1, #1</div><div class="line">.text:0000000000008FAC                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008FB0                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008FB4                 MOV             X0, X8</div><div class="line">.text:0000000000008FB8                 BL              sub_9034</div><div class="line">//子的普通f5</div><div class="line">.text:0000000000008FBC                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008FC0                 MOV             W1, #1</div><div class="line">.text:0000000000008FC4                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008FC8                 MOV             X0, X8</div><div class="line">.text:0000000000008FCC                 BL              sub_9058</div><div class="line">//直接调用子加的虚 f6</div><div class="line">.text:0000000000008FD0                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008FD4                 MOV             W1, #1</div><div class="line">.text:0000000000008FD8                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008FDC                 MOV             X0, X8</div><div class="line">.text:0000000000008FE0                 BL              sub_90F8</div><div class="line">//直接调用子不实现的父虚 f7</div><div class="line">.text:0000000000008FE4                 MOV             W1, #1</div><div class="line">.text:0000000000008FE8                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008FEC                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000008FF0                 MOV             X0, X8</div><div class="line">.text:0000000000008FF4                 BL              sub_9114</div><div class="line"></div><div class="line">//子析构</div><div class="line">.text:0000000000008FF8                 SUB             X8, X29, #-var_18</div><div class="line">.text:0000000000008FFC                 STR             W0, [SP,#0x40+var_24]</div><div class="line">.text:0000000000009000                 MOV             X0, X8</div><div class="line">.text:0000000000009004                 BL              sub_8DC0</div><div class="line"></div><div class="line">//返回</div><div class="line">.text:0000000000009008                 MRS             X8, #3, c13, c0, #2</div><div class="line">.text:000000000000900C                 LDR             X8, [X8,#0x28]</div><div class="line">.text:0000000000009010                 LDUR            X0, [X29,#var_8]</div><div class="line">.text:0000000000009014                 CMP             X8, X0</div><div class="line">.text:0000000000009018                 B.NE            loc_9030</div><div class="line">.text:000000000000901C                 MOV             W8, WZR</div><div class="line">.text:0000000000009020                 MOV             W0, W8</div><div class="line">.text:0000000000009024                 LDP             X29, X30, [SP,#0x40+var_s0]</div><div class="line">.text:0000000000009028                 ADD             SP, SP, #0x50</div><div class="line">.text:000000000000902C                 RET</div><div class="line">.text:0000000000009030 ; ---------------------------------------------------------------------------</div><div class="line">.text:0000000000009030</div><div class="line">.text:0000000000009030 loc_9030                                ; CODE XREF: main+214↑j</div><div class="line">.text:0000000000009030                 BL              .__stack_chk_fail</div><div class="line">.text:0000000000009030 ; &#125; // starts at 8E04</div><div class="line">.text:0000000000009030 ; End of function main</div></pre></td></tr></table></figure></p>
+<p>B的构造<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">.text:0000000000008D70 sub_8D70                                ; CODE XREF: sub_89C8+14↑p</div><div class="line">.text:0000000000008D70                                         ; main+1C↓p</div><div class="line">.text:0000000000008D70</div><div class="line">.text:0000000000008D70 var_10          = -0x10</div><div class="line">.text:0000000000008D70 var_8           = -8</div><div class="line">.text:0000000000008D70 var_s0          =  0</div><div class="line">.text:0000000000008D70</div><div class="line">.text:0000000000008D70 ; __unwind &#123;</div><div class="line">.text:0000000000008D70                 SUB             SP, SP, #0x20</div><div class="line">.text:0000000000008D74                 STP             X29, X30, [SP,#0x10+var_s0]</div><div class="line">.text:0000000000008D78                 ADD             X29, SP, #0x10</div><div class="line">.text:0000000000008D7C                 STR             X0, [SP,#0x10+var_8]</div><div class="line">.text:0000000000008D80                 LDR             X0, [SP,#0x10+var_8]</div><div class="line">.text:0000000000008D84                 MOV             X1, X0</div><div class="line">.text:0000000000008D88                 STR             X0, [SP,#0x10+var_10]</div><div class="line">.text:0000000000008D8C                 MOV             X0, X1</div><div class="line">//父的构造</div><div class="line">.text:0000000000008D90                 BL              sub_9130</div><div class="line">.text:0000000000008D94                 MOV             W8, #1</div><div class="line">//赋值对象虚表指针为子的，虚表指针在对象一开始的位置</div><div class="line">.text:0000000000008D98                 ADRP            X0, #unk_625B8@PAGE</div><div class="line">.text:0000000000008D9C                 ADD             X0, X0, #unk_625B8@PAGEOFF</div><div class="line">.text:0000000000008DA0                 MOV             X1, #0x10</div><div class="line">.text:0000000000008DA4                 ADD             X0, X0, X1</div><div class="line">.text:0000000000008DA8                 LDR             X1, [SP,#0x10+var_10]</div><div class="line">.text:0000000000008DAC                 STR             X0, [X1]</div><div class="line">//Ba在对象偏移12处</div><div class="line">.text:0000000000008DB0                 STR             W8, [X1,#0xC]</div><div class="line">.text:0000000000008DB4                 LDP             X29, X30, [SP,#0x10+var_s0]</div><div class="line">.text:0000000000008DB8                 ADD             SP, SP, #0x20</div><div class="line">.text:0000000000008DBC                 RET</div><div class="line">.text:0000000000008DBC ; &#125; // starts at 8D70</div><div class="line">.text:0000000000008DBC ; End of function sub_8D70</div></pre></td></tr></table></figure></p>
+<p>A的构造<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">.text:0000000000009130 sub_9130                                ; CODE XREF: sub_8D70+20↑p</div><div class="line">.text:0000000000009130</div><div class="line">.text:0000000000009130 var_C           = -0xC</div><div class="line">.text:0000000000009130 var_8           = -8</div><div class="line">.text:0000000000009130 var_s0          =  0</div><div class="line">.text:0000000000009130</div><div class="line">.text:0000000000009130 ; __unwind &#123;</div><div class="line">.text:0000000000009130                 SUB             SP, SP, #0x20</div><div class="line">.text:0000000000009134                 STP             X29, X30, [SP,#0x10+var_s0]</div><div class="line">.text:0000000000009138                 ADD             X29, SP, #0x10</div><div class="line">.text:000000000000913C                 MOV             W1, #1</div><div class="line">.text:0000000000009140                 MOV             W8, #2</div><div class="line">//将虚表指针置为父的虚表.给的时候就把位置加过了，给的是虚表的位置</div><div class="line">.text:0000000000009144                 ADRP            X9, #unk_62600@PAGE</div><div class="line">.text:0000000000009148                 ADD             X9, X9, #unk_62600@PAGEOFF</div><div class="line">.text:000000000000914C                 MOV             X10, #0x10</div><div class="line">.text:0000000000009150                 ADD             X9, X9, X10</div><div class="line">.text:0000000000009154                 STR             X0, [SP,#0x10+var_8]</div><div class="line">.text:0000000000009158                 LDR             X10, [SP,#0x10+var_8]</div><div class="line">.text:000000000000915C                 STR             X9, [X10]</div><div class="line">//a赋值，在对象的8偏移处</div><div class="line">.text:0000000000009160                 STR             W8, [X10,#8]</div><div class="line"></div><div class="line">//取出虚表指针62610 </div><div class="line">.text:0000000000009164                 LDR             X9, [X10]</div><div class="line">//取出虚表的偏移0x10   62620</div><div class="line">.text:0000000000009168                 LDR             X9, [X9,#0x10]</div><div class="line">.text:000000000000916C                 MOV             X0, X10</div><div class="line">//调用虚表项---这里在gcc 7.3.0下为直接正常调用，没有错误。但在android的ndk编译环境下不得使用纯虚函数带定义。否则调用时直接到虚表项的纯位</div><div class="line">//这里的调用是错误的   写时注意不要给纯虚定义。</div><div class="line">.text:0000000000009170                 BLR             X9   </div><div class="line">.text:0000000000009174                 STR             W0, [SP,#0x10+var_C]</div><div class="line">.text:0000000000009178                 LDP             X29, X30, [SP,#0x10+var_s0]</div><div class="line">.text:000000000000917C                 ADD             SP, SP, #0x20</div><div class="line">.text:0000000000009180                 RET</div><div class="line">.text:0000000000009180 ; &#125; // starts at 9130</div><div class="line">.text:0000000000009180 ; End of function sub_9130</div></pre></td></tr></table></figure></p>
+<p>虚表在需要重定位的data只读段<br>俩个虚表:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">.data.rel.ro:00000000000625B8 unk_625B8       DCB    0                ; DATA XREF: sub_8D70+28↑o</div><div class="line">.data.rel.ro:00000000000625B8                                         ; sub_8D70+2C↑o ...</div><div class="line">.data.rel.ro:00000000000625B9                 DCB    0</div><div class="line">.data.rel.ro:00000000000625BA                 DCB    0</div><div class="line">.data.rel.ro:00000000000625BB                 DCB    0</div><div class="line">.data.rel.ro:00000000000625BC                 DCB    0</div><div class="line">.data.rel.ro:00000000000625BD                 DCB    0</div><div class="line">.data.rel.ro:00000000000625BE                 DCB    0</div><div class="line">.data.rel.ro:00000000000625BF                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C0                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C1                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C2                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C3                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C4                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C5                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C6                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C7                 DCB    0</div><div class="line">.data.rel.ro:00000000000625C8                 DCQ sub_9084   //返回2的  0</div><div class="line">.data.rel.ro:00000000000625D0                 DCQ sub_90A0   //返回3的  8</div><div class="line">.data.rel.ro:00000000000625D8                 DCQ sub_90BC   //返回4的  16</div><div class="line">.data.rel.ro:00000000000625E0                 DCQ sub_9114   //返回7的  24</div><div class="line">.data.rel.ro:00000000000625E8                 DCQ sub_8DC0   //析构     32</div><div class="line">.data.rel.ro:00000000000625F0                 DCQ sub_9184              40  ????  会再调用析构且delete自己</div><div class="line">.data.rel.ro:00000000000625F8                 DCQ sub_90F8   //返回6的  48  这是子添加的</div><div class="line">.data.rel.ro:0000000000062600 unk_62600       DCB    0                ; DATA XREF: sub_9130+14↑o</div><div class="line">.data.rel.ro:0000000000062600                                         ; sub_9130+18↑o ...</div><div class="line">.data.rel.ro:0000000000062601                 DCB    0</div><div class="line">.data.rel.ro:0000000000062602                 DCB    0</div><div class="line">.data.rel.ro:0000000000062603                 DCB    0</div><div class="line">.data.rel.ro:0000000000062604                 DCB    0</div><div class="line">.data.rel.ro:0000000000062605                 DCB    0</div><div class="line">.data.rel.ro:0000000000062606                 DCB    0</div><div class="line">.data.rel.ro:0000000000062607                 DCB    0</div><div class="line">.data.rel.ro:0000000000062608                 DCB    0</div><div class="line">.data.rel.ro:0000000000062609                 DCB    0</div><div class="line">.data.rel.ro:000000000006260A                 DCB    0</div><div class="line">.data.rel.ro:000000000006260B                 DCB    0</div><div class="line">.data.rel.ro:000000000006260C                 DCB    0</div><div class="line">.data.rel.ro:000000000006260D                 DCB    0</div><div class="line">.data.rel.ro:000000000006260E                 DCB    0</div><div class="line">.data.rel.ro:000000000006260F                 DCB    0</div><div class="line">.data.rel.ro:0000000000062610                 DCQ sub_91B4  //返回1的  0</div><div class="line">.data.rel.ro:0000000000062618                 DCQ __cxa_pure_virtual   8</div><div class="line">.data.rel.ro:0000000000062620                 DCQ __cxa_pure_virtual   16</div><div class="line">.data.rel.ro:0000000000062628                 DCQ sub_9114  //返回7的   24</div><div class="line">.data.rel.ro:0000000000062630                 DCQ sub_91D0  //析构      32</div><div class="line">.data.rel.ro:0000000000062638                 DCQ sub_9200              40    ????   断点命令</div></pre></td></tr></table></figure></p>
+<p>子的f3<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">.text:00000000000090BC sub_90BC                                ; CODE XREF: main+1A0↑p</div><div class="line">.text:00000000000090BC                                         ; DATA XREF: .data.rel.ro:00000000000625D8↓o</div><div class="line">.text:00000000000090BC</div><div class="line">.text:00000000000090BC var_C           = -0xC</div><div class="line">.text:00000000000090BC var_8           = -8</div><div class="line">.text:00000000000090BC var_s0          =  0</div><div class="line">.text:00000000000090BC</div><div class="line">.text:00000000000090BC ; __unwind &#123;</div><div class="line">.text:00000000000090BC                 SUB             SP, SP, #0x20</div><div class="line">.text:00000000000090C0                 STP             X29, X30, [SP,#0x10+var_s0]</div><div class="line">.text:00000000000090C4                 ADD             X29, SP, #0x10</div><div class="line">.text:00000000000090C8                 MOV             W8, #1</div><div class="line">.text:00000000000090CC                 STR             X0, [SP,#0x10+var_8]</div><div class="line">.text:00000000000090D0                 STR             W1, [SP,#0x10+var_C]</div><div class="line">//直接调用A::f3</div><div class="line">.text:00000000000090D4                 LDR             X0, [SP,#0x10+var_8]</div><div class="line">.text:00000000000090D8                 MOV             W1, W8</div><div class="line">.text:00000000000090DC                 BL              sub_8D54   //返回5</div><div class="line">.text:00000000000090E0                 MOV             W8, #4</div><div class="line">.text:00000000000090E4                 STR             W0, [SP,#0x10+var_C]</div><div class="line">.text:00000000000090E8                 MOV             W0, W8</div><div class="line">.text:00000000000090EC                 LDP             X29, X30, [SP,#0x10+var_s0]</div><div class="line">.text:00000000000090F0                 ADD             SP, SP, #0x20</div><div class="line">.text:00000000000090F4                 RET</div><div class="line">.text:00000000000090F4 ; &#125; // starts at 90BC</div><div class="line">.text:00000000000090F4 ; End of function sub_90BC</div></pre></td></tr></table></figure></p>
+<p>子析构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">.text:0000000000008DC0 sub_8DC0                                ; CODE XREF: main+200↓p</div><div class="line">.text:0000000000008DC0                                         ; sub_9184+18↓p</div><div class="line">.text:0000000000008DC0                                         ; DATA XREF: ...</div><div class="line">.text:0000000000008DC0</div><div class="line">.text:0000000000008DC0 var_8           = -8</div><div class="line">.text:0000000000008DC0 var_s0          =  0</div><div class="line">.text:0000000000008DC0</div><div class="line">.text:0000000000008DC0 ; __unwind &#123;</div><div class="line">.text:0000000000008DC0                 SUB             SP, SP, #0x20</div><div class="line">.text:0000000000008DC4                 STP             X29, X30, [SP,#0x10+var_s0]</div><div class="line">.text:0000000000008DC8                 ADD             X29, SP, #0x10</div><div class="line">.text:0000000000008DCC                 MOV             W8, #2</div><div class="line">//赋值自己的虚表指针</div><div class="line">.text:0000000000008DD0                 ADRP            X9, #unk_625B8@PAGE</div><div class="line">.text:0000000000008DD4                 ADD             X9, X9, #unk_625B8@PAGEOFF</div><div class="line">.text:0000000000008DD8                 MOV             X10, #0x10</div><div class="line">.text:0000000000008DDC                 ADD             X9, X9, X10</div><div class="line">.text:0000000000008DE0                 STR             X0, [SP,#0x10+var_8]</div><div class="line">.text:0000000000008DE4                 LDR             X10, [SP,#0x10+var_8]</div><div class="line">.text:0000000000008DE8                 STR             X9, [X10]</div><div class="line">.text:0000000000008DEC                 STR             W8, [X10,#0xC]</div><div class="line">.text:0000000000008DF0                 MOV             X0, X10</div><div class="line">.text:0000000000008DF4                 BL              sub_91D0</div><div class="line">.text:0000000000008DF8                 LDP             X29, X30, [SP,#0x10+var_s0]</div><div class="line">.text:0000000000008DFC                 ADD             SP, SP, #0x20</div><div class="line">.text:0000000000008E00                 RET</div><div class="line">.text:0000000000008E00 ; &#125; // starts at 8DC0</div><div class="line">.text:0000000000008E00 ; End of function sub_8DC0</div></pre></td></tr></table></figure></p>
+<p>父析构:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">.text:00000000000091D0 sub_91D0                                ; CODE XREF: sub_8DC0+34↑p</div><div class="line">.text:00000000000091D0                                         ; DATA XREF: .data.rel.ro:0000000000062630↓o</div><div class="line">.text:00000000000091D0</div><div class="line">.text:00000000000091D0 var_8           = -8</div><div class="line">.text:00000000000091D0</div><div class="line">.text:00000000000091D0 ; __unwind &#123;</div><div class="line">.text:00000000000091D0                 SUB             SP, SP, #0x10</div><div class="line">.text:00000000000091D4                 MOV             W8, #2</div><div class="line">//赋值自己的虚表指针</div><div class="line">.text:00000000000091D8                 ADRP            X9, #unk_62600@PAGE</div><div class="line">.text:00000000000091DC                 ADD             X9, X9, #unk_62600@PAGEOFF</div><div class="line">.text:00000000000091E0                 MOV             X10, #0x10</div><div class="line">.text:00000000000091E4                 ADD             X9, X9, X10</div><div class="line">.text:00000000000091E8                 STR             X0, [SP,#0x10+var_8]</div><div class="line">.text:00000000000091EC                 LDR             X10, [SP,#0x10+var_8]</div><div class="line">.text:00000000000091F0                 STR             X9, [X10]</div><div class="line">.text:00000000000091F4                 STR             W8, [X10,#8]</div><div class="line">.text:00000000000091F8                 ADD             SP, SP, #0x10</div><div class="line">.text:00000000000091FC                 RET</div><div class="line">.text:00000000000091FC ; &#125; // starts at 91D0</div><div class="line">.text:00000000000091FC ; End of function sub_91D0</div></pre></td></tr></table></figure></p>
+<p>对象内存模型:<br>单继承时由低到高依次:虚表指针、父成员、子成员。直接连续存的</p>
+<p>虚表排列:<br>虚表内函数的顺序按类继承层次中首次声明的顺序，先父的。因此只要继承了父的虚，虚表前面就会和父的虚顺序一样，这样保证多态调用的肯定是对应的。<br>子类新定义的虚会在父的后面，纯虚函数使用出错函数占位置，即使有定义也不会写进去。</p>
+<p>构造:<br>构造为先执行父的构造，再执行子的虚表指针赋值、初始化、函数体。在构造中都会赋予虚表指针各自类的虚表位置。<br>虚表指针为类的隐藏成员，位于对象的一开始。<br>注意ndk中调用纯虚函数的坑，即使定义了也不能使用。使用作用域静态使用可以。</p>
+<p>析构:<br>先执行子的虚表指针覆盖、函数体、成员析构，最后执行父的析构。</p>
+<p>函数调用:与p5所述函数查找过程一致。<br>指针调用虚函数时都被翻译为查找虚表，寄存器跳转。<br>指针使用普通函数、对象使用函数都是直接调用。<br>作用域强制调用虚与普都使用直接调用。<br>但是父中使用定义了的纯虚函数会有错误。在ndk下</p>
+<p>一些解释:<br>对象通过虚表指针访问虚表(类的虚函数、一个类一张虚表)。<br>构造中和析构中都为虚表指针赋值，为的是在父的构造与析构中执行虚函数时执行的是自己的版本。<br>虚表在.data.rel.ro段。</p>
+<p>ida使用一些方面:<br>引用的from是数据来源，表示修改这个位置的数据的代码    标记为w<br>to是数据去向，表示读取这个位置数据的代码  标记为r  或者引用地址o</p>
+<p>这里ndk编译出的arm代码引用处和实际处差了一截，不过一样可以使用交叉引用查看获取虚表地址的代码，就是构造函数与析构函数了。</p>
+<p>全局的析构还是在代理构造中用atexit注册的。</p>
+<h3 id="x86-64"><a href="#x86-64" class="headerlink" title="x86-64"></a>x86-64</h3><p>…太多了，就看arm的吧</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
+          
+            <a href="/tags/反编译/" rel="tag"># 反编译</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/28/cpp学习-第十四章-重载运算与类型转化/" rel="next" title="cpp学习-第十四章-重载运算与类型转化">
+                <i class="fa fa-chevron-left"></i> cpp学习-第十四章-重载运算与类型转化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">77</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义基类与派生类"><span class="nav-number">1.1.</span> <span class="nav-text">定义基类与派生类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚函数"><span class="nav-number">1.2.</span> <span class="nav-text">虚函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抽象基类"><span class="nav-number">1.3.</span> <span class="nav-text">抽象基类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问控制与继承"><span class="nav-number">1.4.</span> <span class="nav-text">访问控制与继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#继承中的作用域"><span class="nav-number">1.5.</span> <span class="nav-text">继承中的作用域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数与拷贝控制"><span class="nav-number">1.6.</span> <span class="nav-text">构造函数与拷贝控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器与继承"><span class="nav-number">1.7.</span> <span class="nav-text">容器与继承</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反编译"><span class="nav-number">2.</span> <span class="nav-text">反编译</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARM-64"><span class="nav-number">2.1.</span> <span class="nav-text">ARM-64</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分析"><span class="nav-number">2.1.1.</span> <span class="nav-text">分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#x86-64"><span class="nav-number">2.2.</span> <span class="nav-text">x86-64</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
