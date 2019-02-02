@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="android逆向,dex," />
+  <meta name="keywords" content="cpp," />
 
 
 
@@ -94,23 +94,18 @@
 
 
 
-<meta name="description" content="结构体图: 之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，d">
-<meta name="keywords" content="android逆向,dex">
+<meta name="description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。">
+<meta name="keywords" content="cpp">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dex文件格式">
-<meta property="og:url" content="http://yoursite.com/2018/04/08/dex文件格式/index.html">
+<meta property="og:title" content="cpp学习-第十六章-模板与泛型编程">
+<meta property="og:url" content="http://yoursite.com/2019/02/03/cpp学习-第十六章-模板与泛型编程/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="结构体图: 之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，d">
+<meta property="og:description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://i.imgur.com/T1b5fAc.jpg">
-<meta property="og:image" content="https://i.imgur.com/3514dvx.jpg">
-<meta property="og:image" content="https://i.imgur.com/mDOEFRJ.jpg">
-<meta property="og:image" content="https://i.imgur.com/YsIRrma.png">
-<meta property="og:updated_time" content="2018-06-22T13:14:50.016Z">
+<meta property="og:updated_time" content="2019-02-02T18:18:09.773Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="dex文件格式">
-<meta name="twitter:description" content="结构体图: 之后说几个坑  数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。 dex只分header，索引结构区，d">
-<meta name="twitter:image" content="https://i.imgur.com/T1b5fAc.jpg">
+<meta name="twitter:title" content="cpp学习-第十六章-模板与泛型编程">
+<meta name="twitter:description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。">
 
 
 
@@ -139,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/04/08/dex文件格式/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/02/03/cpp学习-第十六章-模板与泛型编程/"/>
 
 
 
 
 
-  <title>dex文件格式 | GGWP</title>
+  <title>cpp学习-第十六章-模板与泛型编程 | GGWP</title>
   
 
 
@@ -288,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/08/dex文件格式/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/03/cpp学习-第十六章-模板与泛型编程/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="imbaya">
@@ -305,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">dex文件格式</h1>
+          <h1 class="post-title" itemprop="name headline">cpp学习-第十六章-模板与泛型编程</h1>
         
 
         <div class="post-meta">
@@ -317,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-08T23:51:35+08:00">
-                2018-04-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-03T02:16:51+08:00">
+                2019-02-03
               </time>
             
 
@@ -340,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
+                  <a href="/categories/cpp/" itemprop="url" rel="index">
+                    <span itemprop="name">cpp</span>
                   </a>
                 </span>
 
@@ -377,23 +372,23 @@
       
 
       
-        <p>结构体图:<br><img src="https://i.imgur.com/T1b5fAc.jpg" alt=""></p>
-<p><img src="https://i.imgur.com/3514dvx.jpg" alt=""><br>之后说几个坑</p>
-<ol>
-<li>数据类型分：u1，u2，u4，u8，sleb128，uleb128，uleb128p1。其中u几表示字节数，16进制数据前缀0x后缀h。sleb有符号uleb无符号,p1为+1。后面3个为dex特有leb128数据类型。用每字节最高位定下一字节是否算在本数据中，也就是每字节有效位为7位。dex数据为小端存储（header中指定）。</li>
-<li>dex只分header，索引结构区，data区。header中的各off均指向索引区。dex被映射为DexMapList结构（header中的mapoff）。该map中指定了头，索引区，以及各数据的文件偏移</li>
-<li>dex为了小，字串重复利用，被type等均用字串索引指向。位于data区，而date区的其他数据（如代码）等都用文件偏移指定。</li>
-<li>proto为方法元，表示的是方法的参和返回类型。</li>
-<li>class结构最复杂，第一层含类的基本信息，第二层是字段和方法信息，第三层是方法代码等详情。</li>
-<li>破解时可以直接修改dex文件后修改效验值和sha。不用拆包为smali再打包。不过签名是必须的</li>
-</ol>
-<p>ODEX是安卓上的应用程序apk中提取出来的可运行文件，即将APK中的classes.dex文件通过dex优化过程将其优化生成一个·dex文件单独存放，原APK中的classes.dex文件会保留。<br>这样做可以加快软件的启动速度，预先提取，减少对RAM的占用，因为没有odex的话，系统要从apk包中提取dex再运行。<br>俩种存在方式：</p>
-<ol>
-<li>cache/dalvik-cache目录下，命名为apk路径@apk名@classes.dex。用于加快程序读取速度</li>
-<li>与apk存于同一目录，以.odex后缀，多是系统程序。</li>
-</ol>
-<p><img src="https://i.imgur.com/mDOEFRJ.jpg" alt=""></p>
-<p>还有一张看雪的：<br><img src="https://i.imgur.com/YsIRrma.png" alt=""></p>
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>模板是创建类或函数的公式，为编译时使用。<br>模板应该尽力减少对实参类型的要求。<br>使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。</p>
+<a id="more"></a>
+<h3 id="定义模板"><a href="#定义模板" class="headerlink" title="定义模板"></a>定义模板</h3><h4 id="函数模板"><a href="#函数模板" class="headerlink" title="函数模板"></a>函数模板</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">template&lt;typename T&gt;</div><div class="line">inline //inline与constexpr放这里</div><div class="line">int f(T a,T b)</div><div class="line">&#123;</div><div class="line">    ....</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>模板定义使用关键字template开始，&lt;&gt;内为模板参数列表，不能为空。使用模板时隐式或显示将模板实参绑定模板参数上。<br>对于函数可以自动推断,或显示使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">f(1,3);</div><div class="line">f&lt;int&gt;(1,3);</div></pre></td></tr></table></figure></p>
+<p>类型参数在函数体内任意使用。声明为类型时class或typename都可以当关键字。类型还可以是一个值:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">template&lt;unsigned N&gt;</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<p>实例化时必须传入常量表达式，值的类型可以是整形、指针、左值引用。</p>
+<h4 id="类模板"><a href="#类模板" class="headerlink" title="类模板"></a>类模板</h4><p>编译器不能为类模板自动推断类型，必须手动使用&lt;&gt;<br>定义方式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">template &lt;typename T&gt;</div><div class="line">class A&#123;</div><div class="line"></div><div class="line">在类模板的作用域下，使用A而不必使用A&lt;T&gt;</div><div class="line">&#125;</div><div class="line">使用:</div><div class="line">A&lt;int&gt; a;</div></pre></td></tr></table></figure></p>
+<p>每个实例生成独立的类，与其它同一模板生成的无关。<br>定义在类模板内的函数隐式inline，外的定义方式:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">template&lt;typename T&gt;</div><div class="line">A&lt;T&gt; A&lt;T&gt;::f(T ls)&#123;&#125;  //遇到类名才进入类的作用域，因此使用A&lt;T&gt;</div></pre></td></tr></table></figure></p>
+<p>在A<t>中定义了f函数。<br>一个类模板的成员函数只有使用时才实例化，这使得传入类型不必完全符合模板操作要求。</t></p>
+<h3 id="杂记"><a href="#杂记" class="headerlink" title="杂记"></a>杂记</h3><p>友元与模板各自是否是模板是无关的。<br>根据声明方式可以模板类型一对一、一对多、多对一。<br>可以使用typedef A&lt; int&gt; AINT 简化一个实例，using则可更改模板名。<br>static成员绑定实例，使用时实例化.<br>T可以是任意名字，名字在编译时都作为符号表项，因此不同类型的名字作用域是互相影响的，模板参的名字也按名字查找与隐藏。<br>模板也可以声明<br>使用T的类型成员时前要加typename。否则会当成静态成员。<br>可以加默认模板实参:template &lt; typename T=int&gt; 使用时即使使用默认也要加&lt;&gt;<br>成员模板不能是虚函数，可以与类模板独立定义，独立处理类型。<br>可以使用显示实例化提前实例一个模板实例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">extern template 名字;//声明</div><div class="line">template 名字;//定义</div></pre></td></tr></table></figure></p>
+<p>定义时实例化到模块、声明连接用。</p>
+<p>模板的参数推断能转化的只有顶层、底层const、函数数组指针。<br>指定类型时可按一般的转化。</p>
+<p>type_traits库中有类型转化的模板，如将引用、const去掉等。</p>
+<p>多个模板函数与普通函数可选时:<br>选同好-&gt;选非模板-&gt;选作用范围更小的模板(更特例化)</p>
+<p>可以使用…传多个模板参数与模板函数的参数。</p>
+<p>模板可以特例化，即手动代替编译器的部分工作，函数模板特例化生成函数的实例。<br>类模板的特例化甚至可以只是部分特例化，生成范围更小的模板。如hash&lt; type&gt;的定义使用、之前type_traits库的转化。</p>
+<h2 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h2><p>为编译时任务，在反汇编时基本看不出差别。都是普通的对象生成与函数调用。</p>
 
       
     </div>
@@ -411,9 +406,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/android逆向/" rel="tag"># android逆向</a>
-          
-            <a href="/tags/dex/" rel="tag"># dex</a>
+            <a href="/tags/cpp/" rel="tag"># cpp</a>
           
         </div>
       
@@ -426,8 +419,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/06/硬件与系统安装/" rel="next" title="硬件与系统安装">
-                <i class="fa fa-chevron-left"></i> 硬件与系统安装
+              <a href="/2019/02/01/cpp学习-第十五章-面向对象程序设计/" rel="next" title="cpp学习-第十五章-面向对象程序设计">
+                <i class="fa fa-chevron-left"></i> cpp学习-第十五章-面向对象程序设计
               </a>
             
           </div>
@@ -435,10 +428,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/04/09/android文件系统目录结构/" rel="prev" title="android文件系统目录结构">
-                android文件系统目录结构 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -490,8 +479,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/1.png"
@@ -553,6 +551,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#核心简记"><span class="nav-number">1.</span> <span class="nav-text">核心简记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义模板"><span class="nav-number">1.1.</span> <span class="nav-text">定义模板</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#函数模板"><span class="nav-number">1.1.1.</span> <span class="nav-text">函数模板</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类模板"><span class="nav-number">1.1.2.</span> <span class="nav-text">类模板</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#杂记"><span class="nav-number">1.2.</span> <span class="nav-text">杂记</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反编译"><span class="nav-number">2.</span> <span class="nav-text">反编译</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
