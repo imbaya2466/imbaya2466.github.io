@@ -283,6 +283,175 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/25/黄皮23-25章简记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/25/黄皮23-25章简记/" itemprop="url">黄皮23-25章简记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-25T21:25:34+08:00">
+                2018-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="逆向加固应用"><a href="#逆向加固应用" class="headerlink" title="逆向加固应用"></a>逆向加固应用</h2><ol>
+<li>四大组件如果想要使用，必须在androidmanifest.xml中声明。因此不论如何加固，四大组件名字都会摆出来（如何加固？要知道为何四大组件名字必须写在xml中），但application可以改，并动态加载application。</li>
+<li>libdvm加载dex用的dvmDexFileOpenPartial，360加固自己实现了这个函数，art如何加载的？art也能调用360实现的这个函数？art与dvm开放的接口相同。相同又是如何做到完整替换的？-针对的是java字节码。需要阅读双方源码。</li>
+<li>ida导入头是用读取文件，执行脚本用shift+F2</li>
+<li>最好的过一般反调试的方法是改系统源码。</li>
+<li>webview的js可访问自定义的java对象，用来提供前端操控本机app的内部行为，相当于自定义了一个浏览器接口。同时带来了很多安全问题，注册js对象名时一般要加密-获取该名称即可调用内部接口，加密后是知道开放的对象是什么但不知道用什么名字调用。获取该字串：java层调试需要从头附加不容易过壳。（java如何附加到运行一半的app中调试？）修改smali前面的壳容易检测出来，前端js遍历全部对象挨个调用可以不获取字串调用，仿造java层加载so调用加密方法可以获取字串。反正要求是给定字串加密后为所需，固定的数据，不用分析加密过程取得结果就行。</li>
+<li>adb可以帮助输入内容等与屏幕交互，点击输入框后用adb shell input text “”即可。</li>
+<li>书中例题就是考一个提供给js接口的安全性。</li>
+<li>最好的dump dex也是修改android源码。</li>
+<li>现在的app都是做成了浏览器开放接口给js调用，所以需要研究webview或是自定义view的详细用法与原理！！！</li>
+</ol>
+<h2 id="爱加密"><a href="#爱加密" class="headerlink" title="爱加密"></a>爱加密</h2><ol>
+<li>反调试一般为了阻止你一步dump关键函数，可以通过在常见反调试点下断的方式绕过，比如fopen，gets等。当然最好的dump和过反调试方式还是改android内核源码。（做一个必须-简直无敌）</li>
+<li>ida可以用G直接搜索全局符号表找到指定函数</li>
+<li>ida的hex-view可以改内存空间，edit改完记得点apply change。</li>
+<li>ida也可以修改寄存器等</li>
+<li>还原apk：把manifest中的application name还原，assets不需要的删除，apktool回编译，把dex换成dump出来的，签名。</li>
+<li>dvm加载so用的dvmloadnativecode函数</li>
+</ol>
+<h2 id="android漏洞"><a href="#android漏洞" class="headerlink" title="android漏洞"></a>android漏洞</h2><ol>
+<li>文件解压漏洞，解压的文件名可以含任意字符，所以可以用../进入data/data（此目录下各应用用户为各应用本身，所以有7权，此外data/app下各文件属于system用户，但其他用户有执行和阅读权，所以可打开并执行）覆盖/自定义文件</li>
+<li>屏幕录取权限不易发现漏洞，可加windowmanager.layoutparams.FLAG_SECURE使自己应用安全防录制与截屏</li>
+</ol>
+<h2 id="Wannacry加密病毒"><a href="#Wannacry加密病毒" class="headerlink" title="Wannacry加密病毒"></a>Wannacry加密病毒</h2><ol>
+<li>通过获取windowmanager获取权限建立浮窗为顶层造成勒索，同时用DeviceAdminReceiver修改锁屏密码使其重启也不知密码</li>
+<li>可怕的是sd卡权限，sd卡权限默认直接就对应用开放了，因此该应用把sd卡内的数据全部加密。经测试我的模拟器在完全没有提醒的情况下虚拟sd卡被破坏。</li>
+</ol>
+<p>对于所有平台，一般公共数据都是开放的，sd卡、硬盘等，所有软件都可以使用api访问这部分内容，因此任意软件都可以修改加密其内容形成勒索，执行软件时一定要注意。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/23/android分析利器DDMS/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -895,6 +1064,172 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/android源码编译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/25/android源码编译/" itemprop="url">android源码编译</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T20:09:35+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本次基于google官方文档下载编译：<br><a href="https://source.android.com/setup/build/requirements" target="_blank" rel="external">https://source.android.com/setup/build/requirements</a><br>还有一篇详细的博客：<br><a href="https://blog.csdn.net/dd864140130/article/details/51718187" target="_blank" rel="external">https://blog.csdn.net/dd864140130/article/details/51718187</a></p>
+<h2 id="相关准备"><a href="#相关准备" class="headerlink" title="相关准备"></a>相关准备</h2><p>master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。<br>master 分支事最少，带有预编译版本的 OpenJDK；因此无需另行安装。较低的版本则需要单独进行安装。</p>
+<h3 id="vpn"><a href="#vpn" class="headerlink" title="vpn"></a>vpn</h3><p>因为要下载的是谷歌官方的，所以必不可少。采用购买ssr。<br>先用shadowsocks启动：<a href="https://blog.csdn.net/u011774239/article/details/53905702" target="_blank" rel="external">https://blog.csdn.net/u011774239/article/details/53905702</a><br>在应用中使用：<a href="https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md" target="_blank" rel="external">https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md</a></p>
+<p>此后需要外网的指令加前缀</p>
+<h3 id="putty-telnet"><a href="#putty-telnet" class="headerlink" title="putty+telnet"></a>putty+telnet</h3><p>远程操控：<br>telnet在linux的设置：<a href="https://blog.csdn.net/linux_ever/article/details/50519028" target="_blank" rel="external">https://blog.csdn.net/linux_ever/article/details/50519028</a></p>
+<h2 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h2><p>python 2.7<br>make3.81<br>git<br>java环境1.8对于ubuntu14.04特殊，参考官方安装：<br><a href="https://source.android.com/setup/build/initializing#installing-the-jdk" target="_blank" rel="external">https://source.android.com/setup/build/initializing#installing-the-jdk</a><br>安装所需的软件包 (Ubuntu 14.04)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc unzip</div></pre></td></tr></table></figure></p>
+<h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><p><a href="https://source.android.com/setup/build/downloading" target="_blank" rel="external">https://source.android.com/setup/build/downloading</a><br>用Repo管理git指定要下载的分支。<br>android-8.1.0_r1支持机型较多而且较新。目前下了这个，61G</p>
+<p>可以用shell脚本错误时自动sync<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#FileName source_asyn.sh</div><div class="line">PATH=~/bin:$PATH</div><div class="line"># 注意修改成你要编译的版本，比如这里我在mac上编译的是Android-7.1.1——r6</div><div class="line">repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-7.1.1_r6</div><div class="line">repo sync</div><div class="line">while [$? = 1]: do</div><div class="line">echo &quot;=========download failed,again============&quot;</div><div class="line">sleep 5</div><div class="line">repo sync</div><div class="line">done</div></pre></td></tr></table></figure></p>
+<p>学习linux脚本！</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><a href="https://source.android.com/setup/build/building" target="_blank" rel="external">https://source.android.com/setup/build/building</a><br>先找到对应版本设备的二进制文件：<a href="https://developers.google.com/android/drivers" target="_blank" rel="external">https://developers.google.com/android/drivers</a><br><strong>俩个都</strong>下载按说明添加到源代码树的 vendor/ 层次结构中。<br>之后步骤按照官方。<br>遇到的错误：<br>jack未启动错误：jack-admin start-server再接着make<br>Out of memory error：<br>输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m&quot;</div><div class="line">out/host/linux-x86/bin/jack-admin kill-server</div><div class="line">out/host/linux-x86/bin/jack-admin start-server</div></pre></td></tr></table></figure></p>
+<h2 id="虚拟机运行"><a href="#虚拟机运行" class="headerlink" title="虚拟机运行"></a>虚拟机运行</h2><p>source build/envsetup.sh这句就是在配置环境变量，可以使用jack、emulator等<br>编译完成后直接emulator等较长时间即可在虚拟机中运行android了</p>
+<h2 id="fastboot刷机"><a href="#fastboot刷机" class="headerlink" title="fastboot刷机"></a>fastboot刷机</h2><p>编译后配置好的fastboot直接刷到实体机（因此购买谷歌官方机十分方便测试cm的mi3编译时失败…..买个google垃圾机吧…）<br>购买后：<br>google机开启设备锁编译完成后使用fastboot flashall -w直接刷机成功。</p>
+<p>刷机后android无法访问网络：<br>显示已连接，但无法正常访问网络是正常的，但所有网络请求失败原因是系统时间不正确，导致服务器无法通过时间验证，在设置处设置时间即可。</p>
+<h2 id="打包rom"><a href="#打包rom" class="headerlink" title="打包rom"></a>打包rom</h2><h3 id="几个补充知识"><a href="#几个补充知识" class="headerlink" title="几个补充知识"></a>几个补充知识</h3><p><strong>Android基于Permission的安全机制</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/17131835" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/17131835</a><br>简记：系统文件与目录被用uid、gid划分，进程持有uid/gid，从而决定进程能否使用api或者访问文件等操作，android root后所有的root操作一定要用su提权，所以在su时检测是否给权。<br>system/build.prop:系统信息<br>default.prop：系统配置.debugger选项所在<br>当你获得了android的应用shell时，可以用run-as变成开了debugger权限进程的uid shell。从而越权。</p>
+<p><strong>android开源项目的管理</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18195205" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18195205</a><br>未看完</p>
+<p><strong>android编译系统</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18466779" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18466779</a><br>android的make由一个mk文件，include其它mk文件组成。只执行一个。</p>
+<p><strong>android系统的各镜像分析</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/20501657" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/20501657</a><br>一个是正常的系统，它由boot.img、system.img、ramdisk.img和userdata.img等组成，另外一个就是recovery系统，由recovery.img组成。<br>boot.img启动其它几个，另一个系统是由recovery启动全部。<br>通过对比Android正常使用时的系统和进行升级时使用的Recovery系统，我们就可以对运行Linux系统的移动设备（或者说嵌入式设备）世界窥一斑而知全豹，实际上我们只需要有一个BootLoader、一个Linux Kernel，以及一个Ramdisk，就可以将它们运行起来。Ramdisk属于用户空间的范畴，它里面主要包含了Linux Kernel启动完成时所要加载的根文件系统。这个根文件系统的作用就是为整个系统提供一个init程序，以便Linux Kernel可以将控制权从内核空间转移到用户空间。系统提供什么样的功能给用户使用主要取决于在用户空间层运行了哪些服务和守护进程。这些服务守护进程都是直接或者间接地由init进程启动的。例如，对于recovery系统来说，它最主要提供的功能就是让用户升级系统，也就是它的主要用户空间服务就是负责执行长级任务的recovery程序。又如，我们正常使用的Android系统，它的主要用户空间服务和守护进程都是由system.img镜像提供的，此外，我们还可以通过userdata.img镜像来安装第三方应用来丰富手机的功能。因此，我们也可以说，init进程启动的服务决定了系统的功能。当然 ，这些功能是建立是硬件的基础之上的。</p>
+<h3 id="CM-ROM"><a href="#CM-ROM" class="headerlink" title="CM ROM"></a>CM ROM</h3><p><strong>androidROM刷机</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/29688041" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/29688041</a><br>下载编译需要前几篇的知识：repo和编译系统<br>用户正常使用Android设备时的系统，主要是包含有两个分区：System分区和Boot分区。System分区包含有Android运行时框架、系统APP以及预装的第三方APP等，而Boot分区包含有Kernel和Rootfs<br>fastboot为bootloader的一种交互启动方式，可以刷recover和普通模式，recovery则是可以刷普通模式。<br>recover与普通模式则是俩个系统。<br>关于cm：<br>2016年12月23日，Cyanogen公司宣布他们关闭CyanogenMod的服务器<br>CyanogenMod随即宣布会进行转移，并更名为LineageOS</p>
+<p>于是编译小米3的lineageos</p>
+<p>Cancro是mi3/4  ：小米3的电信版和小米4移动版，刷机包前缀都是cancro<br><a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a>  好的下载编译教程<br><a href="https://github.com/LineageOS" target="_blank" rel="external">https://github.com/LineageOS</a>  其git仓库<br><a href="https://www.lineageos.org/" target="_blank" rel="external">https://www.lineageos.org/</a>   其官网<br><a href="https://download.lineageos.org/cancro" target="_blank" rel="external">https://download.lineageos.org/cancro</a>  lineageos对小米的支持<br><a href="https://wiki.lineageos.org/devices/cancro" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro</a> lineageos对mi3的信息<br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a> 官方构建方法<br><a href="https://wiki.lineageos.org/devices/cancro/install" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/install</a> 官方刷机方法</p>
+<p>一：找到目标测试：<br>在官网的支持<a href="https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源" target="_blank" rel="external">https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源</a><br>刷机-adb可以在Android和恢复模式下工作<br>因为这个机子只能支持到14.1也就是android7.0.想测试更高版本的源代码请买google官方机<br>测试刷机成功</p>
+<p>二：下载源代码<br>参考：<a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a><br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a><br>远程连接telent<br>下载构建包，注意和官方的环境有所不同，不要重用<br>sudo apt-get install bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libwxgtk2.8-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev<br>由于需要vpn所以一直用root权操作，注意PATH配置，环变与变量是和shell绑定的，不是用户。<br>其它步骤一样。直到repo sync</p>
+<p>三：编译<br>获取设备文件除了breakfast。还有单独的项目提供各设备的文件<br><a href="https://github.com/TheMuppets" target="_blank" rel="external">https://github.com/TheMuppets</a><br>  在.repo/loccal_mainifest/roomsevice.xml 文件中新增一行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;project name=&quot;TheMuppets/proprietary_vendor_xiaomi&quot; path=&quot;vendor/xiaomi&quot; remote=&quot;github&quot; revision=&quot;cm-14.1&quot;/&gt;</div></pre></td></tr></table></figure></p>
+<p>  然后执行repo sync 同步</p>
+<p>编译失败，java-doc:错误找不到okhttp.connectionpool的类文件。<br>未找到解决方法。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/看雪2018ctf/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1205,172 +1540,6 @@
 <li>手动注册native</li>
 <li>反调试检测</li>
 </ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/android源码编译/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/25/android源码编译/" itemprop="url">android源码编译</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T20:09:35+08:00">
-                2018-06-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android系统/" itemprop="url" rel="index">
-                    <span itemprop="name">android系统</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本次基于google官方文档下载编译：<br><a href="https://source.android.com/setup/build/requirements" target="_blank" rel="external">https://source.android.com/setup/build/requirements</a><br>还有一篇详细的博客：<br><a href="https://blog.csdn.net/dd864140130/article/details/51718187" target="_blank" rel="external">https://blog.csdn.net/dd864140130/article/details/51718187</a></p>
-<h2 id="相关准备"><a href="#相关准备" class="headerlink" title="相关准备"></a>相关准备</h2><p>master 分支历来都是在 Ubuntu Long Term Support (LTS) 版本中进行开发和测试，采用ubuntu-14.04-desktop-amd64。试了其它14.04.4之类的，都有冲突。<br>master 分支事最少，带有预编译版本的 OpenJDK；因此无需另行安装。较低的版本则需要单独进行安装。</p>
-<h3 id="vpn"><a href="#vpn" class="headerlink" title="vpn"></a>vpn</h3><p>因为要下载的是谷歌官方的，所以必不可少。采用购买ssr。<br>先用shadowsocks启动：<a href="https://blog.csdn.net/u011774239/article/details/53905702" target="_blank" rel="external">https://blog.csdn.net/u011774239/article/details/53905702</a><br>在应用中使用：<a href="https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md" target="_blank" rel="external">https://github.com/Shadowsocks-Wiki/shadowsocks/blob/master/6-linux-settings.md</a></p>
-<p>此后需要外网的指令加前缀</p>
-<h3 id="putty-telnet"><a href="#putty-telnet" class="headerlink" title="putty+telnet"></a>putty+telnet</h3><p>远程操控：<br>telnet在linux的设置：<a href="https://blog.csdn.net/linux_ever/article/details/50519028" target="_blank" rel="external">https://blog.csdn.net/linux_ever/article/details/50519028</a></p>
-<h2 id="编译环境"><a href="#编译环境" class="headerlink" title="编译环境"></a>编译环境</h2><p>python 2.7<br>make3.81<br>git<br>java环境1.8对于ubuntu14.04特殊，参考官方安装：<br><a href="https://source.android.com/setup/build/initializing#installing-the-jdk" target="_blank" rel="external">https://source.android.com/setup/build/initializing#installing-the-jdk</a><br>安装所需的软件包 (Ubuntu 14.04)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev libxml2-utils xsltproc unzip</div></pre></td></tr></table></figure></p>
-<h2 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h2><p><a href="https://source.android.com/setup/build/downloading" target="_blank" rel="external">https://source.android.com/setup/build/downloading</a><br>用Repo管理git指定要下载的分支。<br>android-8.1.0_r1支持机型较多而且较新。目前下了这个，61G</p>
-<p>可以用shell脚本错误时自动sync<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line">#FileName source_asyn.sh</div><div class="line">PATH=~/bin:$PATH</div><div class="line"># 注意修改成你要编译的版本，比如这里我在mac上编译的是Android-7.1.1——r6</div><div class="line">repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-7.1.1_r6</div><div class="line">repo sync</div><div class="line">while [$? = 1]: do</div><div class="line">echo &quot;=========download failed,again============&quot;</div><div class="line">sleep 5</div><div class="line">repo sync</div><div class="line">done</div></pre></td></tr></table></figure></p>
-<p>学习linux脚本！</p>
-<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p><a href="https://source.android.com/setup/build/building" target="_blank" rel="external">https://source.android.com/setup/build/building</a><br>先找到对应版本设备的二进制文件：<a href="https://developers.google.com/android/drivers" target="_blank" rel="external">https://developers.google.com/android/drivers</a><br><strong>俩个都</strong>下载按说明添加到源代码树的 vendor/ 层次结构中。<br>之后步骤按照官方。<br>遇到的错误：<br>jack未启动错误：jack-admin start-server再接着make<br>Out of memory error：<br>输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">export JACK_SERVER_VM_ARGUMENTS=&quot;-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m&quot;</div><div class="line">out/host/linux-x86/bin/jack-admin kill-server</div><div class="line">out/host/linux-x86/bin/jack-admin start-server</div></pre></td></tr></table></figure></p>
-<h2 id="虚拟机运行"><a href="#虚拟机运行" class="headerlink" title="虚拟机运行"></a>虚拟机运行</h2><p>source build/envsetup.sh这句就是在配置环境变量，可以使用jack、emulator等<br>编译完成后直接emulator等较长时间即可在虚拟机中运行android了</p>
-<h2 id="fastboot刷机"><a href="#fastboot刷机" class="headerlink" title="fastboot刷机"></a>fastboot刷机</h2><p>编译后配置好的fastboot直接刷到实体机（因此购买谷歌官方机十分方便测试cm的mi3编译时失败…..买个google垃圾机吧…）<br>购买后：<br>google机开启设备锁编译完成后使用fastboot flashall -w直接刷机成功。</p>
-<p>刷机后android无法访问网络：<br>显示已连接，但无法正常访问网络是正常的，但所有网络请求失败原因是系统时间不正确，导致服务器无法通过时间验证，在设置处设置时间即可。</p>
-<h2 id="打包rom"><a href="#打包rom" class="headerlink" title="打包rom"></a>打包rom</h2><h3 id="几个补充知识"><a href="#几个补充知识" class="headerlink" title="几个补充知识"></a>几个补充知识</h3><p><strong>Android基于Permission的安全机制</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/17131835" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/17131835</a><br>简记：系统文件与目录被用uid、gid划分，进程持有uid/gid，从而决定进程能否使用api或者访问文件等操作，android root后所有的root操作一定要用su提权，所以在su时检测是否给权。<br>system/build.prop:系统信息<br>default.prop：系统配置.debugger选项所在<br>当你获得了android的应用shell时，可以用run-as变成开了debugger权限进程的uid shell。从而越权。</p>
-<p><strong>android开源项目的管理</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18195205" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18195205</a><br>未看完</p>
-<p><strong>android编译系统</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/18466779" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/18466779</a><br>android的make由一个mk文件，include其它mk文件组成。只执行一个。</p>
-<p><strong>android系统的各镜像分析</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/20501657" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/20501657</a><br>一个是正常的系统，它由boot.img、system.img、ramdisk.img和userdata.img等组成，另外一个就是recovery系统，由recovery.img组成。<br>boot.img启动其它几个，另一个系统是由recovery启动全部。<br>通过对比Android正常使用时的系统和进行升级时使用的Recovery系统，我们就可以对运行Linux系统的移动设备（或者说嵌入式设备）世界窥一斑而知全豹，实际上我们只需要有一个BootLoader、一个Linux Kernel，以及一个Ramdisk，就可以将它们运行起来。Ramdisk属于用户空间的范畴，它里面主要包含了Linux Kernel启动完成时所要加载的根文件系统。这个根文件系统的作用就是为整个系统提供一个init程序，以便Linux Kernel可以将控制权从内核空间转移到用户空间。系统提供什么样的功能给用户使用主要取决于在用户空间层运行了哪些服务和守护进程。这些服务守护进程都是直接或者间接地由init进程启动的。例如，对于recovery系统来说，它最主要提供的功能就是让用户升级系统，也就是它的主要用户空间服务就是负责执行长级任务的recovery程序。又如，我们正常使用的Android系统，它的主要用户空间服务和守护进程都是由system.img镜像提供的，此外，我们还可以通过userdata.img镜像来安装第三方应用来丰富手机的功能。因此，我们也可以说，init进程启动的服务决定了系统的功能。当然 ，这些功能是建立是硬件的基础之上的。</p>
-<h3 id="CM-ROM"><a href="#CM-ROM" class="headerlink" title="CM ROM"></a>CM ROM</h3><p><strong>androidROM刷机</strong>：<a href="https://blog.csdn.net/luoshengyang/article/details/29688041" target="_blank" rel="external">https://blog.csdn.net/luoshengyang/article/details/29688041</a><br>下载编译需要前几篇的知识：repo和编译系统<br>用户正常使用Android设备时的系统，主要是包含有两个分区：System分区和Boot分区。System分区包含有Android运行时框架、系统APP以及预装的第三方APP等，而Boot分区包含有Kernel和Rootfs<br>fastboot为bootloader的一种交互启动方式，可以刷recover和普通模式，recovery则是可以刷普通模式。<br>recover与普通模式则是俩个系统。<br>关于cm：<br>2016年12月23日，Cyanogen公司宣布他们关闭CyanogenMod的服务器<br>CyanogenMod随即宣布会进行转移，并更名为LineageOS</p>
-<p>于是编译小米3的lineageos</p>
-<p>Cancro是mi3/4  ：小米3的电信版和小米4移动版，刷机包前缀都是cancro<br><a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a>  好的下载编译教程<br><a href="https://github.com/LineageOS" target="_blank" rel="external">https://github.com/LineageOS</a>  其git仓库<br><a href="https://www.lineageos.org/" target="_blank" rel="external">https://www.lineageos.org/</a>   其官网<br><a href="https://download.lineageos.org/cancro" target="_blank" rel="external">https://download.lineageos.org/cancro</a>  lineageos对小米的支持<br><a href="https://wiki.lineageos.org/devices/cancro" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro</a> lineageos对mi3的信息<br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a> 官方构建方法<br><a href="https://wiki.lineageos.org/devices/cancro/install" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/install</a> 官方刷机方法</p>
-<p>一：找到目标测试：<br>在官网的支持<a href="https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源" target="_blank" rel="external">https://download.lineageos.org/cancro上找到其编译好的镜像测试-同时按博客中的去git中查找是否存在源码与设备是否开源</a><br>刷机-adb可以在Android和恢复模式下工作<br>因为这个机子只能支持到14.1也就是android7.0.想测试更高版本的源代码请买google官方机<br>测试刷机成功</p>
-<p>二：下载源代码<br>参考：<a href="https://www.cnblogs.com/jiaoxiake/p/6875864.html" target="_blank" rel="external">https://www.cnblogs.com/jiaoxiake/p/6875864.html</a><br><a href="https://wiki.lineageos.org/devices/cancro/build" target="_blank" rel="external">https://wiki.lineageos.org/devices/cancro/build</a><br>远程连接telent<br>下载构建包，注意和官方的环境有所不同，不要重用<br>sudo apt-get install bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libwxgtk2.8-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev<br>由于需要vpn所以一直用root权操作，注意PATH配置，环变与变量是和shell绑定的，不是用户。<br>其它步骤一样。直到repo sync</p>
-<p>三：编译<br>获取设备文件除了breakfast。还有单独的项目提供各设备的文件<br><a href="https://github.com/TheMuppets" target="_blank" rel="external">https://github.com/TheMuppets</a><br>  在.repo/loccal_mainifest/roomsevice.xml 文件中新增一行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;project name=&quot;TheMuppets/proprietary_vendor_xiaomi&quot; path=&quot;vendor/xiaomi&quot; remote=&quot;github&quot; revision=&quot;cm-14.1&quot;/&gt;</div></pre></td></tr></table></figure></p>
-<p>  然后执行repo sync 同步</p>
-<p>编译失败，java-doc:错误找不到okhttp.connectionpool的类文件。<br>未找到解决方法。</p>
 
           
         
@@ -1747,202 +1916,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/xposed概观与初步使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/31/xposed概观与初步使用/" itemprop="url">xposed概观与初步使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T00:31:51+08:00">
-                2018-05-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近先后尝试了各种手写nativehook，开始还好，写到后面越发艰难，最后参看2011年的古河代码后无果，于是决定先使用好常用的hook框架，再针对开源的代码去研究轮子。<br>hook的好处十分多，如可以不修改不重打包逆向程序，而且可以避免反调试和各种壳，但hook时需要详细知道目标函数的符号等信息。</p>
-<p>目前认准有三：<br>1、<strong>XPOSED 开源</strong><br>优点：<br>1）、代码编写方便，开发速度较快。<br>2）、有许多现成的模块可以用，而且很多模块也是开源的，方便学习研究。<br>缺点：<br>1）、每次编写代码需要重启手机生效。<br>2）、不支持native的HOOK。<br>3）、独立性较差，需要依赖XPOSED installer，不易单独分发。</p>
-<p>2、<strong>cydia substrate 不开源</strong><br>这个Supported on versions 2.3 through 4.3的android。在ios上表现很好，android的2013年就停更了。<br>优点：<br>1）、比较擅长在native层的HOOK。<br>2）、独立性较好，实现的功能可以封装在单独APP里分发给用户使用，因此也是较大型外挂辅助工具的首选。<br>缺点：<br>1）、每次编写代码需要重启手机生效。<br>2）、开发效率较低，成本较高。</p>
-<p>3、<strong>frida 开源</strong><br>优点：<br>1）、无须重启手机和目标APP，这个可以节省很多时间，如果APP测试的点需要很复杂地搭建好环境，一旦重新启动就意味着很麻烦地再重新搭建环境，例如账号登录，进入特定关卡等。<br>2）、JS脚本编写，灵活方便，再也不用担心多参数个数和类型问题了。<br>3）、可以直接使用或修改对象的成员变量，非常方便。<br>4）、配合PC终端命令行使用，脚本编写出错也不会导致APP崩溃，只需修改后重新来过即可，有时会有问题，这个时候需要重启下APP或手机即可。</p>
-<p>缺点：<br>1）、JS脚本套在python脚本里面，编写JS脚本时候不是很方便，容易出错，好在即使出错也不会导致APP崩溃掉，修改后重新来过即可。<br>2）、该工具配合PC终端使用，更适合专业者，不利于分发给用户使用。</p>
-<p>接下来依次尝试之。</p>
-<h2 id="Xposed-原理"><a href="#Xposed-原理" class="headerlink" title="Xposed 原理"></a>Xposed 原理</h2><p>通过替换/system/bin/app_process程序控制zygote进程，使得app_process在启动过程中会加载XposedBridge.jar这个jar包，从而完成对Zygote进程及其创建的Dalvik虚拟机的劫持。</p>
-<p>项目梳理：<br>XposedBridge.jar：XposedBridge.jar是Xposed提供的jar文件，负责在Native层与FrameWork层进行交互。/system/bin/app_process进程启动过程中会加载该jar包，其它的Modules的开发与运行都是基于该jar包的。<br>Xposed：Xposed的C++部分，主要是用来替换/system/bin/app_process，并为XposedBridge提供JNI方法。<br>XposedInstaller：Xposed的安装包，负责配置Xposed工作的环境并且提供对基于Xposed框架的Modules的管理。在安装XposedInstaller之后，app_process与XposedBridge.jar放置在了/data/data/de.robv.android.xposed.installer。</p>
-<h2 id="Xposed-安装"><a href="#Xposed-安装" class="headerlink" title="Xposed 安装"></a>Xposed 安装</h2><p>因为要修改系统文件，所以前提需要root<br>经实践发现supersu卡刷非常管用。</p>
-<p>root后安装xposed installer ，进入应用，点击install安装框架（via那个是通过recovery模式安装）</p>
-<p>到此hook框架已经安装完成。可以自己编写模块使用了</p>
-<h2 id="AS下的Xposed编程"><a href="#AS下的Xposed编程" class="headerlink" title="AS下的Xposed编程"></a>AS下的Xposed编程</h2><h3 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h3><p>不必有activity，一个空项目就好</p>
-<h3 id="1导入包"><a href="#1导入包" class="headerlink" title="1导入包"></a>1导入包</h3><p>俩种方式：</p>
-<ol>
-<li>把下好的api-82.jar放到lib下，并添加到build.gradle路径中</li>
-<li>由于以传至jcenter()库所以在build.gradle的dependencies下直接写compileOnly ‘de.robv.android.xposed:api:82’</li>
-</ol>
-<p>注意接口包不能包含到插件项目的生成包中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])</div><div class="line">    implementation &apos;com.android.support:appcompat-v7:27.1.1&apos;</div><div class="line">    testImplementation &apos;junit:junit:4.12&apos;</div><div class="line">    androidTestImplementation &apos;com.android.support.test:runner:1.0.2&apos;</div><div class="line">    androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.2&apos;</div><div class="line">    compileOnly &apos;de.robv.android.xposed:api:82&apos;</div><div class="line">	compileOnly &apos;de.robv.android.xposed:api:82:sources&apos; 方便Ctrl+Q快速查阅</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>注意为compileOnly，区别：<br>2.x（3.x）</p>
-<ol>
-<li>（implementation）：只能在内部使用此模块,会参与打包，比如我在一个libiary中使用implementation依赖了gson库，然后我的主项目依赖了libiary，那么，我的主项目就无法访问gson库中的方法。</li>
-<li>compile（api）：使用该方式依赖的库将会参与编译和打包。 也就是全部包含进dex中。又打包又用</li>
-<li>provided（compileOnly）：只在编译时有效，不会参与打包 。运行时寻找android平台上的，只用不打包</li>
-<li>apk（runtimeOnly）：只在生成apk的时候参与打包，编译时不会参与。不用只打包。</li>
-<li>testCompile（testImplementation）：testCompile 只在单元测试代码的编译以及最终打包测试apk时有效。</li>
-<li>debugCompile（debugImplementation）:debugCompile 只在debug模式的编译和最终的debug apk打包时有效</li>
-<li>releaseCompile:Release compile 仅仅针对Release 模式的编译和最终的Release apk打包。</li>
-</ol>
-<p>API 类真正的实现则在 Xposed FramWork中。所以选择compileOnly<br>jar为.class集合。</p>
-<h3 id="2改manifest"><a href="#2改manifest" class="headerlink" title="2改manifest"></a>2改manifest</h3><p>AndroidManifest.xml中添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;application</div><div class="line">    android:allowBackup=&quot;true&quot;</div><div class="line">    android:icon=&quot;@mipmap/ic_launcher&quot;</div><div class="line">    android:label=&quot;@string/app_name&quot;</div><div class="line">    android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;</div><div class="line">    android:supportsRtl=&quot;true&quot;</div><div class="line">    android:theme=&quot;@style/AppTheme&quot;&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposedmodule&quot;</div><div class="line">    android:value=&quot;true&quot;/&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposeddescription&quot;</div><div class="line">    android:value=&quot;Easy example&quot;/&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposedminversion&quot;</div><div class="line">    android:value=&quot;54&quot;/&gt;</div><div class="line">&lt;/application&gt;</div></pre></td></tr></table></figure></p>
-<p>xposedmodule：代表的是Android程序作为Xposed中的一个模块，所以值为true；<br>xposeddescription：代表的是对本模块的功能的描述，可以自己简单叙述下就可以了；项目名是插件名，这是底下的描述<br>xposedminversion：代表的是本模块开发时用到的xposed的jar包的最低版本号；</p>
-<h3 id="3java中写类"><a href="#3java中写类" class="headerlink" title="3java中写类"></a>3java中写类</h3><p>只要新建一个实现IXposedHookLoadPackage接口的类，然后在handleLoadPackage回调方法中进行拦截操作即可，详细见下文。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import de.robv.android.xposed.IXposedHookLoadPackage;</div><div class="line">import de.robv.android.xposed.XposedBridge;</div><div class="line">import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;</div><div class="line"></div><div class="line">public class main implements IXposedHookLoadPackage &#123;</div><div class="line">    public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable &#123;</div><div class="line">        XposedBridge.log(&quot;Loaded app: &quot; + lpparam.packageName);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="4添加模块入口"><a href="#4添加模块入口" class="headerlink" title="4添加模块入口"></a>4添加模块入口</h3><p>告诉Xposed框架一个模块中Hook的入口</p>
-<ol>
-<li>main下建assets文件夹</li>
-<li>assets文件夹下建xposed_init文件</li>
-<li>xposed_init中写包名.类名</li>
-</ol>
-<p><strong>main文件夹下的东西都会被打包</strong></p>
-<h3 id="构建安装"><a href="#构建安装" class="headerlink" title="构建安装"></a>构建安装</h3><p>构建安装apk至手机中，框架即可自动识别到模块，点击启动，重启后即可生效。</p>
-<p>注意AS的Instant Run（闪电）是加快apk安装速度的功能，可能涉及的方面有：</p>
-<ol>
-<li>优化apk大小，可能把不用的类优化掉了（xposed时小心）</li>
-<li>热更新方法内代码</li>
-<li>热更新资源</li>
-<li>热更新新方法</li>
-</ol>
-<h2 id="api详解"><a href="#api详解" class="headerlink" title="api详解"></a>api详解</h2><p>首先是api官网：<br><a href="https://api.xposed.info/reference/packages.html" target="_blank" rel="external">https://api.xposed.info/reference/packages.html</a></p>
-<p>android.app:有关当前应用程序信息的方法。<br>android.content.res:包含替换资源所需的类。<br>de.robv.android.xposed:包含Xposed框架的主要类。<br>de.robv.android.xposed.callbacks:包含回调的基类。<br>de.robv.android.xposed.services:包含Xposed框架提供的文件访问服务。<br><img src="https://i.imgur.com/nhQbI7d.png" alt=""></p>
-<h4 id="android-app"><a href="#android-app" class="headerlink" title="android.app"></a>android.app</h4><p>就一个AndroidAppHelper类，用于查询当前应用程序信息的各种方法</p>
-<h4 id="de-robv-android-xposed"><a href="#de-robv-android-xposed" class="headerlink" title="de.robv.android.xposed"></a>de.robv.android.xposed</h4><p>这个是主要功能包<br>IXposedHookLoadPackage接口：这个接口应该由模块的主类来实现。Xposed会自动注册为回叫。在每个app加载时收到通知。其唯一方法在加载时调用：void handleLoadPackage （XC_LoadPackage.LoadPackageParam lpparam）参数为de.robv.android.xposed.callbacks包中XC_LoadPackage的子类，其为包装关于正在加载的应用程序的信息的类。可返回packageName，classLoader等</p>
-<p>里面还有：XposedHelpers静态类用于简化hook如：findAndHookMethod<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">public static XC_MethodHook.Unhook findAndHookMethod (String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback)</div><div class="line">参数为：</div><div class="line">1. 类名</div><div class="line">2. 类加载器</div><div class="line">3. 目标方法名称</div><div class="line">4. 参数类型与回调函数</div><div class="line"></div><div class="line">官方示例：</div><div class="line"></div><div class="line">public class Tutorial implements IXposedHookLoadPackage &#123;</div><div class="line">	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable &#123;</div><div class="line">		if (!lpparam.packageName.equals(&quot;com.android.systemui&quot;))</div><div class="line">			return;</div><div class="line"></div><div class="line">		findAndHookMethod(&quot;com.android.systemui.statusbar.policy.Clock&quot;, lpparam.classLoader, &quot;updateClock&quot;, new XC_MethodHook() &#123;</div><div class="line">  		 @Override</div><div class="line"> 		  protected void beforeHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">    			 String oldText = (String) param.args[0];</div><div class="line">     			Log.d(&quot;MyModule&quot;, oldText);</div><div class="line">    			 param.args[0] = &quot;test&quot;;</div><div class="line">    			 param.args[1] = 42; // auto-boxing is working here</div><div class="line">    			 setBooleanField(param.args[2], &quot;great&quot;, true);//设置类的字段XposedHelpers中</div><div class="line">			     // 这样写不行，因为myclass编译时未知</div><div class="line">    			 //   MyClass myClass = (MyClass) param.args[2];</div><div class="line">   			  //   myClass.great = true;</div><div class="line">			@Override</div><div class="line">			protected void afterHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">				TextView tv = (TextView) param.thisObject;</div><div class="line">				String text = tv.getText().toString();</div><div class="line">				tv.setText(text + &quot; :)&quot;);</div><div class="line">				tv.setTextColor(Color.RED);</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>XC_MethodHook钩子类，其含俩个方法用于目标方法之前与之后调用，其有俩个内部类：<br>MethodHookParam可获得参数（字段args数组）与返回信息（方法）<br>XC_MethodHook.Unhook管理hook用。可用来删除回调</p>
-<p>具体灵活使用还是需要系统框架源码知识和xposed源码实现原理。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1993,7 +1966,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-count">99</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

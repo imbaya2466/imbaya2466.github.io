@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。">
+<meta name="description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。c++为了一遍编译语法大量多余.比如区分T的静态对象与类型对象、返回值在作用域外之类，都是为了编译时可以一遍编译而设置的。">
 <meta name="keywords" content="cpp">
 <meta property="og:type" content="article">
 <meta property="og:title" content="cpp学习-第十六章-模板与泛型编程">
 <meta property="og:url" content="http://yoursite.com/2019/02/03/cpp学习-第十六章-模板与泛型编程/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。">
+<meta property="og:description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。c++为了一遍编译语法大量多余.比如区分T的静态对象与类型对象、返回值在作用域外之类，都是为了编译时可以一遍编译而设置的。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-02T18:18:09.773Z">
+<meta property="og:updated_time" content="2019-02-03T16:09:18.614Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="cpp学习-第十六章-模板与泛型编程">
-<meta name="twitter:description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。">
+<meta name="twitter:description" content="核心简记模板是创建类或函数的公式，为编译时使用。模板应该尽力减少对实参类型的要求。使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。c++为了一遍编译语法大量多余.比如区分T的静态对象与类型对象、返回值在作用域外之类，都是为了编译时可以一遍编译而设置的。">
 
 
 
@@ -372,7 +372,7 @@
       
 
       
-        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>模板是创建类或函数的公式，为编译时使用。<br>模板应该尽力减少对实参类型的要求。<br>使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。</p>
+        <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>模板是创建类或函数的公式，为编译时使用。<br>模板应该尽力减少对实参类型的要求。<br>使用模板时才会生成代码，定义模板并不会。因此为了编译模块找到定义，必须把模板类/函数定义、声明等都放在头文件供使用。<br>c++为了一遍编译语法大量多余.比如区分T的静态对象与类型对象、返回值在作用域外之类，都是为了编译时可以一遍编译而设置的。</p>
 <a id="more"></a>
 <h3 id="定义模板"><a href="#定义模板" class="headerlink" title="定义模板"></a>定义模板</h3><h4 id="函数模板"><a href="#函数模板" class="headerlink" title="函数模板"></a>函数模板</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">template&lt;typename T&gt;</div><div class="line">inline //inline与constexpr放这里</div><div class="line">int f(T a,T b)</div><div class="line">&#123;</div><div class="line">    ....</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>模板定义使用关键字template开始，&lt;&gt;内为模板参数列表，不能为空。使用模板时隐式或显示将模板实参绑定模板参数上。<br>对于函数可以自动推断,或显示使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">f(1,3);</div><div class="line">f&lt;int&gt;(1,3);</div></pre></td></tr></table></figure></p>
@@ -428,6 +428,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/04/类多继承与delete继承类/" rel="prev" title="类多继承与delete继承类">
+                类多继承与delete继承类 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -504,7 +508,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-count">99</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -283,6 +283,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/androidNDK逆向初步/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/08/androidNDK逆向初步/" itemprop="url">androidNDK逆向初步</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T23:01:48+08:00">
+                2018-05-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h2><ol>
+<li>elf，linux下程序执行，连接等需要详细补充。</li>
+</ol>
+<h2 id="原生程序启动流程概述-2013"><a href="#原生程序启动流程概述-2013" class="headerlink" title="原生程序启动流程概述 2013"></a>原生程序启动流程概述 2013</h2><p>注意这里是原生可执行程序，不是动态库so的加载运行过程<br><strong>静态链接出的可执行文件</strong>：<br>_start(crtbegin_static.S)调用__libc_init(bionic\lib\bionic\libc_init_static.c)调用main</p>
+<p><strong>*动态连接出的可执行文件</strong>（.interp段指定加载器默认为system/bin/linker）：<br>linker(begin.S)调用<strong>linker_init(linker.c)返回入口函数并执行_start(crtbegin_dynamic.S)调用</strong>libc_init(libc_init_dtnamic.c)调用main</p>
+<p>动态连接库文件：<br><strong>on_dlclose(crtbegin_so.c)调用</strong>cxa_finalize记录计数</p>
+<p>说明：</p>
+<ol>
+<li>目前静态动态_start都一样</li>
+<li>__libc_init动态的少点因为大部分工作linker做了</li>
+</ol>
+<h2 id="原生文件格式"><a href="#原生文件格式" class="headerlink" title="原生文件格式"></a>原生文件格式</h2><p>不同系统、架构下的elf有所不同。android下的elf遵循了arm的标准，不同版本ndk与连接器脚本生成的elf有所不同。具体的格式需要阅读源码：NDK的platforms\android-14\arch-arm\usr\include\sys\exec_elf.h<br>目前简单百度了下，大概可理解为由头部决定节头和段头的位置，由段头和节头分别决定段与节的位置，节用来存储数据代码等给link用的，而段是内存中用来执行的。<br><img src="https://i.imgur.com/wP0XSIH.png" alt=""></p>
+<h2 id="原生c的逆向分析"><a href="#原生c的逆向分析" class="headerlink" title="原生c的逆向分析"></a>原生c的逆向分析</h2><p>注意主要用寄存器传参 R0 R1 R2 依次左到右（不同于栈的右到左压，右在高地址）。返回用R0<br>R11常作为栈帧<br>ida蓝色表示顺序执行，绿色满足时，红色不满足时执行<br>全局变量从全局偏移表里取（具体？详细了解elf结构和内存布局后）</p>
+<p>switch依旧依靠跳转表</p>
+<p>gcc的-O2优化效果好，取消了栈的存储操作，基本全用寄存器，而且逻辑上也省去了许多无用的部分</p>
+<h2 id="原生c-的逆向分析"><a href="#原生c-的逆向分析" class="headerlink" title="原生c++的逆向分析"></a>原生c++的逆向分析</h2><p>c++的类被解析为结构体的空间分配，而各函数代码都是直接化在流程中了，不是分成块的存储调用方式。<br>c++的各种特性库slt（如gunslt、stlport、gabi++、system）都分别支持各种不同的c++功能，其中前俩个提供容器类，默认为system自动连接，其它的都分为动态和静态连接方式。详见ndk高级编程中</p>
+<p>动态连接时ida可以解析出函数的来源，而静态时ida只能识别出子程序调用，无法识别出具体的函数。因此静态分析难度更大，只有动态分析好用</p>
+<h2 id="JNI"><a href="#JNI" class="headerlink" title="JNI"></a>JNI</h2><p>而DNK中最为常用的就是jni中的交互函数：JNIEnv和JavaVM<br>前者是原生与java交互用，后者代表虚拟机常用于多线程中。<br>c中都是指向函数表结构体的指针，c++中为类对象指针。为了方便ida识别出JNI的结构体，需要导入jni头文件用来看出具体调用的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">struct _JNIEnv;</div><div class="line">struct _JavaVM;</div><div class="line">typedef const struct JNINativeInterface* C_JNIEnv;</div><div class="line"></div><div class="line">#if defined(__cplusplus)</div><div class="line">typedef _JNIEnv JNIEnv;</div><div class="line">typedef _JavaVM JavaVM;</div><div class="line">#else</div><div class="line">typedef const struct JNINativeInterface* JNIEnv;</div><div class="line">typedef const struct JNIInvokeInterface* JavaVM;</div><div class="line">#endif</div><div class="line"></div><div class="line">在定义完JNI俩个函数指针集合结构体之后</div><div class="line"></div><div class="line">定义c++用的类</div><div class="line">struct _JNIEnv &#123;</div><div class="line">    /* do not rename this; it does not seem to be entirely opaque */</div><div class="line">    const struct JNINativeInterface* functions;</div><div class="line"></div><div class="line">......定义类的方法调用该结构体。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>以下为ida解析头文件结构体方法：<br>进入ida，点击文件-&gt;读取文件-&gt;解析c头文件<br>这里选择ndk的jni文件(已修改并存入工具库中)，需要删除报错的俩个include和1107的#define JNIEXPORT  …改为#define JNIEXPORT<br>然后结构体选项卡按insert-&gt;Add standard structure<br>之后反汇编窗口中选中env函数偏移的量右键中会出现解析为该结构体的内容</p>
+<p><strong> java与c的native函数可以手动映射</strong></p>
+<p>因此下坑的地方很多，比如init数组加密操作，javaload加密操作，so中一般名字的native方法不能说明什么。要全部分析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">static JNINativeMethod methods[] = &#123;</div><div class="line">	&#123;&quot;initSN&quot;, &quot;()V&quot;, (void*)n1&#125;,</div><div class="line">	&#123;&quot;saveSN&quot;, &quot;(Ljava/lang/String;)V&quot;, (void*)n2&#125;,</div><div class="line">	&#123;&quot;work&quot;, &quot;()V&quot;, (void*)n3&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">/*</div><div class="line"> * 库加载时注册native函数</div><div class="line"> */</div><div class="line">jint JNI_OnLoad(JavaVM* vm, void* reserved)&#123;</div><div class="line">	if(JNI_OK != (*vm)-&gt;GetEnv(vm, (void**)&amp;g_env, JNI_VERSION_1_6))&#123;</div><div class="line">		return -1;</div><div class="line">	&#125;</div><div class="line">	LOGV(&quot;JNI_OnLoad()&quot;);</div><div class="line">	native_class = (*g_env)-&gt;FindClass(g_env, &quot;com/droider/ndkapp/MyApp&quot;);</div><div class="line">	if (JNI_OK ==(*g_env)-&gt;RegisterNatives(g_env,</div><div class="line">			native_class, methods, NELEM(methods)))&#123;//把java类的native函数对应到原生函数中,手动。自动的话是按javah生成的对应，这里没有包含javah生成的头文件</div><div class="line">		LOGV(&quot;RegisterNatives() --&gt; nativeMethod() ok&quot;);</div><div class="line">	&#125; else &#123;</div><div class="line">		LOGE(&quot;RegisterNatives() --&gt; nativeMethod() failed&quot;);</div><div class="line">		return -1;</div><div class="line">	&#125;</div><div class="line">	return JNI_VERSION_1_6;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void JNI_OnUnLoad(JavaVM* vm, void* reserved)&#123;</div><div class="line">	LOGV(&quot;JNI_OnUnLoad()&quot;);</div><div class="line">	(*g_env)-&gt;UnregisterNatives(g_env, native_class);</div><div class="line">	LOGV(&quot;UnregisterNatives()&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>编写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)</div><div class="line">&#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">    return JNI_VERSION_1_6;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//init函数定义，必须为_init</div><div class="line">extern &quot;C&quot;  void _init(void)&#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">__attribute__((constructor,visibility(&quot;hidden&quot;))) void init_array_0(void) &#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">__attribute__((constructor,visibility(&quot;hidden&quot;))) void  init_array_1(void) &#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">extern &quot;C&quot; void preinit(int argc, char **argv, char **envp) &#123;</div><div class="line">    LOGD(&quot;preinit_array never be called in so&quot;);</div><div class="line">&#125;</div><div class="line">__attribute__((section(&quot;.preinit_array&quot;))) typeof(preinit) *__preinit = preinit;</div></pre></td></tr></table></figure></p>
+<p><a href="https://blog.csdn.net/qq1084283172/article/details/54233552" target="_blank" rel="external">https://blog.csdn.net/qq1084283172/article/details/54233552</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/05/PWN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1945,171 +2110,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/24/root与adb/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/24/root与adb/" itemprop="url">root与adb</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-24T22:58:43+08:00">
-                2018-04-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="root"><a href="#root" class="headerlink" title="root"></a>root</h2><p>root就是指linux内核中的最高权限，与linux下完全同<br>我们所说的越狱或者ROOT，就是把su安装到手机里面 /system/bin目录下，并把它的权限设置为4755，那么某些程序需要ROOT权限的时候，就可以通过su切换到ROOT身份，然后去执行<br>adb需要root，但是adb没有root权限<br>无法一般获取原因：<br>su负责获取root权限；但是该程序位于/system/bin下。android为了安全去掉了linux这个命令。而想要将su拷贝到Android手机底层命令的执行目录（/system/bin）下并赋予执行权限。但是这里有一个问题，拷贝到系统目录下的操作，和在系统目录下更改权限的操作，只有root权限才可以做这个操作。这就是一个死锁。</p>
-<p>因此。需要漏洞。系统漏洞<br>计划于linux系统熟实后解决rop，看漏洞战争与安卓那本漏洞书进入漏洞研究。</p>
-<p>有俩方案：</p>
-<ol>
-<li>系统漏洞方案<br>主旨思想是查找系统漏洞，让本身具有root权限的进程执行打开root权限的操作。</li>
-<li>重烧eng boot.img方案<br>Android版本有user版本和eng版本的区别，其中eng版本可以用于开发调试，所以本身可以开启root权限。通过重烧eng boot.img版本来获取root权限。</li>
-</ol>
-<h2 id="adb"><a href="#adb" class="headerlink" title="adb"></a>adb</h2><p><a href="https://www.jianshu.com/p/3bacaeab06b2" target="_blank" rel="external">https://www.jianshu.com/p/3bacaeab06b2</a></p>
-<ol>
-<li>adb devices  获取手机设备序列号和连接状态</li>
-<li>adb get-serialno 获得设备序列号</li>
-<li>如果有多个模拟器或者Android设备同时连接上adb，那么可以通过命令来选择指定的目标设备。在执行adb命令时 在一般命令前再加入 –s &lt;序列号&gt;即可。adb -s XXXX shell（命令）</li>
-<li>只有一个设备时命令任意执行</li>
-<li>adb shell为进入shell模式</li>
-<li>adb install APK路径  安装apk<br>adb install -r APK路径  保留数据和缓存文件，重新安装APK<br>adb install -s APK路径  安装apk到sd卡<br>adb root 以root权限重启adb服务</li>
-<li>adb tcpip 5555让设备在 5555 端口监听 TCP/IP 连接</li>
-<li>adb connect device-ip-address 通过ip adb </li>
-<li>aadb pull sdcard/pull.txt d:\导出</li>
-<li>adb push d:\push.txt sdcard/导入</li>
-<li>adb forward tcp:主机端口 tcp:androd端口 转发主机端口到android端口<br>…</li>
-</ol>
-<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>1)adb client（客户端）<br>client是运行在PC端的，该组件发送命令，可以通过发出adb命令从命令行终端调用客户端。每当我们发起一个adb命令的时候，就会开启一个client程序。当然，当我们开启DDMS或者ADT的时候，也会自动创建client。当我们开启一个client的时候，它首先会去检测后台是否已经有一个server程序在运行着，否则会开启一个adb-server进程。所有的client都是通过5037端口与adb-server进行通信的。</p>
-<p>2）adb daemon（adbd后台程序）<br>Daemon，该组件作为一个后台进程运行在模拟器/真实Android设备中，在设备上运行命令。daemon使用端口的范围是5554-5585，每个模拟器/设备连接到PC端时，总会开启这样一个后台进程，并且为其分配了两个连续的端口，比如：<br>Emulator1, console: 5554<br>Emulator1, adb: 5555<br>因为每个设备都分一组两个端口，所以adb连接手机的最大数量为16。<br>端口的作用，在这两个端口中，其中偶数端口是用于server与设备进行交互的，可以让server直接从设备中读取数据，而奇数端口是用来与设备的adbd进行连接通信的。</p>
-<p>3)adb server（服务器）<br>Server，该组件管理客户端和后台程序之间的通信，作为一个后台的程序运行在PC端。当一个server开启的时候，会自动绑定并且监听5037端口，接收client通过该端口发送过来的命令。同时server还会对5555-5585间的奇数端口进行扫描，进行对已连接设备的定位。<br><img src="https://i.imgur.com/6oOlqBe.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2160,7 +2160,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-count">99</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
