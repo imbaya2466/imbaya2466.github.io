@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,逆向," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试先为了看懂：https://github.com/xiaobaiyey/dexload 钩子(hook)与注入(inject):hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。实现部分交集互">
+<meta name="keywords" content="android,逆向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android-hook">
+<meta property="og:url" content="http://yoursite.com/2019/02/10/android-hook/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试先为了看懂：https://github.com/xiaobaiyey/dexload 钩子(hook)与注入(inject):hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。实现部分交集互">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.imgur.com/hkQbs5I.png">
+<meta property="og:image" content="https://i.imgur.com/9b1VRGl.png">
+<meta property="og:image" content="https://i.imgur.com/nyq7RpT.png">
+<meta property="og:updated_time" content="2019-02-09T18:43:19.746Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android-hook">
+<meta name="twitter:description" content="前言目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试先为了看懂：https://github.com/xiaobaiyey/dexload 钩子(hook)与注入(inject):hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。实现部分交集互">
+<meta name="twitter:image" content="https://i.imgur.com/hkQbs5I.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/10/android-hook/"/>
+
+
+
+
+
+  <title>android-hook | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/10/android-hook/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android-hook</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-10T02:38:20+08:00">
+                2019-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试<br>先为了看懂：<a href="https://github.com/xiaobaiyey/dexload" target="_blank" rel="external">https://github.com/xiaobaiyey/dexload</a></p>
+<p>钩子(hook)与注入(inject):<br>hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。<br>注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。<br>实现部分交集互用，有时不区分。一般hook目标需要注入为前提。<br>之前写过一篇注入的，但没有实现完整:<a href="https://xn--74q78i15hxv3arigm4e.cn/2018/05/26/android-hook/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2018/05/26/android-hook/</a><br>猜测失败原因是Android 7.0之后对于非公开API的调用限制:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">从 Android 7.0 开始，系统将阻止应用动态链接非公开 NDK 库，这种库可能会导致您的应用崩溃。此行为变更旨在为跨平台更新和不同设备提供统一的应用体验。</div><div class="line">7.0更新详情:https://developer.android.com/about/versions/nougat/android-7.0-changes?hl=zh-cn#ndk</div><div class="line">详细的ndK变更:https://android.googlesource.com/platform/bionic/+/master/android-changes-for-ndk-developers.md#Writable-and-Executable-Segments-Enforced-for-API-level-26</div></pre></td></tr></table></figure></p>
+<p>开发只要保证:连接不在apk中的库时只能连接公开的NDK，自己使用的so一定要放到apk中打包。<br>AOSP 7.0以后关于NDK限制机制的核心代码是在 /bionic/linker/linker.cpp，自己环境下可以修改源码来方便注入，其它环境下可以先注入处理掉检测部分，再注入自己的so。</p>
+<p>Java Hook<br>Static Field Hook：静态成员hook<br>Method Hook：函数hook</p>
+<p>Native So Hook<br>GOT Hook：全局偏移表hook<br>SYM Hook：符号表hook<br>Inline Hook：函数内联hook</p>
+<p>本篇分析native的hook，下一篇java下针对art hook。</p>
+<a id="more"></a>
+<p>一个cpu是可以支持一系列指令的，比如我的n6p:<br>ro.product.cpu.abi=arm64-v8a<br>ro.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi<br>ro.product.cpu.abilist32=armeabi-v7a,armeabi<br>ro.product.cpu.abilist64=arm64-v8a</p>
+<p>ARM64有俩种执行状态:<br>AArch64 ——64 位执行状态，包括该状态的异常模型、内存模型、程序员模型和指令集支持<br>AArch32 ——32 位执行状态，包括该状态的异常模型、内存模型、程序员模型和指令集支持<br>这些执行状态支持三个主要指令集：<br>A32（或 ARM）：32 位固定长度指令集，通过不同架构变体增强部分 32 位架构执行环境现在称为 AArch32。<br>T32 (Thumb) 是以 16 位固定长度指令集的形式引入的，随后在引入 Thumb-2 技术时增强为 16 位和 32 位混合长度指令集。部分 32 位架构执行环境现在称为 AArch32。<br>A64：提供与 ARM 和 Thumb 指令集类似功能的 32 位固定长度指令集。随 ARMv8-A 一起引入，它是一种 全新的AArch64 指令集。</p>
+<h2 id="hook实现分析"><a href="#hook实现分析" class="headerlink" title="hook实现分析"></a>hook实现分析</h2><h3 id="GToad的实现"><a href="#GToad的实现" class="headerlink" title="GToad的实现"></a>GToad的实现</h3><p><a href="https://github.com/GToad/Android_Inline_Hook" target="_blank" rel="external">https://github.com/GToad/Android_Inline_Hook</a><br><a href="https://github.com/GToad/Android_Inline_Hook_ARM64" target="_blank" rel="external">https://github.com/GToad/Android_Inline_Hook_ARM64</a><br>他分别写了32与64的hook，都很新。<br>同时在他的博客<a href="https://gtoad.github.io/" target="_blank" rel="external">https://gtoad.github.io/</a>  写了很多相关的文章。<br>接下来对其精要</p>
+<h4 id="PLT-Hook-amp-Inline-Hook"><a href="#PLT-Hook-amp-Inline-Hook" class="headerlink" title="PLT-Hook&amp;Inline-Hook"></a>PLT-Hook&amp;Inline-Hook</h4><p>PLT Hook通过修改GOT表，使得在调用该共享库的函数时跳转到的是用户自定义的Hook功能代码。<br>只能修改指定模块单向使用其它模块的地方。got是代码模块导入其它模块的重定位点。<br>用于:统一hook目标模块针对同一外部的所有调用，如运行库、系统调用等。<br>无法hook某次精确调用，无法hook模块内自定义的函数。</p>
+<p>Inline Hook在代码段中插入跳转指令，从而把程序执行流程引向自定义代码。<br>基本流程<br><img src="https://i.imgur.com/hkQbs5I.png" alt=""><br>图1<br>几乎应对全部情况，可以针对库函数修改达到批量hook。</p>
+<h4 id="32位Inline-hook"><a href="#32位Inline-hook" class="headerlink" title="32位Inline-hook"></a>32位Inline-hook</h4><p>64兼容能用，实际这个版本更通用。<br>32位示例在n6p测试成功，不过实际使用有一点小心，当lib中存在v8版本64位机会优先选择64位版本使用，此时加入32位的so是错误的。不能同时加载32bit和64bit的so库。实际上64位进程中加载32位so就是错误的。<br>apk安装时，解析其中lib的类型，确定使用的虚拟机。64位设备提供32与64位俩种虚拟机，根据apk的不同fork使用，优先使用64位的。因此注意使用时abi的完全一致，apk安装时决定版本也要与使用so一致。</p>
+<p>使用:hook框架产出so文件，加载so后自动执行hook逻辑。用constructor属性init_array中调用(destructor属性卸载时用)调用顺序与声明顺序一致。</p>
+<p>需要的工具:<a href="https://github.com/keystone-engine/keystone" target="_blank" rel="external">https://github.com/keystone-engine/keystone</a> 多架构汇编程序框架。在这里用于看机器码。</p>
+<h5 id="arm32基本步骤"><a href="#arm32基本步骤" class="headerlink" title="arm32基本步骤"></a>arm32基本步骤</h5><p>1.根据/proc/self/maps中获取so的基地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">虚拟地址起始  虚拟地址结束  此段属性  文件中页单位偏移  文件所属设备号 文件所属节点号   文件名[stack]表示在进程中作为栈使用，[heap]表示堆  </div><div class="line">722e3c7000-722e3de000     r-xp       00000000       fd:00           1953          /system/lib64/liblog.so   //大小17000   第一段</div><div class="line">722e3de000-722e3df000     r--p       00016000       fd:00           1953          /system/lib64/liblog.so   //大小1000    第二段</div><div class="line">722e3df000-722e3e0000     rw-p       00017000       fd:00           1953          /system/lib64/liblog.so   //大小1000    第三段</div><div class="line"></div><div class="line">最小单位为0x1000，即4096字节，页大小。</div><div class="line"></div><div class="line">readelf:</div><div class="line">Elf file type is DYN (Shared object file)</div><div class="line">Entry point 0x0</div><div class="line">There are 8 program headers, starting at offset 64</div><div class="line"></div><div class="line">Program Headers:</div><div class="line">  Type           Offset             VirtAddr           PhysAddr</div><div class="line">                 FileSiz            MemSiz              Flags  Align</div><div class="line">第一段:</div><div class="line">  PHDR           0x0000000000000040 0x0000000000000040 0x0000000000000040</div><div class="line">                 0x00000000000001c0 0x00000000000001c0  R      0x8</div><div class="line">  LOAD           0x0000000000000000 0x0000000000000000 0x0000000000000000</div><div class="line">                 0x00000000000160ac 0x00000000000160ac  R E    0x1000</div><div class="line">第二、三段:                         这个LOAD到187CC   18000为第三段开始     </div><div class="line">                 这里将文件16000内容映射到17000处与16000处，后者供第一段使用，前者供第二段使用，为了另起一页开新段权限不同。</div><div class="line">                 因此17000的前部分不用(是第一部分重复的)从178d0开始用。elf中指明明确的要加载的开始与大小，其中可以推出页的具体映射规划。</div><div class="line">  LOAD           0x00000000000168d0 0x00000000000178d0 0x00000000000178d0</div><div class="line">                 0x0000000000000d68 0x0000000000000efc  RW     0x1000</div><div class="line">  DYNAMIC        0x0000000000016910 0x0000000000017910 0x0000000000017910</div><div class="line">                 0x0000000000000210 0x0000000000000210  RW     0x8</div><div class="line"></div><div class="line">  NOTE           0x0000000000000200 0x0000000000000200 0x0000000000000200</div><div class="line">                 0x0000000000000038 0x0000000000000038  R      0x4</div><div class="line">  GNU_EH_FRAME   0x0000000000015b20 0x0000000000015b20 0x0000000000015b20</div><div class="line">                 0x000000000000058c 0x000000000000058c  R      0x4</div><div class="line">  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000</div><div class="line">                 0x0000000000000000 0x0000000000000000  RW     0x0</div><div class="line">  GNU_RELRO      0x00000000000168d0 0x00000000000178d0 0x00000000000178d0</div><div class="line">                 0x0000000000000730 0x0000000000000730  RW     0x8</div><div class="line"></div><div class="line"> Section to Segment mapping:</div><div class="line">  Segment Sections...</div><div class="line">   00</div><div class="line">   01     .note.android.ident .note.gnu.build-id .dynsym .dynstr .gnu.hash .gnu.version .gnu.version_d .gnu.version_r .rela.dyn .rela.plt .plt .text .rodata .eh_frame .eh_frame_hdr</div><div class="line">   02     .fini_array .data.rel.ro .dynamic .got .got.plt .data .bss</div><div class="line">   03     .dynamic</div><div class="line">   04     .note.android.ident .note.gnu.build-id</div><div class="line">   05     .eh_frame_hdr</div><div class="line">   06</div><div class="line">   07     .fini_array .data.rel.ro .dynamic .got .got.plt</div><div class="line"></div><div class="line">ida解析:</div><div class="line">第一段17000 0开始</div><div class="line">LOAD	        0000000000000000	0000000000003E48	R	.	X	.	L	mempage	01	public	CODE	64	00	0D</div><div class="line">.plt	        0000000000003E48	0000000000004758	R	.	X	.	L	qword	04	public	CODE	64	00	0D</div><div class="line">.text	        0000000000004758	0000000000013680	R	.	X	.	L	dword	05	public	CODE	64	00	0D</div><div class="line">.rodata	        0000000000013680	00000000000142B4	R	.	.	.	L	para	06	public	CONST	64	00	0D</div><div class="line">LOAD	        00000000000142B4	00000000000142B8	R	.	X	.	L	mempage	01	public	CODE	64	00	0D</div><div class="line">.eh_frame	    00000000000142B8	0000000000015B20	R	.	.	.	L	qword	07	public	CONST	64	00	0D</div><div class="line">.eh_frame_hdr	0000000000015B20	00000000000160AC	R	.	.	.	L	dword	08	public	CONST	64	00	0D</div><div class="line"></div><div class="line">第二段1000 17000开始</div><div class="line">.fini_array	    00000000000178D0	00000000000178D8	R	W	.	.	L	qword	09	public	DATA	64	00	0D</div><div class="line">.data.rel.ro	00000000000178D8	0000000000017910	R	W	.	.	L	qword	0A	public	DATA	64	00	0D</div><div class="line">LOAD	        0000000000017910	0000000000017B20	R	W	.	.	L	mempage	02	public	DATA	64	00	0D</div><div class="line">.got	        0000000000017B20	0000000000017B70	R	W	.	.	L	qword	0B	public	DATA	64	00	0D</div><div class="line">.got.plt	    0000000000017B70	0000000000018000	R	W	.	.	L	qword	0C	public	DATA	64	00	0D</div><div class="line">第三段1000 18000开始</div><div class="line">.data	        0000000000018000	0000000000018638	R	W	.	.	L	para	0D	public	DATA	64	00	0D</div><div class="line">.bss	        0000000000018638	00000000000187CC	R	W	.	.	L	qword	0E	public	BSS	    64	00	0D</div><div class="line">.prgend	        00000000000187CC	00000000000187CD	?	?	?	.	L	byte	0F	public		    64	00	0F</div><div class="line">extern	        00000000000187D0	0000000000018B40	?	?	?	.	L	qword	10	public		    64	00	10</div><div class="line">abs	            0000000000018B40	0000000000018B58	?	?	?	.	L	qword	11	public		    64	00	11</div></pre></td></tr></table></figure>
+<p>从上面一个so的三种状态看结构，分别是:进程中maps下的信息，elf中段的信息，ida中解析出的segmentation<br>可见，maps下描述的是进程或线程中连续虚拟内存的区域。据说由mmap创建—这需要看完linker才能了解具体的加载过程了。<br>elf中段是文件如何映射，即文件偏移到VA的转化。<br>ida中则直接解析出了VA的信息。<br>对应关系:<br>maps是实际基址开始的三种权限段VA地址，ida中的是假设从基址0开始的VA，elf则是给出了文件部分的大小与位置所放到VA的大小与位置。<br>实际的权限与文件要求的权限并不一致，依赖段的内容决定。因此通过权限判别并不可靠。</p>
+<p>显而易见，文件so内偏移不是VA偏移，通过文件偏移在内存中找代码位置要依靠段的位置换算。这一过程ida完成了，通过ida分析窗口的地址可以直接看VA偏移，此偏移加上内存中文件基址就是实际的文件中内容在内存的地址。</p>
+<p>2.基地址加VA偏移定位hook点，保存hook点内容。</p>
+<p>3.构造stub代码，以提前编好的汇编代码为模板填充构建。跳转到自定义的函数，通过寄存器远跳</p>
+<p>4.将保存的原地址内容构造成可执行备份模块，并修复指令，最后跳回hook点。继续填充stub的尾部，跳到原内容备份处，通过地址数据改PC远跳。<br>备份的指令执行不一定能还原原语句功能，此时需要修补指令:<br>取PC的值进行计算的指令，因为PC改变了。包括相对寻址<br>跳转到hook点部分的指令，因为跳到中间会造成不完整的hook，跳到hook开始处没事。<br>主要有:<br>BLX, BL, B, BX-绝对跳转没问题，相对时需要修正，计算实际要跳转的地址使用修改PC跳转，有L时将原地址下一条保存到LR<br>ADD-可能使用PC，寻找其他寄存器替代<br>ADR, LDR, MOV-可能使用PC间接寻址，计算绝对地址获取值，将值赋给指定寄存器。</p>
+<p>这里需要复习下arm32指令的格式:<br>cond 00 X opcode S Rn Rd So<br>条件码 00 X 指令编码 是否影响CPSR 第一个操作数寄存器编码 目标寄存器编码 第二个操作数 </p>
+<p>5.修改hook点代码，指向stub<br>用LDR PC, [PC, #-4] ，想远跳必须绝对地址。B立即数只能相对跳。<br>由于三级流水，执行时PC是正在执行指令+8的位置，只有直接使用PC的指令要当心这个问题。</p>
+<h5 id="Thumb-2方案"><a href="#Thumb-2方案" class="headerlink" title="Thumb-2方案"></a>Thumb-2方案</h5><p><img src="https://i.imgur.com/9b1VRGl.png" alt=""><br>图2<br><a href="https://gtoad.github.io/2018/07/06/Android-Native-Hook-Practice/" target="_blank" rel="external">https://gtoad.github.io/2018/07/06/Android-Native-Hook-Practice/</a></p>
+<p>暂时先放弃对Thumb的支持….因为我还用不到….</p>
+<h4 id="64位Inline-hook"><a href="#64位Inline-hook" class="headerlink" title="64位Inline-hook"></a>64位Inline-hook</h4><p>测试并分析64位的</p>
+<p>ARM64切换到ARM32处理器模式来处理ARM32和Thumb-2需要产生Ring1的异常才行，因此普通进程并不会混用指令。<br>ARM64指令集中PC，SP不再是通用寄存器X0-X31中的一员。在ARM32中，R13就是SP，R14就是LR，R15就是PC。在ARM64中，X29是栈帧寄存器，X30是LR,而PC，SP是独立的寄存器。这也导致了对它们的操控和读写有了更多限制。没有了PUSH/POP和LDM/STM指令。</p>
+<p><img src="https://i.imgur.com/nyq7RpT.png" alt=""><br>图3</p>
+<p>基本流程与32位一致。</p>
+<p>注意一下寄存器的恢复时机。占用的寄存器应该在跳至的代码中恢复，这里他是做的对的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">STP X1, X0, [SP, #-0x10]</div><div class="line">LDR X0, 8</div><div class="line">BR X0  //去时的x0修复在stub代码中</div><div class="line">[TARGET_</div><div class="line">ADDRESS] (64bit)</div><div class="line">LDR X0, [SP, -0x8] //这是回来的时候修复X0的</div></pre></td></tr></table></figure>
+<h2 id="我的hook方案与实现"><a href="#我的hook方案与实现" class="headerlink" title="我的hook方案与实现"></a>我的hook方案与实现</h2><p>64用hook，接口完善。</p>
+<p>一次性hook，不用修复指令，完美复原。<br>指定次数hook，这个需要修复指令了。<br>不限次数hook，修复指令。</p>
+<p>项目地址：<a href="https://github.com/imbaya2466/android-hook" target="_blank" rel="external">https://github.com/imbaya2466/android-hook</a><br>含分析项目的注释代码及自己的实践hook。<br>待完成:</p>
+<ol>
+<li>优化接口</li>
+<li>一次性hook与指定次数hook</li>
+</ol>
+<p>一些坑:</p>
+<ol>
+<li>Cmake尝试失败，最后又用回了ndk-build</li>
+<li>一定要在build.gradle中加abiFilters，否则会将arm代码视为别的abi编译产生错误。在application.mk中指定集合到studio没用。即含有汇编代码时需要指定平台编译！！</li>
+<li>AS build出apk里的so与AS调试用的so不一致，即使是debug编译出的。因此找偏移地址时要确定目标so不变。</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/04/类多继承与delete继承类/" rel="next" title="类多继承与delete继承类">
+                <i class="fa fa-chevron-left"></i> 类多继承与delete继承类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">100</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">77</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hook实现分析"><span class="nav-number">2.</span> <span class="nav-text">hook实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GToad的实现"><span class="nav-number">2.1.</span> <span class="nav-text">GToad的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PLT-Hook-amp-Inline-Hook"><span class="nav-number">2.1.1.</span> <span class="nav-text">PLT-Hook&Inline-Hook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#32位Inline-hook"><span class="nav-number">2.1.2.</span> <span class="nav-text">32位Inline-hook</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#arm32基本步骤"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">arm32基本步骤</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Thumb-2方案"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">Thumb-2方案</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64位Inline-hook"><span class="nav-number">2.1.3.</span> <span class="nav-text">64位Inline-hook</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我的hook方案与实现"><span class="nav-number">3.</span> <span class="nav-text">我的hook方案与实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>

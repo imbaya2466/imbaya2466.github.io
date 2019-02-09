@@ -283,6 +283,176 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/AS下cmake使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/10/AS下cmake使用/" itemprop="url">AS下cmake使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T22:02:24+08:00">
+                2018-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>首先将以前写的搬出来方便看</p>
+<h2 id="AS下编辑native—较新方法-使用cmake（常用！）"><a href="#AS下编辑native—较新方法-使用cmake（常用！）" class="headerlink" title="AS下编辑native—较新方法-使用cmake（常用！）"></a>AS下编辑native—较新方法-使用cmake（常用！）</h2><p>AS可以先写好java类，然后点击错误修正可以自动生成对应c文件与原生函数头。<br><strong> AS生成的：注意as下如果是cpp文件extern “C” 必加 </strong><br>当你使用错误修正时是生成c版本的时自动不加，当是cpp文件中错误修正时自动加 </p>
+<p><strong>AS所有配置文件基础目录都是当前同一目录下</strong><br>例如AndroidManifest.xml中指明了java代码路径<br>build.gradle中的文件cmakelist从当前下找</p>
+<h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><p>创建支持原生代码的项目与创建任何其他 Android Studio 项目类似，不过前者还需要额外几个步骤：</p>
+<ol>
+<li>在向导的 Configure your new project 部分，选中 Include C++ Support 复选框。点击 Next。</li>
+<li>正常填写所有其他字段并完成向导接下来的几个部分。</li>
+<li>在向导的 Customize C++ Support 部分，您可以使用下列选项自定义项目：<br>C++ Standard：使用下拉列表选择您希望使用哪种 C++ 标准。选择 Toolchain Default 会使用默认的 CMake 设置。<br>Exceptions Support：如果您希望启用对 C++ 异常处理的支持，请选中此复选框。如果启用此复选框，Android Studio 会将 -fexceptions 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>Runtime Type Information Support：如果您希望支持 RTTI，请选中此复选框。如果启用此复选框，Android Studio 会将 -frtti 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>点击 Finish。</li>
+</ol>
+<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ol>
+<li>在 cpp 组中，您可以找到属于项目的所有原生源文件、标头和预构建库。对于新项目，Android Studio 会创建一个示例 C++ 源文件 native-lib.cpp，并将其置于应用模块的 src/main/cpp/ 目录中。本示例代码提供了一个简单的 C++ 函数 stringFromJNI()，此函数可以返回字符串“Hello from C++”。</li>
+<li>在 External Build Files 组中，您可以找到 CMake 或 ndk-build 的构建脚本。与 build.gradle 文件指示 Gradle 如何构建应用一样，CMake 和 ndk-build 需要一个构建脚本来了解如何构建您的原生库。对于新项目，Android Studio 会创建一个 CMake 构建脚本 CMakeLists.txt，并将其置于模块的根目录中。且必须叫这个名字。</li>
+<li>cmake与ndk-build的配置都在build.gradle的管理配置下。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">使用cmake构建，指定文件</div><div class="line">    externalNativeBuild &#123;</div><div class="line">        cmake &#123;</div><div class="line">            path &quot;CMakeLists.txt&quot;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="运行过程"><a href="#运行过程" class="headerlink" title="运行过程"></a>运行过程</h3><ol>
+<li>Gradle 调用您的外部构建脚本 CMakeLists.txt。</li>
+<li>CMake 按照构建脚本中的命令将 C++ 源文件 native-lib.cpp 编译到共享的对象库中，并命名为 libnative-lib.so，Gradle 随后会将其打包到 APK 中。</li>
+<li>运行时，应用的 MainActivity 会使用 System.loadLibrary() 加载原生库。现在，应用可以使用库的原生函数 stringFromJNI()。</li>
+<li>MainActivity.onCreate() 调用 stringFromJNI()，这将返回“Hello from C++”并使用这些文字更新 TextView。</li>
+</ol>
+<h3 id="CMakeLists-txt"><a href="#CMakeLists-txt" class="headerlink" title="CMakeLists.txt"></a>CMakeLists.txt</h3><p>cmake_minimum_required(VERSION 3.4.1)<br>CMake最小版本使用的是3.4.1。</p>
+<h4 id="add-library"><a href="#add-library" class="headerlink" title="add_library()"></a>add_library()</h4><p><strong>这个就是往项目中添加要生成的东西</strong> 即使是第三方库生成或使用也要先生成目标文件，这里决定最后lib中有什么<br>配置so库信息（为当前当前脚本文件添加库）<br>参一：这个是声明引用so库的名称，在项目中，如果需要使用这个so文件，引用的名称就是这个。生成的会加前后缀<br>参二：<br>STATIC：静态库，是目标文件的归档文件，在链接其它目标的时候使用。<br>SHARED：动态库，会被动态链接，在运行时被加载。<br>MODULE：模块库，是不会被链接到其它目标中的插件，但是可能会在运行时使用dlopen-系列的函数动态链接。<br>参三：构建so库的源文件路径，注意是相对cmakelist的。</p>
+<p>还可以用来构建有源代码的库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">add_library( app-glue</div><div class="line">             STATIC</div><div class="line">             $&#123;ANDROID_NDK&#125;/sources/android/native_app_glue/android_native_app_glue.c )</div><div class="line"></div><div class="line"># You need to link static libraries against your shared native library.</div><div class="line">target_link_libraries( native-lib app-glue $&#123;log-lib&#125; )</div></pre></td></tr></table></figure></p>
+<p>还可以用来构建使用已有so的库,set_target_properties用于设置查找so库的路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">add_library( imported-lib</div><div class="line">             SHARED</div><div class="line">             IMPORTED )</div><div class="line">set_target_properties(target1 target2 ...</div><div class="line">                      PROPERTIES prop1 value1</div><div class="line">                      prop2 value2 ...)</div></pre></td></tr></table></figure></p>
+<h4 id="include-directories"><a href="#include-directories" class="headerlink" title="include_directories"></a>include_directories</h4><p>配置头文件路径,注意这里指定的是目录而非文件</p>
+<h4 id="find-library"><a href="#find-library" class="headerlink" title="find_library()"></a>find_library()</h4><p><strong>这个就是用来使用android上提供的</strong><br>这个方法与我们要创建的so库无关而是使用NDK的Apis或者库，默认情况下Android平台集成了很多NDK库文件，所以这些文件是没有必要打包到apk里面去的。直接声明想要使用的库名称即可<br>参一：出口，存放库的路径<br>参二：指定使用的库</p>
+<h4 id="target-link-libraries"><a href="#target-link-libraries" class="headerlink" title="target_link_libraries()"></a>target_link_libraries()</h4><p><strong>这个就是一个连接操作，将后面的连接到第一个文件中</strong></p>
+<p>如果你本地的库（native-lib）想要调用log库的方法，那么就需要配置这个属性，意思是把NDK库关联到本地库。<br>参一：要被关联的库名称<br>其它参：要关联的库名称。${log-lib}为取找到的路径</p>
+<h4 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">#添加一个库，可用于目标</div><div class="line">add_library( # 指定库的名称。生成后会加前后缀根据下面的设置</div><div class="line">             native-lib</div><div class="line"></div><div class="line">             # 将库设置为共享库。</div><div class="line">             SHARED</div><div class="line"></div><div class="line">             # 提供源文件的相对路径。可以多个文件编译为一个库</div><div class="line">             src/main/jni/native-lib.cpp )</div><div class="line">#添加头文件</div><div class="line">include_directories(src/main/cpp/include/)</div><div class="line"></div><div class="line">______________________________________________________________________</div><div class="line"></div><div class="line">#从源码形式的库获取</div><div class="line">add_library( app-glue</div><div class="line">             STATIC</div><div class="line">             $&#123;ANDROID_NDK&#125;/sources/android/native_app_glue/android_native_app_glue.c )</div><div class="line"></div><div class="line">______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line">#添加一个已有的库</div><div class="line">add_library( imported-lib</div><div class="line">             SHARED</div><div class="line">			 #表示这个已经存在，只要导入就可以，set_target_properties()指定路径</div><div class="line">             IMPORTED )</div><div class="line">#指定目标库的位置</div><div class="line">set_target_properties( # Specifies the target library.</div><div class="line">                       imported-lib</div><div class="line"></div><div class="line">                       # Specifies the parameter you want to define.</div><div class="line">                       PROPERTIES IMPORTED_LOCATION</div><div class="line"></div><div class="line">                       # Provides the path to the library you want to import.</div><div class="line">                       imported-lib/src/$&#123;ANDROID_ABI&#125;/libimported-lib.so )</div><div class="line">#编译时定位标头文件</div><div class="line">include_directories( imported-lib/include/ )</div><div class="line"></div><div class="line">_______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line">#使用android上存在的</div><div class="line">find_library( # find用来找到库，这个变量被赋予要找的库的路径</div><div class="line">              log-lib</div><div class="line"></div><div class="line">              # 这里是你要找的库的名字，该库已存在于android中</div><div class="line">              log )</div><div class="line"></div><div class="line"></div><div class="line">_______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#第一个参数是最终要生成的，其它都是需要连接进去的</div><div class="line">target_link_libraries( # 指定目标库</div><div class="line">                       native-lib</div><div class="line"></div><div class="line">					   #连接已有的库</div><div class="line">					   imported-lib</div><div class="line">					   #连接自己建的库 </div><div class="line">                       app-glue</div><div class="line">                       # 连接的android ndk平台已存在目标，将找到的路径传入即可</div><div class="line">                       $&#123;log-lib&#125; )</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/androidNDK逆向初步/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1956,160 +2126,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/25/项目构建工具/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/25/项目构建工具/" itemprop="url">项目构建工具</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-25T00:41:39+08:00">
-                2018-04-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/修养/" itemprop="url" rel="index">
-                    <span itemprop="name">修养</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>以下均不限语言</p>
-<ol>
-<li>gcc是GNU Compiler Collection（就是GNU编译器套件），也可以简单认为是编译器，它可以编译很多种编程语言（括C、C++、Objective-C、Fortran、Java等等）。</li>
-<li>当你的程序只有一个源文件时，直接就可以用gcc命令编译它。</li>
-<li>但是当你的程序包含很多个源文件时，用gcc命令逐个去编译时，你就很容易混乱而且工作量大</li>
-<li>所以出现了make工具make工具可以看成是一个智能的批处理工具，它本身并没有编译和链接的功能，而是用类似于批处理的方式—通过调用makefile文件中用户指定的命令来进行编译和链接的。</li>
-<li>makefile是什么？简单的说就像一首歌的乐谱，make工具就像指挥家，指挥家根据乐谱指挥整个乐团怎么样演奏，make工具就根据makefile中的命令进行编译和链接的</li>
-<li>makefile命令中就包含了调用gcc（也可以是别的编译器）去编译某个源文件的命令</li>
-<li>makefile在一些简单的工程完全可以人工手下，但是当工程非常大的时候，手写makefile也是非常麻烦的，如果换了个平台makefile又要重新修改。</li>
-<li>这时候就出现了Cmake这个工具，cmake就可以更加简单的生成makefile文件给上面那个make用。当然cmake还有其他功能，就是可以跨平台生成对应平台能用的makefile，你不用再自己去修改了。</li>
-<li>可是cmake根据什么生成makefile呢？它又要根据一个叫CMakeLists.txt文件（学名：组态档）去生成makefile。</li>
-<li>到最后CMakeLists.txt文件谁写啊？亲，是你自己手写的。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2160,7 +2176,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">100</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

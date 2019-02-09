@@ -283,6 +283,157 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/10/android-hook/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/02/10/android-hook/" itemprop="url">android-hook</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-10T02:38:20+08:00">
+                2019-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试<br>先为了看懂：<a href="https://github.com/xiaobaiyey/dexload" target="_blank" rel="external">https://github.com/xiaobaiyey/dexload</a></p>
+<p>钩子(hook)与注入(inject):<br>hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。<br>注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。<br>实现部分交集互用，有时不区分。一般hook目标需要注入为前提。<br>之前写过一篇注入的，但没有实现完整:<a href="https://xn--74q78i15hxv3arigm4e.cn/2018/05/26/android-hook/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2018/05/26/android-hook/</a><br>猜测失败原因是Android 7.0之后对于非公开API的调用限制:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">从 Android 7.0 开始，系统将阻止应用动态链接非公开 NDK 库，这种库可能会导致您的应用崩溃。此行为变更旨在为跨平台更新和不同设备提供统一的应用体验。</div><div class="line">7.0更新详情:https://developer.android.com/about/versions/nougat/android-7.0-changes?hl=zh-cn#ndk</div><div class="line">详细的ndK变更:https://android.googlesource.com/platform/bionic/+/master/android-changes-for-ndk-developers.md#Writable-and-Executable-Segments-Enforced-for-API-level-26</div></pre></td></tr></table></figure></p>
+<p>开发只要保证:连接不在apk中的库时只能连接公开的NDK，自己使用的so一定要放到apk中打包。<br>AOSP 7.0以后关于NDK限制机制的核心代码是在 /bionic/linker/linker.cpp，自己环境下可以修改源码来方便注入，其它环境下可以先注入处理掉检测部分，再注入自己的so。</p>
+<p>Java Hook<br>Static Field Hook：静态成员hook<br>Method Hook：函数hook</p>
+<p>Native So Hook<br>GOT Hook：全局偏移表hook<br>SYM Hook：符号表hook<br>Inline Hook：函数内联hook</p>
+<p>本篇分析native的hook，下一篇java下针对art hook。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/02/10/android-hook/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/04/类多继承与delete继承类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1640,168 +1791,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/18/cpp学习-第九章-顺序容器/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/01/18/cpp学习-第九章-顺序容器/" itemprop="url">cpp学习-第九章-顺序容器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-18T01:33:54+08:00">
-                2019-01-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/cpp/" itemprop="url" rel="index">
-                    <span itemprop="name">cpp</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="核心简记"><a href="#核心简记" class="headerlink" title="核心简记"></a>核心简记</h2><p>容器分为顺序容器(不依赖值，与元素加入位置对应)、有序与无序关联容器(根据关键字的值存储)。标准库的容器性能很好</p>
-<p>顺序容器类型:在添加删除与查找方面代价侧重不同。   </p>
-<ol>
-<li>vector:可变大小数组，随机访问，尾部插入快。  空间不够时分配更大的，并拷贝</li>
-<li>deque:双端队列，随机访问，头尾插入快   。 一段一段的连续空间链接起来，deque采用一块map（非STL中的map）作为主控，map是一块小的连续空间，其中每个元素都是指针，指向一块较大的线性连续空 间，称为缓冲区。而缓冲区才是存储deque元素的空间主体。</li>
-<li>list:双向链表，双向顺序访问，任意插入快  。  底层数据结构为双向循环链表</li>
-<li>forward_list:单向链表，单向顺序访问，任意插入快</li>
-<li>array:固定大小数组，随机访问，不可改动大小</li>
-<li>string:与vector相似，专门保存字符。</li>
-</ol>
-<p>容器上的操作层次:</p>
-<ol>
-<li>所有容器类型提供</li>
-<li>仅针对顺序、关联或无序容器</li>
-<li>只适用小部分容器</li>
-</ol>
-<p>每个容器定义在头文件中，文件名与类型名相同。均为模板类</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/01/18/cpp学习-第九章-顺序容器/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1852,7 +1841,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">99</span>
+                <span class="site-state-item-count">100</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
