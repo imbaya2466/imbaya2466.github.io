@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://i.imgur.com/hkQbs5I.png">
 <meta property="og:image" content="https://i.imgur.com/9b1VRGl.png">
 <meta property="og:image" content="https://i.imgur.com/nyq7RpT.png">
-<meta property="og:updated_time" content="2019-02-09T18:43:19.746Z">
+<meta property="og:updated_time" content="2019-02-14T18:46:35.089Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android-hook">
 <meta name="twitter:description" content="前言目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试先为了看懂：https://github.com/xiaobaiyey/dexload 钩子(hook)与注入(inject):hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。实现部分交集互">
@@ -385,7 +385,8 @@
 <a id="more"></a>
 <p>一个cpu是可以支持一系列指令的，比如我的n6p:<br>ro.product.cpu.abi=arm64-v8a<br>ro.product.cpu.abilist=arm64-v8a,armeabi-v7a,armeabi<br>ro.product.cpu.abilist32=armeabi-v7a,armeabi<br>ro.product.cpu.abilist64=arm64-v8a</p>
 <p>ARM64有俩种执行状态:<br>AArch64 ——64 位执行状态，包括该状态的异常模型、内存模型、程序员模型和指令集支持<br>AArch32 ——32 位执行状态，包括该状态的异常模型、内存模型、程序员模型和指令集支持<br>这些执行状态支持三个主要指令集：<br>A32（或 ARM）：32 位固定长度指令集，通过不同架构变体增强部分 32 位架构执行环境现在称为 AArch32。<br>T32 (Thumb) 是以 16 位固定长度指令集的形式引入的，随后在引入 Thumb-2 技术时增强为 16 位和 32 位混合长度指令集。部分 32 位架构执行环境现在称为 AArch32。<br>A64：提供与 ARM 和 Thumb 指令集类似功能的 32 位固定长度指令集。随 ARMv8-A 一起引入，它是一种 全新的AArch64 指令集。</p>
-<h2 id="hook实现分析"><a href="#hook实现分析" class="headerlink" title="hook实现分析"></a>hook实现分析</h2><h3 id="GToad的实现"><a href="#GToad的实现" class="headerlink" title="GToad的实现"></a>GToad的实现</h3><p><a href="https://github.com/GToad/Android_Inline_Hook" target="_blank" rel="external">https://github.com/GToad/Android_Inline_Hook</a><br><a href="https://github.com/GToad/Android_Inline_Hook_ARM64" target="_blank" rel="external">https://github.com/GToad/Android_Inline_Hook_ARM64</a><br>他分别写了32与64的hook，都很新。<br>同时在他的博客<a href="https://gtoad.github.io/" target="_blank" rel="external">https://gtoad.github.io/</a>  写了很多相关的文章。<br>接下来对其精要</p>
+<h2 id="hook实现分析"><a href="#hook实现分析" class="headerlink" title="hook实现分析"></a>hook实现分析</h2><p>几个推荐的hook框架:<br><a href="https://github.com/jmpews/HookZz/tree/master" target="_blank" rel="external">https://github.com/jmpews/HookZz/tree/master</a><br><a href="https://github.com/iqiyi/xHook" target="_blank" rel="external">https://github.com/iqiyi/xHook</a></p>
+<h3 id="GToad的实现"><a href="#GToad的实现" class="headerlink" title="GToad的实现"></a>GToad的实现</h3><p><a href="https://github.com/GToad/Android_Inline_Hook" target="_blank" rel="external">https://github.com/GToad/Android_Inline_Hook</a><br><a href="https://github.com/GToad/Android_Inline_Hook_ARM64" target="_blank" rel="external">https://github.com/GToad/Android_Inline_Hook_ARM64</a><br>他分别写了32与64的hook，都很新。<br>同时在他的博客<a href="https://gtoad.github.io/" target="_blank" rel="external">https://gtoad.github.io/</a>  写了很多相关的文章。<br>接下来对其精要</p>
 <h4 id="PLT-Hook-amp-Inline-Hook"><a href="#PLT-Hook-amp-Inline-Hook" class="headerlink" title="PLT-Hook&amp;Inline-Hook"></a>PLT-Hook&amp;Inline-Hook</h4><p>PLT Hook通过修改GOT表，使得在调用该共享库的函数时跳转到的是用户自定义的Hook功能代码。<br>只能修改指定模块单向使用其它模块的地方。got是代码模块导入其它模块的重定位点。<br>用于:统一hook目标模块针对同一外部的所有调用，如运行库、系统调用等。<br>无法hook某次精确调用，无法hook模块内自定义的函数。</p>
 <p>Inline Hook在代码段中插入跳转指令，从而把程序执行流程引向自定义代码。<br>基本流程<br><img src="https://i.imgur.com/hkQbs5I.png" alt=""><br>图1<br>几乎应对全部情况，可以针对库函数修改达到批量hook。</p>
 <h4 id="32位Inline-hook"><a href="#32位Inline-hook" class="headerlink" title="32位Inline-hook"></a>32位Inline-hook</h4><p>64兼容能用，实际这个版本更通用。<br>32位示例在n6p测试成功，不过实际使用有一点小心，当lib中存在v8版本64位机会优先选择64位版本使用，此时加入32位的so是错误的。不能同时加载32bit和64bit的so库。实际上64位进程中加载32位so就是错误的。<br>apk安装时，解析其中lib的类型，确定使用的虚拟机。64位设备提供32与64位俩种虚拟机，根据apk的不同fork使用，优先使用64位的。因此注意使用时abi的完全一致，apk安装时决定版本也要与使用so一致。</p>
@@ -409,17 +410,21 @@
 <p>注意一下寄存器的恢复时机。占用的寄存器应该在跳至的代码中恢复，这里他是做的对的。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">STP X1, X0, [SP, #-0x10]</div><div class="line">LDR X0, 8</div><div class="line">BR X0  //去时的x0修复在stub代码中</div><div class="line">[TARGET_</div><div class="line">ADDRESS] (64bit)</div><div class="line">LDR X0, [SP, -0x8] //这是回来的时候修复X0的</div></pre></td></tr></table></figure>
 <h2 id="我的hook方案与实现"><a href="#我的hook方案与实现" class="headerlink" title="我的hook方案与实现"></a>我的hook方案与实现</h2><p>64用hook，接口完善。</p>
-<p>一次性hook，不用修复指令，完美复原。<br>指定次数hook，这个需要修复指令了。<br>不限次数hook，修复指令。</p>
+<p>一次性hook，不用修复指令，完美复原。<br>不限次数hook，修复指令。</p>
 <p>项目地址：<a href="https://github.com/imbaya2466/android-hook" target="_blank" rel="external">https://github.com/imbaya2466/android-hook</a><br>含分析项目的注释代码及自己的实践hook。<br>待完成:</p>
 <ol>
-<li>优化接口</li>
-<li>一次性hook与指定次数hook</li>
+<li>优化接口，改善数据结构 ok</li>
+<li>修复bug-重复hook ok</li>
+<li>删除hook功能 ok</li>
+<li>一次性hook -失败</li>
 </ol>
+<p>无法一次性hook-arm64下。<br>因为不可修改pc，只能使用寄存器跳转，此时跳转回去必须使用一个寄存器但无代码可修复寄存器，因此失败。</p>
 <p>一些坑:</p>
 <ol>
 <li>Cmake尝试失败，最后又用回了ndk-build</li>
 <li>一定要在build.gradle中加abiFilters，否则会将arm代码视为别的abi编译产生错误。在application.mk中指定集合到studio没用。即含有汇编代码时需要指定平台编译！！</li>
 <li>AS build出apk里的so与AS调试用的so不一致，即使是debug编译出的。因此找偏移地址时要确定目标so不变。</li>
+<li>native方法不是System.loadLibrary时绑定，是调用native方法时才寻找符号表中符合的，也可以手动绑定?需要看art的native方法oat后的样子才能确定。</li>
 </ol>
 
       
