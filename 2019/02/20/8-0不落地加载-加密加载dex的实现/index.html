@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,逆向," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言阅读art源码，思考dex不落地&amp;amp;加密加载的实现，并含有oat过程">
+<meta name="keywords" content="android,逆向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="8.0不落地加载&amp;加密加载dex的实现">
+<meta property="og:url" content="http://yoursite.com/2019/02/20/8-0不落地加载-加密加载dex的实现/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言阅读art源码，思考dex不落地&amp;amp;加密加载的实现，并含有oat过程">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-19T19:34:02.883Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="8.0不落地加载&amp;加密加载dex的实现">
+<meta name="twitter:description" content="前言阅读art源码，思考dex不落地&amp;amp;加密加载的实现，并含有oat过程">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/20/8-0不落地加载-加密加载dex的实现/"/>
+
+
+
+
+
+  <title>8.0不落地加载&加密加载dex的实现 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/20/8-0不落地加载-加密加载dex的实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">8.0不落地加载&加密加载dex的实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-20T03:29:45+08:00">
+                2019-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android应用加固/" itemprop="url" rel="index">
+                    <span itemprop="name">android应用加固</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>阅读art源码，思考dex不落地&amp;加密加载的实现，并含有oat过程</p>
+<a id="more"></a>
+<h2 id="android提供的内存加载接口"><a href="#android提供的内存加载接口" class="headerlink" title="android提供的内存加载接口"></a>android提供的内存加载接口</h2><p>分析内存加载dex，探索内存加载dex的可行性。</p>
+<p>正好，InMemoryDexClassLoader是Android8.0新增的类加载器，继承自BaseDexClassLoader，用于加载内存中的dex文件。</p>
+<p>libcore\dalvik\src\main\java\dalvik\system\InMemoryDexClassLoader.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public final class InMemoryDexClassLoader extends BaseDexClassLoader &#123;</div><div class="line">    /**</div><div class="line">     * Create an in-memory DEX class loader with the given dex buffers.</div><div class="line">     *</div><div class="line">     * @param dexBuffers array of buffers containing DEX files between</div><div class="line">     *                       &lt;tt&gt;buffer.position()&lt;/tt&gt; and &lt;tt&gt;buffer.limit()&lt;/tt&gt;.</div><div class="line">     * @param parent the parent class loader for delegation.</div><div class="line">     * @hide</div><div class="line">     */</div><div class="line">    public InMemoryDexClassLoader(ByteBuffer[] dexBuffers, ClassLoader parent) &#123;</div><div class="line">        super(dexBuffers, parent);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * Creates a new in-memory DEX class loader.</div><div class="line">     *</div><div class="line">     * @param dexBuffer buffer containing DEX file contents between</div><div class="line">     *                       &lt;tt&gt;buffer.position()&lt;/tt&gt; and &lt;tt&gt;buffer.limit()&lt;/tt&gt;.</div><div class="line">     * @param parent the parent class loader for delegation.</div><div class="line">     */</div><div class="line">    public InMemoryDexClassLoader(ByteBuffer dexBuffer, ClassLoader parent) &#123;</div><div class="line">        this(new ByteBuffer[] &#123; dexBuffer &#125;, parent);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>很直观，传入ByteBuffer数组，用父类创建。注意一个ByteBuffer对象代表了一个字节缓冲区，即一个对象代表一个dex文件</p>
+<p>BaseDexClassLoader<br>libcore\dalvik\src\main\java\dalvik\system\BaseDexClassLoader.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line"> * Constructs an instance.</div><div class="line"> *</div><div class="line"> * dexFile must be an in-memory representation of a full dexFile.</div><div class="line"> *</div><div class="line"> * @param dexFiles the array of in-memory dex files containing classes.</div><div class="line"> * @param parent the parent class loader</div><div class="line"> *</div><div class="line"> * @hide</div><div class="line"> */</div><div class="line">public BaseDexClassLoader(ByteBuffer[] dexFiles, ClassLoader parent) &#123;</div><div class="line">    // TODO We should support giving this a library search path maybe.</div><div class="line">    super(parent);</div><div class="line">    this.pathList = new DexPathList(this, dexFiles);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>DexPathList<br>libcore\dalvik\src\main\java\dalvik\system\DexPathList.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">  /**</div><div class="line">   * Construct an instance.</div><div class="line">   *</div><div class="line">   * @param definingContext the context in which any as-yet unresolved</div><div class="line">   * classes should be defined</div><div class="line">   *</div><div class="line">   * @param dexFiles the bytebuffers containing the dex files that we should load classes from.</div><div class="line">   */</div><div class="line">  public DexPathList(ClassLoader definingContext, ByteBuffer[] dexFiles) &#123;</div><div class="line">      if (definingContext == null) &#123;</div><div class="line">          throw new NullPointerException(&quot;definingContext == null&quot;);</div><div class="line">      &#125;</div><div class="line">      if (dexFiles == null) &#123;</div><div class="line">          throw new NullPointerException(&quot;dexFiles == null&quot;);</div><div class="line">      &#125;</div><div class="line">      if (Arrays.stream(dexFiles).anyMatch(v -&gt; v == null)) &#123;</div><div class="line">          throw new NullPointerException(&quot;dexFiles contains a null Buffer!&quot;);</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      this.definingContext = definingContext;</div><div class="line">      // TODO It might be useful to let in-memory dex-paths have native libraries.</div><div class="line">      this.nativeLibraryDirectories = Collections.emptyList();</div><div class="line">      this.systemNativeLibraryDirectories =</div><div class="line">              splitPaths(System.getProperty(&quot;java.library.path&quot;), true);</div><div class="line">      this.nativeLibraryPathElements = makePathElements(this.systemNativeLibraryDirectories);</div><div class="line"></div><div class="line">      ArrayList&lt;IOException&gt; suppressedExceptions = new ArrayList&lt;IOException&gt;();</div><div class="line">//创建文件节点</div><div class="line">      this.dexElements = makeInMemoryDexElements(dexFiles, suppressedExceptions);</div><div class="line">      if (suppressedExceptions.size() &gt; 0) &#123;</div><div class="line">          this.dexElementsSuppressedExceptions =</div><div class="line">                  suppressedExceptions.toArray(new IOException[suppressedExceptions.size()]);</div><div class="line">      &#125; else &#123;</div><div class="line">          dexElementsSuppressedExceptions = null;</div><div class="line">      &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>和普通的创建方式类似，创建节点数组，代表文件和目录</p>
+<p>makeInMemoryDexElements<br>dalvik\src\main\java\dalvik\system\DexPathList.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">private static Element[] makeInMemoryDexElements(ByteBuffer[] dexFiles,</div><div class="line">        List&lt;IOException&gt; suppressedExceptions) &#123;</div><div class="line">    Element[] elements = new Element[dexFiles.length];</div><div class="line">    int elementPos = 0;</div><div class="line">    for (ByteBuffer buf : dexFiles) &#123;</div><div class="line">        try &#123;</div><div class="line">            DexFile dex = new DexFile(buf);</div><div class="line">            elements[elementPos++] = new Element(dex);</div><div class="line">        &#125; catch (IOException suppressed) &#123;</div><div class="line">            System.logE(&quot;Unable to load dex file: &quot; + buf, suppressed);</div><div class="line">            suppressedExceptions.add(suppressed);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    if (elementPos != elements.length) &#123;</div><div class="line">        elements = Arrays.copyOf(elements, elementPos);</div><div class="line">    &#125;</div><div class="line">    return elements;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>和普通方式相同，创建DexFile对象，表示加载到内存的dex文件，elements表示一个节点。</p>
+<p>DexFile<br>libcore\dalvik\src\main\java\dalvik\system\DexFile.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">  DexFile(ByteBuffer buf) throws IOException &#123;</div><div class="line">       mCookie = openInMemoryDexFile(buf);</div><div class="line">       mInternalCookie = mCookie;</div><div class="line">       mFileName = null;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">private static Object openInMemoryDexFile(ByteBuffer buf) throws IOException &#123;</div><div class="line">       if (buf.isDirect()) &#123;</div><div class="line">		//直接缓冲区</div><div class="line">           return createCookieWithDirectBuffer(buf, buf.position(), buf.limit());</div><div class="line">       &#125; else &#123;</div><div class="line">		//不是直接缓冲区转数组</div><div class="line">           return createCookieWithArray(buf.array(), buf.position(), buf.limit());</div><div class="line">       &#125;</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   private static native Object createCookieWithDirectBuffer(ByteBuffer buf, int start, int end);</div><div class="line">   private static native Object createCookieWithArray(byte[] buf, int start, int end);</div></pre></td></tr></table></figure></p>
+<p>调用native方法生成内存dex对象。参数：</p>
+<ol>
+<li>byte[],dex文件的字节数组</li>
+<li>int型,表示此缓冲区的位置(该位置可以设置)</li>
+<li>int,此缓冲区的限制</li>
+</ol>
+<p>仔细一想….这个ByteBuffer不就是曾经研究javaNio的时候看的缓冲区类么……<br>position limit  capacity分别代表读写当前位置、读限制、写限制<br>也就是说传入的就是byte[]数组，它的当前读取的位置，可读区的大小</p>
+<p>接下来进入native层<br>art\runtime\native\dalvik_system_DexFile.cc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">static jobject DexFile_createCookieWithArray(JNIEnv* env,</div><div class="line">                                             jclass,</div><div class="line">                                             jbyteArray buffer,</div><div class="line">                                             jint start,</div><div class="line">                                             jint end) &#123;</div><div class="line">	//分配memmap内存</div><div class="line">  std::unique_ptr&lt;MemMap&gt; dex_mem_map(AllocateDexMemoryMap(env, start, end));</div><div class="line">  if (dex_mem_map == nullptr) &#123;</div><div class="line">    DCHECK(Thread::Current()-&gt;IsExceptionPending());</div><div class="line">    return 0;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  auto destination = reinterpret_cast&lt;jbyte*&gt;(dex_mem_map.get()-&gt;Begin());</div><div class="line">  //GetByteArrayRegion的作用是byte数组的值拷贝，直接拷贝到destination中</div><div class="line">  env-&gt;GetByteArrayRegion(buffer, start, end - start, destination);</div><div class="line">  return CreateSingleDexFileCookie(env, std::move(dex_mem_map));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>分配MemoryMap内存，通过jni拷贝dex进去，之后执行CreateSingleDexFileCookie</p>
+<p>CreateSingleDexFileCookie<br>art\runtime\native\dalvik_system_DexFile.cc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">constexpr size_t kOatFileIndex = 0;</div><div class="line">constexpr size_t kDexFileIndexStart = 1;</div><div class="line"></div><div class="line"></div><div class="line">static jobject CreateSingleDexFileCookie(JNIEnv* env, std::unique_ptr&lt;MemMap&gt; data) &#123;</div><div class="line">  std::unique_ptr&lt;const DexFile&gt; dex_file(CreateDexFile(env, std::move(data)));</div><div class="line">  if (dex_file.get() == nullptr) &#123;</div><div class="line">    DCHECK(env-&gt;ExceptionCheck());</div><div class="line">    return nullptr;</div><div class="line">  &#125;</div><div class="line">  std::vector&lt;std::unique_ptr&lt;const DexFile&gt;&gt; dex_files;</div><div class="line">  dex_files.push_back(std::move(dex_file));</div><div class="line">  //可见并没有oat文件被传入......直接执行的dex</div><div class="line">  return ConvertDexFilesToJavaArray(env, nullptr, dex_files);</div><div class="line">&#125;</div><div class="line"></div><div class="line">static jlongArray ConvertDexFilesToJavaArray(JNIEnv* env,</div><div class="line">                                             const OatFile* oat_file,</div><div class="line">                                             std::vector&lt;std::unique_ptr&lt;const DexFile&gt;&gt;&amp; vec) &#123;</div><div class="line">  // Add one for the oat file.</div><div class="line">  //创建一个java层的long数组</div><div class="line">  jlongArray long_array = env-&gt;NewLongArray(static_cast&lt;jsize&gt;(kDexFileIndexStart + vec.size()));</div><div class="line">  if (env-&gt;ExceptionCheck() == JNI_TRUE) &#123;</div><div class="line">    return nullptr;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  jboolean is_long_data_copied;</div><div class="line">  //直接获取该java数组的引用</div><div class="line">  jlong* long_data = env-&gt;GetLongArrayElements(long_array, &amp;is_long_data_copied);</div><div class="line">  if (env-&gt;ExceptionCheck() == JNI_TRUE) &#123;</div><div class="line">    return nullptr;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  //第0个位置存oatfile的指针</div><div class="line">  long_data[kOatFileIndex] = reinterpret_cast&lt;uintptr_t&gt;(oat_file);</div><div class="line">  for (size_t i = 0; i &lt; vec.size(); ++i) &#123;</div><div class="line">	  //后面每个位置存dex文件的指针</div><div class="line">    long_data[kDexFileIndexStart + i] = reinterpret_cast&lt;uintptr_t&gt;(vec[i].get());</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  //复制回</div><div class="line">  env-&gt;ReleaseLongArrayElements(long_array, long_data, 0);</div><div class="line">  if (env-&gt;ExceptionCheck() == JNI_TRUE) &#123;</div><div class="line">    return nullptr;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Now release all the unique_ptrs.</div><div class="line">  //释放只能指针</div><div class="line">  for (auto&amp; dex_file : vec) &#123;</div><div class="line">    dex_file.release();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  return long_array;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用了CreateDexFile去创建一个DexFile，之后调用和普通里一样的ConvertDexFilesToJavaArray方法返回jlongArray对象。注意oat_file为null。<br>可见返回的mCookie其实就是一个oat和多个dex的指针，但内存加载失去了oat</p>
+<p>CreateDexFile<br>art\runtime\native\dalvik_system_DexFile.cc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">static const DexFile* CreateDexFile(JNIEnv* env, std::unique_ptr&lt;MemMap&gt; dex_mem_map) &#123;</div><div class="line">  std::string location = StringPrintf(&quot;Anonymous-DexFile@%p-%p&quot;,</div><div class="line">                                      dex_mem_map-&gt;Begin(),</div><div class="line">                                      dex_mem_map-&gt;End());</div><div class="line">  std::string error_message;</div><div class="line">  std::unique_ptr&lt;const DexFile&gt; dex_file(DexFile::Open(location,</div><div class="line">                                                        0,</div><div class="line">                                                        std::move(dex_mem_map),</div><div class="line">                                                        /* verify */ true,</div><div class="line">                                                        /* verify_location */ true,</div><div class="line">                                                        &amp;error_message));</div><div class="line">...</div><div class="line"></div><div class="line">  return dex_file.release();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用open返回DexFile对象</p>
+<p>Open<br>art\runtime\dex_file.cc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">static constexpr OatDexFile* kNoOatDexFile = nullptr;</div><div class="line"></div><div class="line">std::unique_ptr&lt;const DexFile&gt; DexFile::Open(const std::string&amp; location,</div><div class="line">                                             uint32_t location_checksum,</div><div class="line">                                             std::unique_ptr&lt;MemMap&gt; map,</div><div class="line">                                             bool verify,</div><div class="line">                                             bool verify_checksum,</div><div class="line">                                             std::string* error_msg) &#123;</div><div class="line">...</div><div class="line"></div><div class="line">  std::unique_ptr&lt;DexFile&gt; dex_file = OpenCommon(map-&gt;Begin(),</div><div class="line">                                                 map-&gt;Size(),</div><div class="line">                                                 location,</div><div class="line">                                                 location_checksum,</div><div class="line">                                                 kNoOatDexFile,</div><div class="line">                                                 verify,</div><div class="line">                                                 verify_checksum,</div><div class="line">                                                 error_msg);</div><div class="line">  if (dex_file != nullptr) &#123;</div><div class="line">    dex_file-&gt;mem_map_.reset(map.release());</div><div class="line">  &#125;</div><div class="line">  return dex_file;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>OpenCommon<br>art\runtime\dex_file.cc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">std::unique_ptr&lt;DexFile&gt; DexFile::OpenCommon(const uint8_t* base,</div><div class="line">                                             size_t size,</div><div class="line">                                             const std::string&amp; location,</div><div class="line">                                             uint32_t location_checksum,</div><div class="line">                                             const OatDexFile* oat_dex_file,</div><div class="line">                                             bool verify,</div><div class="line">                                             bool verify_checksum,</div><div class="line">                                             std::string* error_msg,</div><div class="line">                                             VerifyResult* verify_result) &#123;</div><div class="line">  if (verify_result != nullptr) &#123;</div><div class="line">    *verify_result = VerifyResult::kVerifyNotAttempted;</div><div class="line">  &#125;</div><div class="line">  std::unique_ptr&lt;DexFile&gt; dex_file(new DexFile(base,</div><div class="line">                                                size,</div><div class="line">                                                location,</div><div class="line">                                                location_checksum,</div><div class="line">                                                oat_dex_file));</div><div class="line">...</div><div class="line">  if (verify &amp;&amp; !DexFileVerifier::Verify(dex_file.get(),</div><div class="line">                                         dex_file-&gt;Begin(),</div><div class="line">                                         dex_file-&gt;Size(),</div><div class="line">                                         location.c_str(),</div><div class="line">                                         verify_checksum,</div><div class="line">                                         error_msg)) &#123;</div><div class="line">...</div><div class="line">  &#125;</div><div class="line">  if (verify_result != nullptr) &#123;</div><div class="line">    *verify_result = VerifyResult::kVerifySucceeded;</div><div class="line">  &#125;</div><div class="line">  return dex_file;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用DexFile的构造函数</p>
+<p>DexFile<br>art\runtime\dex_file.cc<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">DexFile::DexFile(const uint8_t* base,</div><div class="line">                 size_t size,</div><div class="line">                 const std::string&amp; location,</div><div class="line">                 uint32_t location_checksum,</div><div class="line">                 const OatDexFile* oat_dex_file)</div><div class="line">    : begin_(base),</div><div class="line">      size_(size),</div><div class="line">      location_(location),</div><div class="line">      location_checksum_(location_checksum),</div><div class="line">      header_(reinterpret_cast&lt;const Header*&gt;(base)),</div><div class="line">      string_ids_(reinterpret_cast&lt;const StringId*&gt;(base + header_-&gt;string_ids_off_)),</div><div class="line">      type_ids_(reinterpret_cast&lt;const TypeId*&gt;(base + header_-&gt;type_ids_off_)),</div><div class="line">      field_ids_(reinterpret_cast&lt;const FieldId*&gt;(base + header_-&gt;field_ids_off_)),</div><div class="line">      method_ids_(reinterpret_cast&lt;const MethodId*&gt;(base + header_-&gt;method_ids_off_)),</div><div class="line">      proto_ids_(reinterpret_cast&lt;const ProtoId*&gt;(base + header_-&gt;proto_ids_off_)),</div><div class="line">      class_defs_(reinterpret_cast&lt;const ClassDef*&gt;(base + header_-&gt;class_defs_off_)),</div><div class="line">      method_handles_(nullptr),</div><div class="line">      num_method_handles_(0),</div><div class="line">      call_site_ids_(nullptr),</div><div class="line">      num_call_site_ids_(0),</div><div class="line">      oat_dex_file_(oat_dex_file) &#123;</div><div class="line">  CHECK(begin_ != nullptr) &lt;&lt; GetLocation();</div><div class="line">  CHECK_GT(size_, 0U) &lt;&lt; GetLocation();</div><div class="line">  // Check base (=header) alignment.</div><div class="line">  // Must be 4-byte aligned to avoid undefined behavior when accessing</div><div class="line">  // any of the sections via a pointer.</div><div class="line">  CHECK_ALIGNED(begin_, alignof(Header));</div><div class="line"></div><div class="line">  InitializeSectionsFromMapList();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通过dex文件格式对其内存地址各项赋值<br>这里注意oat_dex_file传的是null，而在dexclassloader中，先经过dex2oat，再从磁盘中获取oat文件，之后从内存中的oat文件中获取dexfile。最后返回包装后的oat与dex文件</p>
+<h2 id="不落地加载参考"><a href="#不落地加载参考" class="headerlink" title="不落地加载参考"></a>不落地加载参考</h2><h3 id="xiaobaiyey的方案"><a href="#xiaobaiyey的方案" class="headerlink" title="xiaobaiyey的方案"></a>xiaobaiyey的方案</h3><p>一直想解决怎么优化oat的问题….有个比较好的实现：<a href="https://github.com/xiaobaiyey/dexload" target="_blank" rel="external">https://github.com/xiaobaiyey/dexload</a></p>
+<h2 id="自己的实现"><a href="#自己的实现" class="headerlink" title="自己的实现"></a>自己的实现</h2><p>没有相关文章了，这部分必须自己看art加载dex源码理解透彻才能写。<br>我注释的art源码:<br><a href="https://github.com/imbaya2466/art_read" target="_blank" rel="external">https://github.com/imbaya2466/art_read</a></p>
+<p>项目地址:<br><a href="https://github.com/imbaya2466/apksec" target="_blank" rel="external">https://github.com/imbaya2466/apksec</a></p>
+<p>按文件偏移hook太不稳定了，应该从符号表、got。这样hook稳定点。<br>使用dlopen、dlsym来使用系统so的函数。<br>hook使用我的一次性hook正好，很稳定而且自动解除。</p>
+<p>杂记：</p>
+<ol>
+<li>签名中的类名要以L开头以;结尾</li>
+<li>保存全局对象在c++中要记得提升为全局，防止虚拟机delete，出错的话看报错的对象标号，debug找标号即可</li>
+<li>模板的签名不用加&lt;&gt;如List&lt; int&gt;就用List就行，使用E的地方为Object。使用javap可以查看</li>
+<li>构造函数的名字是<init></init></li>
+<li>dlopen返回的句柄是soinfo*</li>
+<li>native下log报错信息少时可以hook看栈的信息，存了函数调用路径</li>
+<li>xhook的plthook还挺好用的</li>
+<li>用inline hook，hook mmap回调会有问题，猜测原因为mmalloc时使用的mmap有自己的处理</li>
+</ol>
+<h3 id="生成加密oat文件"><a href="#生成加密oat文件" class="headerlink" title="生成加密oat文件"></a>生成加密oat文件</h3><p>比较容易被dump…但运行速度可以，之后结合dexvmp不太容易。<br>暂时先不动dex2oat进程。在主进程执行Dex2Oat方法时hook将文件解密，执行完后将dex加密，并加密odex与vdex。<br>在OatFileBase::OpenOatFile时解密odex与vdex，之后再加密</p>
+<p>360的实现就是将加密的dex从内存放到磁盘，再进行dex2oat时解密加密-最好是到内存在解密-dlopen与mmap之后。</p>
+<p>vdex是8.0新加的<br>google描述:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">在 Android O 版本中，将会生成以下文件：</div><div class="line">.vdex：其中包含 APK 的未压缩 DEX 代码，另外还有一些旨在加快验证速度的元数据。</div><div class="line">.odex：其中包含 APK 中已经过 AOT 编译的方法代码。</div><div class="line">.art (optional)：其中包含 APK 中列出的某些字符串和类的 ART 内部表示，用于加快应用启动速度。</div><div class="line">more:https://android-review.googlesource.com/c/platform/art/+/264514</div><div class="line">odex与vdex配对,oat将dex写入vdex，其余输出到odex。</div></pre></td></tr></table></figure></p>
+<p>白名单:/system/etc/public.libraries.txt表示开放的so<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">libandroid.so</div><div class="line">libaaudio.so</div><div class="line">libc.so</div><div class="line">libcamera2ndk.so</div><div class="line">libdl.so</div><div class="line">libEGL.so</div><div class="line">libGLESv1_CM.so</div><div class="line">libGLESv2.so</div><div class="line">libGLESv3.so</div><div class="line">libicui18n.so</div><div class="line">libicuuc.so</div><div class="line">libjnigraphics.so</div><div class="line">liblog.so</div><div class="line">libmediandk.so</div><div class="line">libm.so</div><div class="line">libnativewindow.so</div><div class="line">libneuralnetworks.so</div><div class="line">libOpenMAXAL.so</div><div class="line">libOpenSLES.so</div><div class="line">libRS.so</div><div class="line">libstdc++.so</div><div class="line">libsync.so</div><div class="line">libvulkan.so</div><div class="line">libwebviewchromium_plat_support.so</div><div class="line">libz.so</div></pre></td></tr></table></figure></p>
+<p>注意没有art.so因此加载会失败。绕过so的限制最好就是自己实现dlopen与dlsym。</p>
+<h3 id="直接加载加密dex文件"><a href="#直接加载加密dex文件" class="headerlink" title="直接加载加密dex文件"></a>直接加载加密dex文件</h3><p>容易被dump，需要dex函数运行时自解密，影响运行效率。如果实现了dexvmp这样直接使用dex效率可能更好点。</p>
+<h4 id="内存加载"><a href="#内存加载" class="headerlink" title="内存加载"></a>内存加载</h4><p>8.0以上使用InMemoryDexClassLoader，hook解密。内存加载</p>
+<p>reateCookieWithArray拷贝时是加密的。<br>DexFile::Open时解密map中内容。或者DexFile::OpenCommon时也可以，只要保证使用其中数据前解密即可。</p>
+<h4 id="落地加密"><a href="#落地加密" class="headerlink" title="落地加密"></a>落地加密</h4><p>5.0以上使用hook阻止art生成oat。非内存加载。落地加密<br>hook阻止oat生成。<br>在DexFile::Open中获取句柄前解密即可。<br>DexFile::Open执行结束加密。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/10/android-hook/" rel="next" title="android-hook">
+                <i class="fa fa-chevron-left"></i> android-hook
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">101</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">77</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android提供的内存加载接口"><span class="nav-number">2.</span> <span class="nav-text">android提供的内存加载接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不落地加载参考"><span class="nav-number">3.</span> <span class="nav-text">不落地加载参考</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#xiaobaiyey的方案"><span class="nav-number">3.1.</span> <span class="nav-text">xiaobaiyey的方案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自己的实现"><span class="nav-number">4.</span> <span class="nav-text">自己的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#生成加密oat文件"><span class="nav-number">4.1.</span> <span class="nav-text">生成加密oat文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#直接加载加密dex文件"><span class="nav-number">4.2.</span> <span class="nav-text">直接加载加密dex文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#内存加载"><span class="nav-number">4.2.1.</span> <span class="nav-text">内存加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#落地加密"><span class="nav-number">4.2.2.</span> <span class="nav-text">落地加密</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>

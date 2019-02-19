@@ -283,6 +283,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/15/frida官方文档/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/15/frida官方文档/" itemprop="url">frida官方文档</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-15T20:52:12+08:00">
+                2018-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="JavaScript-API"><a href="#JavaScript-API" class="headerlink" title="JavaScript API"></a>JavaScript API</h2><p>以下介绍的都是对象。</p>
+<p>官方功能非常细致：<a href="https://www.frida.re/docs/javascript-api/" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/</a></p>
+<p>这里的回调一般为对象。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">直接声明对象：</div><div class="line">var person=</div><div class="line">&#123;</div><div class="line">    add: function (a, b) &#123;</div><div class="line">        return a + b;</div><div class="line">    &#125;,</div><div class="line">    sub: function (a, b) &#123;</div><div class="line">        return new Promise(resolve =&gt; &#123;</div><div class="line">            setTimeout(() =&gt; &#123;</div><div class="line">                resolve(a - b);</div><div class="line">            &#125;, 100);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">定义类也只是直接定义构造函数即可：</div><div class="line">function Car(color,door)&#123;</div><div class="line">this.color = color;</div><div class="line">this.doors = door;</div><div class="line">this.showColor = function()&#123;</div><div class="line">alert(this.color)</div><div class="line">&#125;;</div><div class="line">&#125;</div><div class="line">var car1 = new Car(“red”,4);</div><div class="line">var car2 = new Car(“blue”,4);</div></pre></td></tr></table></figure></p>
+<h4 id="Global-全局"><a href="#Global-全局" class="headerlink" title="Global 全局"></a>Global 全局</h4><p>全局api。<br>hexdump(target[, options])从提供的ArrayBuffer或NativePointer 生成一个hexdump  target（转化byte数组方便显示的）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">ar libc = Module.findBaseAddress(&apos;libc.so&apos;);</div><div class="line">var buf = Memory.readByteArray(libc, 64);</div><div class="line">console.log(hexdump(buf, &#123;</div><div class="line">  offset: 0,</div><div class="line">  length: 64,</div><div class="line">  header: true,</div><div class="line">  ansi: true</div><div class="line">&#125;));</div></pre></td></tr></table></figure></p>
+<p>int64(v)为new Int64(v)的简写，化为64位的int值，同理还有uint64。<br>ptr（s）为new NativePointer(s)的简写，表示原生指针，NULL为ptr(“0”)，<strong>以后的address都是指这个</strong>。<br>recv([type, ]callback)异步的用于在js（目标程序中）接收到来自py脚本的type消息后调用callback。只会接收一次，想多次要重复注册，可以用其返回.wait()等待来实现同步。<br>send(message[, data])将JavaScript对象发送message到基于Frida的应用程序py（它必须可序列化为JSON）。如果你还有一些你想要发送的原始二进制数据，例如你使用了一些内存Memory#readByteArray，那么你可以通过可选data参数传递它。这要求它是一个ArrayBuffer或0到255之间的整数数组。<br>setTimeout(fn, delay)：fn在delay毫秒后调用。返回值给clearTimeout可以取消<br>clearTimeout(id)：取消由呼叫返回的ID setTimeout<br>setInterval(fn, delay)：fn每delay毫秒调用一次。返回值同样用于取消<br>clearInterval(id)：取消由呼叫返回的ID setInterval</p>
+<h4 id="console-控制台"><a href="#console-控制台" class="headerlink" title="console 控制台"></a>console 控制台</h4><p>console.log(line)，console.warn(line)，console.error(line)<br>用于直接从js代码中向frida程序中输出结果（js代码输出在py)ArrayBuffer自动化为hexdump()</p>
+<h4 id="RPC-远程执行"><a href="#RPC-远程执行" class="headerlink" title="RPC 远程执行"></a>RPC 远程执行</h4><p>rpc.exports可以在js中开启函数供py远程执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">rpc.exports = &#123;</div><div class="line">    add: function (a, b) &#123;</div><div class="line">        return a + b;</div><div class="line">    &#125;,</div><div class="line">    sub: function (a, b) &#123;</div><div class="line">        return new Promise(resolve =&gt; &#123;</div><div class="line">            setTimeout(() =&gt; &#123;</div><div class="line">                resolve(a - b);</div><div class="line">            &#125;, 100);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>其中promise和reslove都是js的方法，Promise 对象用于表示一个异步操作的最终状态（完成或失败），以及其返回的值。</p>
+<h4 id="Frida-frida信息"><a href="#Frida-frida信息" class="headerlink" title="Frida frida信息"></a>Frida frida信息</h4><p>Frida.version:当前Frida版本<br>Frida.heapSize：包含Frida私有堆的当前大小的动态属性</p>
+<h4 id="Process-进程相关"><a href="#Process-进程相关" class="headerlink" title="Process  进程相关"></a>Process  进程相关</h4><p>Process.arch：cpu架构，字符串ia32，x64，arm 或arm64<br>Process.platform：系统，字符串windows，  darwin，linux或qnx<br>Process.pageSize：虚拟内存页面大小（以字节为单位）<br>Process.pointerSize：指针大小（以字节为单位）<br>Process.isDebuggerAttached()：调试器当前是否连接的布尔值<br>Process.getCurrentThreadId()：线程的id指的是运行脚本的线程，每次运行都不一样<br>Process.enumerateThreads(callbacks)枚举线程，没有成功。<br>线程对象含：<br>id：操作系统特定的ID<br>state：字符串指定是running，stopped，waiting， uninterruptible或halted<br>context：与键对象pc和sp，其是指定EIP / RIP / PC分别和ESP / RSP / SP，用于IA32 / 64 /臂NativePointer对象。其他处理器特定键也可以，例如eax，rax，r0，x0，等。</p>
+<p>Process.findModuleByAddress(address)， Process.getModuleByAddress(address)， Process.findModuleByName(name)，  Process.getModuleByName(name)：按地址、名字找或返回module<br>Process.enumerateModules(callbacks)遍历module</p>
+<p>module对象包含：<br>name：规范模块名称作为字符串<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>path：完整的文件系统路径作为一个字符串</p>
+<p>Process.enumerateRanges(protection|specifier, callbacks)：枚举满足protection给定的内存范围这是什么？<br>用range对象调用包含：<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>protection：保护字符串（见上文）<br>file:(当可用时）文件映射细节作为包含以下内容的对象：<br>path：完整的文件系统路径作为一个字符串<br>offset：磁盘上映射文件的偏移量，以字节为单位<br>size：磁盘上映射文件的大小，以字节为单位</p>
+<h4 id="Module-模块相关"><a href="#Module-模块相关" class="headerlink" title="Module  模块相关"></a>Module  模块相关</h4><p>name都是字串填模块名<br>Module.ensureInitialized(name)：确保指定模块的初始化器已经运行。<br>Module.enumerateImports(name, callbacks)：枚举模块的进口。<br>Module.enumerateExports(name, callbacks)：枚举模块的出口。<br>Module.enumerateSymbols(name, callbacks)：枚举模块的符号。<br>Module.enumerateRanges(name, protection, callbacks)：枚举满足protection给定的内存范围。<br>Module.findBaseAddress(name)：返回name 模块的基地址<br>Module.findExportByName(module|null, exp)：返回名为exp的导出函数地址。可输入在那个模块，若模块写null就是全部搜索。可用于找知道名称的函数！</p>
+<p>module对象包含：<br>name：规范模块名称作为字符串<br>base：基地址为 NativePointer<br>size：大小以字节为单位<br>path：完整的文件系统路径作为一个字符串</p>
+<h4 id="ModuleMap-所有模块"><a href="#ModuleMap-所有模块" class="headerlink" title="ModuleMap 所有模块"></a>ModuleMap 所有模块</h4><p>表示所有模块的映射<br>new ModuleMap([filter])：创建模块映射，可以有条件。<br>has(address)：某地址是否在模块表中。<br>find(address)，get(address)：返回一个包含address属于该模块的细节的对象。</p>
+<h4 id="Memory-内存相关"><a href="#Memory-内存相关" class="headerlink" title="Memory 内存相关"></a>Memory 内存相关</h4><p>Memory.scan(address, size, pattern, callbacks):扫描内存，出现pattern。从address开始，size为大小。callback为回调函数。<br>Memory.alloc(size)：在堆上分配内存。<br>Memory.copy(dst, src, n)：就像memcpy一样。<br>Memory.protect(address, size, protection)：更新内存区域的保护<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Memory.protect(ptr(&quot;0x1234&quot;), 4096, &apos;rw-&apos;);</div></pre></td></tr></table></figure></p>
+<p>Memory.patchCode(address, size, apply)：好像很强大….怎么用不清楚。<br>Memory.readPointer(address)：把地址内容化为指针返回。(从内存中读取ptr)<br>Memory.readS8(address)，Memory.readU8(address)， Memory.readS16(address)，Memory.readU16(address)， Memory.readS32(address)，Memory.readU32(address)， Memory.readShort(address)，Memory.readUShort(address)， Memory.readInt(address)，Memory.readUInt(address)， Memory.readFloat(address)，Memory.readDouble(address)：读有符号或无符号的8/16/32 /等。或浮点/双精度值并将其作为数字返回。</p>
+<p>Memory.writeS8(address, value)，Memory.writeU8(address, value)， Memory.writeS16(address, value)，Memory.writeU16(address, value)，  Memory.writeS32(address, value)，Memory.writeU32(address, value)， Memory.writeShort(address, value)，Memory.writeUShort(address, value)， Memory.writeInt(address, value)，Memory.writeUInt(address, value)， Memory.writeFloat(address, value)，Memory.writeDouble(address, value)：写数value到符号或无符号的8/16/32 /等。或浮动/双值在address。</p>
+<p>Memory.readByteArray(address, length):从指定地址读出array<br>Memory.writeByteArray(address, bytes)：写入字节数组</p>
+<p>Memory.readUtf8String(address[, size = -1])，Memory.writeUtf16String(address, str)，Memory.allocUtf8String(str)等针对特定编码字符串的内存处理。</p>
+<h4 id="Thread-线程相关"><a href="#Thread-线程相关" class="headerlink" title="Thread 线程相关"></a>Thread 线程相关</h4><p>Thread.backtrace([context, backtracer])：为当前线程生成回溯，作为NativePointer对象数组返回。</p>
+<h4 id="NativePointer-原生指针"><a href="#NativePointer-原生指针" class="headerlink" title="NativePointer 原生指针"></a>NativePointer 原生指针</h4><p>ptr（s）为new NativePointer(s)的简写<br>new NativePointer(s)：从s 包含内存地址的字符串中创建新的NativePointer，该内存地址为十进制或十六进制（如果前缀为“0x”）<br>isNull()：返回一个布尔值，允许您方便地检查指针是否为NULL。<br>add(rhs)，sub(rhs)，  and(rhs)，or(rhs)，  xor(rhs)：使一个新的NativePointer这个NativePointer正/负/和/或/ XOR  rhs，这可以是一个数字或其他NativePointer<br>equals(rhs)：返回一个布尔值，指示是否rhs等于这个值; 即它具有相同的指针值<br>toInt32()：将此NativePointer强制转换为带符号的32位整数<br>toString([radix = 16])：转换为可选基数的字符串（默认为16）</p>
+<h4 id="NativeFunction-原生函数"><a href="#NativeFunction-原生函数" class="headerlink" title="NativeFunction 原生函数"></a>NativeFunction 原生函数</h4><p>new NativeFunction(address, returnType, argTypes[, abi])：创建一个新的NativeFunction来调用address（用a指定的  NativePointer）函数，其中returnType指定返回类型，  argTypes数组指定参数类型。您也可以选择指定abi是否不是系统默认值。对于可变参数函数，在固定参数和可变参数之间添加一个’…’ 条目argTypes。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">原函数int fun(char* a):</div><div class="line">var f = new NativeFunction(ptr(&quot;%s&quot;), &apos;int&apos;, [&apos;pointer&apos;]);</div></pre></td></tr></table></figure></p>
+<p>详细：<a href="https://www.frida.re/docs/javascript-api/#nativefunction" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/#nativefunction</a></p>
+<h4 id="NativeCallback"><a href="#NativeCallback" class="headerlink" title="NativeCallback"></a>NativeCallback</h4><p>new NativeCallback(func, returnType, argTypes[, abi])：创建一个由JavaScript函数实现的新的NativeCallback func，返回的对象也是a NativePointer，因此可以传递给它Interceptor#replace。</p>
+<h4 id="io，socket，file"><a href="#io，socket，file" class="headerlink" title="io，socket，file"></a>io，socket，file</h4><p>支持js下的io、socket、file等操作</p>
+<h4 id="Interceptor"><a href="#Interceptor" class="headerlink" title="Interceptor"></a>Interceptor</h4><p>Interceptor.attach(target, callbacks)：拦截target处的函数。target可以是NativePointer指定的地址。Module.findExportByName()等api获得的地址可以由frida解决arm一位为1时是thumb指令等问题。callbacks是一个对象，可以有多个包含：<br>onEnter: function (args)：回调函数给出了一个参数  args，可以用来读取或写入参数作为一个NativePointer对象数组 。<br>onLeave: function (retval)：给定一个参数的回调函数，该参数 retval是一个NativePointer包含原始返回值的衍生对象。您可以调用retval.replace(1337)以用整数替换返回值1337，或者retval.replace(ptr(“0x1234”))用指针替换。请注意，该对象在onLeave调用中被回收，因此不要在回调之外存储和使用它。如果需要存储包含的值，请进行深层复制，例如：ptr(retval.toString())。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">nterceptor.attach(Module.findExportByName(&quot;libc.so&quot;, &quot;read&quot;), &#123;</div><div class="line">    onEnter: function (args) &#123;</div><div class="line">        this.fileDescriptor = args[0].toInt32();</div><div class="line">    &#125;,</div><div class="line">    onLeave: function (retval) &#123;</div><div class="line">        if (retval.toInt32() &gt; 0) &#123;</div><div class="line">            /* do something with this.fileDescriptor */</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>Interceptor.replace(target, replacement)：在target 执行时替换函数at replacement。这通常用于完全或部分替换现有函数的实现。用于 在JavaScript中NativeCallback实现一个replacement。请注意，  replacement直到Interceptor#revert被调用时才会保持活动状态。如果你想链接到原始的实现，你可以target通过NativeFunction内部的实现同步调用，这将绕过并直接进入原始实现。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var openPtr = Module.findExportByName(&quot;libc.so&quot;, &quot;open&quot;);</div><div class="line">var open = new NativeFunction(openPtr, &apos;int&apos;, [&apos;pointer&apos;, &apos;int&apos;]);</div><div class="line">Interceptor.replace(openPtr, new NativeCallback(function (pathPtr, flags) &#123;</div><div class="line">    var path = Memory.readUtf8String(pathPtr);</div><div class="line">    log(&quot;Opening &apos;&quot; + path + &quot;&apos;&quot;);</div><div class="line">    var fd = open(pathPtr, flags);</div><div class="line">    log(&quot;Got fd: &quot; + fd);</div><div class="line">    return fd;</div><div class="line">&#125;, &apos;int&apos;, [&apos;pointer&apos;, &apos;int&apos;]));</div></pre></td></tr></table></figure></p>
+<p>Interceptor.revert(target)：将函数恢复target到之前的实现。</p>
+<h4 id="Stalker"><a href="#Stalker" class="headerlink" title="Stalker"></a>Stalker</h4><p>Stalker.follow([threadId, options])：开始跟踪threadId（或省略当前线程），可选地options启用事件。<br>Stalker.unfollow([threadId])：停止跟踪threadId（或省略当前线程）。</p>
+<h4 id="arm-mip"><a href="#arm-mip" class="headerlink" title="arm mip"></a>arm mip</h4><p>有各种针对不同平台的原生读写与结构类型</p>
+<h4 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h4><p>Java.available：一个布尔值，指定当前进程是否加载了Java虚拟机。<br>Java.enumerateLoadedClasses(callbacks)：枚举现在加载的类，其中callbacks是一个对象：<br>onMatch: function (className)：为每个加载的类调用  className可以传递给use()JavaScript封装器的类。<br>onComplete: function ()：当所有类都被枚举时调用。</p>
+<p>Java.perform(fn)：确保当前线程连接到虚拟机并呼叫fn。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Java.perform(function () &#123;</div><div class="line">    var Activity = Java.use(&quot;android.app.Activity&quot;);</div><div class="line">    Activity.onResume.implementation = function () &#123;</div><div class="line">        send(&quot;onResume() got called! Let&apos;s call the original implementation&quot;);</div><div class="line">        this.onResume();</div><div class="line">    &#125;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>Java.use(className)：动态获得一个JavaScript包装程序  className，您可以通过调用$new()它来调用构造函数来实例化对象。调用$dispose()一个实例来显式清理它（或等待JavaScript对象获取垃圾回收，或脚本被卸载）。静态和非静态方法是可用的，你甚至可以替换一个方法实现并抛出一个异常：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Java.perform(function () &#123;</div><div class="line">    var Activity = Java.use(&quot;android.app.Activity&quot;);</div><div class="line">    var Exception = Java.use(&quot;java.lang.Exception&quot;);</div><div class="line">    Activity.onResume.implementation = function () &#123;</div><div class="line">        throw Exception.$new(&quot;Oh noes!&quot;);</div><div class="line">    &#125;;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>Java.choose(className, callbacks)：className通过扫描Java堆枚举类的活动实例。用来获得某类java对象。</p>
+<h2 id="任务：使用frida-hook-android系统调用。"><a href="#任务：使用frida-hook-android系统调用。" class="headerlink" title="任务：使用frida hook android系统调用。"></a>任务：使用frida hook android系统调用。</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/01/frida概观与初步使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1716,192 +1893,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/android逆向基本常用操作/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/12/android逆向基本常用操作/" itemprop="url">android逆向基本常用操作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T21:36:28+08:00">
-                2018-05-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章</p>
-<p>adb用法：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/</a></p>
-<h1 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h1><h2 id="手动分析"><a href="#手动分析" class="headerlink" title="手动分析"></a>手动分析</h2><h3 id="apk拆包"><a href="#apk拆包" class="headerlink" title="apk拆包"></a>apk拆包</h3><p>一般使用官方的apktool即可<br>指令：apktool d apk名 -o 输出文件名</p>
-<p>mali/baksmali 针对单个dex文件更好。</p>
-<h3 id="拆包后"><a href="#拆包后" class="headerlink" title="拆包后"></a>拆包后</h3><p>含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail</p>
-<p>静态ida HexView改so的内容后，点击”Edit-&gt;Plugins-&gt;modifyfile”，然后就可以保存新的so文件了。</p>
-<p>问题:改dex的其它方案？如何dump内存内的dex/so?。</p>
-<h3 id="apk打包"><a href="#apk打包" class="headerlink" title="apk打包"></a>apk打包</h3><p>apktool b 文件名<br>会把打包好的文件输出到文件下的dist目录</p>
-<h3 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h3><p>用已加好的bat脚本启动signapk.jar<br>signapk apk名  即可完成签名<br>注意一点在win下不加入path的程序，当前目录要写全才可以运行(./xxx)和linux下一样。<br>win下\分割  linux下/分割</p>
-<h2 id="一键式分析"><a href="#一键式分析" class="headerlink" title="一键式分析"></a>一键式分析</h2><p>java-拖入jeb<br>c/c++-拖入ida</p>
-<h1 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h1><h2 id="java层"><a href="#java层" class="headerlink" title="java层"></a>java层</h2><p><strong>AS动态调试smali</strong><br>成功<br>参见之前的博客：android动态调试-java层<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/29/android%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95-java%E5%B1%82/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/29/android%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95-java%E5%B1%82/</a><br>用AS加插件或者jeb都好使的很<br>DDMS：log可设置过滤器查看。点击Start Method Profiling可以获取一段时间的函数调用过程。</p>
-<p>原理:java代码调试接口:JDWP是传统java虚拟机调试java的协议，dalvik也实现了该接口。启用调试的da虚拟机(需要指令adb shell am start -D -n)会启动JDWP调试线程，系统属性ro.debuggable为1时所有程序都可以开启调试支持（不用分别改android:debuggable了），我个人理解为adb负责转发android环境到DDMS，DDMS自带端口转发功能，将对java的调试信息通过指定端口(8700)转发到对应的调试线程中。<br>线程-&gt;adb-&gt;DDMS转发端口-&gt;java调试器</p>
-<p><strong>jeb</strong><br>成功<br>jeb可调试smali，不可调试java与so。<br>最初adb shell am start -D -n packageName/ActivityName或者debugger开启下直接运行，之后找到pid附加即可。注意以下几点：先下断点在smali再attach，断点才可以使用。可查看线程与运行时数据，F6为单步</p>
-<h2 id="c-c-层"><a href="#c-c-层" class="headerlink" title="c/c++层"></a>c/c++层</h2><p>ida的debugger-&gt;run/attach选项只有不加载文件时才有。<br><strong>前提:</strong><br>将ida的android_server复制到android设备中执行。并转发本地端口到设备端口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">放server这个文件路径随意</div><div class="line">adb push android_server /data/local/tmp</div><div class="line">adb shell chmod 777 /data/local/tmp/android_server</div><div class="line">运行server</div><div class="line">adb shell su  /data/local/tmp/android_server</div><div class="line"></div><div class="line">转发端口</div><div class="line">adb forward tcp:23946 tcp:23946</div></pre></td></tr></table></figure></p>
-<p>执行android_server提示中指明了端口号，用adb forward tcp:xxx tcp:xxx 转发pc端口(参一)到android(参二)。</p>
-<p><strong>执行已有原生程序：</strong><br>成功<br>注意生成native程序时Android.mk加如下语句,否则Android 5.0 and later only support position-independent executables (-fPIE).是android5.0之后随机分配程序的内存地址机制<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">LOCAL_CFLAGS += -pie -fPIE</div><div class="line">LOCAL_LDFLAGS += -pie -fPIE</div></pre></td></tr></table></figure></p>
-<ol>
-<li>前提完成,且要调试的文件放入android并保证可以运行</li>
-<li>打开ida不加载文件。</li>
-<li>debugger-&gt;Run-&gt;Remote即可运行调试原生程序。需要填入目标程序在android的全路径和目标程序所在目录，本地端口填localhost  之前写的那个pcXXX。ida会自动加载分析该文件并执行(知道模块的文件位置即可加载分析)</li>
-</ol>
-<p><strong>调试so库俩种方式</strong><br><strong>直接附加app的开始</strong><br>成功<br>此方法一般脱壳用，从应用的一开始加载调试。dump(自己写ida脚本)内存取出正确的dex与so</p>
-<ol>
-<li>前提完成，apk安装</li>
-<li>adb shell am start -D -n packageName/ActivityName开启android进程调试状态</li>
-<li>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程(这就是DDMS的功能之一)</li>
-<li>ida-&gt;debugger-&gt;attach-&gt;localhost(此时可设置debug options设置ida断点位置，比如在加载so时停下，可分析一个app的所有过程<strong>经测试不管用，要在进入调试窗口后的debugger-&gt;debugger options中设置有用</strong>，加载so时会直接断在linker中)-&gt;指定目标进程附加,此时该进程会处于ida调试之中。</li>
-<li>jdb -connect com.sun.jdi.SocketAttach:hostname=localhost,port=8700（jdb进行附加）这个就是java层的调试原理，通过java调试协议JDWP运行该应用，此时jdb调试与应用一起被ida中断</li>
-<li>此时ida中就可以使用od调试方法了。</li>
-</ol>
-<p><strong>静态分析so后附加进程</strong><br>成功<br>此方法用于已经有了so文件,停在so文件指定的位置。</p>
-<ol>
-<li>前提完成,apk安装。</li>
-<li>首先打开ida加载指定so,找到需要调试的函数并记住函数的地址</li>
-<li>运行应用并保证要调的模块已经加载(此时JNI_Onload()什么的已经执行了)</li>
-<li>ida-&gt;debugger-&gt;selectdebugger-&gt;..-&gt;process option设置localhost。但其他的不用改，那是指定应该匹配什么so文件用的之后会匹配对应模块</li>
-<li>ida-&gt;debugger-&gt;Attach to process。之后选择要附加的进程进行附加，附加成功后弹出模块找不到错误(大概为ida找不到模块的代码文件(已加载进程序的so，ida不知其路径，而对于之前的可执行程序有路径就可分析文件中的代码))但是有一个模块可选same按钮，这是识别出进程中某模块和本地ida分析的文件名相同</li>
-<li>ctrl+s找到与目标so同名的模块code区记住其start地址，按G跳到该地址加之前记住的函数地址处即可找到该函数，断点即可。</li>
-<li>android中触发原生函数，即可中断开始调试</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1947,7 +1943,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">100</span>
+                <span class="site-state-item-count">101</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
