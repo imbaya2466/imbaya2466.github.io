@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言阅读art源码，思考dex不落地&amp;amp;加密加载的实现，并含有oat过程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-19T19:34:02.883Z">
+<meta property="og:updated_time" content="2019-02-21T10:51:29.145Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="8.0不落地加载&amp;加密加载dex的实现">
 <meta name="twitter:description" content="前言阅读art源码，思考dex不落地&amp;amp;加密加载的实现，并含有oat过程">
@@ -405,7 +405,7 @@
 <h2 id="不落地加载参考"><a href="#不落地加载参考" class="headerlink" title="不落地加载参考"></a>不落地加载参考</h2><h3 id="xiaobaiyey的方案"><a href="#xiaobaiyey的方案" class="headerlink" title="xiaobaiyey的方案"></a>xiaobaiyey的方案</h3><p>一直想解决怎么优化oat的问题….有个比较好的实现：<a href="https://github.com/xiaobaiyey/dexload" target="_blank" rel="external">https://github.com/xiaobaiyey/dexload</a></p>
 <h2 id="自己的实现"><a href="#自己的实现" class="headerlink" title="自己的实现"></a>自己的实现</h2><p>没有相关文章了，这部分必须自己看art加载dex源码理解透彻才能写。<br>我注释的art源码:<br><a href="https://github.com/imbaya2466/art_read" target="_blank" rel="external">https://github.com/imbaya2466/art_read</a></p>
 <p>项目地址:<br><a href="https://github.com/imbaya2466/apksec" target="_blank" rel="external">https://github.com/imbaya2466/apksec</a></p>
-<p>按文件偏移hook太不稳定了，应该从符号表、got。这样hook稳定点。<br>使用dlopen、dlsym来使用系统so的函数。<br>hook使用我的一次性hook正好，很稳定而且自动解除。</p>
+<p>按文件偏移hook太不稳定了，应该从符号表、got。这样hook稳定点。<br>使用dlopen、dlsym来使用系统so的函数。<br>hook使用我的一次性hook正好，很稳定而且自动解除。<br>必须加载到内存再解密，因为读写大文件太费时了，不能在每次启动时进行。因此需要dex2oat的部分实现才可加密odex、vdex</p>
 <p>杂记：</p>
 <ol>
 <li>签名中的类名要以L开头以;结尾</li>
@@ -467,6 +467,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/21/android-native保护整理实践/" rel="prev" title="android-native保护整理实践">
+                android-native保护整理实践 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -543,7 +547,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">101</span>
+                <span class="site-state-item-count">102</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

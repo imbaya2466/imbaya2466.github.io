@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://i.imgur.com/hkQbs5I.png">
 <meta property="og:image" content="https://i.imgur.com/9b1VRGl.png">
 <meta property="og:image" content="https://i.imgur.com/nyq7RpT.png">
-<meta property="og:updated_time" content="2019-02-14T18:46:35.089Z">
+<meta property="og:updated_time" content="2019-02-21T13:10:19.029Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android-hook">
 <meta name="twitter:description" content="前言目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试先为了看懂：https://github.com/xiaobaiyey/dexload 钩子(hook)与注入(inject):hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。实现部分交集互">
@@ -389,6 +389,10 @@
 <h3 id="GToad的实现"><a href="#GToad的实现" class="headerlink" title="GToad的实现"></a>GToad的实现</h3><p><a href="https://github.com/GToad/Android_Inline_Hook" target="_blank" rel="external">https://github.com/GToad/Android_Inline_Hook</a><br><a href="https://github.com/GToad/Android_Inline_Hook_ARM64" target="_blank" rel="external">https://github.com/GToad/Android_Inline_Hook_ARM64</a><br>他分别写了32与64的hook，都很新。<br>同时在他的博客<a href="https://gtoad.github.io/" target="_blank" rel="external">https://gtoad.github.io/</a>  写了很多相关的文章。<br>接下来对其精要</p>
 <h4 id="PLT-Hook-amp-Inline-Hook"><a href="#PLT-Hook-amp-Inline-Hook" class="headerlink" title="PLT-Hook&amp;Inline-Hook"></a>PLT-Hook&amp;Inline-Hook</h4><p>PLT Hook通过修改GOT表，使得在调用该共享库的函数时跳转到的是用户自定义的Hook功能代码。<br>只能修改指定模块单向使用其它模块的地方。got是代码模块导入其它模块的重定位点。<br>用于:统一hook目标模块针对同一外部的所有调用，如运行库、系统调用等。<br>无法hook某次精确调用，无法hook模块内自定义的函数。</p>
 <p>Inline Hook在代码段中插入跳转指令，从而把程序执行流程引向自定义代码。<br>基本流程<br><img src="https://i.imgur.com/hkQbs5I.png" alt=""><br>图1<br>几乎应对全部情况，可以针对库函数修改达到批量hook。</p>
+<h4 id="GOT-hook"><a href="#GOT-hook" class="headerlink" title="GOT-hook"></a>GOT-hook</h4><p>原理实现:<a href="https://github.com/iqiyi/xHook/blob/master/docs/overview/android_plt_hook_overview.zh-CN.md" target="_blank" rel="external">https://github.com/iqiyi/xHook/blob/master/docs/overview/android_plt_hook_overview.zh-CN.md</a></p>
+<p>曾经的一篇实现:<a href="https://xn--74q78i15hxv3arigm4e.cn/2018/06/29/android%E5%BA%94%E7%94%A8%E5%8A%A0%E5%9B%BA2/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2018/06/29/android%E5%BA%94%E7%94%A8%E5%8A%A0%E5%9B%BA2/</a></p>
+<p>linker对so的连接处理就是将rel指定的内容用其他符号指定的值填写，符号表标识的名字有自己定义的和需要的外部的名字，rel指向了这些外部的名字。自己的代码执行时链接已经完成，此时其他模块使用此模块与此模块使用其他模块的got已经填写完毕，因此got hook，只能动每个模块中got表部分-使用其他模块的调用。</p>
+<p>也可以直接用xhook，还挺好用的。</p>
 <h4 id="32位Inline-hook"><a href="#32位Inline-hook" class="headerlink" title="32位Inline-hook"></a>32位Inline-hook</h4><p>64兼容能用，实际这个版本更通用。<br>32位示例在n6p测试成功，不过实际使用有一点小心，当lib中存在v8版本64位机会优先选择64位版本使用，此时加入32位的so是错误的。不能同时加载32bit和64bit的so库。实际上64位进程中加载32位so就是错误的。<br>apk安装时，解析其中lib的类型，确定使用的虚拟机。64位设备提供32与64位俩种虚拟机，根据apk的不同fork使用，优先使用64位的。因此注意使用时abi的完全一致，apk安装时决定版本也要与使用so一致。</p>
 <p>使用:hook框架产出so文件，加载so后自动执行hook逻辑。用constructor属性init_array中调用(destructor属性卸载时用)调用顺序与声明顺序一致。</p>
 <p>需要的工具:<a href="https://github.com/keystone-engine/keystone" target="_blank" rel="external">https://github.com/keystone-engine/keystone</a> 多架构汇编程序框架。在这里用于看机器码。</p>
@@ -547,7 +551,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">101</span>
+                <span class="site-state-item-count">102</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -604,7 +608,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hook实现分析"><span class="nav-number">2.</span> <span class="nav-text">hook实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GToad的实现"><span class="nav-number">2.1.</span> <span class="nav-text">GToad的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PLT-Hook-amp-Inline-Hook"><span class="nav-number">2.1.1.</span> <span class="nav-text">PLT-Hook&Inline-Hook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#32位Inline-hook"><span class="nav-number">2.1.2.</span> <span class="nav-text">32位Inline-hook</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#arm32基本步骤"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">arm32基本步骤</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Thumb-2方案"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">Thumb-2方案</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64位Inline-hook"><span class="nav-number">2.1.3.</span> <span class="nav-text">64位Inline-hook</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我的hook方案与实现"><span class="nav-number">3.</span> <span class="nav-text">我的hook方案与实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hook实现分析"><span class="nav-number">2.</span> <span class="nav-text">hook实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GToad的实现"><span class="nav-number">2.1.</span> <span class="nav-text">GToad的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PLT-Hook-amp-Inline-Hook"><span class="nav-number">2.1.1.</span> <span class="nav-text">PLT-Hook&Inline-Hook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOT-hook"><span class="nav-number">2.1.2.</span> <span class="nav-text">GOT-hook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#32位Inline-hook"><span class="nav-number">2.1.3.</span> <span class="nav-text">32位Inline-hook</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#arm32基本步骤"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">arm32基本步骤</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Thumb-2方案"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">Thumb-2方案</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64位Inline-hook"><span class="nav-number">2.1.4.</span> <span class="nav-text">64位Inline-hook</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我的hook方案与实现"><span class="nav-number">3.</span> <span class="nav-text">我的hook方案与实现</span></a></li></ol></div>
             
 
           </div>

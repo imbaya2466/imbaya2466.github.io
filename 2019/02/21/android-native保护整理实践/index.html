@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,逆向," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言本篇收集整理常见native保护措施，并有一定实践。尚未完成，持续更新">
+<meta name="keywords" content="android,逆向">
+<meta property="og:type" content="article">
+<meta property="og:title" content="android-native保护整理实践">
+<meta property="og:url" content="http://yoursite.com/2019/02/21/android-native保护整理实践/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言本篇收集整理常见native保护措施，并有一定实践。尚未完成，持续更新">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-21T15:49:39.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="android-native保护整理实践">
+<meta name="twitter:description" content="前言本篇收集整理常见native保护措施，并有一定实践。尚未完成，持续更新">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/21/android-native保护整理实践/"/>
+
+
+
+
+
+  <title>android-native保护整理实践 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/21/android-native保护整理实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">android-native保护整理实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-21T23:46:20+08:00">
+                2019-02-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android应用加固/" itemprop="url" rel="index">
+                    <span itemprop="name">android应用加固</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇收集整理常见native保护措施，并有一定实践。<br>尚未完成，持续更新</p>
+<a id="more"></a>
+<h2 id="阻止静态分析"><a href="#阻止静态分析" class="headerlink" title="阻止静态分析"></a>阻止静态分析</h2><h3 id="so整体加密"><a href="#so整体加密" class="headerlink" title="so整体加密"></a>so整体加密</h3><p>目标:so整体加密，不落地&amp;落地加密、内存解密加载<br>实现:自定义linker实现</p>
+<h3 id="段加密"><a href="#段加密" class="headerlink" title="段加密"></a>段加密</h3><p>目的:加密部分so<br>原理:加载时使用的是头表，因此节头表很多无用的部分，可以用来变形并添加自己的信息。<br>将任意部分加密后运行时获取信息解密即可</p>
+<p>实现:<br><a href="https://xn--74q78i15hxv3arigm4e.cn/2018/07/19/apk%E5%8A%A0%E5%9B%BA-%E5%8A%A0%E5%AF%86so-native%E5%B1%82%E8%A7%A3%E5%AF%86/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2018/07/19/apk%E5%8A%A0%E5%9B%BA-%E5%8A%A0%E5%AF%86so-native%E5%B1%82%E8%A7%A3%E5%AF%86/</a></p>
+<h3 id="函数加密，运行时解密"><a href="#函数加密，运行时解密" class="headerlink" title="函数加密，运行时解密"></a>函数加密，运行时解密</h3><p>目标:加密指定函数<br>原理:通过符号表定位函数位置、大小。加密即可。解密时可以直接使用函数名当指针解密。</p>
+<p>实现:<br><a href="https://xn--74q78i15hxv3arigm4e.cn/2018/07/19/apk%E5%8A%A0%E5%9B%BA-%E5%8A%A0%E5%AF%86so-native%E5%B1%82%E8%A7%A3%E5%AF%86/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2018/07/19/apk%E5%8A%A0%E5%9B%BA-%E5%8A%A0%E5%AF%86so-native%E5%B1%82%E8%A7%A3%E5%AF%86/</a></p>
+<h3 id="elf加壳"><a href="#elf加壳" class="headerlink" title="elf加壳"></a>elf加壳</h3><p>目的:对elf加壳</p>
+<p>实现:<br>常见的有UPX:<a href="https://github.com/upx/upx" target="_blank" rel="external">https://github.com/upx/upx</a> 可以自己修改源码，同时可以压缩elf大小</p>
+<h3 id="花指令"><a href="#花指令" class="headerlink" title="花指令"></a>花指令</h3><p>目标:干扰反编译器的自动分析<br>原理:针对常见反汇编算法，手动构造容易引起误会的汇编代码。</p>
+<p>实现:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">	__asm </div><div class="line">	&#123;</div><div class="line">		push label;</div><div class="line">		retn;</div><div class="line">	&#125;</div><div class="line">label:</div></pre></td></tr></table></figure></p>
+<h3 id="hook更改流程"><a href="#hook更改流程" class="headerlink" title="hook更改流程"></a>hook更改流程</h3><p>目的:动态改变执行流程<br>原理:通过hook要运行的函数，改变程序流程，使程序以不同于静态分析结果。</p>
+<p>实现:<br>如inline hook下Jni_OnLoad实现解密等操作。</p>
+<h3 id="混淆"><a href="#混淆" class="headerlink" title="混淆"></a>混淆</h3><p>目的:替换等价汇编指令为难以分析的指令<br>原理:花指令、指令乱序、指令替换、llvm</p>
+<h2 id="阻止动态调试"><a href="#阻止动态调试" class="headerlink" title="阻止动态调试"></a>阻止动态调试</h2><p>干扰动态调试过程，有效增加逆向成本</p>
+<h3 id="基于时间的检测"><a href="#基于时间的检测" class="headerlink" title="基于时间的检测"></a>基于时间的检测</h3><p>目的:进程自我检测一定区域的断点调试<br>原理:通过在一段代码区间获取时间值，如果时间相差过大，则可能是有断点在调试。检测退出时机为区间最后时间判断时,当该区域没有断点时不会退出。</p>
+<p>实现:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">#include&lt;time.h&gt;</div><div class="line"></div><div class="line">    start = clock();</div><div class="line">    ...</div><div class="line">    （部分代码逻辑）</div><div class="line">    ...</div><div class="line">    end = clock();</div><div class="line">    if(end-start&gt;10000)&#123;</div><div class="line">        //debug处理</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<h3 id="基于文件的检测"><a href="#基于文件的检测" class="headerlink" title="基于文件的检测"></a>基于文件的检测</h3><p>目的:通过系统信息检测是否被调试<br>原理:查看系统特定文件的信息，获取调试信息<br>/proc/pid/status 和 /proc/pid/task/pid/status：普通状态下，TracerPid这项应该为0；调试状态下为调试进程的PID。<br>/proc/pid/stat 和 /proc/pid/task/pid/stat：cpu活跃信息；调试状态下，括号后面的第一个字母应该为t。表示traced状态(追踪)<br>/proc/pid/wchan 和 /proc/pid/task/pid/wchan：当进程sleep时，kernel当前运行的函数；调试状态下，里面内容为ptrace_stop。</p>
+<p>实现:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">#include&lt;fcntl.h&gt;</div><div class="line">int fd=open(&quot;/proc/self/status&quot;,O_RDONLY);//或指定pid</div><div class="line">char* buf = new char[500];</div><div class="line">read(fd, buf, 500);</div><div class="line">char *p=strstr(buf,&quot;TracerPid&quot;);</div><div class="line"></div><div class="line">if(memcpy(p+11,&quot;0&quot;,1)!=0)//pid不可能以0开头，不是0就是被调试了</div><div class="line">&#123;</div><div class="line">    //debug处理</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="针对常见调试器检测"><a href="#针对常见调试器检测" class="headerlink" title="针对常见调试器检测"></a>针对常见调试器检测</h3><p>目的:干扰常用调试器调试<br>原理:通过检测常用调试器痕迹，进行反调试。如<br>程序-android_server，gdb，gdbserver<br>端口-23946等，信息来源可以是/proc/net/tcp</p>
+<h3 id="虚拟机内部相关字段"><a href="#虚拟机内部相关字段" class="headerlink" title="虚拟机内部相关字段"></a>虚拟机内部相关字段</h3><p>目的:通过虚拟机信息判断调试<br>原理:虚拟机保存了是否被调试的相关数据。</p>
+<p>实现:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">if(android.os.Debug.isDebuggerConnected())&#123;</div><div class="line">    //debug处理</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="ptrace"><a href="#ptrace" class="headerlink" title="ptrace"></a>ptrace</h3><p>目的:阻止调试器附加<br>原理:linux下的调试是使用ptrace(跟踪)调用，linux每个进程只能被一个跟踪，因此可以先ptrace自己阻止附加。</p>
+<p>实现:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">int check = ptrace(PTRACE_TRACEME,0 ,0 ,0);//用来指示此进程将由其父进程跟踪。父fork出子。</div><div class="line">if(check != 0)&#123;//成功返回0</div><div class="line">    //处理debug</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="断点扫描"><a href="#断点扫描" class="headerlink" title="断点扫描"></a>断点扫描</h3><p>目的:直接查找断点的存在<br>原理:调试器原理是向断点处插入断点汇编指令，触发断点进行系统调用，调试器获得控制权从而处理。此方法暴力查找断点</p>
+<p>实现:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">bool checkBreakPoint ()</div><div class="line">&#123;</div><div class="line">    int i, j;</div><div class="line">    unsigned int base, offset, pheader;</div><div class="line">    Elf32_Ehdr *elfhdr;</div><div class="line">    Elf32_Phdr *ph_t;</div><div class="line">    //获取段表</div><div class="line">    base = getLibAddr (&quot;libnative-lib.so&quot;);</div><div class="line">    elfhdr = (Elf32_Ehdr *) base;</div><div class="line">    pheader = base + elfhdr-&gt;e_phoff;</div><div class="line"></div><div class="line">    for (i = 0; i &lt; elfhdr-&gt;e_phnum; i++) &#123;</div><div class="line">        ph_t = (Elf32_Phdr*)(pheader + i * sizeof(Elf32_Phdr)); // traverse program header </div><div class="line">        if ( !(ph_t-&gt;p_flags &amp; 1) ) continue; //不是可执行就继续</div><div class="line">        //找到段加载地址，跳过头部、头表</div><div class="line">        offset = base + ph_t-&gt;p_vaddr;</div><div class="line">        offset += sizeof(Elf32_Ehdr) + sizeof(Elf32_Phdr) * elfhdr-&gt;e_phnum;</div><div class="line"></div><div class="line">        //每个字节判断</div><div class="line">        char *p = (char*)offset;</div><div class="line">        for (j = 0; j &lt; ph_t-&gt;p_memsz; j++) &#123;</div><div class="line">            if(*p == 0x01 &amp;&amp; *(p+1) == 0xde) &#123;</div><div class="line">                LOGI (&quot;Find thumb bpt %p&quot;, p);</div><div class="line">                return true;</div><div class="line">            &#125; else if (*p == 0xf0 &amp;&amp; *(p+1) == 0xf7 &amp;&amp; *(p+2) == 0x00 &amp;&amp; *(p+3) == 0xa0) &#123;</div><div class="line">                LOGI (&quot;Find thumb2 bpt %p&quot;, p);</div><div class="line">                return true;</div><div class="line">            &#125; else if (*p == 0x01 &amp;&amp; *(p+1) == 0x00 &amp;&amp; *(p+2) == 0x9f &amp;&amp; *(p+3) == 0xef) &#123;</div><div class="line">                LOGI (&quot;Find arm bpt %p&quot;, p);</div><div class="line">                return true;</div><div class="line">            &#125;</div><div class="line">            p++;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return false;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="信号处理"><a href="#信号处理" class="headerlink" title="信号处理"></a>信号处理</h3><p>目的:干扰调试过程中的信号处理<br>原理:断点指令使被调试进程发出信号SIGTRAP，传递到要处理的地方，通常调试器会截获Linux系统内给被调试进程的各种信号，由调试者可选地传递给被调试进程。但是SIGTRAP是个例外，因为通常的目标程序中不会出现breakpoint，因为这会使得程序自己奔溃。SIGTRAP会被认为是调试器自己设置的-这样会造成不同的错误<br>在信号处理中处理解密逻辑，此处难以调试<br>实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">char dynamic_ccode[] = &#123;0x1f,0xb4, //push &#123;r0-r4&#125;</div><div class="line">                        0x01,0xde, //breakpoint</div><div class="line">                        0x1f,0xbc, //pop &#123;r0-r4&#125;</div><div class="line">                        0xf7,0x46&#125;;//mov pc,lr</div><div class="line"></div><div class="line">char *g_addr = 0;</div><div class="line">//信号处理函数负责解密逻辑与恢复指令</div><div class="line">void my_sigtrap(int sig)&#123;</div><div class="line">    LOGI(&quot;my_sigtrap\n&quot;);</div><div class="line"></div><div class="line">    char change_bkp[] = &#123;0x00,0x46&#125;; //mov r0,r0</div><div class="line">    memcpy(g_addr+2,change_bkp,2);</div><div class="line">    __builtin___clear_cache(g_addr,(g_addr+8)); // need to clear cache</div><div class="line">    LOGI(&quot;chang bpk to nop\n&quot;);</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">void anti4()&#123;//SIGTRAP</div><div class="line"></div><div class="line">    int ret,size;</div><div class="line">    char *addr,*tmpaddr;</div><div class="line"></div><div class="line">    signal(SIGTRAP,my_sigtrap);  //注册信号处理</div><div class="line"></div><div class="line">    addr = (char*)malloc(PAGE_SIZE*2);</div><div class="line"></div><div class="line">    memset(addr,0,PAGE_SIZE*2);</div><div class="line">    g_addr = (char *)(( (long)addr + PAGE_SIZE-1) &amp; ~(PAGE_SIZE-1));</div><div class="line"></div><div class="line">    LOGI(&quot;addr: %p ,g_addr : %p\n&quot;,addr,g_addr);</div><div class="line"></div><div class="line">    ret = mprotect(g_addr,PAGE_SIZE,PROT_READ|PROT_WRITE|PROT_EXEC);</div><div class="line">    if(ret!=0)</div><div class="line">    &#123;</div><div class="line">        LOGI(&quot;mprotect error\n&quot;);</div><div class="line">        return ;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    size = 8;</div><div class="line">    memcpy(g_addr,dynamic_ccode,size);</div><div class="line"></div><div class="line">    __builtin___clear_cache(g_addr,(g_addr+size)); // need to clear cache</div><div class="line">    LOGI(&quot;start stub\n&quot;);</div><div class="line"></div><div class="line">    __asm__(&quot;push &#123;r5&#125;\n\t&quot;</div><div class="line">            &quot;push &#123;r0-r4,lr&#125;\n\t&quot;</div><div class="line">            &quot;mov r0,pc\n\t&quot;  //此时pc指向后两条指令</div><div class="line">            &quot;add r0,r0,#6\n\t&quot;//cjh:这里的add是add.w，所以会占32位，因此需要+6才对。 原文：+4 是的lr 地址为 pop&#123;r0-r5&#125;</div><div class="line">            &quot;mov lr,r0\n\t&quot;</div><div class="line">            &quot;mov pc,%0\n\t&quot;</div><div class="line">            &quot;pop &#123;r0-r5&#125;\n\t&quot;</div><div class="line">            &quot;mov lr,r5\n\t&quot; //恢复lr</div><div class="line">            &quot;pop &#123;r5&#125;\n\t&quot;</div><div class="line">    :</div><div class="line">    :&quot;r&quot;(g_addr)</div><div class="line">    :);</div><div class="line"></div><div class="line">    LOGI(&quot;hi, i&apos;m here\n&quot;);</div><div class="line">    free(addr);</div><div class="line">    LOGI(&quot;hi, i&apos;m here2\n&quot;);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="调试器的错误理解"><a href="#调试器的错误理解" class="headerlink" title="调试器的错误理解"></a>调试器的错误理解</h3><p>目的:干扰调试器对汇编指令的解析<br>原理:Thumb-2模式是Thumb16和Thumb32指令的混合执行，切换依靠跳转时的地址数值，可动态确定。因此难以被判断。<br>不过ida可手动改分析的汇编指令集</p>
+<h3 id="守护进程-线程"><a href="#守护进程-线程" class="headerlink" title="守护进程/线程"></a>守护进程/线程</h3><p>目的:时时反调试检测<br>原理:启动守护进程/线程，相互检测调试，相互检测存活。</p>
+<p>设计良好的话反调试效果明显</p>
+<p>实现:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div></pre></td><td class="code"><pre><div class="line">int pipefd[2];</div><div class="line">int childpid;</div><div class="line"></div><div class="line">void *anti3_thread(void *)&#123;</div><div class="line"></div><div class="line">    int statue=-1,alive=1,count=0;</div><div class="line"></div><div class="line">    close(pipefd[1]);</div><div class="line"></div><div class="line">    while(read(pipefd[0],&amp;statue,4)&gt;0)</div><div class="line">        break;</div><div class="line">    sleep(1);</div><div class="line"></div><div class="line">    //这里改为非阻塞     fcntl(pipefd[0], F_SETFL, O_NONBLOCK); //enable fd的O_NONBLOCK </div><div class="line">    LOGI(&quot;pip--&gt;read = %d&quot;, statue);</div><div class="line"></div><div class="line">    while(true) &#123;</div><div class="line"></div><div class="line">        LOGI(&quot;pip--&gt; statue = %d&quot;, statue);</div><div class="line">        read(pipefd[0], &amp;statue, 4);</div><div class="line">        sleep(1);</div><div class="line"></div><div class="line">        LOGI(&quot;pip--&gt; statue2 = %d&quot;, statue);</div><div class="line">        if (statue != 0) &#123;</div><div class="line">            kill(childpid,SIGKILL);</div><div class="line">            kill(getpid(), SIGKILL);</div><div class="line">            return NULL;</div><div class="line">        &#125;</div><div class="line">        statue = -1;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void anti3()&#123;</div><div class="line">    int pid,p;</div><div class="line">    FILE *fd;</div><div class="line">    char filename[MAX];</div><div class="line">    char line[MAX];</div><div class="line"></div><div class="line">    pid = getpid();</div><div class="line">    sprintf(filename,&quot;/proc/%d/status&quot;,pid);// 读取proc/pid/status中的TracerPid     p = fork();</div><div class="line">    if(p==0) //child     &#123;</div><div class="line">        LOGI(&quot;Child&quot;);</div><div class="line">        close(pipefd[0]); //关闭子进程的读管道         int pt,alive=0;</div><div class="line">        pt = ptrace(PTRACE_TRACEME, 0, 0, 0); //子进程反调试         while(true)</div><div class="line">        &#123;</div><div class="line">            fd = fopen(filename,&quot;r&quot;);</div><div class="line">            while(fgets(line,MAX,fd))</div><div class="line">            &#123;</div><div class="line">                if(strstr(line,&quot;TracerPid&quot;) != NULL)</div><div class="line">                &#123;</div><div class="line">                    LOGI(&quot;line %s&quot;,line);</div><div class="line">                    int statue = atoi(&amp;line[10]);</div><div class="line">                    LOGI(&quot;########## tracer pid:%d&quot;, statue);</div><div class="line">                    write(pipefd[1],&amp;statue,4);//子进程向父进程写 statue值 </div><div class="line">                    fclose(fd);</div><div class="line"></div><div class="line">                    if(statue != 0)</div><div class="line">                    &#123;</div><div class="line">                        LOGI(&quot;########## tracer pid:%d&quot;, statue);</div><div class="line">                        return ;</div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                    break;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            sleep(1);</div><div class="line"></div><div class="line">        &#125;</div><div class="line">    &#125;else&#123;</div><div class="line">        LOGI(&quot;Father&quot;);</div><div class="line">        childpid = p;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">extern &quot;C&quot;</div><div class="line">JNIEXPORT jstring</div><div class="line"></div><div class="line">JNICALL</div><div class="line">Java_com_sec_gtoad_antidebug_MainActivity_stringFromFork(</div><div class="line">        JNIEnv *env,</div><div class="line">        jobject /* this */) &#123;</div><div class="line">    std::string hello = &quot;Hello from fork&quot;;</div><div class="line">    pthread_t id_0;</div><div class="line">    id_0 = pthread_self();</div><div class="line">    pipe(pipefd);</div><div class="line">    pthread_create(&amp;id_0,NULL,anti3_thread,(void*)NULL);</div><div class="line">    LOGI(&quot;Start&quot;);</div><div class="line">    anti3();</div><div class="line">    return env-&gt;NewStringUTF(hello.c_str());</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="防止hook"><a href="#防止hook" class="headerlink" title="防止hook"></a>防止hook</h2><h2 id="防止注入"><a href="#防止注入" class="headerlink" title="防止注入"></a>防止注入</h2><h2 id="VMP"><a href="#VMP" class="headerlink" title="VMP"></a>VMP</h2><h2 id="其它针对性措施"><a href="#其它针对性措施" class="headerlink" title="其它针对性措施"></a>其它针对性措施</h2><h3 id="检测frida"><a href="#检测frida" class="headerlink" title="检测frida"></a>检测frida</h3><p>fridaserver:进程列表、tcp端口检测<br>检测注入:检测加载的so中是否有frida特征的</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://gtoad.github.io/2017/06/25/Android-Anti-Debug/" target="_blank" rel="external">https://gtoad.github.io/2017/06/25/Android-Anti-Debug/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/20/8-0不落地加载-加密加载dex的实现/" rel="next" title="8.0不落地加载&加密加载dex的实现">
+                <i class="fa fa-chevron-left"></i> 8.0不落地加载&加密加载dex的实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">102</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">77</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻止静态分析"><span class="nav-number">2.</span> <span class="nav-text">阻止静态分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#so整体加密"><span class="nav-number">2.1.</span> <span class="nav-text">so整体加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#段加密"><span class="nav-number">2.2.</span> <span class="nav-text">段加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数加密，运行时解密"><span class="nav-number">2.3.</span> <span class="nav-text">函数加密，运行时解密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#elf加壳"><span class="nav-number">2.4.</span> <span class="nav-text">elf加壳</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#花指令"><span class="nav-number">2.5.</span> <span class="nav-text">花指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hook更改流程"><span class="nav-number">2.6.</span> <span class="nav-text">hook更改流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混淆"><span class="nav-number">2.7.</span> <span class="nav-text">混淆</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阻止动态调试"><span class="nav-number">3.</span> <span class="nav-text">阻止动态调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于时间的检测"><span class="nav-number">3.1.</span> <span class="nav-text">基于时间的检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于文件的检测"><span class="nav-number">3.2.</span> <span class="nav-text">基于文件的检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#针对常见调试器检测"><span class="nav-number">3.3.</span> <span class="nav-text">针对常见调试器检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机内部相关字段"><span class="nav-number">3.4.</span> <span class="nav-text">虚拟机内部相关字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ptrace"><span class="nav-number">3.5.</span> <span class="nav-text">ptrace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#断点扫描"><span class="nav-number">3.6.</span> <span class="nav-text">断点扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信号处理"><span class="nav-number">3.7.</span> <span class="nav-text">信号处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试器的错误理解"><span class="nav-number">3.8.</span> <span class="nav-text">调试器的错误理解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#守护进程-线程"><span class="nav-number">3.9.</span> <span class="nav-text">守护进程/线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防止hook"><span class="nav-number">4.</span> <span class="nav-text">防止hook</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防止注入"><span class="nav-number">5.</span> <span class="nav-text">防止注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#VMP"><span class="nav-number">6.</span> <span class="nav-text">VMP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它针对性措施"><span class="nav-number">7.</span> <span class="nav-text">其它针对性措施</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检测frida"><span class="nav-number">7.1.</span> <span class="nav-text">检测frida</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">8.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
