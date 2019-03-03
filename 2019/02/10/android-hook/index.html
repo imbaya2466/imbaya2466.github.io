@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://i.imgur.com/hkQbs5I.png">
 <meta property="og:image" content="https://i.imgur.com/9b1VRGl.png">
 <meta property="og:image" content="https://i.imgur.com/nyq7RpT.png">
-<meta property="og:updated_time" content="2019-02-21T13:10:19.029Z">
+<meta property="og:updated_time" content="2019-02-23T17:33:08.743Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android-hook">
 <meta name="twitter:description" content="前言目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试先为了看懂：https://github.com/xiaobaiyey/dexload 钩子(hook)与注入(inject):hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。实现部分交集互">
@@ -421,6 +421,7 @@
 <li>修复bug-重复hook ok</li>
 <li>删除hook功能 ok</li>
 <li>一次性hook -失败</li>
+<li>使hook函数提前结束(不使用BLR而使用BR，用户函数的ret将直接将hook函数返回)</li>
 </ol>
 <p>无法一次性hook-arm64下。<br>因为不可修改pc，只能使用寄存器跳转，此时跳转回去必须使用一个寄存器但无代码可修复寄存器，因此失败。</p>
 <p>一些坑:</p>
@@ -428,7 +429,7 @@
 <li>Cmake尝试失败，最后又用回了ndk-build</li>
 <li>一定要在build.gradle中加abiFilters，否则会将arm代码视为别的abi编译产生错误。在application.mk中指定集合到studio没用。即含有汇编代码时需要指定平台编译！！</li>
 <li>AS build出apk里的so与AS调试用的so不一致，即使是debug编译出的。因此找偏移地址时要确定目标so不变。</li>
-<li>native方法不是System.loadLibrary时绑定，是调用native方法时才寻找符号表中符合的，也可以手动绑定?需要看art的native方法oat后的样子才能确定。</li>
+<li>native方法不是System.loadLibrary时绑定，是调用native方法时才寻找符号表中符合的，也可以手动绑定。需要看art的native方法oat后的样子才能确定。</li>
 </ol>
 
       
@@ -551,7 +552,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">102</span>
+                <span class="site-state-item-count">103</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -573,7 +574,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">77</span>
+                <span class="site-state-item-count">79</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

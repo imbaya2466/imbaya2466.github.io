@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,dex,vdex,oat," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言通过阅读8.0源码下dex解析的过程，自己实现相关文件解析器。">
+<meta name="keywords" content="android,dex,vdex,oat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dex-oat-vdex文件解析实现">
+<meta property="og:url" content="http://yoursite.com/2019/03/03/dex-oat-vdex文件解析实现/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言通过阅读8.0源码下dex解析的过程，自己实现相关文件解析器。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-03T13:28:48.196Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="dex-oat-vdex文件解析实现">
+<meta name="twitter:description" content="前言通过阅读8.0源码下dex解析的过程，自己实现相关文件解析器。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/03/dex-oat-vdex文件解析实现/"/>
+
+
+
+
+
+  <title>dex-oat-vdex文件解析实现 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/03/dex-oat-vdex文件解析实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">dex-oat-vdex文件解析实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-03T21:26:37+08:00">
+                2019-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>通过阅读8.0源码下dex解析的过程，自己实现相关文件解析器。</p>
+<a id="more"></a>
+<h2 id="dex"><a href="#dex" class="headerlink" title="dex"></a>dex</h2><p>系统的dex解析头文件<br><a href="https://github.com/imbaya2466/art_read/blob/master/art/runtime/dex_file.h" target="_blank" rel="external">https://github.com/imbaya2466/art_read/blob/master/art/runtime/dex_file.h</a></p>
+<h3 id="文件格式"><a href="#文件格式" class="headerlink" title="文件格式"></a>文件格式</h3><p>可以参考前文<br><a href="https://xn--74q78i15hxv3arigm4e.cn/2018/04/08/dex%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2018/04/08/dex%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F/</a></p>
+<p>官方:<br><a href="https://source.android.com/devices/tech/dalvik/dex-format" target="_blank" rel="external">https://source.android.com/devices/tech/dalvik/dex-format</a></p>
+<p>细节方面直接参考官方即可，非常全面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">header  文件头</div><div class="line"></div><div class="line">ids*5   索引区</div><div class="line"></div><div class="line"></div><div class="line">class_defs  类定义区</div><div class="line">data        数据区----一般直接到文件末尾了</div><div class="line">  link_data   连接数据区--位于数据区</div></pre></td></tr></table></figure>
+<h4 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">// Raw header_item.</div><div class="line">struct Header &#123;</div><div class="line">  uint8_t magic_[8];   //魔数</div><div class="line">  uint32_t checksum_;  //dex文件校验和</div><div class="line">  uint8_t signature_[kSha1DigestSize]; //dexSHA-1签名 </div><div class="line">  uint32_t file_size_;  // 整个文件大小</div><div class="line">  uint32_t header_size_;  // 头大小</div><div class="line">  uint32_t endian_tag_;   //大小端标签 ，标准 .dex 文件格式为 小端 ，此项一般固定为 0x1234 5678 常量</div><div class="line">  uint32_t link_size_;  // unused   这个两个字段是表示链接数据的大小和偏移值，没用</div><div class="line">  uint32_t link_off_;  // unused</div><div class="line">  uint32_t map_off_;  // unused   map item 的偏移地址 ，该 item 属于 data 区里的内容 </div><div class="line"></div><div class="line">  uint32_t string_ids_size_;  // dex中用到的所有的字符串内容的项数和偏移值</div><div class="line">  uint32_t string_ids_off_;  </div><div class="line">  uint32_t type_ids_size_;  // dex中的类型数据结构的项数和偏移值 数量&lt;65535</div><div class="line">  uint32_t type_ids_off_;  </div><div class="line">  uint32_t proto_ids_size_;  // dex中的元数据信息数据结构的项数和偏移值 数量&lt;65535</div><div class="line">  uint32_t proto_ids_off_;  </div><div class="line">  uint32_t field_ids_size_;  // dex中的字段信息数据结构的项数和偏移值</div><div class="line">  uint32_t field_ids_off_;  </div><div class="line">  uint32_t method_ids_size_;  // dex中的方法信息数据结构的项数和偏移值</div><div class="line">  uint32_t method_ids_off_;  </div><div class="line">  uint32_t class_defs_size_;  // dex中的类信息数据结构的项数和偏移值</div><div class="line">  uint32_t class_defs_off_;  </div><div class="line">  uint32_t data_size_;  // dex中数据区域的结构信息的大小(字节数)和偏移值</div><div class="line">  uint32_t data_off_;  </div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>只有data的size表示字节数，data的size+off应该为文件末尾。ids都是索引，def是定义</p>
+<h4 id="索引区"><a href="#索引区" class="headerlink" title="索引区"></a>索引区</h4><h5 id="string-ids"><a href="#string-ids" class="headerlink" title="string_ids"></a>string_ids</h5><p>每项为一个结构体，描述偏移用的，位于索引区<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// Raw string_id_item.</div><div class="line">struct StringId &#123;</div><div class="line">  uint32_t string_data_off_;  // 字符数据的偏移，指向data区</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>每个偏移指向一个数据结构体</p>
+<p>在data区的string数据结构体<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">struct string_data_item</div><div class="line">    &#123;</div><div class="line">	    uleb128 utf16_size;//uleb128编码长度</div><div class="line">      byte data;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>数据使用MUTF-8编码，在MTUF-8中，它的头部存放的是由uleb128编码的字符的个数。描述字串的。<br>leb128格式，是基于 1 个 Byte 的一种不定长度的编码方式 。若第一个 Byte 的最高位为 1 ，则表示还需要下一个 Byte 来描述 ，直至最后一个 Byte 的最高位为 0。即计算一个leb128编码的字符字节数要从开始到最高位为0的字节。这是描述一个字符的。<br>将leb128编码的数字转换为可读数字的规则是：除去每个字节的最高位，将每个字节剩余的7个bits拼接在一起，即为数字。1-5个字节。</p>
+<h5 id="type-ids"><a href="#type-ids" class="headerlink" title="type_ids"></a>type_ids</h5><p>这个数据结构中存放的数据主要是描述dex中所有的类型，比如类类型，基本类型，数组类型的名字</p>
+<p>每项为一个结构体，描述字串索引，位于索引区<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// Raw type_id_item.</div><div class="line">struct TypeId &#123;</div><div class="line">  dex::StringIndex descriptor_idx_;  // string_ids的标号</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>4字节描述类型的字串标号</p>
+<p>字串表示类型还是使用:V-void B-byte C-char D-double F-float I-int J-long 类类型:LA/B/V; 数组：[类型- 类型[]</p>
+<h5 id="proto-ids"><a href="#proto-ids" class="headerlink" title="proto_ids"></a>proto_ids</h5><p>proto 的意思是 method prototype 代表 java 语言里的一个 method 的原型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// Raw proto_id_item.</div><div class="line">struct ProtoId &#123;</div><div class="line">  dex::StringIndex shorty_idx_;     // string_id的索引，简单描述方法原型  如DLL  大小4字节</div><div class="line">  dex::TypeIndex return_type_idx_;  // type_ids的索引，描述返回值类型  大小俩字节</div><div class="line">  uint16_t pad_;                    // padding = 0  填充对齐用        俩字节</div><div class="line">  uint32_t parameters_off_;         // type_list的文件偏移</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>简单表示原型字串索引、返回类型类型索引、参数类型表偏移，偏移为0时没有参数</p>
+<p>参数类型表，位于data区<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// Raw type_list.</div><div class="line">class TypeList &#123;</div><div class="line">  uint32_t size_;  // list的大小</div><div class="line">  TypeItem list_[1];  //每项内容是type_ids的索引-俩字节</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h5 id="field-ids"><a href="#field-ids" class="headerlink" title="field_ids"></a>field_ids</h5><p>描述类属性成员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// Raw field_id_item.</div><div class="line">struct FieldId &#123;</div><div class="line">  dex::TypeIndex class_idx_;   // type_ids_的索引，表示成员所属类</div><div class="line">  dex::TypeIndex type_idx_;    // type_ids_的索引，表示成员本身的类型</div><div class="line">  dex::StringIndex name_idx_;  // string_ids_的缩影，表示成员的名字</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h5 id="method-ids"><a href="#method-ids" class="headerlink" title="method_ids"></a>method_ids</h5><p>描述类的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// Raw method_id_item.</div><div class="line">struct MethodId &#123;</div><div class="line">  dex::TypeIndex class_idx_;   // type_ids_的索引 ，表示方法所属类</div><div class="line">  uint16_t proto_idx_;         // proto_ids_的索引，表示方法原</div><div class="line">  dex::StringIndex name_idx_;  // string_ids_的索引，表示方法名</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h4 id="类定义区"><a href="#类定义区" class="headerlink" title="类定义区"></a>类定义区</h4><p>存放class的定义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// Raw class_def_item.</div><div class="line">struct ClassDef &#123;</div><div class="line">  dex::TypeIndex class_idx_;  // type_ids_的索引，表示那个类</div><div class="line">  uint16_t pad1_;  // padding = 0  填充</div><div class="line">  uint32_t access_flags_;   //class的访问类型 public , final , static 等</div><div class="line">  dex::TypeIndex superclass_idx_;  // type_ids_的索引，表示父类类型</div><div class="line">  uint16_t pad2_;  // padding = 0 填充</div><div class="line">  uint32_t interfaces_off_;  // 文件偏移，指向 type_list，表示类继承的接口，接口也是类型</div><div class="line">  dex::StringIndex source_file_idx_;  // string_ids_的索引，源文件信息 没有为0xffff ffff </div><div class="line">  uint32_t annotations_off_;  // 文件偏移，指向annotations_directory_item 表示注释 没有为0 </div><div class="line">  uint32_t class_data_off_;  // 文件偏移，指向class_data_item 表示class的数据 没有为0</div><div class="line">  uint32_t static_values_off_;  // 文件偏移，指向EncodedArray，static的初始值 没有为0</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这里文件的偏移一般都指向了data区</p>
+<h5 id="annotationsoff"><a href="#annotationsoff" class="headerlink" title="annotationsoff"></a>annotations<em>off</em></h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">struct DexAnnotationsDirectoryItem</div><div class="line">&#123;</div><div class="line">    uint class_annotations_off;        //--&gt;annotation_set_item</div><div class="line">    uint fields_size;</div><div class="line">    uint annotated_methods_size;</div><div class="line">    uint annotated_parameters_size;</div><div class="line">    </div><div class="line">    field_annotation field_annotations[fields_size];</div><div class="line">    method_annotation method_annotations[annotated_methods_size];</div><div class="line">    parameter_annotation parameter_annotations[annotated_parameters_size];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="class-dataoff"><a href="#class-dataoff" class="headerlink" title="class_dataoff"></a>class_data<em>off</em></h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">		struct class_data_item</div><div class="line">		&#123;</div><div class="line">			uleb128 static_fields_size;   //静态字段个数</div><div class="line">			uleb128 instance_fields_size; //实例字段个数</div><div class="line">			uleb128 direct_methods_size;  //直接方法个数</div><div class="line">			uleb128 virtual_methods_size; //虚方法个数</div><div class="line">      //以下为数组，非偏移。大小由上提供</div><div class="line">			encoded_field static_fields [ static_fields_size ];    //静态字段</div><div class="line">			encoded_field instance_fields [ instance_fields_size ]; //实例字段</div><div class="line">			encoded_method direct_methods [ direct_method_size ];   //直接方法</div><div class="line">			encoded_method virtual_methods [ virtual_methods_size ];  //虚方法</div><div class="line">    &#125;</div><div class="line"></div><div class="line">struct encoded_field</div><div class="line">&#123;</div><div class="line">    uleb128 filed_idx_diff; //field_ids的索引，相对此数组上一个的差</div><div class="line">    uleb128 access_flags;  //访问权限</div><div class="line">&#125;</div><div class="line"></div><div class="line">struct encoded_method</div><div class="line">&#123;</div><div class="line">    uleb128 method_idx_diff; //method_ids的索引，相对此数组上一个的差</div><div class="line">    uleb128 access_flags;     //访问权限</div><div class="line">    uleb128 code_off;       //指向data区的偏移指向code_item</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>直接方法是指类的（type为某个类）所有实例构造器和private实例方法。反之protected或者public方法都叫做虚方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">struct code_item </div><div class="line">&#123;</div><div class="line">    ushort                         registers_size;  //此代码使用的寄存器数量</div><div class="line">    ushort                         ins_size;        //此代码所用方法的传入参数的字数</div><div class="line">    ushort                         outs_size;       //此代码进行方法调用所需的传出参数空间的字数</div><div class="line">    ushort                         tries_size;      //此实例的 try_item 数量</div><div class="line">    uint                         debug_info_off;    //从文件开头到此代码的调试信息（行号 + 局部变量信息）序列的偏移量</div><div class="line">    uint                         insns_size;        //指令列表的大小</div><div class="line">    ushort                         insns [insns_size]; //字节码的实际数组</div><div class="line">    ushort                         paddding;             //填充用</div><div class="line">    try_item                     tries [tyies_size]; // 用于表示在代码中捕获异常的位置以及如何对异常进行处理的数组</div><div class="line">    encoded_catch_handler_list  handlers;             // 用于表示“捕获类型列表和关联处理程序地址”的列表的字节。每个 try_item 都具有到此结构的分组偏移量</div></pre></td></tr></table></figure>
+<h3 id="系统加载"><a href="#系统加载" class="headerlink" title="系统加载"></a>系统加载</h3><p>最后都是使用 DexFile::OpenCommon(共同) 来解析加载到内存的dex<br>其一开始直接使用DexFile构造dex对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">//DexFile类的构造</div><div class="line">//参数：数据开始地址、大小、文件名、dex头的check、null</div><div class="line">DexFile::DexFile(const uint8_t* base,</div><div class="line">                 size_t size,</div><div class="line">                 const std::string&amp; location,</div><div class="line">                 uint32_t location_checksum,</div><div class="line">                 const OatDexFile* oat_dex_file)</div><div class="line">    : begin_(base),</div><div class="line">      size_(size),</div><div class="line">      location_(location),</div><div class="line">      location_checksum_(location_checksum),</div><div class="line">      header_(reinterpret_cast&lt;const Header*&gt;(base)),</div><div class="line">      string_ids_(reinterpret_cast&lt;const StringId*&gt;(base + header_-&gt;string_ids_off_)),</div><div class="line">      type_ids_(reinterpret_cast&lt;const TypeId*&gt;(base + header_-&gt;type_ids_off_)),</div><div class="line">      field_ids_(reinterpret_cast&lt;const FieldId*&gt;(base + header_-&gt;field_ids_off_)),</div><div class="line">      method_ids_(reinterpret_cast&lt;const MethodId*&gt;(base + header_-&gt;method_ids_off_)),</div><div class="line">      proto_ids_(reinterpret_cast&lt;const ProtoId*&gt;(base + header_-&gt;proto_ids_off_)),</div><div class="line">      class_defs_(reinterpret_cast&lt;const ClassDef*&gt;(base + header_-&gt;class_defs_off_)),</div><div class="line">      method_handles_(nullptr),</div><div class="line">      num_method_handles_(0),</div><div class="line">      call_site_ids_(nullptr),</div><div class="line">      num_call_site_ids_(0),</div><div class="line">      oat_dex_file_(oat_dex_file) &#123;</div><div class="line">...</div><div class="line">//从maplist(begin_ + header_-&gt;map_off_)初始化节信息</div><div class="line">  InitializeSectionsFromMapList();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="实现解析器"><a href="#实现解析器" class="headerlink" title="实现解析器"></a>实现解析器</h3><p>详细细节参考官方<br><a href="https://source.android.com/devices/tech/dalvik/dex-format#top_of_page" target="_blank" rel="external">https://source.android.com/devices/tech/dalvik/dex-format#top_of_page</a></p>
+<p>项目仓库:<br><a href="https://github.com/imbaya2466/XFile" target="_blank" rel="external">https://github.com/imbaya2466/XFile</a></p>
+<p>杂记:</p>
+<ol>
+<li>dalvik的字节码的以2字节为基础的变长码，见<a href="https://source.android.com/devices/tech/dalvik/instruction-formats.html" target="_blank" rel="external">https://source.android.com/devices/tech/dalvik/instruction-formats.html</a></li>
+<li>try-catch块的实现就是直接指定try的区域、catch的列表。相关的数据结构:try_item   encoded_catch_handler_list</li>
+<li>java的注解提供数据解释程序代码，定义注解只能有属性。使用时在目标位置运用注解即可为目标添加数据。该数据解析可在编译阶段或是运行阶段。编译阶段可使用javac的接口，运行阶段可使用反射。在dex中直接保存注解信息，相关数据结构:annotations_directory_item</li>
+<li>类的static字段初始值是直接写在dex类信息中的。相关:static_values_off</li>
+<li>一些有趣的java代码翻译为字节码的点(init clinit)，可以阅读阿里技术的深入探索android热修复2.2节</li>
+</ol>
+<h2 id="odex"><a href="#odex" class="headerlink" title="odex"></a>odex</h2><p>其中包含 APK 中已经过 AOT 编译的方法代码。</p>
+<p>本质是一个oat文件，在系统中使用dlopen加载。也可以作为elf文件映射加载。<br>见下oat文件格式分析</p>
+<h2 id="vdex"><a href="#vdex" class="headerlink" title="vdex"></a>vdex</h2><p>其中包含 APK 的未压缩 DEX 代码，另外还有一些旨在加快验证速度的元数据。</p>
+<h3 id="系统加载-1"><a href="#系统加载-1" class="headerlink" title="系统加载"></a>系统加载</h3><p><a href="https://github.com/imbaya2466/art_read/blob/master/art/runtime/vdex_file.h" target="_blank" rel="external">https://github.com/imbaya2466/art_read/blob/master/art/runtime/vdex_file.h</a><br>更详细的:<br><a href="https://github.com/anestisb/vdexExtractor/tree/master/src/vdex" target="_blank" rel="external">https://github.com/anestisb/vdexExtractor/tree/master/src/vdex</a></p>
+<p>art\runtime\vdex_file.h<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">explicit VdexFile(MemMap* mmap) : mmap_(mmap) &#123;&#125;</div><div class="line"></div><div class="line">header:</div><div class="line">  uint8_t magic_[4];                //魔数vdex</div><div class="line">  uint8_t version_[4];              //版本</div><div class="line">  uint32_t number_of_dex_files_;    //dex文件的数量</div><div class="line">  uint32_t dex_size_;               //文件大小</div><div class="line">  uint32_t verifier_deps_size_;</div><div class="line">  uint32_t quickening_info_size_;</div></pre></td></tr></table></figure></p>
+<p>就是dex的集合</p>
+<h2 id="oat"><a href="#oat" class="headerlink" title="oat"></a>oat</h2><p>可参考:<a href="https://bbs.pediy.com/thread-206230.htm" target="_blank" rel="external">https://bbs.pediy.com/thread-206230.htm</a><br><a href="https://www.jianshu.com/p/e0929379cdc3" target="_blank" rel="external">https://www.jianshu.com/p/e0929379cdc3</a><br>老罗:<br><a href="https://blog.csdn.net/Luoshengyang/article/details/39307813" target="_blank" rel="external">https://blog.csdn.net/Luoshengyang/article/details/39307813</a></p>
+<p>elf中导出了三个符号oatdata、oatexec和oatlastword，标明oat的位置，oat中又含dex<br>oat头指明dex文件的偏移、oat化的class信息<br>oat化的class信息指明了native代码位置</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/dex/" rel="tag"># dex</a>
+          
+            <a href="/tags/vdex/" rel="tag"># vdex</a>
+          
+            <a href="/tags/oat/" rel="tag"># oat</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/21/android-native保护整理实践/" rel="next" title="android-native保护整理实践">
+                <i class="fa fa-chevron-left"></i> android-native保护整理实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">79</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dex"><span class="nav-number">2.</span> <span class="nav-text">dex</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件格式"><span class="nav-number">2.1.</span> <span class="nav-text">文件格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Header"><span class="nav-number">2.1.1.</span> <span class="nav-text">Header</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#索引区"><span class="nav-number">2.1.2.</span> <span class="nav-text">索引区</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#string-ids"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">string_ids</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#type-ids"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">type_ids</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#proto-ids"><span class="nav-number">2.1.2.3.</span> <span class="nav-text">proto_ids</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#field-ids"><span class="nav-number">2.1.2.4.</span> <span class="nav-text">field_ids</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#method-ids"><span class="nav-number">2.1.2.5.</span> <span class="nav-text">method_ids</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类定义区"><span class="nav-number">2.1.3.</span> <span class="nav-text">类定义区</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#annotationsoff"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">annotationsoff</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#class-dataoff"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">class_dataoff</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统加载"><span class="nav-number">2.2.</span> <span class="nav-text">系统加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现解析器"><span class="nav-number">2.3.</span> <span class="nav-text">实现解析器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#odex"><span class="nav-number">3.</span> <span class="nav-text">odex</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#vdex"><span class="nav-number">4.</span> <span class="nav-text">vdex</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#系统加载-1"><span class="nav-number">4.1.</span> <span class="nav-text">系统加载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#oat"><span class="nav-number">5.</span> <span class="nav-text">oat</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
