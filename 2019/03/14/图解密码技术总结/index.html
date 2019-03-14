@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="密码学," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言最近一直在面试实习生岗，前后面试了几家。面试过程基本都不错，但是回答问题现在想想总觉得不够全面和细致，其中有面试官问我elf文件格式，我对elf文件格式还是很熟悉的，但是当时没有充分的表述出来，只说了头、节、段这些基本的概念。现在想想，应该从elf文件的分类、头的内容、节的由来、段的由来。典型的节、段内容、连接装载方式、android下elf特殊的地方等。一步一步系统的描述，并力求简短、提炼核">
+<meta name="keywords" content="密码学">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图解密码技术总结">
+<meta property="og:url" content="http://yoursite.com/2019/03/14/图解密码技术总结/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言最近一直在面试实习生岗，前后面试了几家。面试过程基本都不错，但是回答问题现在想想总觉得不够全面和细致，其中有面试官问我elf文件格式，我对elf文件格式还是很熟悉的，但是当时没有充分的表述出来，只说了头、节、段这些基本的概念。现在想想，应该从elf文件的分类、头的内容、节的由来、段的由来。典型的节、段内容、连接装载方式、android下elf特殊的地方等。一步一步系统的描述，并力求简短、提炼核">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-14T10:15:40.534Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图解密码技术总结">
+<meta name="twitter:description" content="前言最近一直在面试实习生岗，前后面试了几家。面试过程基本都不错，但是回答问题现在想想总觉得不够全面和细致，其中有面试官问我elf文件格式，我对elf文件格式还是很熟悉的，但是当时没有充分的表述出来，只说了头、节、段这些基本的概念。现在想想，应该从elf文件的分类、头的内容、节的由来、段的由来。典型的节、段内容、连接装载方式、android下elf特殊的地方等。一步一步系统的描述，并力求简短、提炼核">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/14/图解密码技术总结/"/>
+
+
+
+
+
+  <title>图解密码技术总结 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/14/图解密码技术总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">图解密码技术总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-14T18:14:04+08:00">
+                2019-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/密码学/" itemprop="url" rel="index">
+                    <span itemprop="name">密码学</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在面试实习生岗，前后面试了几家。面试过程基本都不错，但是回答问题现在想想总觉得不够全面和细致，其中有面试官问我elf文件格式，我对elf文件格式还是很熟悉的，但是当时没有充分的表述出来，只说了头、节、段这些基本的概念。现在想想，应该从elf文件的分类、头的内容、节的由来、段的由来。典型的节、段内容、连接装载方式、android下elf特殊的地方等。一步一步系统的描述，并力求简短、提炼核心，这样才能更好的表现自己对知识的体系总结。毕竟是第一次面试，很是后悔，吸取教训，下次回答之前多多思考，不要抢答或是打断对方的话，冷静微兴奋，不要紧张或是激动。<br>知识上出问题的部分是密码学，这部分在被问到ssl时回答的很不好，基本全忘了，在此总结下密码学的内容。</p>
+<a id="more"></a>
+<h2 id="密码"><a href="#密码" class="headerlink" title="密码"></a>密码</h2><p>面临威胁:窃听、篡改、伪装、否认。<br>威胁特性:机密性、完整性、认证、不可否认性。<br>用来应对的密码技术: 对称密码、公匙密码、单向散列函数、消息认证码、数字签名、随机数生成器。<br>根据不同需求运用不同技术组合。</p>
+<p>密码是隐藏内容，而隐写术隐藏的是消息本身。(我们在传递信息，但别人无法解读；别人不知道我们在传递信息)</p>
+<p>常识:</p>
+<ol>
+<li>不使用保密的密码算法–容易被算法的公布减弱强度。</li>
+<li>使用低强度的密码比不进行任何加密更危险–影响自己的安全感，形成假安全感</li>
+<li>任何密码总有一天被破解</li>
+<li>密码只是信息安全的一部分–木桶效应</li>
+</ol>
+<h3 id="对称密码"><a href="#对称密码" class="headerlink" title="对称密码"></a>对称密码</h3><p>实际上是将机密性压缩在了密匙中<br>64字节长度密匙足够防爆了。</p>
+<p>DES：64位比特明文加密为64比特密文。更长采用分组模式<br>DES是一种16轮循环的feistel网络，密匙56比特。<br>容易被破解。</p>
+<p>三重DES：为了增强DES强度，将DES重复三次。密匙168比特。<br>实现为加密、解密、加密，这样可以兼容普通的DES。<br>还在使用，但处理速度不高。</p>
+<p>AES：分组长度固定128比特，密匙128、192、256比特。<br>使用PSN结构，安全、快速。</p>
+<h3 id="分组密码的模式"><a href="#分组密码的模式" class="headerlink" title="分组密码的模式"></a>分组密码的模式</h3><p>分组密码(DES、AES)对长文本加密需要模式。</p>
+<p>ECB:明文分组加密后直接作为密文分组。<br>可受攻击:改变密文顺序即可修改明文</p>
+<p>CBC:明文分组与前一个密文分组xor再进行加密形成密文分组，需要初始化向量。<br>解密:从前往后密文分组分组解密后xor前面的密文分组得出明文<br>可受攻击:对初始向量反转比特将可直接修改明文第一组<br>SSL/TLS使用</p>
+<p>CFB:明文分组与前一个加密后的密文分组xor形成密文分组，需要初始化向量。<br>解密:从前往后密文分组xor前一个加密后的密文分组得到明文分组。<br>可受攻击:最后一个密文分组可翻转比特修改明文。重放攻击:用相同密匙加密的俩段消息，部分互相替换，可修改明文。<br>可用分组实现流密码</p>
+<p>OFB:初始化向量不停加密，明文分组依次与加密的初始化向量xor形成密文分组。<br>解密:初始化向量不停加密，密文分组依次与加密的初始化向量xor形成明文分组。<br>可用于流<br>可受攻击:翻转比特</p>
+<p>CTR:计数器每次递增后加密，将加密后的递增器与明文分组xor形成密文分组。<br>解密:相同<br>可用于流，可用于并行计算<br>可受攻击:翻转比特</p>
+<h3 id="公匙密码"><a href="#公匙密码" class="headerlink" title="公匙密码"></a>公匙密码</h3><p>RSA<br>公仅私可解，私仅公可解<br>处理速度只有对称密码的几百分之一。<br>破解难在求离散对数的问题…..我实际是算的求底…密文=明文的E次方modN…E是以明文为底密文的对数。<br>实际只要解决对大数进行质因数分解的高效算法。2048比特暂时是安全的。</p>
+<p>不可防止中间人攻击。</p>
+<h3 id="混合密码"><a href="#混合密码" class="headerlink" title="混合密码"></a>混合密码</h3><p>用对称密码提高速度、用公匙密码保护会话密匙。</p>
+<p>其它交换法:Diffie-Hellman</p>
+<h2 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h2><h3 id="单向散列函数"><a href="#单向散列函数" class="headerlink" title="单向散列函数"></a>单向散列函数</h3><p>用于检查数据的完整性，将数据化为短的散列值。<br>长度与消息长度无关，是固定的。单向性</p>
+<p>要求:<br>长度固定、快、足够散列抗碰撞。<br>弱抗碰撞:找一个指定散列相同的消息困难<br>强抗碰撞:找任意俩条散列相同的消息困难</p>
+<p>具体：<br>MD5-已经不安全<br>SHA-2、3常用</p>
+<p>攻击:暴力破解利用多余性碰撞。<br>无法识别伪装</p>
+<h3 id="消息认证码"><a href="#消息认证码" class="headerlink" title="消息认证码"></a>消息认证码</h3><p>单向散列函数与密匙组合<br>证明消息是否被篡改。<br>将消息散列后加密一起发送，可以验证消息完整性。</p>
+<p>攻击：重放攻击，截了不停重发<br>防御：每次发送的消息赋予递增的序号。或接受者先向对方发一个一次性随机数，发送者包含该随机数，每次不一样因此无法重放。</p>
+<p>无法解决:<br>否认</p>
+<h3 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h3><p>单向散列函数与公匙密码组合<br>证明消息是谁的<br>运用私匙加密，公匙解密，表明只有持有该密匙的人才能生成的消息。</p>
+<p>防止否认：可以说自己私匙丢了…..这个自己否认总是有办法的</p>
+<h3 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h3><p>公匙与数字签名组合<br>为公匙加上数字签名，能够认定:公匙确实属于此人</p>
+<p>逐层信用，信用链。</p>
+<p>攻击:注册相似人名</p>
+<h2 id="应用技术"><a href="#应用技术" class="headerlink" title="应用技术"></a>应用技术</h2><h3 id="密匙"><a href="#密匙" class="headerlink" title="密匙"></a>密匙</h3><p>密匙是消息秘密的精华。<br>用加盐防止字典攻击。口令容易被爆破</p>
+<h3 id="随机数"><a href="#随机数" class="headerlink" title="随机数"></a>随机数</h3><p>不可预测的源泉。</p>
+<p>三级:<br>随机性、不可预测性、不可重现性。越来越严格<br>对应的随机数分类:<br>弱伪随机数、强伪随机数、真随机数</p>
+<p>密码学用强伪随机数即可。</p>
+<p>伪随机数生成器使用种子生成一串数字。</p>
+<p>线性同余法不能运用于密码技术，c的rand、java的java.util.Random都是线性同余。<br>(A*内部状态+c)%M  </p>
+<p>单向散列可以用于生成强伪随机。用密码算法加密也可以。</p>
+<h3 id="SSL-TLS"><a href="#SSL-TLS" class="headerlink" title="SSL/TLS"></a>SSL/TLS</h3><p>SSL属于应用层，可以承载其它协议如http。<br>是一种技术框架，可以替换内容。<br>提供了几种密码套餐，双方会在ssl建立中协定使用哪种套餐。</p>
+<p>加密传输时会有：分为多个片段，对每个片段压缩、加消息认证码、加编号。之后一起对称加密CBC模式。最后加上类型、版本、长度报头。<br>类型4种:握手、密码规格变更协议、警告协议、应用数据协议。</p>
+<p>握手协议:</p>
+<ol>
+<li>C-&gt;S 可用版本号、当前时间、客户端随机数、会话id、可用密码套件、可用压缩方式</li>
+<li>C&lt;-S 使用的版本号、当前时间、服务器随机数、会话id、使用的密码套件、使用的压缩方式</li>
+<li>C&lt;-S 证书清单/RSA密匙交换(证书信息不足时)</li>
+<li>C&lt;-S 证书类型清单、认证机构清单(需要客户端证明时)</li>
+<li>C&lt;-S 问候结束</li>
+<li>C-&gt;S 客户端证书</li>
+<li>C-&gt;S 加密的主密码</li>
+<li>C-&gt;S 数字签名，证书本人</li>
+<li>C-&gt;S 切换密码，结束握手</li>
+<li>C&lt;-S 切换密码，结束握手</li>
+<li>成为应用数据协议</li>
+</ol>
+<p>在实现时openSSL有过著名的心脏出血漏洞，数据大小没检查返回内存中数据。</p>
+<p>面试时被问过套件选择….常见的有:<br>RSA/3DES,DSS/AES</p>
+<h3 id="其它密码技术"><a href="#其它密码技术" class="headerlink" title="其它密码技术"></a>其它密码技术</h3><p>密匙:机密性压缩<br>散列:完整性压缩<br>消息认证码:消息认证压缩<br>数字签名:消息认证压缩<br>随机数:随机性压缩为种子随机</p>
+<h4 id="比特币"><a href="#比特币" class="headerlink" title="比特币"></a>比特币</h4><p>完全依赖于用户组成的P2P网络<br>区块链是保存比特币全部交易记录的公共账本。<br>将交易散列与上一块的散列一起存储为一块。<br>向链中添加新的记录交易的块就是挖矿。<br>为了证明自己完成了工作，规定新块的散列值前几位必须是0，通过在新块中修改nonce实现，相当于暴力破解单向散列函数。</p>
+<h4 id="完美的密码技术"><a href="#完美的密码技术" class="headerlink" title="完美的密码技术"></a>完美的密码技术</h4><p>量子密码:通信本身不可窃听<br>量子计算机:计算力庞大</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/密码学/" rel="tag"># 密码学</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/03/dex-oat-vdex文件解析实现/" rel="next" title="dex-oat-vdex文件解析实现">
+                <i class="fa fa-chevron-left"></i> dex-oat-vdex文件解析实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">104</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#密码"><span class="nav-number">2.</span> <span class="nav-text">密码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对称密码"><span class="nav-number">2.1.</span> <span class="nav-text">对称密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分组密码的模式"><span class="nav-number">2.2.</span> <span class="nav-text">分组密码的模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公匙密码"><span class="nav-number">2.3.</span> <span class="nav-text">公匙密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混合密码"><span class="nav-number">2.4.</span> <span class="nav-text">混合密码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#认证"><span class="nav-number">3.</span> <span class="nav-text">认证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单向散列函数"><span class="nav-number">3.1.</span> <span class="nav-text">单向散列函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息认证码"><span class="nav-number">3.2.</span> <span class="nav-text">消息认证码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数字签名"><span class="nav-number">3.3.</span> <span class="nav-text">数字签名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#证书"><span class="nav-number">3.4.</span> <span class="nav-text">证书</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用技术"><span class="nav-number">4.</span> <span class="nav-text">应用技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#密匙"><span class="nav-number">4.1.</span> <span class="nav-text">密匙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#随机数"><span class="nav-number">4.2.</span> <span class="nav-text">随机数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSL-TLS"><span class="nav-number">4.3.</span> <span class="nav-text">SSL/TLS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其它密码技术"><span class="nav-number">4.4.</span> <span class="nav-text">其它密码技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#比特币"><span class="nav-number">4.4.1.</span> <span class="nav-text">比特币</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#完美的密码技术"><span class="nav-number">4.4.2.</span> <span class="nav-text">完美的密码技术</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
