@@ -283,6 +283,161 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/lambda表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/27/lambda表达式/" itemprop="url">lambda表达式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T22:29:13+08:00">
+                2017-09-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="内部类"><a href="#内部类" class="headerlink" title="内部类"></a>内部类</h3><p>static内部类属于外部类的class内，而非静态内部类属于外部类的对象内。因为在其内所以访问范围等同于其内的方法，互相之间private可访问，原因就是互相提供静态方法同时内部对象含有外部的引用（深入字节码）<br>OutClassTest类有个叫InnerClass的内部类（非静态）<br>俩个类的外部使用：<br>OutClassTest oc1 = new OutClassTest();<br>OutClassTest.InnerClass no_static_inner = oc1.new InnerClass();<br>俩个类的内部使用：<br>InnerClass innerObj = new InnerClass();<br>sch就是School的一个对象。<br>假如School是内部静态类：<br>Student.School sch = new Student.School();</p>
+<p><a href="https://blog.csdn.net/Hacker_ZhiDian/article/details/82193100" target="_blank" rel="external">https://blog.csdn.net/Hacker_ZhiDian/article/details/82193100</a></p>
+<h4 id="传统的对象创建过程："><a href="#传统的对象创建过程：" class="headerlink" title="传统的对象创建过程："></a>传统的对象创建过程：</h4><ol>
+<li>类实现接口</li>
+<li>new类创建对象</li>
+<li>对象传入目标使用</li>
+</ol>
+<p>可传递：数据，执行代码（任意多个函数）</p>
+<h4 id="匿名函数方式："><a href="#匿名函数方式：" class="headerlink" title="匿名函数方式："></a>匿名函数方式：</h4><ol>
+<li>实现接口同时new</li>
+<li>对象传入</li>
+</ol>
+<p>可传递：执行代码（任意多个函数）</p>
+<h4 id="lambda方式："><a href="#lambda方式：" class="headerlink" title="lambda方式："></a>lambda方式：</h4><p>与匿名类相同<br>但过程省略多<br>可传递：执行代码（仅一个函数）</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/26/栈-算法1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -894,7 +1049,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">104</span>
+                <span class="site-state-item-count">105</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -905,7 +1060,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -916,7 +1071,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">80</span>
+                <span class="site-state-item-count">82</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

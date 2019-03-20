@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="操作系统,复习," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言简单复习下课本中操作系统的理论。一是有被问到，二是正在有个秘密企划需要些相关知识。 本篇不会给出诸如内存映射、系统调用等详细过程，同样不会有诸如bios启动等实现问题。只说课本中的整体结构与常见算法，教学用课本中对操作系统是一个比较抽象的概念性介绍。详细实际实现过程在过去的相关文章中有解释，将会贴出站内连接。">
+<meta name="keywords" content="操作系统,复习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统理论概述复习">
+<meta property="og:url" content="http://yoursite.com/2019/03/20/操作系统理论概述复习/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言简单复习下课本中操作系统的理论。一是有被问到，二是正在有个秘密企划需要些相关知识。 本篇不会给出诸如内存映射、系统调用等详细过程，同样不会有诸如bios启动等实现问题。只说课本中的整体结构与常见算法，教学用课本中对操作系统是一个比较抽象的概念性介绍。详细实际实现过程在过去的相关文章中有解释，将会贴出站内连接。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-20T05:03:17.271Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统理论概述复习">
+<meta name="twitter:description" content="前言简单复习下课本中操作系统的理论。一是有被问到，二是正在有个秘密企划需要些相关知识。 本篇不会给出诸如内存映射、系统调用等详细过程，同样不会有诸如bios启动等实现问题。只说课本中的整体结构与常见算法，教学用课本中对操作系统是一个比较抽象的概念性介绍。详细实际实现过程在过去的相关文章中有解释，将会贴出站内连接。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/20/操作系统理论概述复习/"/>
+
+
+
+
+
+  <title>操作系统理论概述复习 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/20/操作系统理论概述复习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">操作系统理论概述复习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-20T13:00:29+08:00">
+                2019-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/操作系统/" itemprop="url" rel="index">
+                    <span itemprop="name">操作系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>简单复习下课本中操作系统的理论。一是有被问到，二是正在有个秘密企划需要些相关知识。</p>
+<p>本篇不会给出诸如内存映射、系统调用等详细过程，同样不会有诸如bios启动等实现问题。只说课本中的整体结构与常见算法，教学用课本中对操作系统是一个比较抽象的概念性介绍。<br>详细实际实现过程在过去的相关文章中有解释，将会贴出站内连接。</p>
+<a id="more"></a>
+<p>相关概念在linux下的实现将会有所补充。</p>
+<h2 id="引论"><a href="#引论" class="headerlink" title="引论"></a>引论</h2><p>OS目标:<br>方便性-使计算机易于使用<br>有效性-提高系统资源利用率<br>可扩充性-对新硬件、软件方便扩充<br>开放性-遵守标准规范、方便与规范硬件、软件兼容</p>
+<p>OS作用:<br>用户与硬件间的接口-通过系统调用方便的使用操作系统控制硬件<br>系统资源管理者-处理机、存储器、IO设备等的管理<br>对计算机资源抽象-抽象各种访问资源接口</p>
+<p>发展历程:<br>未配置操作系统-&gt;单道批处理系统-&gt;多道批处理系统-&gt;分时系统-&gt;实时系统-&gt;微型操作系统<br>cpu等资源利用率逐渐增加。</p>
+<p>基本特性:<br>并发-并行是真并发，并发是交替执行;引入进程，进程作为操作系统中独立运行作为资源分配的基本单位;<br>共享-互斥共享，资源只许一个进程访问;同时共享，进程可同时访问资源。<br>虚拟-时分复用技术，虚拟处理机、虚拟设备;空分复用技术，结合虚拟存储技术，将存储器空闲分区存放其它程序。<br>异步-进程以人们不可预知的速度向前推进，这就是进程的异步性。需要进程同步机制</p>
+<p>主要功能:<br>处理机管理-进程控制，创建、状态转化、终止进程;进程同步-互斥(临界资源采用锁)、同步(合作完成任务的进程使用信号量等对执行次序协调)方式协调进程运行;进程通信;调度,作业与进程调度。<br>存储器管理-内存分配，内存保护，地址映射，内存扩充<br>设备管理-缓冲管理，设备分配，设备处理(驱动)<br>文件管理-文件存储空间，目录，文件读写与保护<br>用户接口-用户与程序的接口<br>其它-系统安全、网络功能、多媒体</p>
+<p>OS结构设计:<br>无结构，模块化，分层式，客户/服务器模式，面向对象，微内核<br>微内核最常用，将最基本的功能放入微内核，如进程、线程管理、存储器管理、中断等处理。</p>
+<h2 id="进程的描述与控制"><a href="#进程的描述与控制" class="headerlink" title="进程的描述与控制"></a>进程的描述与控制</h2><h3 id="进程的描述"><a href="#进程的描述" class="headerlink" title="进程的描述"></a>进程的描述</h3><p>PCB在内核中描述进程。</p>
+<p>进程的特征:动态性、并发性、独立性、异步性。</p>
+<p>基本状态:就绪、阻塞、执行。 执行遇到IO请求进入阻塞完成后就绪，执行与就绪切换为时间片。<br>后引入挂起-另一种停止进程活动的方式，用于对其分析。</p>
+<p>OS管理的数据结构:内存表、设备表、文件表、各PCB</p>
+<p>PCB的作用:</p>
+<ol>
+<li>作为独立运行的标志</li>
+<li>能实现间断的处理方式-用于执行的信息</li>
+<li>提供进程管理所需信息-文件、IO等资源信息</li>
+<li>进程调度所需信息-进程状态、等待时间等</li>
+<li>与其它进程的同步与通信-信号量等</li>
+</ol>
+<p>PCB中的信息:</p>
+<ol>
+<li>进程标识符-用于唯一标识进程</li>
+<li>处理机状态-寄存器、程序状态字、用户栈指针</li>
+<li>进程调度信息-进程状态、优先级、等待时间等、阻塞原因</li>
+<li>进程控制信息-程序和数据的地址、进程同步与通信机制、资源清单</li>
+</ol>
+<p>PCB组织可用线性、连接、每个状态分别索引表</p>
+<h3 id="进程控制"><a href="#进程控制" class="headerlink" title="进程控制"></a>进程控制</h3><p>OS内核俩大方面的功能:<br>支撑功能:中断处理、时钟管理、原语操作<br>资源管理功能:进程管理、存储器管理、设备管理</p>
+<p>之后内核实现:进程的创建、终止、阻塞、唤醒、挂起、激活</p>
+<h3 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h3><p>俩种形式的约束关系:<br>间接约束:邻界资源必须进程访问提出申请<br>直接约束:进程间合作完成任务，需要顺序完成</p>
+<p>同步机制应遵守的规则:<br>空闲让进、忙则等待、有限等待、让权等待。</p>
+<p>硬件同步机制:关中断、利用指令TS检测、swap交换等。都是忙等。<br>信号量机制:</p>
+<ol>
+<li>整形信号量:一个整数检测、忙等</li>
+<li>记录型信号量:用一个链表记录等待队列、不忙等，释放时会取出一个继续执行</li>
+<li>AND型信号量:多个资源一起请求、防止因为请求顺序而死锁</li>
+<li>信号量集:加入每次申请多少、最少有多少</li>
+</ol>
+<p>信号量应用:<br>进程互斥、解决进程前驱关系</p>
+<p>管程:操作系统中的资源管理模块，供进程使用。</p>
+<h3 id="进程通信"><a href="#进程通信" class="headerlink" title="进程通信"></a>进程通信</h3><p>共享存储系统-共享内存、管道通信系统-共享文件、消息传递系统-OS支持、客户机服务系统-socket</p>
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><p>将cpu资源(调度与分配)的基本单位称为线程。<br>特性:<br>调度的基本单位、并发性、TCB、系统开销少(仍需要系统调度)</p>
+<p>TCB内容:<br>线程标识符、寄存器、运行状态、优先级、线程专用存储区、信号屏蔽</p>
+<p>实现方式:<br>内核支持、用户级线程、组合方式。</p>
+<p>用户级线程就是协程吧…..</p>
+<h2 id="处理机调度与死锁"><a href="#处理机调度与死锁" class="headerlink" title="处理机调度与死锁"></a>处理机调度与死锁</h2><p>处理机调度层次:<br>高级调度(作业)、中级调度(内存)、低级调度(进程)</p>
+<p>算法目标:<br>资源利用率、公平性、平衡性、策略强制执行。</p>
+<h3 id="作业调度"><a href="#作业调度" class="headerlink" title="作业调度"></a>作业调度</h3><p>FCFS:先来先服务<br>SJF:短作业优先<br>PSA:优先级调度算法<br>HRRN:高响应比优先调度算法</p>
+<h3 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h3><p>抢占、非抢占(时间片、优先级)<br>排队器、分派器、上下文切换器</p>
+<p>轮转调度:就绪进程排成队列依次执行<br>优先级调度:按优先级运行进程<br>多队列调度:多个队列代表优先级不同，优先级高的时间片短，只有优先级高的都空闲才向下</p>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>竞争不可抢占资源引起死锁<br>竞争可消耗资源引起死锁<br>进程顺序推进不当引起死锁</p>
+<p>死锁条件:<br>互斥、请求和保持、不可抢占、循环等待</p>
+<p>处理:<br>预防死锁:<br>一次性申请全部、不满足则释放全部、手动排序</p>
+<p>避免死锁:<br>银行家算法分配时预算。</p>
+<p>检测死锁:<br>资源分配图不可完全简化</p>
+<p>解除死锁:<br>终止进程</p>
+<h2 id="存储器管理"><a href="#存储器管理" class="headerlink" title="存储器管理"></a>存储器管理</h2><p>寄存器、高速缓存、主存储、磁盘缓存、磁盘。<br>对磁盘的操作通过IO设备实现。</p>
+<p>程序的装入现在都是可重定位的装入方式、并在执行时计算指令的物理地址。装入时都为逻辑地址。<br>关于地址转化以及页表可见文章:<a href="https://xn--74q78i15hxv3arigm4e.cn/2018/11/19/android-armlinux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%8Eexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2018/11/19/android-armlinux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%8Eexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</a></p>
+<p>连接静态、装入时运行时动态连接都可。</p>
+<h3 id="连续分配的管理方式"><a href="#连续分配的管理方式" class="headerlink" title="连续分配的管理方式"></a>连续分配的管理方式</h3><p>固定分区、动态分区<br>首次适应FF、循环首次适应NF、最佳适应BF、最坏适应WF。</p>
+<p>将不用的页面换到磁盘缓存中。</p>
+<h3 id="分页存储管理方式"><a href="#分页存储管理方式" class="headerlink" title="分页存储管理方式"></a>分页存储管理方式</h3><p>分页:将用户空间按页管理<br>分段:分为大小不同的段<br>段页式:目前常用，保护模式下的方式</p>
+<p>页表存放页的映射号码<br>为了加速加快表缓冲<br>可以多级页表提供更大的内存空间</p>
+<p>段表的信息更多，还包含大小和基址</p>
+<h3 id="虚拟存储器"><a href="#虚拟存储器" class="headerlink" title="虚拟存储器"></a>虚拟存储器</h3><p>依靠段页、中断、地址变换。<br>实现用户虚拟地址空间。多个虚拟地址空间映射为物理地址。</p>
+<p>访问缺页时调入，从文件区或对换区。<br>调入策略:<br>最佳、先进先出、最近最久未使用、最少使用</p>
+<p>抖动:<br>当内存占用量大时、频繁的缺页将产生抖动。</p>
+<h2 id="输入输出系统"><a href="#输入输出系统" class="headerlink" title="输入输出系统"></a>输入输出系统</h2><p>基本功能:<br>隐藏物理设备细节、与设备无关性(驱动)、提高利用率、驱动对IO进行控制、设备共享、错误处理</p>
+<p>层次:<br>用户软件-&gt;设备独立性软件-&gt;设备驱动-&gt;中断处理程序-&gt;硬件<br>由IO系统接口屏蔽驱动、驱动直接使用硬件IO接口使用各种卡</p>
+<p>IO接口:块设备接口、流设备接口、网络通信接口</p>
+<p>硬件上使用设备控制器。<br>访问IO时可使用单独指令(x86)或当做内存映象(ARM-程序空间、RAM 空间及IO 映射空间统一编址)</p>
+<p>IO通道:由cpu发送指令控制，IO通道即可自己进行IO与内存间的交互。是一种特殊的处理机、具有执行IO指令的能力</p>
+<p>中断:详见<a href="https://xn--74q78i15hxv3arigm4e.cn/2018/11/19/android-armlinux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%8Eexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2018/11/19/android-armlinux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B8%8Eexec%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</a><br>简单过程为:<br>触发中断-&gt;环境保护-&gt;向量表-&gt;执行程序</p>
+<p>IO控制方式:轮询、中断、直接存储器访问、IO通道。</p>
+<p>缓冲:单缓冲、双缓冲、环形缓冲、缓冲池</p>
+<p>磁盘调度:<br>FCFS(先来先服务)、SSTF(最短寻道时间优先)、SCAN(扫描)、CSCAN(循环扫描)</p>
+<h2 id="文件管理、磁盘存储"><a href="#文件管理、磁盘存储" class="headerlink" title="文件管理、磁盘存储"></a>文件管理、磁盘存储</h2><p>树形、保护域与访问权</p>
+<p>外存组织方式:<br>连续方式:一块<br>连接组织方式:隐式、显示连接<br>FAT技术:物理块指针放于内存中的连接表中<br>索引组织:通过任意级索引逐层指向大量块用于存储数据，如linux的EXT方式</p>
+<p>空闲空间:<br>链表法、位示图、成组连接法(unix所使用)</p>
+<h2 id="操作系统接口"><a href="#操作系统接口" class="headerlink" title="操作系统接口"></a>操作系统接口</h2><p>POSIX标准</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/操作系统/" rel="tag"># 操作系统</a>
+          
+            <a href="/tags/复习/" rel="tag"># 复习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/14/图解密码技术总结/" rel="next" title="图解密码技术总结">
+                <i class="fa fa-chevron-left"></i> 图解密码技术总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">82</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引论"><span class="nav-number">2.</span> <span class="nav-text">引论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进程的描述与控制"><span class="nav-number">3.</span> <span class="nav-text">进程的描述与控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#进程的描述"><span class="nav-number">3.1.</span> <span class="nav-text">进程的描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程控制"><span class="nav-number">3.2.</span> <span class="nav-text">进程控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程同步"><span class="nav-number">3.3.</span> <span class="nav-text">进程同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程通信"><span class="nav-number">3.4.</span> <span class="nav-text">进程通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程"><span class="nav-number">3.5.</span> <span class="nav-text">线程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理机调度与死锁"><span class="nav-number">4.</span> <span class="nav-text">处理机调度与死锁</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#作业调度"><span class="nav-number">4.1.</span> <span class="nav-text">作业调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程调度"><span class="nav-number">4.2.</span> <span class="nav-text">进程调度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#死锁"><span class="nav-number">4.3.</span> <span class="nav-text">死锁</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储器管理"><span class="nav-number">5.</span> <span class="nav-text">存储器管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#连续分配的管理方式"><span class="nav-number">5.1.</span> <span class="nav-text">连续分配的管理方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分页存储管理方式"><span class="nav-number">5.2.</span> <span class="nav-text">分页存储管理方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟存储器"><span class="nav-number">5.3.</span> <span class="nav-text">虚拟存储器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#输入输出系统"><span class="nav-number">6.</span> <span class="nav-text">输入输出系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件管理、磁盘存储"><span class="nav-number">7.</span> <span class="nav-text">文件管理、磁盘存储</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作系统接口"><span class="nav-number">8.</span> <span class="nav-text">操作系统接口</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
