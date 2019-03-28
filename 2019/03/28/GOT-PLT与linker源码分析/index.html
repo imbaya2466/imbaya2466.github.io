@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="android,bionic," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言分析linker相关，系统为android8.0">
+<meta name="keywords" content="android,bionic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GOT-PLT与linker源码分析">
+<meta property="og:url" content="http://yoursite.com/2019/03/28/GOT-PLT与linker源码分析/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言分析linker相关，系统为android8.0">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-28T15:07:42.339Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GOT-PLT与linker源码分析">
+<meta name="twitter:description" content="前言分析linker相关，系统为android8.0">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/28/GOT-PLT与linker源码分析/"/>
+
+
+
+
+
+  <title>GOT-PLT与linker源码分析 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/28/GOT-PLT与linker源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">GOT-PLT与linker源码分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-28T23:05:39+08:00">
+                2019-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android系统/" itemprop="url" rel="index">
+                    <span itemprop="name">android系统</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>分析linker相关，系统为android8.0</p>
+<a id="more"></a>
+<h1 id="got-plt"><a href="#got-plt" class="headerlink" title="got-plt"></a>got-plt</h1><p>参考：<a href="https://www.jianshu.com/p/e2a529e72d84" target="_blank" rel="external">https://www.jianshu.com/p/e2a529e72d84</a><br><a href="https://blog.csdn.net/L173864930/article/details/40507359" target="_blank" rel="external">https://blog.csdn.net/L173864930/article/details/40507359</a></p>
+<h2 id="dynamic"><a href="#dynamic" class="headerlink" title="dynamic"></a>dynamic</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">Dynamic section at offset 0xdd8 contains 27 entries:</div><div class="line">  Tag        Type                         Name/Value</div><div class="line"> 0x0000000000000001 (NEEDED)             Shared library: [libm.so]  ---&gt; 依赖的库</div><div class="line"> 0x0000000000000001 (NEEDED)             Shared library: [libdl.so]</div><div class="line"> 0x0000000000000001 (NEEDED)             Shared library: [libc.so]</div><div class="line"> 0x000000000000000e (SONAME)             Library soname: [libtest_dynamiclink.so]</div><div class="line"> 0x0000000000000019 (INIT_ARRAY)         0x10dc0</div><div class="line"> 0x000000000000001b (INIT_ARRAYSZ)       8 (bytes)</div><div class="line"> 0x000000000000001a (FINI_ARRAY)         0x10dc8</div><div class="line"> 0x000000000000001c (FINI_ARRAYSZ)       16 (bytes)</div><div class="line"> 0x0000000000000004 (HASH)               0x228 ---&gt; hash表的文件偏移</div><div class="line"> 0x0000000000000005 (STRTAB)             0x3e0 ---&gt; 动态字符串表的文件偏移</div><div class="line"> 0x0000000000000006 (SYMTAB)             0x278 ---&gt; 动态符号表的文件偏移</div><div class="line"> 0x000000000000000a (STRSZ)              161 (bytes) ---&gt; 动态字符串标的大小</div><div class="line"> 0x000000000000000b (SYMENT)             24 (bytes)</div><div class="line"> 0x0000000000000003 (PLTGOT)             0x10fc8 ---&gt; GOT表的虚拟地址</div><div class="line"> 0x0000000000000002 (PLTRELSZ)           72 (bytes) ---&gt; 使用PLT重定位的函数表(.rela.plt表)的大小</div><div class="line"> 0x0000000000000014 (PLTREL)             RELA</div><div class="line"> 0x0000000000000017 (JMPREL)             0x4d8 ---&gt; 使用PLT重定位的函数表地址(.rela.plt表文件偏移)</div><div class="line"> 0x0000000000000007 (RELA)               0x4c0 ---&gt; 需要重定位的数据表的地址(.rela.dyn表文件偏移)</div><div class="line"> 0x0000000000000008 (RELASZ)             24 (bytes) ---&gt; 重定位的数据表大小</div><div class="line"> 0x0000000000000009 (RELAENT)            24 (bytes) ---&gt; 重定位的数据表项大小</div><div class="line"> 0x0000000000000018 (BIND_NOW)                      ---&gt; 执行前重定位，不采用延迟绑定</div><div class="line"> 0x000000006ffffffb (FLAGS_1)            Flags: NOW</div><div class="line"> 0x000000006ffffffe (VERNEED)            0x4a0</div><div class="line"> 0x000000006fffffff (VERNEEDNUM)         1</div><div class="line"> 0x000000006ffffff0 (VERSYM)             0x482</div><div class="line"> 0x000000006ffffff9 (RELACOUNT)          1</div><div class="line"> 0x0000000000000000 (NULL)               0x0</div></pre></td></tr></table></figure>
+<p>DT_HASH -&gt; .hash<br>DT_SYMTAB &amp; DT_SYMENT -&gt; .dynsym<br>DT_STRTAB &amp; DT_STRSZ -&gt; .dynstr<br>PLTREL(决定REL还是RELA) &amp;(DT_REL | DT_RELA) &amp; (DT_RELSZ | DT_RELASZ ) &amp; (DT_RELENT | DT_RELAENT ) -&gt; .rel.dyn<br>DT_JMPREL &amp; DT_PLTRELSZ &amp; (DT_RELENT | DT_RELAENT) -&gt; .rel.plt<br>FINI_ARRAY &amp; FINI_ARRAYSZ -&gt; .fini_array<br>INIT_ARRAY &amp; INIT_ARRAYSZ -&gt; .init_array</p>
+<h2 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h2><p>64位下GOT的表中每项的大小是8字节，正存放一个一个地址，其作用是提出跨模块的数据访问与函数调用地址放于数据段，数据段每个进程都有一份，从而使代码地址无关，可以进程共享。<br>plt是为了延迟绑定，防止linker工作过多耗费在修改got上。在代码与got间再加一层跳转，代码先跳到plt，再通过plt引用got寄存器跳转。plt存放于代码段，其与地址无关<br>实现简单来说就是连接器初始化时先把plt中jmp的下一条指令地址放于got中，第一次执行时代码跳回plt，plt统一跳到开头共同的处理代码，其获取got前三项的内容跳转(本ELF动态段的装载地址、本ELF的link-map数据结构描述符地址、dl-runtime-resolve函数的地址)<br>之后修改got为目标函数。第二次使用时经过plt引用got直接跳转到目标。</p>
+<h2 id="android下"><a href="#android下" class="headerlink" title="android下"></a>android下</h2><p>android下.rel.plt是重定位got的，Android函数重定位并未采用延迟绑定，ida会解析got把got上存上自己定的extern段上的东西。plt上也没有书中精巧的指令，直接就取了got的内容之后寄存器跳转。其got前3个8字节也不用<br>.rela.dyn是需要重定位的数据的引用。重定位got的<br>.rela.plt存放需要重定位的函数引用。重定位got.plt的</p>
+<p>R_AARCH64_JUMP_SLOT: 重定位类型，通过PLT找到目标符号的地址</p>
+<p>以上主要决定导入问题，导出由动态连接里的SYMTAB决定</p>
+<h1 id="linker源码分析"><a href="#linker源码分析" class="headerlink" title="linker源码分析"></a>linker源码分析</h1><p>着重寻找so的加载，解析过程<br>参考：<a href="https://zhuanlan.zhihu.com/p/31632620" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/31632620</a></p>
+<h2 id="linker自举"><a href="#linker自举" class="headerlink" title="linker自举"></a>linker自举</h2><p>之前分析了execve在内核中装载elf文件与linker，之后由linker负责加载依赖的动态库。从这里开始进入用户态，是运行库负责的工作。</p>
+<h3 id="start"><a href="#start" class="headerlink" title="start"></a>start</h3><p>linker入口代码：<br>bionic\linker\arch\arm64\begin.S<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">#include &lt;private/bionic_asm.h&gt;</div><div class="line"></div><div class="line">ENTRY(_start)</div><div class="line">  mov x0, sp</div><div class="line">  bl __linker_init</div><div class="line"></div><div class="line">  /* linker init returns the _entry address in the main image */</div><div class="line">  br x0</div><div class="line">END(_start)</div></pre></td></tr></table></figure></p>
+<p>在start函数中，栈顶指针寄存器被赋值给r0寄存器作为参数调用init。init做完linker的初始化和依赖库的加载后，通过r0返回了可执行文件入口函数，接下来的bx r0 指令就会将控制权移交给可执行文件。<br>初始的栈顶指向命令行参数、环境变量、ELF辅助向量。这些再execve时就初始好了，基本结构：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">position            content                     size (bytes)  comment</div><div class="line">  ------------------------------------------------------------------------</div><div class="line">stack pointer -&gt;  [ argc = number of args ]     4      </div><div class="line">                  [ argv[0] (pointer) ]         4      </div><div class="line">                  [ argv[1] (pointer) ]         4      </div><div class="line">                  [ argv[..] (pointer) ]        4 * n  </div><div class="line">                  [ argv[n - 1] (pointer) ]     4      </div><div class="line">                  [ argv[n] (pointer) ]         4           = NULL</div><div class="line"></div><div class="line">                  [ envp[0] (pointer) ]         4     </div><div class="line">                  [ envp[1] (pointer) ]         4      </div><div class="line">                  [ envp[..] (pointer) ]        4      </div><div class="line">                  [ envp[term] (pointer) ]      4           = NULL</div><div class="line"></div><div class="line">                  [ auxv[0] (Elf32_auxv_t) ]    8      </div><div class="line">                  [ auxv[1] (Elf32_auxv_t) ]    8</div><div class="line">                  [ auxv[..] (Elf32_auxv_t) ]   8 </div><div class="line">                  [ auxv[term] (Elf32_auxv_t) ] 8           = AT_NULL vector</div><div class="line"></div><div class="line">                  [ padding ]                   0 - 16     </div><div class="line"></div><div class="line">                  [ argument ASCIIZ strings ]   &gt;= 0   </div><div class="line">                  [ environment ASCIIZ str. ]   &gt;= 0   </div><div class="line"></div><div class="line">(0xbffffffc)      [ end marker ]                4          = NULL 结束</div><div class="line"></div><div class="line">(0xc0000000)       &lt; bottom of stack &gt;          0          (virtual)</div></pre></td></tr></table></figure></p>
+<h3 id="init"><a href="#init" class="headerlink" title="init"></a>init</h3><p>bionic\linker\linker_main.cpp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> * This is the entry point for the linker, called from begin.S. This</div><div class="line"> * method is responsible for fixing the linker&apos;s own relocations, and</div><div class="line"> * then calling __linker_init_post_relocation().</div><div class="line"> *</div><div class="line"> * Because this method is called before the linker has fixed it&apos;s own</div><div class="line"> * relocations, any attempt to reference an extern variable, extern</div><div class="line"> * function, or other GOT reference will generate a segfault.</div><div class="line"> */</div><div class="line">extern &quot;C&quot; ElfW(Addr) __linker_init(void* raw_args) &#123;</div><div class="line">  KernelArgumentBlock args(raw_args);//封装参数</div><div class="line"></div><div class="line">  // AT_BASE is set to 0 in the case when linker is run by iself</div><div class="line">  // so in order to link the linker it needs to calcuate AT_BASE</div><div class="line">  // using information at hand. The trick below takes advantage</div><div class="line">  // of the fact that the value of linktime_addr before relocations</div><div class="line">  // are run is an offset and this can be used to calculate AT_BASE.</div><div class="line">  //linker镜像在内存中的地址</div><div class="line">  static uintptr_t linktime_addr = reinterpret_cast&lt;uintptr_t&gt;(&amp;linktime_addr);</div><div class="line">  ElfW(Addr) linker_addr = reinterpret_cast&lt;uintptr_t&gt;(&amp;linktime_addr) - linktime_addr;</div><div class="line"></div><div class="line">  //获得可执行文件的入口点，根据加载基址地址获得elf头与段头</div><div class="line">  ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);</div><div class="line">  ElfW(Ehdr)* elf_hdr = reinterpret_cast&lt;ElfW(Ehdr)*&gt;(linker_addr);</div><div class="line">  ElfW(Phdr)* phdr = reinterpret_cast&lt;ElfW(Phdr)*&gt;(linker_addr + elf_hdr-&gt;e_phoff);</div><div class="line"></div><div class="line">  //soinfo对象，在linker里面是代表动态库的一个类，每个加载到内存的动态库都会有一个soinfo对象表示，</div><div class="line">  //同一个动态库文件dlopen两次能创建两个soinfo对象，并且动态库文件被影射到不同的内存逻辑地址上；</div><div class="line">  soinfo linker_so(nullptr, nullptr, nullptr, 0, 0);</div><div class="line"></div><div class="line">  linker_so.base = linker_addr;</div><div class="line">  //用于计算program headers中所有PT_LOAD节的长度之和，dlopen加载ELF格式的动态库时，除了映射相应的头部数据，会将program headers中所有PT_LOAD分别map到内存</div><div class="line">  linker_so.size = phdr_table_get_load_size(phdr, elf_hdr-&gt;e_phnum);</div><div class="line">  //获取偏移，在execve时，偏移是每个段装载到va中的实际地址与文件中指定的va的差，load_addr(基址)也加了该偏移</div><div class="line">  //在这里是第一个段的实际装载地址-段中va....结果与之前同</div><div class="line">  linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);</div><div class="line">  linker_so.dynamic = nullptr;</div><div class="line">  linker_so.phdr = phdr;</div><div class="line">  linker_so.phnum = elf_hdr-&gt;e_phnum;</div><div class="line">  //标记自己为linker</div><div class="line">  linker_so.set_linker_flag();</div><div class="line"></div><div class="line">  // Prelink the linker so we can access linker globals.</div><div class="line">  //解析.dynamic，解析出符号表、字符串表、got、plt、hash表等等数据结构的内存位置、大小和一些相关参数。</div><div class="line">  if (!linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);</div><div class="line"></div><div class="line">  // This might not be obvious... The reasons why we pass g_empty_list</div><div class="line">  // in place of local_group here are (1) we do not really need it, because</div><div class="line">  // linker is built with DT_SYMBOLIC and therefore relocates its symbols against</div><div class="line">  // itself without having to look into local_group and (2) allocators</div><div class="line">  // are not yet initialized, and therefore we cannot use linked_list.push_*</div><div class="line">  // functions at this point.</div><div class="line">  //重定位linker</div><div class="line">  if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args.argv[0]);</div><div class="line"></div><div class="line">#if defined(__i386__)</div><div class="line">  // On x86, we can&apos;t make system calls before this point.</div><div class="line">  // We can&apos;t move this up because this needs to assign to a global.</div><div class="line">  // Note that until we call __libc_init_main_thread below we have</div><div class="line">  // no TLS, so you shouldn&apos;t make a system call that can fail, because</div><div class="line">  // it will SEGV when it tries to set errno.</div><div class="line">  __libc_init_sysinfo(args);</div><div class="line">#endif</div><div class="line"></div><div class="line">  // Initialize the main thread (including TLS, so system calls really work).</div><div class="line">  //初始化主线程</div><div class="line">  __libc_init_main_thread(args);</div><div class="line"></div><div class="line">  // We didn&apos;t protect the linker&apos;s RELRO pages in link_image because we</div><div class="line">  // couldn&apos;t make system calls on x86 at that point, but we can now...</div><div class="line">  //将PT_GNU_RELRO段指向的内存地址通过mprotoct函数设置为PROT_READ</div><div class="line">  if (!linker_so.protect_relro()) __linker_cannot_link(args.argv[0]);</div><div class="line"></div><div class="line">  // Initialize the linker&apos;s static libc&apos;s globals</div><div class="line">  __libc_init_globals(args);</div><div class="line"></div><div class="line">  // store argc/argv/envp to use them for calling constructors</div><div class="line">  g_argc = args.argc;</div><div class="line">  g_argv = args.argv;</div><div class="line">  g_envp = args.envp;</div><div class="line"></div><div class="line">  // Initialize the linker&apos;s own global variables</div><div class="line">  //递归了get_childred()返回列表中所有的soinfo，然后执行对应的init_func_函数和init_array_列表中的函数</div><div class="line">  //__attribute__ ((constructor))前缀可将函数自定义到INIT_ARRAY</div><div class="line">  linker_so.call_constructors();</div><div class="line"></div><div class="line">  // If the linker is not acting as PT_INTERP entry_point is equal to</div><div class="line">  // _start. Which means that the linker is running as an executable and</div><div class="line">  // already linked by PT_INTERP.</div><div class="line">  //</div><div class="line">  // This happens when user tries to run &apos;adb shell /system/bin/linker&apos;</div><div class="line">  // see also https://code.google.com/p/android/issues/detail?id=63174</div><div class="line">  //检查新进程加载的可执行文件是不是linker</div><div class="line">  if (reinterpret_cast&lt;ElfW(Addr)&gt;(&amp;_start) == entry_point) &#123;</div><div class="line">    __libc_format_fd(STDOUT_FILENO,</div><div class="line">                     &quot;This is %s, the helper program for dynamic executables.\n&quot;,</div><div class="line">                     args.argv[0]);</div><div class="line">    exit(0);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Initialize static variables. Note that in order to</div><div class="line">  // get correct libdl_info we need to call constructors</div><div class="line">  // before get_libdl_info().</div><div class="line">  //get_libdl_info()相当于在堆上拷贝linker_so构造了一个新的soinfo，然后添加到solist和sonext链表中</div><div class="line">  sonext = solist = get_libdl_info(kLinkerPath);</div><div class="line">  g_default_namespace.add_soinfo(solist);</div><div class="line"></div><div class="line">  // We have successfully fixed our own relocations. It&apos;s safe to run</div><div class="line">  // the main part of the linker now.</div><div class="line">  args.abort_message_ptr = &amp;g_abort_message;</div><div class="line">  //创建可执行文件对应的soinfo、调用find_librarys加载依赖库等，完成可执行文件运行所需的一系列准备工作</div><div class="line">  ElfW(Addr) start_address = __linker_init_post_relocation(args, linker_addr);</div><div class="line"></div><div class="line">  INFO(&quot;[ Jumping to _start (%p)... ]&quot;, reinterpret_cast&lt;void*&gt;(start_address));</div><div class="line"></div><div class="line">  // Return the address that the calling assembly stub should jump to.</div><div class="line">  return start_address;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="linker-init-post-relocation"><a href="#linker-init-post-relocation" class="headerlink" title="linker-init-post-relocation"></a>linker-init-post-relocation</h3><h2 id="dlopen"><a href="#dlopen" class="headerlink" title="dlopen"></a>dlopen</h2><h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p>图库挂了….寻找稳定图库中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Runntime_nativeLoad</div><div class="line">  LoadNativeLibrary</div><div class="line">    dlopen</div><div class="line">      do_dlopen</div><div class="line">        find_library</div><div class="line">          find_librarys</div><div class="line">            find_library_internal</div><div class="line">              load_library()-载入内存</div><div class="line">                fd=open_library</div><div class="line">                elf_reader.Load()</div><div class="line">                soinfo_alloc()</div><div class="line">            si-&gt;LinkImage()-链接</div><div class="line">              Relocate()</div><div class="line">                soinfo_do_lookup()</div><div class="line">                resolve_symbol_address()</div><div class="line">        CallConstructors</div><div class="line">          init</div><div class="line">          init_arry</div><div class="line">    dlsym(JNI_OnLoad)</div><div class="line">    JNI_OnLoad</div></pre></td></tr></table></figure></p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><h4 id="入口部分"><a href="#入口部分" class="headerlink" title="入口部分"></a>入口部分</h4><p>bionic\libdl\libdl.c<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// Proxy calls to bionic loader</div><div class="line">//路径、flag</div><div class="line">void* dlopen(const char* filename, int flag) &#123;</div><div class="line">  //内建函数 __builtin_return_address 返回当前函数或其调用者的返回地址</div><div class="line">  const void* caller_addr = __builtin_return_address(0);</div><div class="line">  return __loader_dlopen(filename, flag, caller_addr);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>导出并代理了dlopen</p>
+<p>bionic\linker\dlfcn.cpp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">#if defined(__LP64__)</div><div class="line">#define ELFW(what) ELF64_ ## what</div><div class="line">#else</div><div class="line">#define ELFW(what) ELF32_ ## what</div><div class="line">#endif</div><div class="line"></div><div class="line">#define ELF64_SYM_INITIALIZER(name_offset, value, shndx) \</div><div class="line">    &#123; name_offset, \</div><div class="line">      ((shndx) == 0) ? 0 : (STB_GLOBAL &lt;&lt; 4), \</div><div class="line">      /* st_other */ 0, \</div><div class="line">      shndx, \</div><div class="line">      reinterpret_cast&lt;Elf64_Addr&gt;(value), \</div><div class="line">      /* st_size */ 0, \</div><div class="line">    &#125;</div><div class="line"></div><div class="line">//导出的定义</div><div class="line">  ELFW(SYM_INITIALIZER)(  0, &amp;__dlopen, 1),</div><div class="line">  ELFW(SYM_INITIALIZER)( 16, &amp;__dlclose, 1),</div><div class="line">  ELFW(SYM_INITIALIZER)( 33, &amp;__dlsym, 1),</div><div class="line">  ELFW(SYM_INITIALIZER)( 48, &amp;__dlerror, 1),</div><div class="line">  ELFW(SYM_INITIALIZER)( 65, &amp;__dladdr, 1),</div><div class="line"></div><div class="line">导出名在ANDROID_LIBDL_STRTAB中，name_offset是其偏移。0号为__loader_dlopen。</div><div class="line"></div><div class="line">//实现的部分</div><div class="line">void* __dlopen(const char* filename, int flags, const void* caller_addr) &#123;</div><div class="line">  return dlopen_ext(filename, flags, nullptr, caller_addr);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//文件路径、flag、null、dlopen返回地址</div><div class="line">static void* dlopen_ext(const char* filename,</div><div class="line">                        int flags,</div><div class="line">                        const android_dlextinfo* extinfo,</div><div class="line">                        const void* caller_addr) &#123;</div><div class="line">  ScopedPthreadMutexLocker locker(&amp;g_dl_mutex);</div><div class="line">  g_linker_logger.ResetState();</div><div class="line">  //调用do_dlopen 参数:</div><div class="line">  void* result = do_dlopen(filename, flags, extinfo, caller_addr);</div><div class="line">  if (result == nullptr) &#123;</div><div class="line">    __bionic_format_dlerror(&quot;dlopen failed&quot;, linker_get_error_buffer());</div><div class="line">    return nullptr;</div><div class="line">  &#125;</div><div class="line">  return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>bionic\linker\linker.cpp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div></pre></td><td class="code"><pre><div class="line">//文件路径、flag、null、dlopen返回地址</div><div class="line">void* do_dlopen(const char* name, int flags,</div><div class="line">                const android_dlextinfo* extinfo,</div><div class="line">                const void* caller_addr) &#123;</div><div class="line">  std::string trace_prefix = std::string(&quot;dlopen: &quot;) + (name == nullptr ? &quot;(nullptr)&quot; : name);</div><div class="line">  ScopedTrace trace(trace_prefix.c_str());</div><div class="line">  ScopedTrace loading_trace((trace_prefix + &quot; - loading and linking&quot;).c_str());</div><div class="line">  soinfo* const caller = find_containing_library(caller_addr);</div><div class="line">  android_namespace_t* ns = get_caller_namespace(caller);</div><div class="line"></div><div class="line">  LD_LOG(kLogDlopen,</div><div class="line">         &quot;dlopen(name=\&quot;%s\&quot;, flags=0x%x, extinfo=%s, caller=\&quot;%s\&quot;, caller_ns=%s@%p) ...&quot;,</div><div class="line">         name,</div><div class="line">         flags,</div><div class="line">         android_dlextinfo_to_string(extinfo).c_str(),</div><div class="line">         caller == nullptr ? &quot;(null)&quot; : caller-&gt;get_realpath(),</div><div class="line">         ns == nullptr ? &quot;(null)&quot; : ns-&gt;get_name(),</div><div class="line">         ns);</div><div class="line"></div><div class="line">  auto failure_guard = make_scope_guard([&amp;]() &#123;</div><div class="line">    LD_LOG(kLogDlopen, &quot;... dlopen failed: %s&quot;, linker_get_error_buffer());</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  if ((flags &amp; ~(RTLD_NOW|RTLD_LAZY|RTLD_LOCAL|RTLD_GLOBAL|RTLD_NODELETE|RTLD_NOLOAD)) != 0) &#123;</div><div class="line">    DL_ERR(&quot;invalid flags to dlopen: %x&quot;, flags);</div><div class="line">    return nullptr;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if (extinfo != nullptr) &#123;</div><div class="line">    if ((extinfo-&gt;flags &amp; ~(ANDROID_DLEXT_VALID_FLAG_BITS)) != 0) &#123;</div><div class="line">      DL_ERR(&quot;invalid extended flags to android_dlopen_ext: 0x%&quot; PRIx64, extinfo-&gt;flags);</div><div class="line">      return nullptr;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if ((extinfo-&gt;flags &amp; ANDROID_DLEXT_USE_LIBRARY_FD) == 0 &amp;&amp;</div><div class="line">        (extinfo-&gt;flags &amp; ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) &#123;</div><div class="line">      DL_ERR(&quot;invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without &quot;</div><div class="line">          &quot;ANDROID_DLEXT_USE_LIBRARY_FD): 0x%&quot; PRIx64, extinfo-&gt;flags);</div><div class="line">      return nullptr;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if ((extinfo-&gt;flags &amp; ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS) != 0 &amp;&amp;</div><div class="line">        (extinfo-&gt;flags &amp; (ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_RESERVED_ADDRESS_HINT)) != 0) &#123;</div><div class="line">      DL_ERR(&quot;invalid extended flag combination: ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS is not &quot;</div><div class="line">             &quot;compatible with ANDROID_DLEXT_RESERVED_ADDRESS/ANDROID_DLEXT_RESERVED_ADDRESS_HINT&quot;);</div><div class="line">      return nullptr;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if ((extinfo-&gt;flags &amp; ANDROID_DLEXT_USE_NAMESPACE) != 0) &#123;</div><div class="line">      if (extinfo-&gt;library_namespace == nullptr) &#123;</div><div class="line">        DL_ERR(&quot;ANDROID_DLEXT_USE_NAMESPACE is set but extinfo-&gt;library_namespace is null&quot;);</div><div class="line">        return nullptr;</div><div class="line">      &#125;</div><div class="line">      ns = extinfo-&gt;library_namespace;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  std::string asan_name_holder;</div><div class="line"></div><div class="line">  const char* translated_name = name;</div><div class="line">  if (g_is_asan &amp;&amp; translated_name != nullptr &amp;&amp; translated_name[0] == &apos;/&apos;) &#123;</div><div class="line">    char translated_path[PATH_MAX];</div><div class="line">    if (realpath(translated_name, translated_path) != nullptr) &#123;</div><div class="line">      asan_name_holder = std::string(kAsanLibDirPrefix) + translated_path;</div><div class="line">      if (file_exists(asan_name_holder.c_str())) &#123;</div><div class="line">        translated_name = asan_name_holder.c_str();</div><div class="line">        PRINT(&quot;linker_asan dlopen translating \&quot;%s\&quot; -&gt; \&quot;%s\&quot;&quot;, name, translated_name);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  ProtectedDataGuard guard;</div><div class="line">    //  ns、库名、标志、null、dlopen的caller</div><div class="line">    //得到info对象</div><div class="line">  soinfo* si = find_library(ns, translated_name, flags, extinfo, caller);</div><div class="line">  loading_trace.End();</div><div class="line"></div><div class="line">  if (si != nullptr) &#123;</div><div class="line">    void* handle = si-&gt;to_handle();</div><div class="line">    LD_LOG(kLogDlopen,</div><div class="line">           &quot;... dlopen calling constructors: realpath=\&quot;%s\&quot;, soname=\&quot;%s\&quot;, handle=%p&quot;,</div><div class="line">           si-&gt;get_realpath(), si-&gt;get_soname(), handle);</div><div class="line">    //初始化，在这里执行init_func 、 init_array</div><div class="line">    si-&gt;call_constructors();</div><div class="line">    failure_guard.disable();</div><div class="line">    LD_LOG(kLogDlopen,</div><div class="line">           &quot;... dlopen successful: realpath=\&quot;%s\&quot;, soname=\&quot;%s\&quot;, handle=%p&quot;,</div><div class="line">           si-&gt;get_realpath(), si-&gt;get_soname(), handle);</div><div class="line">    return handle;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  return nullptr;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"> //  ns、库名、标志、null、dlopen的caller</div><div class="line">static soinfo* find_library(android_namespace_t* ns,</div><div class="line">                            const char* name, int rtld_flags,</div><div class="line">                            const android_dlextinfo* extinfo,</div><div class="line">                            soinfo* needed_by) &#123;</div><div class="line">  soinfo* si;</div><div class="line"></div><div class="line">  if (name == nullptr) &#123;</div><div class="line">    si = solist_get_somain();</div><div class="line">  &#125; else if (!find_libraries(ns,</div><div class="line">                             needed_by,</div><div class="line">                             &amp;name,</div><div class="line">                             1,</div><div class="line">                             &amp;si,</div><div class="line">                             nullptr,</div><div class="line">                             0,</div><div class="line">                             rtld_flags,</div><div class="line">                             extinfo,</div><div class="line">                             false /* add_as_children */,</div><div class="line">                             true /* search_linked_namespaces */)) &#123;</div><div class="line">    return nullptr;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  si-&gt;increment_ref_count();</div><div class="line"></div><div class="line">  return si;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>调用find_libraries<br>参数：ns、dlopen的caller、库名、1、返回的info、null、0、flag、null、false、true</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">// add_as_children - add first-level loaded libraries (i.e. library_names[], but</div><div class="line">// not their transitive dependencies) as children of the start_with library.</div><div class="line">// This is false when find_libraries is called for dlopen(), when newly loaded</div><div class="line">// libraries must form a disjoint tree.</div><div class="line"></div><div class="line">//ns、dlopen的caller、库名、1、返回的info、null、0、flag、null、false、true</div><div class="line">bool find_libraries(android_namespace_t* ns,</div><div class="line">                    soinfo* start_with,</div><div class="line">                    const char* const library_names[],</div><div class="line">                    size_t library_names_count,</div><div class="line">                    soinfo* soinfos[],</div><div class="line">                    std::vector&lt;soinfo*&gt;* ld_preloads,</div><div class="line">                    size_t ld_preloads_count,</div><div class="line">                    int rtld_flags,</div><div class="line">                    const android_dlextinfo* extinfo,</div><div class="line">                    bool add_as_children,</div><div class="line">                    bool search_linked_namespaces) &#123;</div><div class="line">  // Step 0: prepare.</div><div class="line">  //第一步，准备</div><div class="line">  LoadTaskList load_tasks;</div><div class="line">  std::unordered_map&lt;const soinfo*, ElfReader&gt; readers_map;</div><div class="line"></div><div class="line">  for (size_t i = 0; i &lt; library_names_count; ++i) &#123;</div><div class="line">    const char* name = library_names[i];</div><div class="line">    load_tasks.push_back(LoadTask::create(name, start_with, &amp;readers_map));</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Construct global_group.</div><div class="line">  soinfo_list_t global_group = make_global_group(ns);</div><div class="line"></div><div class="line">  // soinfos数组为null则堆栈上分配一个</div><div class="line">  // 这个数组在发生错误时需要。例如</div><div class="line">  // when library_names[] = &#123;libone.so, libtwo.so&#125; and libone.so</div><div class="line">  // is loaded correctly but libtwo.so failed for some reason.   第一个加载成功但第二个失败</div><div class="line">  // 返回时要卸载 libone.so</div><div class="line">  // See also implementation of failure_guard below.</div><div class="line"></div><div class="line">  if (soinfos == nullptr) &#123;</div><div class="line">    size_t soinfos_size = sizeof(soinfo*)*library_names_count;</div><div class="line">    soinfos = reinterpret_cast&lt;soinfo**&gt;(alloca(soinfos_size));</div><div class="line">    memset(soinfos, 0, soinfos_size);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // 需要链接的库- see step 2.</div><div class="line">  size_t soinfos_count = 0;</div><div class="line"></div><div class="line">  auto scope_guard = make_scope_guard([&amp;]() &#123;</div><div class="line">    for (LoadTask* t : load_tasks) &#123;</div><div class="line">      LoadTask::deleter(t);</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  auto failure_guard = make_scope_guard([&amp;]() &#123;</div><div class="line">    // Housekeeping</div><div class="line">    soinfo_unload(soinfos, soinfos_count);</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  ZipArchiveCache zip_archive_cache;</div><div class="line"></div><div class="line">  // Step 1: expand the list of load_tasks to include</div><div class="line">  // all DT_NEEDED libraries (do not load them just yet)</div><div class="line">  //扩大load_tasks包含全部需要的库</div><div class="line">  //广度优先</div><div class="line">  for (size_t i = 0; i&lt;load_tasks.size(); ++i) &#123;</div><div class="line">    LoadTask* task = load_tasks[i];</div><div class="line">    soinfo* needed_by = task-&gt;get_needed_by();</div><div class="line"></div><div class="line">    bool is_dt_needed = needed_by != nullptr &amp;&amp; (needed_by != start_with || add_as_children);</div><div class="line">    task-&gt;set_extinfo(is_dt_needed ? nullptr : extinfo);</div><div class="line">    task-&gt;set_dt_needed(is_dt_needed);</div><div class="line"></div><div class="line">    if (!find_library_internal(ns,</div><div class="line">                               task,</div><div class="line">                               &amp;zip_archive_cache,</div><div class="line">                               &amp;load_tasks,</div><div class="line">                               rtld_flags,</div><div class="line">                               search_linked_namespaces || is_dt_needed)) &#123;</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    soinfo* si = task-&gt;get_soinfo();</div><div class="line"></div><div class="line">    if (is_dt_needed) &#123;</div><div class="line">      needed_by-&gt;add_child(si);</div><div class="line"></div><div class="line">      if (si-&gt;is_linked()) &#123;</div><div class="line">        si-&gt;increment_ref_count();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // When ld_preloads is not null, the first</div><div class="line">    // ld_preloads_count libs are in fact ld_preloads.</div><div class="line">    if (ld_preloads != nullptr &amp;&amp; soinfos_count &lt; ld_preloads_count) &#123;</div><div class="line">      ld_preloads-&gt;push_back(si);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (soinfos_count &lt; library_names_count) &#123;</div><div class="line">      soinfos[soinfos_count++] = si;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Step 2: Load libraries in random order (see b/24047022)</div><div class="line">  //加载库</div><div class="line">  LoadTaskList load_list;  //要加载的列表</div><div class="line">  for (auto&amp;&amp; task : load_tasks) &#123;</div><div class="line">    soinfo* si = task-&gt;get_soinfo();</div><div class="line">    auto pred = [&amp;](const LoadTask* t) &#123;</div><div class="line">      return t-&gt;get_soinfo() == si;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    if (!si-&gt;is_linked() &amp;&amp;</div><div class="line">        std::find_if(load_list.begin(), load_list.end(), pred) == load_list.end() ) &#123;</div><div class="line">      load_list.push_back(task);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  shuffle(&amp;load_list);</div><div class="line"></div><div class="line">  for (auto&amp;&amp; task : load_list) &#123;</div><div class="line">    if (!task-&gt;load()) &#123;</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Step 3: pre-link all DT_NEEDED libraries in breadth first order.</div><div class="line">  //以广度优先连接加载的库</div><div class="line">  for (auto&amp;&amp; task : load_tasks) &#123;</div><div class="line">    soinfo* si = task-&gt;get_soinfo();</div><div class="line">    if (!si-&gt;is_linked() &amp;&amp; !si-&gt;prelink_image()) &#123;</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Step 4: Add LD_PRELOADed libraries to the global group for</div><div class="line">  // future runs. There is no need to explicitly add them to</div><div class="line">  // the global group for this run because they are going to</div><div class="line">  // appear in the local group in the correct order.</div><div class="line">  if (ld_preloads != nullptr) &#123;</div><div class="line">    for (auto&amp;&amp; si : *ld_preloads) &#123;</div><div class="line">      si-&gt;set_dt_flags_1(si-&gt;get_dt_flags_1() | DF_1_GLOBAL);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line"></div><div class="line">  // Step 5: link libraries.</div><div class="line">  //链接加载的库</div><div class="line">  soinfo_list_t local_group;</div><div class="line">  walk_dependencies_tree(</div><div class="line">      (start_with != nullptr &amp;&amp; add_as_children) ? &amp;start_with : soinfos,</div><div class="line">      (start_with != nullptr &amp;&amp; add_as_children) ? 1 : soinfos_count,</div><div class="line">      [&amp;] (soinfo* si) &#123;</div><div class="line">    if (ns-&gt;is_accessible(si)) &#123;</div><div class="line">      local_group.push_back(si);</div><div class="line">      return kWalkContinue;</div><div class="line">    &#125; else &#123;</div><div class="line">      return kWalkSkip;</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  bool linked = local_group.visit([&amp;](soinfo* si) &#123;</div><div class="line">    if (!si-&gt;is_linked()) &#123;</div><div class="line">      if (!si-&gt;link_image(global_group, local_group, extinfo) ||</div><div class="line">          !get_cfi_shadow()-&gt;AfterLoad(si, solist_get_head())) &#123;</div><div class="line">        return false;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return true;</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  if (linked) &#123;</div><div class="line">    local_group.for_each([](soinfo* si) &#123;</div><div class="line">      if (!si-&gt;is_linked()) &#123;</div><div class="line">        si-&gt;set_linked();</div><div class="line">      &#125;</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    failure_guard.disable();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  return linked;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>主要为三个部分:<br>通过load_tasks栈广度优先搜索依赖库。<br>调用find_library_internal依次载入库。<br>link_image依次连接，链接与加载的顺序相反。</p>
+<h4 id="加载库"><a href="#加载库" class="headerlink" title="加载库"></a>加载库</h4><p>find_library_internal<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div></pre></td><td class="code"><pre><div class="line">static bool find_library_internal(android_namespace_t* ns,</div><div class="line">                                  LoadTask* task,</div><div class="line">                                  ZipArchiveCache* zip_archive_cache,</div><div class="line">                                  LoadTaskList* load_tasks,</div><div class="line">                                  int rtld_flags,</div><div class="line">                                  bool search_linked_namespaces) &#123;</div><div class="line">  soinfo* candidate;</div><div class="line"></div><div class="line">  //判断是否已经加载</div><div class="line">  if (find_loaded_library_by_soname(ns, task-&gt;get_name(), search_linked_namespaces, &amp;candidate)) &#123;</div><div class="line">    task-&gt;set_soinfo(candidate);</div><div class="line">    return true;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Library might still be loaded, the accurate detection</div><div class="line">  // of this fact is done by load_library.</div><div class="line">  TRACE(&quot;[ \&quot;%s\&quot; find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder...]&quot;,</div><div class="line">      task-&gt;get_name(), candidate == nullptr ? &quot;n/a&quot; : candidate-&gt;get_realpath(), candidate);</div><div class="line"></div><div class="line">  //进行加载</div><div class="line">  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags, search_linked_namespaces)) &#123;</div><div class="line">    return true;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if (search_linked_namespaces) &#123;</div><div class="line">    // if a library was not found - look into linked namespaces</div><div class="line">    for (auto&amp; linked_namespace : ns-&gt;linked_namespaces()) &#123;</div><div class="line">      if (find_library_in_linked_namespace(linked_namespace,</div><div class="line">                                           task,</div><div class="line">                                           rtld_flags)) &#123;</div><div class="line">        return true;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  return false;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">static bool load_library(android_namespace_t* ns,</div><div class="line">                         LoadTask* task,</div><div class="line">                         ZipArchiveCache* zip_archive_cache,</div><div class="line">                         LoadTaskList* load_tasks,</div><div class="line">                         int rtld_flags,</div><div class="line">                         bool search_linked_namespaces) &#123;</div><div class="line">  const char* name = task-&gt;get_name();</div><div class="line">  soinfo* needed_by = task-&gt;get_needed_by();</div><div class="line">  const android_dlextinfo* extinfo = task-&gt;get_extinfo();</div><div class="line"></div><div class="line">  off64_t file_offset;</div><div class="line">  std::string realpath;</div><div class="line">  if (extinfo != nullptr &amp;&amp; (extinfo-&gt;flags &amp; ANDROID_DLEXT_USE_LIBRARY_FD) != 0) &#123;</div><div class="line">    file_offset = 0;</div><div class="line">    if ((extinfo-&gt;flags &amp; ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) &#123;</div><div class="line">      file_offset = extinfo-&gt;library_fd_offset;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if (!realpath_fd(extinfo-&gt;library_fd, &amp;realpath)) &#123;</div><div class="line">      PRINT(&quot;warning: unable to get realpath for the library \&quot;%s\&quot; by extinfo-&gt;library_fd. &quot;</div><div class="line">            &quot;Will use given name.&quot;, name);</div><div class="line">      realpath = name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    task-&gt;set_fd(extinfo-&gt;library_fd, false);</div><div class="line">    task-&gt;set_file_offset(file_offset);</div><div class="line">    return load_library(ns, task, load_tasks, rtld_flags, realpath, search_linked_namespaces);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // Open the file.</div><div class="line">  int fd = open_library(ns, zip_archive_cache, name, needed_by, &amp;file_offset, &amp;realpath);</div><div class="line">  if (fd == -1) &#123;</div><div class="line">    DL_ERR(&quot;library \&quot;%s\&quot; not found&quot;, name);</div><div class="line">    return false;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  task-&gt;set_fd(fd, true);</div><div class="line">  task-&gt;set_file_offset(file_offset);</div><div class="line"></div><div class="line">  return load_library(ns, task, load_tasks, rtld_flags, realpath, search_linked_namespaces);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>load_library<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">static bool load_library(android_namespace_t* ns,</div><div class="line">                         LoadTask* task,</div><div class="line">                         LoadTaskList* load_tasks,</div><div class="line">                         int rtld_flags,</div><div class="line">                         const std::string&amp; realpath,</div><div class="line">                         bool search_linked_namespaces) &#123;</div><div class="line">  off64_t file_offset = task-&gt;get_file_offset();</div><div class="line">  const char* name = task-&gt;get_name();</div><div class="line">  const android_dlextinfo* extinfo = task-&gt;get_extinfo();</div><div class="line"></div><div class="line">...检查</div><div class="line"></div><div class="line">  struct stat file_stat;</div><div class="line"></div><div class="line">...检查</div><div class="line"></div><div class="line">...省略</div><div class="line"></div><div class="line">  soinfo* si = soinfo_alloc(ns, realpath.c_str(), &amp;file_stat, file_offset, rtld_flags);</div><div class="line">  if (si == nullptr) &#123;</div><div class="line">    return false;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  task-&gt;set_soinfo(si);</div><div class="line"></div><div class="line">  // Read the ELF header and some of the segments.</div><div class="line">  if (!task-&gt;read(realpath.c_str(), file_stat.st_size)) &#123;</div><div class="line">    soinfo_free(si);</div><div class="line">    task-&gt;set_soinfo(nullptr);</div><div class="line">    return false;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  // find and set DT_RUNPATH and dt_soname</div><div class="line">  // Note that these field values are temporary and are</div><div class="line">  // going to be overwritten on soinfo::prelink_image</div><div class="line">  // with values from PT_LOAD segments.</div><div class="line">  const ElfReader&amp; elf_reader = task-&gt;get_elf_reader();</div><div class="line">  for (const ElfW(Dyn)* d = elf_reader.dynamic(); d-&gt;d_tag != DT_NULL; ++d) &#123;</div><div class="line">    if (d-&gt;d_tag == DT_RUNPATH) &#123;</div><div class="line">      si-&gt;set_dt_runpath(elf_reader.get_string(d-&gt;d_un.d_val));</div><div class="line">    &#125;</div><div class="line">    if (d-&gt;d_tag == DT_SONAME) &#123;</div><div class="line">      si-&gt;set_soname(elf_reader.get_string(d-&gt;d_un.d_val));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  for_each_dt_needed(task-&gt;get_elf_reader(), [&amp;](const char* name) &#123;</div><div class="line">    load_tasks-&gt;push_back(LoadTask::create(name, si, task-&gt;get_readers_map()));</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  return true;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>创建 soinfo 对象，解析elf并将该.so 文件的依赖库添加到待加载的队列中。<br>加载详见ElfReader<br>基本过程为:<br>校验头部。<br>遍历段头表，找到可加载段，并通过 mmap 将可加载段从文件映射到内存。</p>
+<ol>
+<li>ReadElfHeader()：从.so 文件中读取 ELF 头；</li>
+<li>VerifyElfHeader()：校验 ELF 头；</li>
+<li>ReadProgramHeader()：将.so 文件的 program header table 映射到内存；</li>
+<li>ReserveAddressSpace()：开辟匿名内存空间；</li>
+<li>LoadSegments()：将可加载段加载到 ReserveAddressSpace 开辟的空间中；</li>
+<li>FindPhdr()：校验 program header table 是否在内存中。</li>
+</ol>
+<p>之后解析dynamic获取DT_HASH、DT_STRTAB、 DT_STRSZ、DT_SYMTAB、DT_NEEDED，用于链接。</p>
+<h4 id="链接库"><a href="#链接库" class="headerlink" title="链接库"></a>链接库</h4><p>link_image<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div></pre></td><td class="code"><pre><div class="line">bool soinfo::link_image(const soinfo_list_t&amp; global_group, const soinfo_list_t&amp; local_group,</div><div class="line">                        const android_dlextinfo* extinfo) &#123;</div><div class="line"></div><div class="line">  local_group_root_ = local_group.front();</div><div class="line">  if (local_group_root_ == nullptr) &#123;</div><div class="line">    local_group_root_ = this;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  if ((flags_ &amp; FLAG_LINKER) == 0 &amp;&amp; local_group_root_ == this) &#123;</div><div class="line">    target_sdk_version_ = get_application_target_sdk_version();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  VersionTracker version_tracker;</div><div class="line"></div><div class="line">  if (!version_tracker.init(this)) &#123;</div><div class="line">    return false;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">#if !defined(__LP64__)</div><div class="line">  if (has_text_relocations) &#123;</div><div class="line">    // Fail if app is targeting M or above.</div><div class="line">    if (get_application_target_sdk_version() &gt;= __ANDROID_API_M__) &#123;</div><div class="line">      DL_ERR_AND_LOG(&quot;\&quot;%s\&quot; has text relocations&quot;, get_realpath());</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">    // Make segments writable to allow text relocations to work properly. We will later call</div><div class="line">    // phdr_table_protect_segments() after all of them are applied.</div><div class="line">    DL_WARN(&quot;\&quot;%s\&quot; has text relocations. This is wasting memory and prevents &quot;</div><div class="line">            &quot;security hardening. Please fix.&quot;, get_realpath());</div><div class="line">    add_dlwarning(get_realpath(), &quot;text relocations&quot;);</div><div class="line">    if (phdr_table_unprotect_segments(phdr, phnum, load_bias) &lt; 0) &#123;</div><div class="line">      DL_ERR(&quot;can&apos;t unprotect loadable segments for \&quot;%s\&quot;: %s&quot;,</div><div class="line">             get_realpath(), strerror(errno));</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">#endif</div><div class="line"></div><div class="line">  if (android_relocs_ != nullptr) &#123;</div><div class="line">    // check signature</div><div class="line">    if (android_relocs_size_ &gt; 3 &amp;&amp;</div><div class="line">        android_relocs_[0] == &apos;A&apos; &amp;&amp;</div><div class="line">        android_relocs_[1] == &apos;P&apos; &amp;&amp;</div><div class="line">        android_relocs_[2] == &apos;S&apos; &amp;&amp;</div><div class="line">        android_relocs_[3] == &apos;2&apos;) &#123;</div><div class="line">      DEBUG(&quot;[ android relocating %s ]&quot;, get_realpath());</div><div class="line"></div><div class="line">      bool relocated = false;</div><div class="line">      const uint8_t* packed_relocs = android_relocs_ + 4;</div><div class="line">      const size_t packed_relocs_size = android_relocs_size_ - 4;</div><div class="line"></div><div class="line">      relocated = relocate(</div><div class="line">          version_tracker,</div><div class="line">          packed_reloc_iterator&lt;sleb128_decoder&gt;(</div><div class="line">            sleb128_decoder(packed_relocs, packed_relocs_size)),</div><div class="line">          global_group, local_group);</div><div class="line"></div><div class="line">      if (!relocated) &#123;</div><div class="line">        return false;</div><div class="line">      &#125;</div><div class="line">    &#125; else &#123;</div><div class="line">      DL_ERR(&quot;bad android relocation header.&quot;);</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">#if defined(USE_RELA)</div><div class="line">  if (rela_ != nullptr) &#123;</div><div class="line">    DEBUG(&quot;[ relocating %s ]&quot;, get_realpath());</div><div class="line">    if (!relocate(version_tracker,</div><div class="line">            plain_reloc_iterator(rela_, rela_count_), global_group, local_group)) &#123;</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  if (plt_rela_ != nullptr) &#123;</div><div class="line">    DEBUG(&quot;[ relocating %s plt ]&quot;, get_realpath());</div><div class="line">    if (!relocate(version_tracker,</div><div class="line">            plain_reloc_iterator(plt_rela_, plt_rela_count_), global_group, local_group)) &#123;</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">#else</div><div class="line">  if (rel_ != nullptr) &#123;</div><div class="line">    DEBUG(&quot;[ relocating %s ]&quot;, get_realpath());</div><div class="line">    if (!relocate(version_tracker,</div><div class="line">            plain_reloc_iterator(rel_, rel_count_), global_group, local_group)) &#123;</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  if (plt_rel_ != nullptr) &#123;</div><div class="line">    DEBUG(&quot;[ relocating %s plt ]&quot;, get_realpath());</div><div class="line">    if (!relocate(version_tracker,</div><div class="line">            plain_reloc_iterator(plt_rel_, plt_rel_count_), global_group, local_group)) &#123;</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">#endif</div><div class="line"></div><div class="line">#if defined(__mips__)</div><div class="line">  if (!mips_relocate_got(version_tracker, global_group, local_group)) &#123;</div><div class="line">    return false;</div><div class="line">  &#125;</div><div class="line">#endif</div><div class="line"></div><div class="line">  DEBUG(&quot;[ finished linking %s ]&quot;, get_realpath());</div><div class="line"></div><div class="line">#if !defined(__LP64__)</div><div class="line">  if (has_text_relocations) &#123;</div><div class="line">    // All relocations are done, we can protect our segments back to read-only.</div><div class="line">    if (phdr_table_protect_segments(phdr, phnum, load_bias) &lt; 0) &#123;</div><div class="line">      DL_ERR(&quot;can&apos;t protect segments for \&quot;%s\&quot;: %s&quot;,</div><div class="line">             get_realpath(), strerror(errno));</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">#endif</div><div class="line"></div><div class="line">  // We can also turn on GNU RELRO protection if we&apos;re not linking the dynamic linker</div><div class="line">  // itself --- it can&apos;t make system calls yet, and will have to call protect_relro later.</div><div class="line">  if (!is_linker() &amp;&amp; !protect_relro()) &#123;</div><div class="line">    return false;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  /* Handle serializing/sharing the RELRO segment */</div><div class="line">  if (extinfo &amp;&amp; (extinfo-&gt;flags &amp; ANDROID_DLEXT_WRITE_RELRO)) &#123;</div><div class="line">    if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias,</div><div class="line">                                       extinfo-&gt;relro_fd) &lt; 0) &#123;</div><div class="line">      DL_ERR(&quot;failed serializing GNU RELRO section for \&quot;%s\&quot;: %s&quot;,</div><div class="line">             get_realpath(), strerror(errno));</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125; else if (extinfo &amp;&amp; (extinfo-&gt;flags &amp; ANDROID_DLEXT_USE_RELRO)) &#123;</div><div class="line">    if (phdr_table_map_gnu_relro(phdr, phnum, load_bias,</div><div class="line">                                 extinfo-&gt;relro_fd) &lt; 0) &#123;</div><div class="line">      DL_ERR(&quot;failed mapping GNU RELRO section for \&quot;%s\&quot;: %s&quot;,</div><div class="line">             get_realpath(), strerror(errno));</div><div class="line">      return false;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  notify_gdb_of_load(this);</div><div class="line">  return true;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>基本流程为:<br>通过重定位表的r_offset找到需要重定位的地址，通过r_info确定重定位类型与符号表索引。<br>之后用符号表索引找到符号，根据该符号去已加载的符号表中寻找，找到后即得到该符号地址等信息，根据重定位类型在重定位地点重定位。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/android/" rel="tag"># android</a>
+          
+            <a href="/tags/bionic/" rel="tag"># bionic</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/25/GNU-C内嵌汇编/" rel="next" title="GNU-C内嵌汇编">
+                <i class="fa fa-chevron-left"></i> GNU-C内嵌汇编
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">107</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">23</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">85</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#got-plt"><span class="nav-number">2.</span> <span class="nav-text">got-plt</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#dynamic"><span class="nav-number">2.1.</span> <span class="nav-text">dynamic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#意义"><span class="nav-number">2.2.</span> <span class="nav-text">意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android下"><span class="nav-number">2.3.</span> <span class="nav-text">android下</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linker源码分析"><span class="nav-number">3.</span> <span class="nav-text">linker源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#linker自举"><span class="nav-number">3.1.</span> <span class="nav-text">linker自举</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#start"><span class="nav-number">3.1.1.</span> <span class="nav-text">start</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#init"><span class="nav-number">3.1.2.</span> <span class="nav-text">init</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#linker-init-post-relocation"><span class="nav-number">3.1.3.</span> <span class="nav-text">linker-init-post-relocation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dlopen"><span class="nav-number">3.2.</span> <span class="nav-text">dlopen</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#流程图"><span class="nav-number">3.2.1.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码分析"><span class="nav-number">3.2.2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#入口部分"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">入口部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#加载库"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">加载库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#链接库"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">链接库</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
