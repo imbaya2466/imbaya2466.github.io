@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="扫盲,多媒体,GPU," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言我对多媒体的认识还是停留在大一时的pr、ae上，不论操作系统还是应用也好了解较深的大多都还是基本输入输出流进程内存文件管理等等基本功能…，对于现代的多媒体操作系统与应用支持概念非常模糊，接触到的不多，因此借此机会深入下多媒体的各个层次与方面。">
+<meta name="keywords" content="扫盲,多媒体,GPU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="为什么不玩玩多媒体呢">
+<meta property="og:url" content="http://yoursite.com/2019/04/05/为什么不玩玩多媒体呢/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言我对多媒体的认识还是停留在大一时的pr、ae上，不论操作系统还是应用也好了解较深的大多都还是基本输入输出流进程内存文件管理等等基本功能…，对于现代的多媒体操作系统与应用支持概念非常模糊，接触到的不多，因此借此机会深入下多媒体的各个层次与方面。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/04/05/5ca704f629893.png">
+<meta property="og:image" content="https://i.loli.net/2019/04/05/5ca705752b8a5.png">
+<meta property="og:image" content="https://i.loli.net/2019/04/05/5ca70590926a5.png">
+<meta property="og:image" content="https://i.loli.net/2019/04/05/5ca705e62e009.png">
+<meta property="og:image" content="https://i.loli.net/2019/04/05/5ca7060212560.png">
+<meta property="og:updated_time" content="2019-04-05T07:38:56.315Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="为什么不玩玩多媒体呢">
+<meta name="twitter:description" content="前言我对多媒体的认识还是停留在大一时的pr、ae上，不论操作系统还是应用也好了解较深的大多都还是基本输入输出流进程内存文件管理等等基本功能…，对于现代的多媒体操作系统与应用支持概念非常模糊，接触到的不多，因此借此机会深入下多媒体的各个层次与方面。">
+<meta name="twitter:image" content="https://i.loli.net/2019/04/05/5ca704f629893.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/05/为什么不玩玩多媒体呢/"/>
+
+
+
+
+
+  <title>为什么不玩玩多媒体呢 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/05/为什么不玩玩多媒体呢/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">为什么不玩玩多媒体呢</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-05T15:31:23+08:00">
+                2019-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/多媒体/" itemprop="url" rel="index">
+                    <span itemprop="name">多媒体</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我对多媒体的认识还是停留在大一时的pr、ae上，不论操作系统还是应用也好了解较深的大多都还是基本输入输出流进程内存文件管理等等基本功能…，对于现代的多媒体操作系统与应用支持概念非常模糊，接触到的不多，因此借此机会深入下多媒体的各个层次与方面。</p>
+<a id="more"></a>
+<h2 id="提出问题"><a href="#提出问题" class="headerlink" title="提出问题"></a>提出问题</h2><p>主要概念模糊在:</p>
+<ol>
+<li>应用层如何处理多媒体文件输出的?是用操作系统调用么?——使用驱动提供的用户层库进行传输，linux下猜测应该还是落实到系统调用，显卡设备被映射为设备/内存等进行传输</li>
+<li>如果用操作系统调用驱动的话，具体是怎样的输出过程与汇编代码?——探究中</li>
+<li>如果是不经过操作系统对设备控制，具体是怎样的输出过程与代码?——探究中</li>
+<li>现代的多媒体设备与传统计算机体系如何交互的?—–不论什么设备都是总线上的外设而已，内存地址共享或者专用端口指令。</li>
+<li>寻找答案过程中继续补充问题</li>
+</ol>
+<h2 id="资料收集"><a href="#资料收集" class="headerlink" title="资料收集"></a>资料收集</h2><h3 id="历史"><a href="#历史" class="headerlink" title="历史"></a>历史</h3><p>光栅化就是将数据转化成可见像素的过程。GPU 则是执行转换过程的硬件部件。由于这个过程涉及到屏幕上的每一个像素，所以 GPU 被设计成了一个高度并行化的硬件部件。<br>GPU前PC 上的图形操作是由 视频图形阵列（VGA，Video Graphics Array） 控制器完成。VGA 控制器由连接到一定容量的DRAM上的存储控制器和显示产生器构成。<br>GPU诞生后图形设备变为一个处理器，随着时间的推移，GPU 的可编程能力愈发强大，其作为可编程处理器取代了固定功能的专用逻辑，同时保持了基本的 3D 图形流水线组织。<br>如今，GPU 及其相关驱动实现了图形处理中的 OpenGL 和 DirectX 模型，从而允许开发者能够轻易地操作硬件。</p>
+<h3 id="GPU渲染6个阶段"><a href="#GPU渲染6个阶段" class="headerlink" title="GPU渲染6个阶段"></a>GPU渲染6个阶段</h3><p><img src="https://i.loli.net/2019/04/05/5ca704f629893.png" alt="opengl-graphics-pipeline.png"></p>
+<p>顶点着色器（Vertex Shader）<br>形状装配（Shape Assembly），又称 图元装配<br>几何着色器（Geometry Shader）<br>光栅化（Rasterization）<br>片段着色器（Fragment Shader）<br>测试与混合（Tests and Blending）</p>
+<p>上述阶段中的着色器事实上是一些程序，它们运行在 GPU 中成千上万的小处理器核中。这些着色器允许开发者进行配置，从而可以高效地控制图形渲染流水线中的特定部分。由于它们运行在 GPU 中，因此可以降低 CPU 的负荷。着色器可以使用多种语言编写，OpenGL 提供了 GLSL（OpenGL Shading Language） 着色器语言。</p>
+<h3 id="GPU结构"><a href="#GPU结构" class="headerlink" title="GPU结构"></a>GPU结构</h3><p>存储结构<br>最底层是计算机的系统内存，其次是 GPU 的内部存储，然后依次是两级 cache：L2 和 L1，每个 L1 cache 连接至一个 流处理器（SM，stream processor）。</p>
+<p><img src="https://i.loli.net/2019/04/05/5ca705752b8a5.png" alt="gpu-hierarchy.png"></p>
+<p>CPU-GPU 异构系统</p>
+<p><img src="https://i.loli.net/2019/04/05/5ca70590926a5.png" alt="cpu-gpu-architecture.png"></p>
+<p>分离式结构:CPU与GPU拥有各自的存储，俩者通过PCI-e总线进行连接。目前使用于PC、手机<br>耦合式结构:CPU与GPU共享内存与缓存，AMD的APU，目前使用于游戏主机中。</p>
+<p>注意，目前很多 SoC 都是集成了CPU 和 GPU，事实上这仅仅是在物理上进行了集成，并不意味着它们使用的就是耦合式结构，大多数采用的还是分离式结构。耦合式结构是在系统上进行了集成。</p>
+<p>在存储管理方面，分离式结构中 CPU 和 GPU 各自拥有独立的内存，两者共享一套虚拟地址空间，必要时会进行内存拷贝。对于耦合式结构，GPU 没有独立的内存，与 GPU 共享系统内存，由 MMU 进行存储管理。</p>
+<p>图形应用程序调用 OpenGL 或 Direct3D API 功能，将 GPU 作为协处理器使用。API 通过面向特殊 GPU 优化的图形设备驱动向 GPU 发送命令、程序、数据。</p>
+<p>GPU 资源管理模型 见参考链接1</p>
+<p>CPU-GPU 工作流:</p>
+<ol>
+<li>主存数据复制到显存中</li>
+<li>cpu指令驱动GPU</li>
+<li>GPU中每个运算单元并行处理</li>
+<li>GPU将显存结果传回主存</li>
+</ol>
+<h3 id="屏幕图像显示原理"><a href="#屏幕图像显示原理" class="headerlink" title="屏幕图像显示原理"></a>屏幕图像显示原理</h3><p>介绍屏幕图像显示的原理，需要先从 CRT 显示器原理说起，如下图所示。CRT 的电子枪从上到下逐行扫描，扫描完成后显示器就呈现一帧画面。然后电子枪回到初始位置进行下一次扫描。为了同步显示器的显示过程和系统的视频控制器，显示器会用硬件时钟产生一系列的定时信号。当电子枪换行进行扫描时，显示器会发出一个水平同步信号（horizonal synchronization），简称 HSync；而当一帧画面绘制完成后，电子枪回复到原位，准备画下一帧前，显示器会发出一个垂直同步信号（vertical synchronization），简称 VSync。显示器通常以固定频率进行刷新，这个刷新率就是 VSync 信号产生的频率。虽然现在的显示器基本都是液晶显示屏了，但其原理基本一致。<br>详细见下方科普视频</p>
+<p>常见的 CPU、GPU、显示器工作方式。CPU 计算好显示内容提交至 GPU，GPU 渲染完成后将渲染结果存入帧缓冲区，视频控制器会按照 VSync 信号逐帧读取帧缓冲区的数据，经过数据转换后最终由显示器进行显示。</p>
+<p><img src="https://i.loli.net/2019/04/05/5ca705e62e009.png" alt="ios-renderIng-gpu-internal-structure.png"></p>
+<p>最简单的情况下，帧缓冲区只有一个。此时，帧缓冲区的读取和刷新都都会有比较大的效率问题。为了解决效率问题，GPU 通常会引入两个缓冲区，即 双缓冲机制。在这种情况下，GPU 会预先渲染一帧放入一个缓冲区中，用于视频控制器的读取。当下一帧渲染完毕后，GPU 会直接把视频控制器的指针指向第二个缓冲器。</p>
+<p><img src="https://i.loli.net/2019/04/05/5ca7060212560.png" alt="gpu-double-buffer.png"></p>
+<p>双缓冲虽然能解决效率问题，但会引入一个新的问题。当视频控制器还未读取完成时，即屏幕内容刚显示一半时，GPU 将新的一帧内容提交到帧缓冲区并把两个缓冲区进行交换后，视频控制器就会把新的一帧数据的下半段显示到屏幕上，造成画面撕裂现象。为了解决这个问题，GPU 通常有一个机制叫做垂直同步（简写也是 V-Sync），当开启垂直同步后，GPU 会等待显示器的 VSync 信号发出后，才进行新的一帧渲染和缓冲区更新。这样能解决画面撕裂现象，也增加了画面流畅度，但需要消费更多的计算资源，也会带来部分延迟。</p>
+<p>有俩个视频可以对GPU之后显示器的工作原理有个认识:<br><a href="https://www.bilibili.com/video/av21969824" target="_blank" rel="external">https://www.bilibili.com/video/av21969824</a><br><a href="https://www.bilibili.com/video/av37293124" target="_blank" rel="external">https://www.bilibili.com/video/av37293124</a></p>
+<p>大概讲了显示的是一个一个RGB。过去的扫描，现在的液晶。</p>
+<h2 id="贴近程序员部分"><a href="#贴近程序员部分" class="headerlink" title="贴近程序员部分"></a>贴近程序员部分</h2><h3 id="显卡"><a href="#显卡" class="headerlink" title="显卡"></a>显卡</h3><p>独立显卡，基本由gpu、显存颗粒、pcb板组成。<br>gpu擅长几何运算，而与之配合的cpu擅长逻辑运算。如果CPU想画一个二维图形，只需要发个指令给GPU，GPU就可以迅速计算出该图形的所有像素，并在显示器上指定位置画出相应的图形。<br>cpu将指令发给gpu的时候可以将指令暂存在显存里，同时显卡数据存储在显存。<br>GPU有上千个核，可以并行计算，适合做这种简单但大量的工作。因为这个性质，显卡也会被用在挖比特币或者训练神经网络上。</p>
+<h3 id="访问显卡"><a href="#访问显卡" class="headerlink" title="访问显卡"></a>访问显卡</h3><h4 id="数据交互"><a href="#数据交互" class="headerlink" title="数据交互"></a>数据交互</h4><p>MMIO与PMIO:<a href="https://zh.wikipedia.org/wiki/%E5%AD%98%E5%82%A8%E5%99%A8%E6%98%A0%E5%B0%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA" target="_blank" rel="external">https://zh.wikipedia.org/wiki/%E5%AD%98%E5%82%A8%E5%99%A8%E6%98%A0%E5%B0%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA</a><br>简单来说就是外设存储、寄存器映射到内存；或者专门为io设计的端口指令如in/out<br>往一块内存里面写东西的办法无非就几种:1, 用CPU去做，那么就是用MMIO(Memory Mapped IO)把’显存’ map到CPU寻址空间，然后去读写;2, 用DMA控制器去做，这里面有系统自带的DMA控制器或者显卡带的，不管哪种你可以把DMA控制器看作另外一台机器，那么其实就是向DMA控制器写指令让它帮你传一些东西到显存去，传的这些东西就是显卡要执行的命令和数据。</p>
+<p>把显卡想象成另外一台机器。它要工作，无非也是“程序存储”原理，上电之后，从特定的内存（显存）地址去取指，然后执行指令。显卡的工作逻辑比CPU简单多了，它一般就从一个环形buffer不断的取指令，然后执行，CPU就不断的去往环形buffer填指令。</p>
+<p>操作硬件的动作是敏感动作，一般只有内核才有权限。个别情况会由用户态操作，但是也是通过内核建立寄存器映射才行。<br>理解驱动程序最重要的一句话是，寄存器是软件控制硬件的唯一途径。所以你问如何控制显卡，答案就是靠读写显卡提供的寄存器。方式如上所述</p>
+<h4 id="驱动"><a href="#驱动" class="headerlink" title="驱动"></a>驱动</h4><p>驱动所有外设无非就是通过总线或者地址映射读写寄存器，Vista以前，显卡的驱动全都是kernel mode执行的，因为只有kernel mode才能访问的物理地址，但是kernel mode的坏处是一旦有问题，系统就崩溃，而且kernel mode有很多局限性，比如没有C库支持，浮点运算很难，代价很大等等。所以Vista之后，显卡驱动都分两部分，kmd负责需要访问物理地址的动作，其他事情都放到umd去做，包括API支持等等。所以一个3D程序执行的过程是这样的，app generate command, call D3D runtime，D3D runtime call driver umd, driver umd system call driver kmd, kmd send command to ring buffer, graphic card exeute.</p>
+<p>目前的显卡驱动，不是单纯的一个独立的驱动模块，而是几个驱动模块的集合。用户态和内核态驱动都有。以Linux桌面系统为例，按照模块划分，内核驱动有drm/i915模块， 用户驱动包括libdrm, Xorg的DDX和DIX，3D的LibGL, Video的Libva等等，各个用户态驱动可能相互依赖，相互协作。</p>
+<p>之后其它各种库再对其进行封装。</p>
+<h4 id="库"><a href="#库" class="headerlink" title="库"></a>库</h4><p>收集中…<br>OpenGL是3D API。<br>OpenCL是GPU通用运算API。OpenCL扩充了GPU图形生成之外的能力<br>OpenCV是一个跨平台的计算机视觉库(主要操作对象是图像)</p>
+<p>OpenGL ES android下的<br>ffmpeg，x264，x265 视频解析框架-开源<br>webRTC 直播框架-开源</p>
+<h4 id="具体到代码"><a href="#具体到代码" class="headerlink" title="具体到代码"></a>具体到代码</h4><p>BIOS的 INT 10h中画点实现其实也是直接写显存，但是执行的很慢，基本没人这么用，都是直接写显存的，操作显卡除了访问显存外，有些功能还需要访问端口来实现。<br>使用 int 10h中断，调用 BIOS 里面的预设程序控制显卡，只是初级用法，现在基本只用在 grub 等操作系统加载程序上了，进入了操作系统后，就再也不会调用 int 10h，而是赤裸裸的直接和显卡打交到。</p>
+<h2 id="视屏格式与编码"><a href="#视屏格式与编码" class="headerlink" title="视屏格式与编码"></a>视屏格式与编码</h2><h3 id="H264"><a href="#H264" class="headerlink" title="H264"></a>H264</h3><p>文档1:<a href="http://read.pudn.com/downloads147/ebook/635957/%E6%96%B0%E4%B8%80%E4%BB%A3%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E6%A0%87%E5%87%86H.264.pdf" target="_blank" rel="external">http://read.pudn.com/downloads147/ebook/635957/%E6%96%B0%E4%B8%80%E4%BB%A3%E8%A7%86%E9%A2%91%E5%8E%8B%E7%BC%A9%E7%BC%96%E7%A0%81%E6%A0%87%E5%87%86H.264.pdf</a><br>H.264是ITU（International Telecommunication Union，国际通信联盟）和MPEG（Motion Picture Experts Group，运动图像专家组）联合制定的视频编码标准。而x264是一个开源的H.264/MPEG-4 AVC视频编码函数库，是最好的有损视频编码器之一。</p>
+<h3 id="多媒体基础概念"><a href="#多媒体基础概念" class="headerlink" title="多媒体基础概念"></a>多媒体基础概念</h3><p>分辨率:一帧视频的大小，表示长宽像素个数。<br>帧率:每秒钟视频帧数  FPS<br>编码格式:压缩数据量、采用编码算法压缩冗余。<br>封装格式:把编码后的音视频以一定格式封装到一个容器,MKV、AVI</p>
+<p>视频播放过程:<br>mp4文件–&gt;h.264文件(解封装后生成)–&gt;yuv文件(解码后生成)<br>yuv文件(h.264编码)–&gt;h.264文件(mp4封装)–&gt;mp4文件</p>
+<h2 id="android下的多媒体"><a href="#android下的多媒体" class="headerlink" title="android下的多媒体"></a>android下的多媒体</h2><p>使用WebRtc建立android视频聊天。<br>哔哩哔哩使用的是ffmpeg<br>抖音使用的是….</p>
+<h2 id="android硬件加速"><a href="#android硬件加速" class="headerlink" title="android硬件加速"></a>android硬件加速</h2><h3 id="页面渲染"><a href="#页面渲染" class="headerlink" title="页面渲染"></a>页面渲染</h3><p>页面渲染时，被绘制的元素最终要转换成矩阵像素点（即多维数组形式，类似安卓中的Bitmap），才能被显示器显示。<br>页面由各种基本元素组成，例如圆形、圆角矩形、线段、文字、矢量图（常用贝塞尔曲线组成）、Bitmap等。<br>元素绘制时尤其是动画绘制过程中，经常涉及插值、缩放、旋转、透明度变化、动画过渡、毛玻璃模糊，甚至包括3D变换、物理运动（例如游戏中常见的抛物线运动）、多媒体文件解码（主要在桌面机中有应用，移动设备一般不用GPU做解码）等运算。<br>绘制过程经常需要进行逻辑较简单、但数据量庞大的浮点运算。<br>GPU适用于大量计算</p>
+<p>android的页面绘制:<br>Canvas(Java API) —&gt; OpenGL(C/C++ Lib) —&gt; 驱动程序 —&gt; GPU</p>
+<h3 id="可使用的库"><a href="#可使用的库" class="headerlink" title="可使用的库"></a>可使用的库</h3><p>openCL<br>FFmpeg  很强大很广泛</p>
+<h2 id="逆向相关"><a href="#逆向相关" class="headerlink" title="逆向相关"></a>逆向相关</h2><p>着重还是协议</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="http://chuquan.me/2018/08/26/graphics-rending-principle-gpu/" target="_blank" rel="external">http://chuquan.me/2018/08/26/graphics-rending-principle-gpu/</a></li>
+<li><a href="https://www.zhihu.com/question/20722310" target="_blank" rel="external">https://www.zhihu.com/question/20722310</a></li>
+<li>一般的体系结构知识可以参考《计算机组成原理》。尽管没有专门说GPU，但是GPU也只是PCI-E总线上的一种普通设备而已。</li>
+<li><a href="https://tech.meituan.com/2017/01/19/hardware-accelerate.html" target="_blank" rel="external">https://tech.meituan.com/2017/01/19/hardware-accelerate.html</a></li>
+<li><a href="https://segmentfault.com/a/1190000008413814" target="_blank" rel="external">https://segmentfault.com/a/1190000008413814</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/扫盲/" rel="tag"># 扫盲</a>
+          
+            <a href="/tags/多媒体/" rel="tag"># 多媒体</a>
+          
+            <a href="/tags/GPU/" rel="tag"># GPU</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/28/GOT-PLT与linker源码分析/" rel="next" title="GOT-PLT与linker源码分析">
+                <i class="fa fa-chevron-left"></i> GOT-PLT与linker源码分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">108</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">88</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提出问题"><span class="nav-number">2.</span> <span class="nav-text">提出问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资料收集"><span class="nav-number">3.</span> <span class="nav-text">资料收集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#历史"><span class="nav-number">3.1.</span> <span class="nav-text">历史</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU渲染6个阶段"><span class="nav-number">3.2.</span> <span class="nav-text">GPU渲染6个阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPU结构"><span class="nav-number">3.3.</span> <span class="nav-text">GPU结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#屏幕图像显示原理"><span class="nav-number">3.4.</span> <span class="nav-text">屏幕图像显示原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#贴近程序员部分"><span class="nav-number">4.</span> <span class="nav-text">贴近程序员部分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#显卡"><span class="nav-number">4.1.</span> <span class="nav-text">显卡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问显卡"><span class="nav-number">4.2.</span> <span class="nav-text">访问显卡</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据交互"><span class="nav-number">4.2.1.</span> <span class="nav-text">数据交互</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#驱动"><span class="nav-number">4.2.2.</span> <span class="nav-text">驱动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#库"><span class="nav-number">4.2.3.</span> <span class="nav-text">库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#具体到代码"><span class="nav-number">4.2.4.</span> <span class="nav-text">具体到代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#视屏格式与编码"><span class="nav-number">5.</span> <span class="nav-text">视屏格式与编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#H264"><span class="nav-number">5.1.</span> <span class="nav-text">H264</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多媒体基础概念"><span class="nav-number">5.2.</span> <span class="nav-text">多媒体基础概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android下的多媒体"><span class="nav-number">6.</span> <span class="nav-text">android下的多媒体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#android硬件加速"><span class="nav-number">7.</span> <span class="nav-text">android硬件加速</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#页面渲染"><span class="nav-number">7.1.</span> <span class="nav-text">页面渲染</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可使用的库"><span class="nav-number">7.2.</span> <span class="nav-text">可使用的库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逆向相关"><span class="nav-number">8.</span> <span class="nav-text">逆向相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">9.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
