@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="多媒体,FFmpeg," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="简介FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源库，其主要功能是对数据的处理。使用c写的主要是多媒体数据的处理，不涉及IO收集与GPU视频显示，这部分去读android源码。此外与计算机网络有技术与类似问题实现方法方面相似的地方。 领域大牛:https://blog.csdn.net/leixiaohua1020/article/list/11?不论入门还是深入都可以">
+<meta name="keywords" content="多媒体,FFmpeg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFmpeg-基础理论与入门">
+<meta property="og:url" content="http://yoursite.com/2019/04/23/FFmpeg-基础理论与入门/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="简介FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源库，其主要功能是对数据的处理。使用c写的主要是多媒体数据的处理，不涉及IO收集与GPU视频显示，这部分去读android源码。此外与计算机网络有技术与类似问题实现方法方面相似的地方。 领域大牛:https://blog.csdn.net/leixiaohua1020/article/list/11?不论入门还是深入都可以">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://i.loli.net/2019/04/23/5cbf06ade587e.png">
+<meta property="og:image" content="https://i.loli.net/2019/04/23/5cbf06ada943b.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/04/23/5cbf06ade2b38.png">
+<meta property="og:updated_time" content="2019-04-23T12:48:58.627Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FFmpeg-基础理论与入门">
+<meta name="twitter:description" content="简介FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源库，其主要功能是对数据的处理。使用c写的主要是多媒体数据的处理，不涉及IO收集与GPU视频显示，这部分去读android源码。此外与计算机网络有技术与类似问题实现方法方面相似的地方。 领域大牛:https://blog.csdn.net/leixiaohua1020/article/list/11?不论入门还是深入都可以">
+<meta name="twitter:image" content="https://i.loli.net/2019/04/23/5cbf06ade587e.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/23/FFmpeg-基础理论与入门/"/>
+
+
+
+
+
+  <title>FFmpeg-基础理论与入门 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/23/FFmpeg-基础理论与入门/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">FFmpeg-基础理论与入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-23T20:45:09+08:00">
+                2019-04-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/多媒体/" itemprop="url" rel="index">
+                    <span itemprop="name">多媒体</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>FFmpeg是一套可以用来记录、转换数字音频、视频，并能将其转化为流的开源库，其主要功能是对数据的处理。使用c写的<br>主要是多媒体数据的处理，不涉及IO收集与GPU视频显示，这部分去读android源码。<br>此外与计算机网络有技术与类似问题实现方法方面相似的地方。</p>
+<p>领域大牛:<br><a href="https://blog.csdn.net/leixiaohua1020/article/list/11?" target="_blank" rel="external">https://blog.csdn.net/leixiaohua1020/article/list/11?</a><br>不论入门还是深入都可以参考他的文章，可惜25岁的博士生早逝..</p>
+<p>本篇的参考文写于2014年，5年来许多技术已有长足进步，遇到将再补充。<br>这种实际使用起来性能差距很大的技术还是需要紧跟最新的技术才行…..比如先进的编码与传输方式</p>
+<a id="more"></a>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>使用win下linux子系统即可编译成功android版本的，不过NDK和FFmpeg都要旧版本的，我编译的是ndk14+ffmpeg3.4<br>configure的参数是关键</p>
+<h2 id="ffmpeg入门前置知识"><a href="#ffmpeg入门前置知识" class="headerlink" title="ffmpeg入门前置知识"></a>ffmpeg入门前置知识</h2><p>使用在:<br>视频播放器内核-Mplayer，ffplay，射手播放器，暴风影音，KMPlayer，QQ影音，ijkplayer<br>直播过滤器-ffdshow，lav filters<br>转码工具内核-ffmpeg，格式工厂</p>
+<p>入门ffmpeg前需要掌握些基本的音视频数据格式</p>
+<h3 id="理论层面的音视频技术"><a href="#理论层面的音视频技术" class="headerlink" title="理论层面的音视频技术"></a>理论层面的音视频技术</h3><h4 id="视频播放原理"><a href="#视频播放原理" class="headerlink" title="视频播放原理"></a>视频播放原理</h4><p>音视频技术主要有<br>封装格式:把视频数据和音频数据打包成一个文件的规范,与编码标准无关。如:avi，rmvb，mp4，flv，mkv。支持的标准越多一般越好mkv&gt;rmvb<br>视频压缩编码技术:视频编码的主要作用是将视频像素数据（RGB，YUV等）压缩成为视频码流，从而降低视频的数据量。<br>音频压缩编码技术:音频编码的主要作用是将音频采样数据（PCM等）压缩成为音频码流，从而降低音频的数据量。<br>流媒体协议技术:通信协议,socket之上</p>
+<p>视频播放器播放一个互联网上的视频文件，需要经过以下几个步骤：解协议，解封装，解码视音频，视音频同步。如果播放本地文件则不需要解协议，为以下几个步骤：解封装，解码视音频，视音频同步。</p>
+<p>解协议:就是将流媒体协议的数据，解析为标准的相应的封装格式数据。视音频在网络上传播的时候，常常采用各种流媒体协议，例如HTTP，RTMP，或是MMS等等。这些协议在传输视音频数据的同时，也会传输一些信令数据。这些信令数据包括对播放的控制（播放，暂停，停止），或者对网络状态的描述等。解协议的过程中会去除掉信令数据而只保留视音频数据。例如，采用RTMP协议传输的数据，经过解协议操作后，输出FLV格式的数据。<br>解封装:就是将输入的封装格式的数据，分离成为音频流压缩编码数据和视频流压缩编码数据。封装格式种类很多，例如MP4，MKV，RMVB，TS，FLV，AVI等等，它的作用就是将已经压缩编码的视频数据和音频数据按照一定的格式放到一起。例如，FLV格式的数据，经过解封装操作后，输出H.264编码的视频码流和AAC编码的音频码流。<br>解码:就是将视频/音频压缩编码数据，解码成为非压缩的视频/音频原始数据。音频的压缩编码标准包含AAC，MP3，AC-3等等，视频的压缩编码标准则包含H.264，MPEG2，VC-1等等。解码是整个系统中最重要也是最复杂的一个环节。通过解码，压缩编码的视频数据输出成为非压缩的颜色数据，例如YUV420P，RGB等等；压缩编码的音频数据输出成为非压缩的音频抽样数据，例如PCM数据。<br>视音频同步:就是根据解封装模块处理过程中获取到的参数信息，同步解码出来的视频和音频数据，并将视频音频数据送至系统的显卡和声卡播放出来。</p>
+<h4 id="流媒体协议"><a href="#流媒体协议" class="headerlink" title="流媒体协议"></a>流媒体协议</h4><p>用于主机间的应用层的协议</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>推出机构</th>
+<th>传输层协议</th>
+<th>客户端</th>
+<th>目前使用领域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTSP+RTP</td>
+<td>IETF</td>
+<td>TCP+UDP</td>
+<td>VLC, WMP</td>
+<td>IPTV</td>
+</tr>
+<tr>
+<td>RTMP</td>
+<td>Adobe Inc.</td>
+<td>TCP</td>
+<td>Flash</td>
+<td>互联网直播</td>
+</tr>
+<tr>
+<td>RTMFP</td>
+<td>Adobe Inc.</td>
+<td>UDP</td>
+<td>Flash</td>
+<td>互联网直播</td>
+</tr>
+<tr>
+<td>MMS</td>
+<td>Microsoft Inc.</td>
+<td>TCP/UDP</td>
+<td>WMP</td>
+<td>互联网直播+点播</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>WWW+IETF</td>
+<td>TCP</td>
+<td>Flash</td>
+<td>互联网点播</td>
+</tr>
+</tbody>
+</table>
+<p>点播:视频内容已经存放在服务器上（换句话说，我们能够得到该视频文件在服务器上的URL地址），我们可以选择性地播放某个视频。<br>直播:视频内容是实时录制的，与此同时，将音视频以媒体“流”的形式推到服务器上。此时，一旦有观众收看该直播，服务器收到响应后，会将媒体流传输至播放器，实现视频播放。</p>
+<p>因为互联网网络环境的不稳定性，RTSP+RTP较少用于互联网视音频传输。互联网视频服务通常采用TCP作为其流媒体的传输层协议，因而像RTMP，MMS，HTTP这类的协议广泛用于互联网视音频服务之中。这类协议不会发生丢包，因而保证了视频的质量，但是传输的效率会相对低一些。</p>
+<h4 id="封装格式"><a href="#封装格式" class="headerlink" title="封装格式"></a>封装格式</h4><p>封装格式的主要作用是把视频码流和音频码流按照一定的格式存储在一个文件中。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>推出机构</th>
+<th>流媒体</th>
+<th>支持的视频编码</th>
+<th>支持的音频编码</th>
+<th>目前使用领域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AVI</td>
+<td>Microsoft Inc.</td>
+<td>不支持</td>
+<td>几乎所有格式</td>
+<td>几乎所有格式</td>
+<td>BT下载影视</td>
+</tr>
+<tr>
+<td>MP4</td>
+<td>MPEG</td>
+<td>支持</td>
+<td>MPEG-2, MPEG-4, H.264, H.263等</td>
+<td>AAC, MPEG-1 Layers I, II, III, AC-3等</td>
+<td>互联网视频网站</td>
+</tr>
+<tr>
+<td>TS</td>
+<td>MPEG</td>
+<td>支持</td>
+<td>MPEG-1, MPEG-2, MPEG-4, H.264</td>
+<td>MPEG-1 Layers I, II, III, AAC,</td>
+<td>IPTV，数字电视</td>
+</tr>
+<tr>
+<td>FLV</td>
+<td>Adobe Inc.</td>
+<td>支持</td>
+<td>Sorenson, VP6, H.264</td>
+<td>MP3, ADPCM, Linear PCM, AAC等</td>
+<td>互联网视频网站</td>
+</tr>
+<tr>
+<td>MKV</td>
+<td>CoreCodec Inc.</td>
+<td>支持</td>
+<td>几乎所有格式</td>
+<td>几乎所有格式</td>
+<td>互联网视频网站</td>
+</tr>
+<tr>
+<td>RMVB</td>
+<td>Real Networks Inc.</td>
+<td>支持</td>
+<td>RealVideo 8, 9, 10</td>
+<td>AAC, Cook Codec, RealAudio Lossless</td>
+<td>BT下载影视</td>
+</tr>
+</tbody>
+</table>
+<p>除了AVI之外，其他封装格式都支持流媒体，即可以“边下边播”,总的来说，不同的封装格式之间差距不大，各有优劣。</p>
+<h4 id="视频编码"><a href="#视频编码" class="headerlink" title="视频编码"></a>视频编码</h4><p>视频编码的主要作用是将视频像素数据（RGB，YUV等）压缩成为视频码流，从而降低视频的数据量。视频编码是视音频技术中最重要的技术之一。视频码流的数据量占了视音频总数据量的绝大部分。高效率的视频编码在同等的码率下，可以获得更高的视频质量。</p>
+<p>基本原理:<a href="https://blog.csdn.net/leixiaohua1020/article/details/28114081" target="_blank" rel="external">https://blog.csdn.net/leixiaohua1020/article/details/28114081</a></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>推出机构</th>
+<th>推出时间</th>
+<th>目前使用领域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HEVC(H.265)</td>
+<td>MPEG/ITU-T</td>
+<td>2013</td>
+<td>研发中</td>
+</tr>
+<tr>
+<td>H.264</td>
+<td>MPEG/ITU-T</td>
+<td>2003</td>
+<td>各个领域</td>
+</tr>
+<tr>
+<td>MPEG4</td>
+<td>MPEG</td>
+<td>2001</td>
+<td>不温不火</td>
+</tr>
+<tr>
+<td>MPEG2</td>
+<td>MPEG</td>
+<td>1994</td>
+<td>数字电视</td>
+</tr>
+<tr>
+<td>VP9</td>
+<td>Google</td>
+<td>2013</td>
+<td>研发中</td>
+</tr>
+<tr>
+<td>VP8</td>
+<td>Google</td>
+<td>2008</td>
+<td>不普及</td>
+</tr>
+<tr>
+<td>VC-1</td>
+<td>Microsoft Inc.</td>
+<td>2006</td>
+<td>微软平台</td>
+</tr>
+</tbody>
+</table>
+<p>当前使用最多的视频编码方案就是H.264。<br>H.264仅仅是一个编码标准，而不是一个具体的编码器，H.264只是给编码器的实现提供参照用的。<br>实际中使用最多的就是x264了，性能强悍（超过了很多商业编码器），而且开源。</p>
+<p>现在的编解码标准就要数HEVC和VP9了。VP9是Google继VP8之后推出的新一代标准。VP9和HEVC相比，要稍微逊色一些。<br>实际使用的HEVC开源编码器很有可能是x265。</p>
+<p>下一代是H.266，2018年也标准化了。<br>HEVC &gt; VP9 &gt; H.264&gt; VP8 &gt; MPEG4 &gt; H.263 &gt; MPEG2</p>
+<h4 id="音频编码"><a href="#音频编码" class="headerlink" title="音频编码"></a>音频编码</h4><p>音频编码的主要作用是将音频采样数据（PCM等）压缩成为音频码流，从而降低音频的数据量。高效率的音频编码在同等的码率下，可以获得更高的音质。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>推出机构</th>
+<th>推出时间</th>
+<th>目前使用领域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AAC</td>
+<td>MPEG</td>
+<td>1997</td>
+<td>各个领域（新）</td>
+</tr>
+<tr>
+<td>AC-3</td>
+<td>Dolby Inc.</td>
+<td>1992</td>
+<td>电影</td>
+</tr>
+<tr>
+<td>MP3</td>
+<td>MPEG</td>
+<td>1993</td>
+<td>各个领域（旧）</td>
+</tr>
+<tr>
+<td>WMA</td>
+<td>Microsoft Inc.</td>
+<td>1999</td>
+<td>微软平台</td>
+</tr>
+</tbody>
+</table>
+<p>由表可见，近年来并未推出全新的音频编码方案，可见音频编码技术已经基本可以满足人们的需要。音频编码技术近期绝大部分的改动都是在MP3的继任者——AAC的基础上完成的。</p>
+<p>AAC+ &gt; MP3PRO &gt; AAC&gt; RealAudio &gt; WMA &gt; MP3</p>
+<h4 id="现有网络视音频平台对比"><a href="#现有网络视音频平台对比" class="headerlink" title="现有网络视音频平台对比"></a>现有网络视音频平台对比</h4><p>直播服务普遍采用了RTMP作为流媒体协议，FLV作为封装格式，H.264作为视频编码格式，AAC作为音频编码格式。<br>FLV是RTMP使用的封装格式</p>
+<p>点播服务普遍采用了HTTP作为流媒体协议，H.264作为视频编码格式，AAC作为音频编码格式。</p>
+<h3 id="RGB、YUV视频像素数据"><a href="#RGB、YUV视频像素数据" class="headerlink" title="RGB、YUV视频像素数据"></a>RGB、YUV视频像素数据</h3><p><img src="https://i.loli.net/2019/04/23/5cbf06ade587e.png" alt="20160118002918690.png"></p>
+<p>只规定了像素的表示。<br>用于直接显示的像素数据，直接供硬件驱动使用，因此只规定了像素，问题1<br>用yuvplayer等可播放<br>RGB诉求于人眼对色彩的感应，YUV则着重于视觉对于亮度的敏感程度。<br>RGB没有抽样，全部显示。YUV也可以不抽样。</p>
+<h4 id="颜色"><a href="#颜色" class="headerlink" title="颜色"></a>颜色</h4><p>电磁波的波长和强度可以有很大的区别，在人可以感受的波长范围内（约312.30纳米至745.40纳米），它被称为可见光，有时也被简称为光。假如我们将一个光源各个波长的强度列在一起，我们就可以获得这个光源的光谱。一个物体的光谱决定这个物体的光学特性，包括它的颜色。</p>
+<p>色素:印刷、彩笔等使用反射一定波长的色素，通过反射白光的一部分产生颜色效果。<br>RGB:发光的媒体（比如电视机）使用红、绿 和蓝加色的三元色，每种光尽可能只刺激针对它们的锥状细胞而不刺激其它的锥状细胞。这个系统的色域占人可以感受到的色彩空间的大部分，因此电视机和电脑萤幕使用这个系统。<br>HSB:在制作计算机图像时人们往往使用另一种颜色系统。这个颜色系统使用三项分类，分别叫做色相（hue）、饱和度（saturation）和明度（brightness）的系数。色调决定到底哪一种颜色被使用，饱和度决定颜色的纯度，亮度决定颜色的明暗程度。使用的原因是RGB不能直观的通过数值对应颜色。</p>
+<h4 id="色度抽样"><a href="#色度抽样" class="headerlink" title="色度抽样"></a>色度抽样</h4><p><a href="https://zh.wikipedia.org/wiki/%E8%89%B2%E5%BA%A6%E6%8A%BD%E6%A0%B7" target="_blank" rel="external">https://zh.wikipedia.org/wiki/%E8%89%B2%E5%BA%A6%E6%8A%BD%E6%A0%B7</a><br>由于储存及传送的限制，讯号处理中大多数会偏向被减少（或被压缩）以减低负荷。由于人眼对色度的敏感度不及对亮度的敏感度，图像的色度分量不需要有和亮度分量相同的清晰度，所以许多视讯系统在色差通道上进行较低（相对亮度通道）清晰度（例如，抽样频率）的抽样。这样在不明显降低画面质量的同时降低了影像讯号的总带宽。因抽样而丢失的色度值用内插值，或者前一色度值来替代。在压缩影像中，以4:2:2 Y’CbCr作例，它只需R’G’B’（4:4:4）三分之二的带宽。带宽的减少在肉眼上几乎没有影像上差别。</p>
+<h4 id="YUV"><a href="#YUV" class="headerlink" title="YUV"></a>YUV</h4><p>YUV，分为三个分量，“Y”表示明亮度（Luminance或Luma），也就是灰度值；而“U”和“V” 表示的则是色度、浓度（Chrominance、Chroma），作用是描述影像色彩及饱和度，用于指定像素的颜色。没有UV是黑白的。<br>YUV码流有多种不同的格式，要分析YUV码流，就必须搞清楚你面对的到底是哪一种格式，并且必须搞清楚这种格式的YUV采样和分布情况。</p>
+<p>YUV格式有两大类：planar和packed。<br>紧缩格式（packed formats）：将Y、U、V值存储成Macro Pixels数组，和RGB的存放方式类似。<br>平面格式（planar formats）：将Y、U、V的三个分量分别存放在不同的矩阵中。</p>
+<p>采样方式:YUV4:4:4，YUV4:2:2，YUV4:2:0  。YUV A:B:C的意思一般是指基于4个象素来讲,其中Y采样了A次，U采样了B次,V采样了C次.</p>
+<p><img src="https://i.loli.net/2019/04/23/5cbf06ada943b.jpg" alt="24439730_13282389538k8V.jpg"></p>
+<p>常用420planar ,X264在进行编码的时候需要标准的YUV（4：2：0）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">YUV420比较常用，分为YUV420p和YUV420sp</div><div class="line">    YUV420p：又叫planer平面模式，Y ，U，V分别再不同平面，也就是有三个平面。分为</div><div class="line">        I420:又叫YU12，安卓的模式。存储顺序是先存Y，再存U，最后存V。YYYYUUUVVV</div><div class="line">        YV12:存储顺序是先存Y，再存V，最后存U。YYYVVVUUU</div><div class="line">    YUV420sp：又叫bi-planer或two-planer双平面，Y一个平面，UV在同一个平面交叉存储。分为</div><div class="line">        NV12:IOS只有这一种模式。存储顺序是先存Y，再UV交替存储。YYYYUVUVUV</div><div class="line">        NV21:安卓的模式。存储顺序是先存Y，再VU交替存储。YYYYVUVUVU</div></pre></td></tr></table></figure></p>
+<p>内存计算420:<br>width <em> hight =Y（总和） width </em> hight为多少像素 Y占一个字节<br>U = Y / 4   V = Y / 4<br>所以一个YUV是1.5个字节用于表示一个像素。<br>分辨率:一帧视频的大小，表示长宽像素个数。<br>帧率:每秒钟视频帧数 FPS<br>所以采集大小为:width <em> hight </em> 1.5 <em> frame </em> time</p>
+<h4 id="RGB"><a href="#RGB" class="headerlink" title="RGB"></a>RGB</h4><p>很常见，可参考:<br><a href="https://blog.csdn.net/byhook/article/details/84262330" target="_blank" rel="external">https://blog.csdn.net/byhook/article/details/84262330</a></p>
+<p>也是要按不同格式分开处理</p>
+<h3 id="PCM音频采样数据"><a href="#PCM音频采样数据" class="headerlink" title="PCM音频采样数据"></a>PCM音频采样数据</h3><p><img src="https://i.loli.net/2019/04/23/5cbf06ade2b38.png" alt="20160117235313221.png"><br>是直接供音频驱动使用的数据流格式<br>用Adobe Audition可以查看PCM</p>
+<p>采样频率：即取样频率,指每秒钟取得声音样本的次数。采样频率越高,声音的质量也就越好,声音的还原也就越真实，但同时它占的资源比较多。由于人耳的分辨率很有限,太高的频率并不能分辨出来。在16位声卡中有22KHz、44KHz等几级,其中，22KHz相当于普通FM广播的音质，44KHz已相当于CD音质了，目前的常用采样频率都不超过48KHz。<br>采样位数：即采样值或取样值（就是将采样样本幅度量化）。它是用来衡量声音波动变化的一个参数，也可以说是声卡的分辨率。它的数值越大，分辨率也就越高，所发出声音的能力越强。<br>声道数：单双<br>时长： 采样的时长</p>
+<p>采样频率和采样位数越大，对模拟信号的拟合越好。</p>
+<p>存储方式:<br>如果是单声道的音频文件，采样数据按时间的先后顺序依次存入（有的时候也会采用LRLRLR方式存储，只是另一个声道的数据为0），如果是双声道的话就按照LRLRLR的方式存储，存储的时候还和机器的大小端有关。<br>44100HZ 16bit stereo: 每秒钟有 44100 次采样, 采样数据用 16 位(2字节)记录, 双声道(立体声);<br>22050HZ 8bit  mono: 每秒钟有 22050 次采样, 采样数据用 8 位(1字节)记录, 单声道;</p>
+<h3 id="视频编码的基本原理"><a href="#视频编码的基本原理" class="headerlink" title="视频编码的基本原理"></a>视频编码的基本原理</h3><p>数据冗余:空间冗余、时间冗余、结构冗余、信息冗余。图像像素间存在相关性，无损压缩<br>视觉冗余:人眼的特性，适量误差也行。有损压缩</p>
+<p>具体的编码方法学习建议参考书籍。很数学理论的内容</p>
+<h3 id="音频编码的基本原理"><a href="#音频编码的基本原理" class="headerlink" title="音频编码的基本原理"></a>音频编码的基本原理</h3><p>冗余:音频中不能被人耳感知的信号。20Hz-20kHz。频谱掩蔽效应与时域掩蔽效应</p>
+<p>封装与协议需根据项目需求分析，毕竟太多了，还是紧跟前沿标准好些。</p>
+<h2 id="FFmpeg入门"><a href="#FFmpeg入门" class="headerlink" title="FFmpeg入门"></a>FFmpeg入门</h2><p>源码级跨平台</p>
+<h3 id="ffmpeg程序"><a href="#ffmpeg程序" class="headerlink" title="ffmpeg程序"></a>ffmpeg程序</h3><p>编译好的程序:<br>ffmpeg:用于转码的应用程序<br>ffplay:用于播放的应用程序<br>ffprobe:查看文件格式</p>
+<h3 id="ffmpeg库"><a href="#ffmpeg库" class="headerlink" title="ffmpeg库"></a>ffmpeg库</h3><p><a href="https://blog.csdn.net/leixiaohua1020/article/details/15811977" target="_blank" rel="external">https://blog.csdn.net/leixiaohua1020/article/details/15811977</a><br>他写了很多很简短有用的demo，各个平台的功能。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ol>
+<li>RGB、YUY数据是如何从内存显示的?具体的系统调用与实现代码。</li>
+</ol>
+<p>不论什么外设都是IO端口几种交互方式。DMA、俩种IO地址方式。我只是不知道具体的软件层级功能实现。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多媒体/" rel="tag"># 多媒体</a>
+          
+            <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/05/为什么不玩玩多媒体呢/" rel="next" title="为什么不玩玩多媒体呢">
+                <i class="fa fa-chevron-left"></i> 为什么不玩玩多媒体呢
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">109</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">89</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译"><span class="nav-number">2.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ffmpeg入门前置知识"><span class="nav-number">3.</span> <span class="nav-text">ffmpeg入门前置知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#理论层面的音视频技术"><span class="nav-number">3.1.</span> <span class="nav-text">理论层面的音视频技术</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#视频播放原理"><span class="nav-number">3.1.1.</span> <span class="nav-text">视频播放原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流媒体协议"><span class="nav-number">3.1.2.</span> <span class="nav-text">流媒体协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#封装格式"><span class="nav-number">3.1.3.</span> <span class="nav-text">封装格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#视频编码"><span class="nav-number">3.1.4.</span> <span class="nav-text">视频编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#音频编码"><span class="nav-number">3.1.5.</span> <span class="nav-text">音频编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#现有网络视音频平台对比"><span class="nav-number">3.1.6.</span> <span class="nav-text">现有网络视音频平台对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RGB、YUV视频像素数据"><span class="nav-number">3.2.</span> <span class="nav-text">RGB、YUV视频像素数据</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#颜色"><span class="nav-number">3.2.1.</span> <span class="nav-text">颜色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#色度抽样"><span class="nav-number">3.2.2.</span> <span class="nav-text">色度抽样</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YUV"><span class="nav-number">3.2.3.</span> <span class="nav-text">YUV</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RGB"><span class="nav-number">3.2.4.</span> <span class="nav-text">RGB</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCM音频采样数据"><span class="nav-number">3.3.</span> <span class="nav-text">PCM音频采样数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#视频编码的基本原理"><span class="nav-number">3.4.</span> <span class="nav-text">视频编码的基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#音频编码的基本原理"><span class="nav-number">3.5.</span> <span class="nav-text">音频编码的基本原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FFmpeg入门"><span class="nav-number">4.</span> <span class="nav-text">FFmpeg入门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ffmpeg程序"><span class="nav-number">4.1.</span> <span class="nav-text">ffmpeg程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ffmpeg库"><span class="nav-number">4.2.</span> <span class="nav-text">ffmpeg库</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">5.</span> <span class="nav-text">问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
