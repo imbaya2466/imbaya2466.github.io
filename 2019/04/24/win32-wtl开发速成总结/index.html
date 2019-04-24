@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="windows,win32,实习,UI," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言任务要求使用到windows展现界面，因此速成学习了一段时间，在此做下总结。 以后写工具可以迅速使用win界面速成一个图形界面。这样很方便使用！ 资料:《Windows程序设计(第5版)》MSDNStack Overflow">
+<meta name="keywords" content="windows,win32,实习,UI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="win32+wtl开发速成总结">
+<meta property="og:url" content="http://yoursite.com/2019/04/24/win32-wtl开发速成总结/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言任务要求使用到windows展现界面，因此速成学习了一段时间，在此做下总结。 以后写工具可以迅速使用win界面速成一个图形界面。这样很方便使用！ 资料:《Windows程序设计(第5版)》MSDNStack Overflow">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-24T15:41:49.714Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="win32+wtl开发速成总结">
+<meta name="twitter:description" content="前言任务要求使用到windows展现界面，因此速成学习了一段时间，在此做下总结。 以后写工具可以迅速使用win界面速成一个图形界面。这样很方便使用！ 资料:《Windows程序设计(第5版)》MSDNStack Overflow">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/24/win32-wtl开发速成总结/"/>
+
+
+
+
+
+  <title>win32+wtl开发速成总结 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/24/win32-wtl开发速成总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">win32+wtl开发速成总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-24T23:38:05+08:00">
+                2019-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/windows/" itemprop="url" rel="index">
+                    <span itemprop="name">windows</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>任务要求使用到windows展现界面，因此速成学习了一段时间，在此做下总结。</p>
+<p>以后写工具可以迅速使用win界面速成一个图形界面。这样很方便使用！</p>
+<p>资料:<br>《Windows程序设计(第5版)》<br>MSDN<br>Stack Overflow</p>
+<a id="more"></a>
+<h2 id="基本的win32开发"><a href="#基本的win32开发" class="headerlink" title="基本的win32开发"></a>基本的win32开发</h2><p>核心设计理念:<br>windows给程序发送消息，调用api是程序向win发送消息。</p>
+<p>句柄:指向结构体的指针。具体结构体与资源的关系暂为猜测。句柄一般代表着系统资源对象。</p>
+<p>命名:一般变量-小写字母开头表示类型，然后单词首字母大写。结构体变量-结构体小写形式开头或全部名。</p>
+<p>编码:所有调用、字串使用T即可，可根据项目设定化为utf或多字节，编码与存储无关，存储的话一律用string。<br>不论什么编码一律用string，存的是字节，方便处理，不同编码接口处解析为不同的即可，特别是针对windows程序。仅在图形界面接口处转化存储格式或编码格式。推荐使用utf-8</p>
+<p>基本信息注册:为了分阶段、部分信息重用，Create时已经填满了全部所需信息所以分配内存出来句柄了。<br>RegisterClassEx是窗口的注册，指定画刷、基本支持等，控件是系统注册好的。<br>这个是创建窗口类型，下面是用窗口类型创建窗口。<br>消息处理函数与窗口类型绑定</p>
+<p>内部创建<br>CreateWindowEx提供了创建窗口所需的全部内容，在图内创建list、tree也只需要用它提供的定义即可。因为其指定了父、基于父的位置，大小等信息。</p>
+<p>显示:此时用画刷擦好<br>ShowWindow(hWnd, nCmdShow);</p>
+<p>重绘:此时发出重绘消息重绘<br>UpdateWindow(hWnd);  发送WM_PAINT消息。当部分或全部需要重绘时也会发送该消息。</p>
+<p>经典的消息循环:  这个过程是自己在用代码驱动事件响应，系统只是负责传输和分发到具体的位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//获取消息   000表示该线程全部消息   </div><div class="line">    while (GetMessage(&amp;msg, nullptr, 0, 0))</div><div class="line">    &#123;</div><div class="line">        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &amp;msg))</div><div class="line">        &#123;</div><div class="line">//转化</div><div class="line">            TranslateMessage(&amp;msg);</div><div class="line">//发给windows 让其分发到合适的窗口</div><div class="line">            DispatchMessage(&amp;msg);</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>由于父创建的窗口消息可以部分或全部由父处理。基于此实现控件。<br>具体实现就是将子窗口的消息过程中调用SendMessage向父发送交由父处理，这种模式使子窗口预定义成为控件。<br>因此控件直接create就行。</p>
+<p>消息是同步、有序的方式处理的，绑定线程，不会被打断。当窗口过程返回后DispatchMessage才返回，WM_PAINT处理完UpdateWindow才返回。</p>
+<p>控件:<br>控件已经有系统注册好，并有预定义的名称，直接调用createWindow即可。<br>可以直接在对话框里当资源拖或者用代码在正常窗口中构造。<br>用MoveWindow调整其位置和大小。<br>并提供了方法可以父窗口将消息发送给子控件，来控制子控件。</p>
+<p>用对话框使用控件更高层，因为处理了tab等焦点问题。</p>
+<p>注册表实际上是一个层次型数据库，用来储存系统和应用的海量配置信息</p>
+<h2 id="wtl界面库"><a href="#wtl界面库" class="headerlink" title="wtl界面库"></a>wtl界面库</h2><p>微软员工内部维护的图形库，基于ATL封装。使用只需添加一些.h文件</p>
+<p>使c式的win32应用面向对象封装，并提供了大量方便的功能与宏封装，便于高效开发。</p>
+<p>win32的资源通过rc文件建立id与具体文件的索引关系。</p>
+<p>创建SDI:</p>
+<ol>
+<li>派生框架类</li>
+<li>宏指定工具条与菜单资源ID</li>
+<li>添加消息处理</li>
+</ol>
+<p>对话框创建时链接控件资源只需要:m_wndList.Attach ( GetDlgItem(IDC_LIST) );即可。</p>
+<h2 id="速成开发"><a href="#速成开发" class="headerlink" title="速成开发"></a>速成开发</h2><p>熟悉基本概念后，直接使用wtl以对话框为view构建引导程序。之后使用控件拖拽速成界面，处理下size，主要消息可直接在控件消息处点击添加。<br>之后具体使用的控件消息、方法、结构体只需要MSDN+google+Stack Overflow即可解决。</p>
+<p>VS 开发ide中的航空母舰…win自家的开发更是不要更爽…F1直接看文档</p>
+<h3 id="一些有点忘了的内容"><a href="#一些有点忘了的内容" class="headerlink" title="一些有点忘了的内容"></a>一些有点忘了的内容</h3><p>使用lib需注意两个文件：<br>（1）.h头文件，包含lib中说明输出的类或符号原型或数据结构。应用程序调用lib时，需要将该文件包含入应用程序的源文件中。<br>（2）.LIB文件，静态链接库<br>就是linux的a，一个lib文件实际上也是任意个obj文件的集合</p>
+<p>使用dll需注意三个文件：<br>（1）.h头文件，包含dll中说明输出的类或符号原型或数据结构的.h文件。应用程序调用dll时，需要将该文件包含入应用程序的源文件中。<br>（2）.LIB文件，是dll在编译、链接成功之后生成的文件，作用是当其他应用程序调用dll时，需要将该文件引入应用程序，用于带入dll的实现。如果不想用lib文件或者没有lib文件，可以用WIN32 API函数LoadLibrary、GetProcAddress装载。<br>（3）.dll文件，真正的可执行文件，开发成功后的应用程序在发布时，只需要有.exe文件和.dll文件，并不需要.lib文件和.h头文件。<br>就是linux的so</p>
+<p>文件格式与elf类似，暂不详细分析..</p>
+<h2 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h2><h3 id="内部项目使用的logcat"><a href="#内部项目使用的logcat" class="headerlink" title="内部项目使用的logcat"></a>内部项目使用的logcat</h3><p>地址:</p>
+<h3 id="数据分析展示工具"><a href="#数据分析展示工具" class="headerlink" title="数据分析展示工具"></a>数据分析展示工具</h3><p>一个可自定义数据格式、自定义过滤条件、自定义数据展示的应用</p>
+<p>地址:</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/windows/" rel="tag"># windows</a>
+          
+            <a href="/tags/win32/" rel="tag"># win32</a>
+          
+            <a href="/tags/实习/" rel="tag"># 实习</a>
+          
+            <a href="/tags/UI/" rel="tag"># UI</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/23/实习面试总结/" rel="next" title="实习面试总结">
+                <i class="fa fa-chevron-left"></i> 实习面试总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/24/SQLite使用-简单分析/" rel="prev" title="SQLite使用+简单分析">
+                SQLite使用+简单分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">112</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本的win32开发"><span class="nav-number">2.</span> <span class="nav-text">基本的win32开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wtl界面库"><span class="nav-number">3.</span> <span class="nav-text">wtl界面库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#速成开发"><span class="nav-number">4.</span> <span class="nav-text">速成开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一些有点忘了的内容"><span class="nav-number">4.1.</span> <span class="nav-text">一些有点忘了的内容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目"><span class="nav-number">5.</span> <span class="nav-text">项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内部项目使用的logcat"><span class="nav-number">5.1.</span> <span class="nav-text">内部项目使用的logcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分析展示工具"><span class="nav-number">5.2.</span> <span class="nav-text">数据分析展示工具</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
