@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="windows,win32,实习,UI," />
+  <meta name="keywords" content="win32,实习,UI,windows," />
 
 
 
@@ -95,14 +95,14 @@
 
 
 <meta name="description" content="前言任务要求使用到windows展现界面，因此速成学习了一段时间，在此做下总结。 以后写工具可以迅速使用win界面速成一个图形界面。这样很方便使用！ 资料:《Windows程序设计(第5版)》MSDNStack Overflow">
-<meta name="keywords" content="windows,win32,实习,UI">
+<meta name="keywords" content="win32,实习,UI,windows">
 <meta property="og:type" content="article">
 <meta property="og:title" content="win32+wtl开发速成总结">
 <meta property="og:url" content="http://yoursite.com/2019/04/24/win32-wtl开发速成总结/index.html">
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言任务要求使用到windows展现界面，因此速成学习了一段时间，在此做下总结。 以后写工具可以迅速使用win界面速成一个图形界面。这样很方便使用！ 资料:《Windows程序设计(第5版)》MSDNStack Overflow">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-24T15:41:49.714Z">
+<meta property="og:updated_time" content="2019-05-04T15:41:39.948Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="win32+wtl开发速成总结">
 <meta name="twitter:description" content="前言任务要求使用到windows展现界面，因此速成学习了一段时间，在此做下总结。 以后写工具可以迅速使用win界面速成一个图形界面。这样很方便使用！ 资料:《Windows程序设计(第5版)》MSDNStack Overflow">
@@ -379,7 +379,7 @@
 <h2 id="基本的win32开发"><a href="#基本的win32开发" class="headerlink" title="基本的win32开发"></a>基本的win32开发</h2><p>核心设计理念:<br>windows给程序发送消息，调用api是程序向win发送消息。</p>
 <p>句柄:指向结构体的指针。具体结构体与资源的关系暂为猜测。句柄一般代表着系统资源对象。</p>
 <p>命名:一般变量-小写字母开头表示类型，然后单词首字母大写。结构体变量-结构体小写形式开头或全部名。</p>
-<p>编码:所有调用、字串使用T即可，可根据项目设定化为utf或多字节，编码与存储无关，存储的话一律用string。<br>不论什么编码一律用string，存的是字节，方便处理，不同编码接口处解析为不同的即可，特别是针对windows程序。仅在图形界面接口处转化存储格式或编码格式。推荐使用utf-8</p>
+<p>编码:所有调用、字串使用T即可，可根据项目设定化为utf或多字节，编码与存储无关，存储的话一律用string。<br>不论什么编码一律用string，存的是字节，方便处理，不同编码接口处解析为不同的即可，特别是针对windows程序。仅在图形界面接口处转化存储格式或编码格式。推荐使用utf-8<br>关于编码处理:<br><a href="https://blog.csdn.net/charlessimonyi/article/details/8722859" target="_blank" rel="external">https://blog.csdn.net/charlessimonyi/article/details/8722859</a><br>只要读的时候都用string读，在win界面上显示的时候转化为多字节或utf-16显示即可<br>windows显示的时候都是俩套api，显示的数据格式是宽字符或者多字节、显示的编码使用系统默认:图形下是UTF-16与GBK<br>windows的字符转化是将字符串映射到UTF-16（宽字符）字符串。来源的编码任意。或将UTF-16（宽字符）字符串映射到新字符串。新字符集编码任意可指定<br>因此读取utf-8(为不定字节编码)，输出时转化为utf-16的宽字符即可输出。</p>
 <p>基本信息注册:为了分阶段、部分信息重用，Create时已经填满了全部所需信息所以分配内存出来句柄了。<br>RegisterClassEx是窗口的注册，指定画刷、基本支持等，控件是系统注册好的。<br>这个是创建窗口类型，下面是用窗口类型创建窗口。<br>消息处理函数与窗口类型绑定</p>
 <p>内部创建<br>CreateWindowEx提供了创建窗口所需的全部内容，在图内创建list、tree也只需要用它提供的定义即可。因为其指定了父、基于父的位置，大小等信息。</p>
 <p>显示:此时用画刷擦好<br>ShowWindow(hWnd, nCmdShow);</p>
@@ -390,6 +390,8 @@
 <p>控件:<br>控件已经有系统注册好，并有预定义的名称，直接调用createWindow即可。<br>可以直接在对话框里当资源拖或者用代码在正常窗口中构造。<br>用MoveWindow调整其位置和大小。<br>并提供了方法可以父窗口将消息发送给子控件，来控制子控件。</p>
 <p>用对话框使用控件更高层，因为处理了tab等焦点问题。</p>
 <p>注册表实际上是一个层次型数据库，用来储存系统和应用的海量配置信息</p>
+<h3 id="其它坑"><a href="#其它坑" class="headerlink" title="其它坑"></a>其它坑</h3><p>Runtime Library<br>MT MTd MD MDd    代表着win下运行库的选择<br>静态/动态*debug/relese<br>项目与库均需使用一种指示，<br>经测试组合冲突发生无特定规律….<br>目前还没试出来哪个组合会发生冲突..</p>
+<p>cpp 类成员变量默认初始化，基本类型与类对象区别对待，基本类型与在类外一样-看具体位置获取初始值-即初始值不定。</p>
 <h2 id="wtl界面库"><a href="#wtl界面库" class="headerlink" title="wtl界面库"></a>wtl界面库</h2><p>微软员工内部维护的图形库，基于ATL封装。使用只需添加一些.h文件</p>
 <p>使c式的win32应用面向对象封装，并提供了大量方便的功能与宏封装，便于高效开发。</p>
 <p>win32的资源通过rc文件建立id与具体文件的索引关系。</p>
@@ -407,7 +409,7 @@
 <p>文件格式与elf类似，暂不详细分析..</p>
 <h2 id="项目"><a href="#项目" class="headerlink" title="项目"></a>项目</h2><h3 id="内部项目使用的logcat"><a href="#内部项目使用的logcat" class="headerlink" title="内部项目使用的logcat"></a>内部项目使用的logcat</h3><p>地址:</p>
 <h3 id="数据分析展示工具"><a href="#数据分析展示工具" class="headerlink" title="数据分析展示工具"></a>数据分析展示工具</h3><p>一个可自定义数据格式、自定义过滤条件、自定义数据展示的应用</p>
-<p>地址:</p>
+<p>地址:<a href="https://github.com/imbaya2466/AnyLog" target="_blank" rel="external">https://github.com/imbaya2466/AnyLog</a></p>
 
       
     </div>
@@ -425,13 +427,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/windows/" rel="tag"># windows</a>
-          
             <a href="/tags/win32/" rel="tag"># win32</a>
           
             <a href="/tags/实习/" rel="tag"># 实习</a>
           
             <a href="/tags/UI/" rel="tag"># UI</a>
+          
+            <a href="/tags/windows/" rel="tag"># windows</a>
           
         </div>
       
@@ -533,7 +535,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">112</span>
+                <span class="site-state-item-count">113</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -555,7 +557,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">95</span>
+                <span class="site-state-item-count">97</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -590,7 +592,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本的win32开发"><span class="nav-number">2.</span> <span class="nav-text">基本的win32开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wtl界面库"><span class="nav-number">3.</span> <span class="nav-text">wtl界面库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#速成开发"><span class="nav-number">4.</span> <span class="nav-text">速成开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一些有点忘了的内容"><span class="nav-number">4.1.</span> <span class="nav-text">一些有点忘了的内容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目"><span class="nav-number">5.</span> <span class="nav-text">项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内部项目使用的logcat"><span class="nav-number">5.1.</span> <span class="nav-text">内部项目使用的logcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分析展示工具"><span class="nav-number">5.2.</span> <span class="nav-text">数据分析展示工具</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本的win32开发"><span class="nav-number">2.</span> <span class="nav-text">基本的win32开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#其它坑"><span class="nav-number">2.1.</span> <span class="nav-text">其它坑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wtl界面库"><span class="nav-number">3.</span> <span class="nav-text">wtl界面库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#速成开发"><span class="nav-number">4.</span> <span class="nav-text">速成开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一些有点忘了的内容"><span class="nav-number">4.1.</span> <span class="nav-text">一些有点忘了的内容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目"><span class="nav-number">5.</span> <span class="nav-text">项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内部项目使用的logcat"><span class="nav-number">5.1.</span> <span class="nav-text">内部项目使用的logcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分析展示工具"><span class="nav-number">5.2.</span> <span class="nav-text">数据分析展示工具</span></a></li></ol></li></ol></div>
             
 
           </div>

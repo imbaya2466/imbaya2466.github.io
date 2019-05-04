@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="实习,修养,规范," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言本篇总结一个很重要的修养，在CodeReview时代码的易读性十分重要，CodeReview提升代码质量、减少bug，降低修复成本，团队系统共享。我现在(第一次团队中开发)写的代码就是一坨shi……因此总结下代码命名规范、格式规范、注释规范、结构设计等的规范。 没有规范与风格的代码就是垃圾！！以后代码必须精炼、鲁棒、规范！！">
+<meta name="keywords" content="实习,修养,规范">
+<meta property="og:type" content="article">
+<meta property="og:title" content="代码规范">
+<meta property="og:url" content="http://yoursite.com/2019/05/04/代码规范/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言本篇总结一个很重要的修养，在CodeReview时代码的易读性十分重要，CodeReview提升代码质量、减少bug，降低修复成本，团队系统共享。我现在(第一次团队中开发)写的代码就是一坨shi……因此总结下代码命名规范、格式规范、注释规范、结构设计等的规范。 没有规范与风格的代码就是垃圾！！以后代码必须精炼、鲁棒、规范！！">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-04T15:36:03.960Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="代码规范">
+<meta name="twitter:description" content="前言本篇总结一个很重要的修养，在CodeReview时代码的易读性十分重要，CodeReview提升代码质量、减少bug，降低修复成本，团队系统共享。我现在(第一次团队中开发)写的代码就是一坨shi……因此总结下代码命名规范、格式规范、注释规范、结构设计等的规范。 没有规范与风格的代码就是垃圾！！以后代码必须精炼、鲁棒、规范！！">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/04/代码规范/"/>
+
+
+
+
+
+  <title>代码规范 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/04/代码规范/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">代码规范</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-04T23:33:53+08:00">
+                2019-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/修养/" itemprop="url" rel="index">
+                    <span itemprop="name">修养</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇总结一个很重要的修养，在CodeReview时代码的易读性十分重要，CodeReview提升代码质量、减少bug，降低修复成本，团队系统共享。<br>我现在(第一次团队中开发)写的代码就是一坨shi……<br>因此总结下代码命名规范、格式规范、注释规范、结构设计等的规范。</p>
+<p>没有规范与风格的代码就是垃圾！！<br>以后代码必须精炼、鲁棒、规范！！</p>
+<a id="more"></a>
+<h2 id="代码规范"><a href="#代码规范" class="headerlink" title="代码规范"></a>代码规范</h2><p>参考:<a href="https://zh-google-styleguide.readthedocs.io/en/latest/" target="_blank" rel="external">https://zh-google-styleguide.readthedocs.io/en/latest/</a></p>
+<h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><h4 id="自足"><a href="#自足" class="headerlink" title="自足"></a>自足</h4><p>一个文件一个类，.h为接口、.cc为实现。每个cc对应一个h。<br>所有头文件要能够自给自足，用户不需要包含额外的文件来使用头文件。一个模板或内联函数在h中定义，static不用</p>
+<h4 id="保护"><a href="#保护" class="headerlink" title="保护"></a>保护</h4><p>使用define保护全头文件，命名:<code>&lt;PROJECT&gt;_&lt;PATH&gt;_&lt;FILE&gt;_H_</code> </p>
+<h4 id="前置声明"><a href="#前置声明" class="headerlink" title="前置声明"></a>前置声明</h4><p>尽可能地避免使用前置声明。使用 #include 包含需要的头文件即可。</p>
+<h4 id="内敛函数"><a href="#内敛函数" class="headerlink" title="内敛函数"></a>内敛函数</h4><p>只有当函数只有 10 行甚至更少时才将其定义为内联函数.  </p>
+<h4 id="include的顺序"><a href="#include的顺序" class="headerlink" title="include的顺序"></a>include的顺序</h4><p>使用标准的头文件包含顺序可增强可读性, 避免隐藏依赖，顺序: 此文件相关头文件, C 库, C++ 库, 其他库的 .h, 本项目内的 .h.  仅在需要的文件添加</p>
+<ol>
+<li>本文件对应的 </li>
+<li>C 系统文件</li>
+<li>C++ 系统文件</li>
+<li>其他库的 .h 文件</li>
+<li>本项目内 .h 文件</li>
+</ol>
+<p>您所依赖的符号 (symbols) 被哪些头文件所定义，您就应该包含（include）哪些头文件，不管某个头是否已经包含过了</p>
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><h4 id="命名空间"><a href="#命名空间" class="headerlink" title="命名空间"></a>命名空间</h4><p>在 .cc 文件中定义一个不需要被外部引用的变量时，可以将它们放在匿名命名空间或声明为 static 。但是不要在 .h 文件中这么做。.-为了使声明仅在该模块内<br>使用具名的命名空间时, 其名称可基于项目名或相对路径. 禁止使用 using 指示（using-directive）。<br>不要using整个命名空间，不要在头文件中别名-保证文件的独立性，不污染命名空间</p>
+<h4 id="静态与全局函数"><a href="#静态与全局函数" class="headerlink" title="静态与全局函数"></a>静态与全局函数</h4><p>使用静态成员函数或命名空间内的非成员函数, 尽量不要用裸的全局函数. 将一系列函数直接置于命名空间中，不要用类的静态方法模拟出命名空间的效果，类的静态方法应当和类的实例或静态数据紧密相关.</p>
+<h4 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h4><p>将函数变量尽可能置于最小作用域内, 并在变量声明时进行初始化. 离第一次使用越近越好。有一个例外, 如果变量是一个对象, 每次进入作用域都要调用其构造函数, 每次退出作用域都要调用其析构函数. 这会导致效率降低.</p>
+<h3 id="类"><a href="#类" class="headerlink" title="类"></a>类</h3><h4 id="构造函数的职责"><a href="#构造函数的职责" class="headerlink" title="构造函数的职责"></a>构造函数的职责</h4><p>不要在构造函数中调用虚函数, 也不要在无法报出错误时进行可能失败的初始化.使用init或工厂。</p>
+<h4 id="隐式类型转换"><a href="#隐式类型转换" class="headerlink" title="隐式类型转换"></a>隐式类型转换</h4><p>不要定义隐式类型转换. 对于转换运算符和单参数构造函数, 请使用 explicit 关键字.</p>
+<h4 id="可拷贝类型和可移动类型"><a href="#可拷贝类型和可移动类型" class="headerlink" title="可拷贝类型和可移动类型"></a>可拷贝类型和可移动类型</h4><p>如果你的类型需要, 就让它们支持拷贝 / 移动. 否则, 就把隐式产生的拷贝和移动函数禁用.</p>
+<h4 id="结构体-VS-类"><a href="#结构体-VS-类" class="headerlink" title="结构体 VS. 类"></a>结构体 VS. 类</h4><p>仅当只有数据成员时使用 struct, 其它一概使用 class</p>
+<h4 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h4><p>使用组合常常比使用继承更合理. 如果使用继承的话, 定义为 public 继承.</p>
+<h4 id="多重继承"><a href="#多重继承" class="headerlink" title="多重继承"></a>多重继承</h4><p>真正需要用到多重实现继承的情况少之又少. 只在以下情况我们才允许多重继承: 最多只有一个基类是非抽象类; 其它基类都是以 Interface 为后缀的 纯接口类.</p>
+<h4 id="运算符重载"><a href="#运算符重载" class="headerlink" title="运算符重载"></a>运算符重载</h4><p>除少数特定环境外, 不要重载运算符. 也不要创建用户定义字面量.</p>
+<h4 id="存取控制"><a href="#存取控制" class="headerlink" title="存取控制"></a>存取控制</h4><p>将 所有 数据成员声明为 private, 除非是 static const 类型成员。</p>
+<h4 id="声明顺序"><a href="#声明顺序" class="headerlink" title="声明顺序"></a>声明顺序</h4><p>类定义一般应以 public: 开始, 后跟 protected:, 最后是 private:. 省略空部分.<br>在各个部分中, 建议将类似的声明放在一起, 并且建议以如下的顺序: 类型 (包括 typedef, using 和嵌套的结构体与类), 常量, 工厂函数, 构造函数, 赋值运算符, 析构函数, 其它函数, 数据成员.</p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><h4 id="参数顺序"><a href="#参数顺序" class="headerlink" title="参数顺序"></a>参数顺序</h4><p>函数的参数顺序为: 输入参数在先, 后跟输出参数.</p>
+<h4 id="编写简短函数"><a href="#编写简短函数" class="headerlink" title="编写简短函数"></a>编写简短函数</h4><p>我们倾向于编写简短, 凝练的函数.<br>如果函数超过 40 行, 可以思索一下能不能在不影响程序结构的前提下对其进行分割.</p>
+<h4 id="引用参数"><a href="#引用参数" class="headerlink" title="引用参数"></a>引用参数</h4><p>所有按引用传递的参数必须加上 const.<br>输入参数是值参或 const 引用, 输出参数为指针. 输入参数可以是 const 指针<br>输入参数必须是不可更改的，输出才是可改的</p>
+<h4 id="函数重载"><a href="#函数重载" class="headerlink" title="函数重载"></a>函数重载</h4><p>若要使用函数重载, 则必须能让读者一看调用点就胸有成竹, 而不用花心思猜测调用的重载函数到底是哪一种. 这一规则也适用于构造函数.</p>
+<h4 id="缺省参数"><a href="#缺省参数" class="headerlink" title="缺省参数"></a>缺省参数</h4><p>只允许在非虚函数中使用缺省参数, 且必须保证缺省参数的值始终一致. 缺省参数与 函数重载 遵循同样的规则. 一般情况下建议使用函数重载, 尤其是在缺省函数带来的可读性提升不能弥补下文中所提到的缺点的情况下.</p>
+<h4 id="后置语法"><a href="#后置语法" class="headerlink" title="后置语法"></a>后置语法</h4><p>只有在常规写法 (返回类型前置) 不便于书写或不便于阅读时使用返回类型后置语法.</p>
+<h4 id="动态分配"><a href="#动态分配" class="headerlink" title="动态分配"></a>动态分配</h4><p>动态分配出的对象最好有单一且固定的所有主, 并通过智能指针传递所有权.</p>
+<h3 id="其他语言特性"><a href="#其他语言特性" class="headerlink" title="其他语言特性"></a>其他语言特性</h3><h4 id="变长数组"><a href="#变长数组" class="headerlink" title="变长数组"></a>变长数组</h4><p>不允许使用变长数组和 alloca().</p>
+<h4 id="友元"><a href="#友元" class="headerlink" title="友元"></a>友元</h4><p>允许合理的使用友元类及友元函数.</p>
+<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>我们不使用 C++ 异常.—这个自己定</p>
+<h4 id="RTTI"><a href="#RTTI" class="headerlink" title="RTTI"></a>RTTI</h4><p>禁止</p>
+<h4 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h4><p>使用 C++ 的类型转换, 如 static_cast&lt;&gt;(). 不要使用 int y = (int)x 或 int y = int(x) 等转换方式。</p>
+<h4 id="流"><a href="#流" class="headerlink" title="流"></a>流</h4><p>只在记录日志时使用流.</p>
+<h4 id="前置自增和自减"><a href="#前置自增和自减" class="headerlink" title="前置自增和自减"></a>前置自增和自减</h4><p>对于迭代器和其他模板对象使用前缀形式 (++i) 的自增, 自减运算符.</p>
+<h4 id="const-用法"><a href="#const-用法" class="headerlink" title="const 用法"></a>const 用法</h4><p>我们强烈建议你在任何可能的情况下都要使用 const</p>
+<h4 id="整形"><a href="#整形" class="headerlink" title="整形"></a>整形</h4><p>C++ 内建整型中, 仅使用 int. 如果程序中需要不同大小的变量, 可以使用 &lt; stdint.h&gt; 中长度精确的整型, 如 int16_t.如果您的变量可能不小于 2^31 (2GiB), 就用 64 位变量比如 int64_t.<br>无符号数慎重</p>
+<h4 id="64-位下的可移植性"><a href="#64-位下的可移植性" class="headerlink" title="64 位下的可移植性"></a>64 位下的可移植性</h4><p>代码应该对 64 位和 32 位系统友好. 处理打印, 比较, 结构体对齐时应切记</p>
+<h4 id="预处理宏"><a href="#预处理宏" class="headerlink" title="预处理宏"></a>预处理宏</h4><p>使用宏时要非常谨慎, 尽量以内联函数, 枚举和常量代替之。不要在 .h 文件中定义宏.</p>
+<h4 id="nullptr-和-NULL"><a href="#nullptr-和-NULL" class="headerlink" title="nullptr 和 NULL"></a>nullptr 和 NULL</h4><p>整数用 0, 实数用 0.0, 指针用 nullptr 或 NULL, 字符 (串) 用 ‘\0’.<br>整数用 0, 实数用 0.0, 这一点是毫无争议的. C++11 项目用 nullptr</p>
+<h4 id="auto"><a href="#auto" class="headerlink" title="auto"></a>auto</h4><p>用 auto 绕过烦琐的类型名，只要可读性好就继续用，别用在局部变量之外的地方。</p>
+<h4 id="Lambda-表达式"><a href="#Lambda-表达式" class="headerlink" title="Lambda 表达式"></a>Lambda 表达式</h4><p>适当使用 lambda 表达式。别用默认 lambda 捕获，所有捕获都要显式写出来。</p>
+<h4 id="模板编程"><a href="#模板编程" class="headerlink" title="模板编程"></a>模板编程</h4><p>不要使用复杂的模板编程</p>
+<h3 id="命名约定"><a href="#命名约定" class="headerlink" title="命名约定"></a>命名约定</h3><h4 id="通用命名规则"><a href="#通用命名规则" class="headerlink" title="通用命名规则"></a>通用命名规则</h4><p>函数命名, 变量命名, 文件命名要有描述性; 少用缩写.<br>尽可能使用描述性的命名</p>
+<h4 id="文件命名"><a href="#文件命名" class="headerlink" title="文件命名"></a>文件命名</h4><p>文件名要全部小写，使用_分割单词。定义类时文件名一般成对出现。</p>
+<h4 id="类型命名"><a href="#类型命名" class="headerlink" title="类型命名"></a>类型命名</h4><p>类型名称的每个单词首字母均大写, 不包含下划线: MyExcitingClass, MyExcitingEnum.<br>所有类型命名 —— 类, 结构体, 类型定义 (typedef), 枚举, 类型模板参数 —— 均使用相同约定, 即以大写字母开始, 每个单词首字母均大写, 不包含下划线. </p>
+<h4 id="变量命名"><a href="#变量命名" class="headerlink" title="变量命名"></a>变量命名</h4><p>变量 (包括函数参数) 和数据成员名一律小写, 单词之间用下划线连接.<br>类的成员变量以下划线结尾, 但结构体的就不用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">string table_name;</div><div class="line">class TableInfo &#123;</div><div class="line">  ...</div><div class="line"> private:</div><div class="line">  string table_name_;  // 好 - 后加下划线.</div><div class="line">  static Pool&lt;TableInfo&gt;* pool_;  // 好.</div><div class="line">&#125;;</div><div class="line">struct UrlTableProperties &#123;</div><div class="line">  string name;</div><div class="line">  int num_entries;</div><div class="line">  static Pool&lt;UrlTableProperties&gt;* pool;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h4 id="常量命名"><a href="#常量命名" class="headerlink" title="常量命名"></a>常量命名</h4><p>声明为 constexpr 或 const 的变量, 或在程序运行期间其值始终保持不变的, 命名时以 “k” 开头, 大小写混合<br>所有具有静态存储类型的变量 (例如静态变量或全局变量) 都应当以此方式命名<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const int kDaysInAWeek = 7;</div></pre></td></tr></table></figure></p>
+<h4 id="函数命名"><a href="#函数命名" class="headerlink" title="函数命名"></a>函数命名</h4><p>常规函数使用大小写混合, 取值和设值函数则要求与变量名匹配<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">AddTableEntry()</div><div class="line">DeleteUrl()</div><div class="line">OpenFileOrDie()</div><div class="line"></div><div class="line">取值和设值函数的命名与变量一致. 一般来说它们的名称与实际的成员变量对应, 但并不强制要求. </div><div class="line">例如 int count() 与 void set_count(int count).</div></pre></td></tr></table></figure></p>
+<p>(同样的命名规则同时适用于类作用域与命名空间作用域的常量, 因为它们是作为 API 的一部分暴露对外的, 因此应当让它们看起来像是一个函数）</p>
+<h4 id="命名空间命名"><a href="#命名空间命名" class="headerlink" title="命名空间命名"></a>命名空间命名</h4><p>命名空间以小写字母命名. 最高级命名空间的名字取决于项目名称</p>
+<h4 id="枚举命名"><a href="#枚举命名" class="headerlink" title="枚举命名"></a>枚举命名</h4><p>举的命名应当和 常量 或 宏 一致: kEnumName 或是 ENUM_NAME.</p>
+<h4 id="宏命名"><a href="#宏命名" class="headerlink" title="宏命名"></a>宏命名</h4><p>一般不用宏<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">MY_MACRO_THAT_SCARES_SMALL_CHILDREN</div></pre></td></tr></table></figure></p>
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>注释虽然写起来很痛苦, 但对保证代码可读性至关重要. 下面的规则描述了如何注释以及在哪儿注释. 当然也要记住: 注释固然很重要, 但最好的代码应当本身就是文档. 有意义的类型名和变量名, 要远胜过要用注释解释的含糊不清的名字.</p>
+<h4 id="注释风格"><a href="#注释风格" class="headerlink" title="注释风格"></a>注释风格</h4><p>使用 // 或 /<em> </em>/, 统一就好.</p>
+<h4 id="文件注释"><a href="#文件注释" class="headerlink" title="文件注释"></a>文件注释</h4><p>在每一个文件开头加入版权公告.<br>文件注释描述了该文件的内容.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">/*</div><div class="line"> *  Copyright (c) 2013 The WebRTC project authors. All Rights Reserved.</div><div class="line"> *</div><div class="line"> *  Use of this source code is governed by a BSD-style license</div><div class="line"> *  that can be found in the LICENSE file in the root of the source</div><div class="line"> *  tree. An additional intellectual property rights grant can be found</div><div class="line"> *  in the file PATENTS.  All contributing project authors may</div><div class="line"> *  be found in the AUTHORS file in the root of the source tree.</div><div class="line"> */</div></pre></td></tr></table></figure></p>
+<h4 id="类注释"><a href="#类注释" class="headerlink" title="类注释"></a>类注释</h4><p>每个类的定义都要附带一份注释, 描述类的功能和用法<br>如果类的声明和定义分开了(例如分别放在了 .h 和 .cc 文件中), 此时, 描述类用法的注释应当和接口定义放在一起, 描述类的操作和实现的注释应当和实现放在一起.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// Iterates over the contents of a GargantuanTable.</div><div class="line">// Example:</div><div class="line">//    GargantuanTableIterator* iter = table-&gt;NewIterator();</div><div class="line">//    for (iter-&gt;Seek(&quot;foo&quot;); !iter-&gt;done(); iter-&gt;Next()) &#123;</div><div class="line">//      process(iter-&gt;key(), iter-&gt;value());</div><div class="line">//    &#125;</div><div class="line">//    delete iter;</div></pre></td></tr></table></figure></p>
+<h4 id="函数注释"><a href="#函数注释" class="headerlink" title="函数注释"></a>函数注释</h4><p>函数声明处的注释描述函数功能; 定义处的注释描述函数实现.<br>函数声明处注释的内容:</p>
+<ol>
+<li>函数的输入输出.</li>
+<li>对类成员函数而言: 函数调用期间对象是否需要保持引用参数, 是否会释放这些参数.</li>
+<li>函数是否分配了必须由调用者释放的空间.</li>
+<li>参数是否可以为空指针.</li>
+<li>是否存在函数使用上的性能隐患.</li>
+<li>如果函数是可重入的, 其同步前提是什么?</li>
+</ol>
+<p>注释构造/析构函数时, 切记读代码的人知道构造/析构函数的功能, 所以 “销毁这一对象” 这样的注释是没有意义的. 你应当注明的是注明构造函数对参数做了什么 (例如, 是否取得指针所有权) 以及析构函数清理了什么<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// Returns an iterator for this table.  It is the client&apos;s</div><div class="line">// responsibility to delete the iterator when it is done with it,</div><div class="line">// and it must not use the iterator once the GargantuanTable object</div><div class="line">// on which the iterator was created has been deleted.</div><div class="line">//</div><div class="line">// The iterator is initially positioned at the beginning of the table.</div><div class="line">//</div><div class="line">// This method is equivalent to:</div><div class="line">//    Iterator* iter = table-&gt;NewIterator();</div><div class="line">//    iter-&gt;Seek(&quot;&quot;);</div><div class="line">//    return iter;</div><div class="line">// If you are going to immediately seek to another place in the</div><div class="line">// returned iterator, it will be faster to use NewIterator()</div><div class="line">// and avoid the extra seek.</div><div class="line">Iterator* GetIterator() const;</div></pre></td></tr></table></figure></p>
+<p>如果函数的实现过程中用到了很巧妙的方式, 那么在函数定义处应当加上解释性的注释. 例如, 你所使用的编程技巧, 实现的大致步骤, 或解释如此实现的理由. </p>
+<h4 id="变量注释"><a href="#变量注释" class="headerlink" title="变量注释"></a>变量注释</h4><p>通常变量名本身足以很好说明变量用途. 某些情况下, 也需要额外的注释说明.<br>每个类数据成员 (也叫实例变量或成员变量) 都应该用注释说明用途. 如果有非变量的参数(例如特殊值, 数据成员之间的关系, 生命周期等)不能够用类型与变量名明确表达, 则应当加上注释.<br>和数据成员一样, 所有全局变量也要注释说明含义及用途, 以及作为全局变量的原因</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">private:</div><div class="line"> // Used to bounds-check table accesses. -1 means</div><div class="line"> // that we don&apos;t yet know how many entries the table has.</div><div class="line"> int num_total_entries_;</div></pre></td></tr></table></figure>
+<h4 id="实现注释"><a href="#实现注释" class="headerlink" title="实现注释"></a>实现注释</h4><p>对于代码中巧妙的, 晦涩的, 有趣的, 重要的地方加以注释</p>
+<p>代码前、行注释均可<br>函数实际参数注释:如果函数参数的意义不明显</p>
+<p>不要描述显而易见的现象, 永远不要 用自然语言翻译代码作为注释, 除非即使对深入理解 C++ 的读者来说代码的行为都是不明显的. 要假设读代码的人 C++ 水平比你高, 即便他/她可能不知道你的用意</p>
+<h4 id="标点-拼写和语法"><a href="#标点-拼写和语法" class="headerlink" title="标点, 拼写和语法"></a>标点, 拼写和语法</h4><p>注释的通常写法是包含正确大小写和结尾句号的完整叙述性语句. 大多数情况下, 完整的句子比句子片段可读性更高. 短一点的注释, 比如代码行尾注释, 可以随意点, 但依然要注意风格的一致性.</p>
+<h4 id="TODO注释"><a href="#TODO注释" class="headerlink" title="TODO注释"></a>TODO注释</h4><p>对那些临时的, 短期的解决方案, 或已经够好但仍不完美的代码使用 TODO 注释.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// TODO(kl@gmail.com): Use a &quot;*&quot; here for concatenation operator.</div><div class="line">// TODO(Zeke) change this to use relations.</div><div class="line">// TODO(bug 12345): remove the &quot;Last visitors&quot; feature</div></pre></td></tr></table></figure>
+<h4 id="弃用注释"><a href="#弃用注释" class="headerlink" title="弃用注释"></a>弃用注释</h4><p>通过弃用注释（DEPRECATED comments）以标记某接口点已弃用.</p>
+<h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><h4 id="行长度"><a href="#行长度" class="headerlink" title="行长度"></a>行长度</h4><p>每一行代码字符数&lt;80</p>
+<h4 id="非ascii"><a href="#非ascii" class="headerlink" title="非ascii"></a>非ascii</h4><p>尽量不使用非 ASCII 字符, 使用时必须使用 UTF-8 编码.<br>别用 C++11 的 char16_t 和 char32_t, 它们和 UTF-8 文本没有关系, wchar_t<br>存储格式和编码没有关系，字节存就对了</p>
+<h4 id="空格还是制表位"><a href="#空格还是制表位" class="headerlink" title="空格还是制表位"></a>空格还是制表位</h4><p>只使用空格, 每次缩进 2 个空格.</p>
+<h4 id="函数声明与定义"><a href="#函数声明与定义" class="headerlink" title="函数声明与定义"></a>函数声明与定义</h4><p>返回类型和函数名在同一行, 参数也尽量放在同一行, 如果放不下就对形参分行, 分行方式与 函数调用 一致.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ReturnType ClassName::ReallyLongFunctionName(Type par_name1, Type par_name2,</div><div class="line">                                             Type par_name3) &#123;</div><div class="line">  DoSomething();</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ol>
+<li>使用好的参数名.</li>
+<li>只有在参数未被使用或者其用途非常明显时, 才能省略参数名.</li>
+<li>如果返回类型和函数名在一行放不下, 分行.</li>
+<li>如果返回类型与函数声明或定义分行了, 不要缩进.</li>
+<li>左圆括号总是和函数名在同一行.</li>
+<li>函数名和左圆括号间永远没有空格.</li>
+<li>圆括号与参数间没有空格.</li>
+<li>左大括号总在最后一个参数同一行的末尾处, 不另起新行.</li>
+<li>右大括号总是单独位于函数最后一行, 或者与左大括号同一行.</li>
+<li>右圆括号和左大括号间总是有一个空格.</li>
+<li>所有形参应尽可能对齐.</li>
+<li>缺省缩进为 2 个空格.</li>
+<li>换行后的参数保持 4 个空格的缩进.</li>
+</ol>
+<h4 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h4><p>要么一行写完函数调用, 要么在圆括号里对参数分行, 要么参数另起一行且缩进四格. 如果没有其它顾虑的话, 尽可能精简行数, 比如把多个参数适当地放在同一行里.</p>
+<h4 id="列表初始化格式"><a href="#列表初始化格式" class="headerlink" title="列表初始化格式"></a>列表初始化格式</h4><p>与函数调用同</p>
+<h4 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h4><p>倾向于不在圆括号内使用空格. 关键字 if 和 else 另起一行.与()同行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">if (condition) &#123;  // 圆括号里没有空格.</div><div class="line">  ...  // 2 空格缩进.</div><div class="line">&#125; else if (...) &#123;  // else 与 if 的右括号同一行.</div><div class="line">  ...</div><div class="line">&#125; else &#123;</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="循环和开关选择语句"><a href="#循环和开关选择语句" class="headerlink" title="循环和开关选择语句"></a>循环和开关选择语句</h4><p>switch 语句可以使用大括号分段, 以表明 cases 之间不是连在一起的. 在单语句循环里, 括号可用可不用. 空循环体应使用 {} 或 continue.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">switch (var) &#123;</div><div class="line">  case 0: &#123;  // 2 空格缩进</div><div class="line">    ...      // 4 空格缩进</div><div class="line">    break;</div><div class="line">  &#125;</div><div class="line">  case 1: &#123;</div><div class="line">    ...</div><div class="line">    break;</div><div class="line">  &#125;</div><div class="line">  default: &#123;</div><div class="line">    assert(false);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="变量及数组初始化"><a href="#变量及数组初始化" class="headerlink" title="变量及数组初始化"></a>变量及数组初始化</h4><p>用 =, () 和 {} 均可.</p>
+<h4 id="预处理指令"><a href="#预处理指令" class="headerlink" title="预处理指令"></a>预处理指令</h4><p>预处理指令不要缩进, 从行首开始.</p>
+<h4 id="类格式"><a href="#类格式" class="headerlink" title="类格式"></a>类格式</h4><p>访问控制块的声明依次序是 public:, protected:, private:, 每个都缩进 1 个空格.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">class MyClass : public OtherClass &#123;</div><div class="line"> public:      // 注意有一个空格的缩进</div><div class="line">  MyClass();  // 标准的两空格缩进</div><div class="line">  explicit MyClass(int var);</div><div class="line">  ~MyClass() &#123;&#125;</div><div class="line"></div><div class="line">  void SomeFunction();</div><div class="line">  void SomeFunctionThatDoesNothing() &#123;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  void set_some_var(int var) &#123; some_var_ = var; &#125;</div><div class="line">  int some_var() const &#123; return some_var_; &#125;</div><div class="line"></div><div class="line"> private:</div><div class="line">  bool SomeInternalFunction();</div><div class="line"></div><div class="line">  int some_var_;</div><div class="line">  int some_other_var_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h4 id="构造函数初始值列表"><a href="#构造函数初始值列表" class="headerlink" title="构造函数初始值列表"></a>构造函数初始值列表</h4><p>构造函数初始化列表放在同一行或按四格缩进并排多行.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// 如果初始化列表需要置于多行, 将每一个成员放在单独的一行</div><div class="line">// 并逐行对齐</div><div class="line">MyClass::MyClass(int var)</div><div class="line">    : some_var_(var),             // 4 space indent</div><div class="line">      some_other_var_(var + 1) &#123;  // lined up</div><div class="line">  DoSomething();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h4 id="命名空间格式化"><a href="#命名空间格式化" class="headerlink" title="命名空间格式化"></a>命名空间格式化</h4><p>命名空间内容不缩进</p>
+<h4 id="垂直留白"><a href="#垂直留白" class="headerlink" title="垂直留白"></a>垂直留白</h4><p>这不仅仅是规则而是原则问题了: 不在万不得已, 不要使用空行. 尤其是: 两个函数定义之间的空行不要超过 2 行, 函数体首尾不要留空行, 函数体中也不要随意添加空行.</p>
+<h2 id="代码逻辑注意点"><a href="#代码逻辑注意点" class="headerlink" title="代码逻辑注意点"></a>代码逻辑注意点</h2><p>函数参数数量一般不要超过三个<br>函数功能尽力单一！尽力单一！<br>类职责单一！<br>错误处理统一！<br>接口设计</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/实习/" rel="tag"># 实习</a>
+          
+            <a href="/tags/修养/" rel="tag"># 修养</a>
+          
+            <a href="/tags/规范/" rel="tag"># 规范</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/24/SQLite使用-简单分析/" rel="next" title="SQLite使用+简单分析">
+                <i class="fa fa-chevron-left"></i> SQLite使用+简单分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">113</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码规范"><span class="nav-number">2.</span> <span class="nav-text">代码规范</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件"><span class="nav-number">2.1.</span> <span class="nav-text">文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#自足"><span class="nav-number">2.1.1.</span> <span class="nav-text">自足</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#保护"><span class="nav-number">2.1.2.</span> <span class="nav-text">保护</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前置声明"><span class="nav-number">2.1.3.</span> <span class="nav-text">前置声明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内敛函数"><span class="nav-number">2.1.4.</span> <span class="nav-text">内敛函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#include的顺序"><span class="nav-number">2.1.5.</span> <span class="nav-text">include的顺序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作用域"><span class="nav-number">2.2.</span> <span class="nav-text">作用域</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#命名空间"><span class="nav-number">2.2.1.</span> <span class="nav-text">命名空间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态与全局函数"><span class="nav-number">2.2.2.</span> <span class="nav-text">静态与全局函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#局部变量"><span class="nav-number">2.2.3.</span> <span class="nav-text">局部变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类"><span class="nav-number">2.3.</span> <span class="nav-text">类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#构造函数的职责"><span class="nav-number">2.3.1.</span> <span class="nav-text">构造函数的职责</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#隐式类型转换"><span class="nav-number">2.3.2.</span> <span class="nav-text">隐式类型转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可拷贝类型和可移动类型"><span class="nav-number">2.3.3.</span> <span class="nav-text">可拷贝类型和可移动类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结构体-VS-类"><span class="nav-number">2.3.4.</span> <span class="nav-text">结构体 VS. 类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承"><span class="nav-number">2.3.5.</span> <span class="nav-text">继承</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多重继承"><span class="nav-number">2.3.6.</span> <span class="nav-text">多重继承</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#运算符重载"><span class="nav-number">2.3.7.</span> <span class="nav-text">运算符重载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#存取控制"><span class="nav-number">2.3.8.</span> <span class="nav-text">存取控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#声明顺序"><span class="nav-number">2.3.9.</span> <span class="nav-text">声明顺序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">2.4.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参数顺序"><span class="nav-number">2.4.1.</span> <span class="nav-text">参数顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写简短函数"><span class="nav-number">2.4.2.</span> <span class="nav-text">编写简短函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用参数"><span class="nav-number">2.4.3.</span> <span class="nav-text">引用参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数重载"><span class="nav-number">2.4.4.</span> <span class="nav-text">函数重载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺省参数"><span class="nav-number">2.4.5.</span> <span class="nav-text">缺省参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#后置语法"><span class="nav-number">2.4.6.</span> <span class="nav-text">后置语法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态分配"><span class="nav-number">2.4.7.</span> <span class="nav-text">动态分配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他语言特性"><span class="nav-number">2.5.</span> <span class="nav-text">其他语言特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#变长数组"><span class="nav-number">2.5.1.</span> <span class="nav-text">变长数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#友元"><span class="nav-number">2.5.2.</span> <span class="nav-text">友元</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常"><span class="nav-number">2.5.3.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RTTI"><span class="nav-number">2.5.4.</span> <span class="nav-text">RTTI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类型转换"><span class="nav-number">2.5.5.</span> <span class="nav-text">类型转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流"><span class="nav-number">2.5.6.</span> <span class="nav-text">流</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前置自增和自减"><span class="nav-number">2.5.7.</span> <span class="nav-text">前置自增和自减</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#const-用法"><span class="nav-number">2.5.8.</span> <span class="nav-text">const 用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#整形"><span class="nav-number">2.5.9.</span> <span class="nav-text">整形</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64-位下的可移植性"><span class="nav-number">2.5.10.</span> <span class="nav-text">64 位下的可移植性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#预处理宏"><span class="nav-number">2.5.11.</span> <span class="nav-text">预处理宏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nullptr-和-NULL"><span class="nav-number">2.5.12.</span> <span class="nav-text">nullptr 和 NULL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#auto"><span class="nav-number">2.5.13.</span> <span class="nav-text">auto</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Lambda-表达式"><span class="nav-number">2.5.14.</span> <span class="nav-text">Lambda 表达式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模板编程"><span class="nav-number">2.5.15.</span> <span class="nav-text">模板编程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命名约定"><span class="nav-number">2.6.</span> <span class="nav-text">命名约定</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通用命名规则"><span class="nav-number">2.6.1.</span> <span class="nav-text">通用命名规则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件命名"><span class="nav-number">2.6.2.</span> <span class="nav-text">文件命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类型命名"><span class="nav-number">2.6.3.</span> <span class="nav-text">类型命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变量命名"><span class="nav-number">2.6.4.</span> <span class="nav-text">变量命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常量命名"><span class="nav-number">2.6.5.</span> <span class="nav-text">常量命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数命名"><span class="nav-number">2.6.6.</span> <span class="nav-text">函数命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命名空间命名"><span class="nav-number">2.6.7.</span> <span class="nav-text">命名空间命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#枚举命名"><span class="nav-number">2.6.8.</span> <span class="nav-text">枚举命名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#宏命名"><span class="nav-number">2.6.9.</span> <span class="nav-text">宏命名</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注释"><span class="nav-number">2.7.</span> <span class="nav-text">注释</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注释风格"><span class="nav-number">2.7.1.</span> <span class="nav-text">注释风格</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件注释"><span class="nav-number">2.7.2.</span> <span class="nav-text">文件注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类注释"><span class="nav-number">2.7.3.</span> <span class="nav-text">类注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数注释"><span class="nav-number">2.7.4.</span> <span class="nav-text">函数注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变量注释"><span class="nav-number">2.7.5.</span> <span class="nav-text">变量注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现注释"><span class="nav-number">2.7.6.</span> <span class="nav-text">实现注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标点-拼写和语法"><span class="nav-number">2.7.7.</span> <span class="nav-text">标点, 拼写和语法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TODO注释"><span class="nav-number">2.7.8.</span> <span class="nav-text">TODO注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#弃用注释"><span class="nav-number">2.7.9.</span> <span class="nav-text">弃用注释</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#格式"><span class="nav-number">2.8.</span> <span class="nav-text">格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#行长度"><span class="nav-number">2.8.1.</span> <span class="nav-text">行长度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非ascii"><span class="nav-number">2.8.2.</span> <span class="nav-text">非ascii</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#空格还是制表位"><span class="nav-number">2.8.3.</span> <span class="nav-text">空格还是制表位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数声明与定义"><span class="nav-number">2.8.4.</span> <span class="nav-text">函数声明与定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#函数调用"><span class="nav-number">2.8.5.</span> <span class="nav-text">函数调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#列表初始化格式"><span class="nav-number">2.8.6.</span> <span class="nav-text">列表初始化格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#条件语句"><span class="nav-number">2.8.7.</span> <span class="nav-text">条件语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#循环和开关选择语句"><span class="nav-number">2.8.8.</span> <span class="nav-text">循环和开关选择语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#变量及数组初始化"><span class="nav-number">2.8.9.</span> <span class="nav-text">变量及数组初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#预处理指令"><span class="nav-number">2.8.10.</span> <span class="nav-text">预处理指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类格式"><span class="nav-number">2.8.11.</span> <span class="nav-text">类格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构造函数初始值列表"><span class="nav-number">2.8.12.</span> <span class="nav-text">构造函数初始值列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命名空间格式化"><span class="nav-number">2.8.13.</span> <span class="nav-text">命名空间格式化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#垂直留白"><span class="nav-number">2.8.14.</span> <span class="nav-text">垂直留白</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码逻辑注意点"><span class="nav-number">3.</span> <span class="nav-text">代码逻辑注意点</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
