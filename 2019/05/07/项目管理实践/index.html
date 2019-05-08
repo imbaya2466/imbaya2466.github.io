@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言学校教过软件工程，但最后除了文档内容&amp;amp;规范其他剩下的并不多(形成了写文档的习惯)，真正具有实践指导意义的项目流程理解还需亲身经历。这里简记下具有实践意义的内容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-07T15:56:54.590Z">
+<meta property="og:updated_time" content="2019-05-08T14:54:00.969Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="项目管理实践">
 <meta name="twitter:description" content="前言学校教过软件工程，但最后除了文档内容&amp;amp;规范其他剩下的并不多(形成了写文档的习惯)，真正具有实践指导意义的项目流程理解还需亲身经历。这里简记下具有实践意义的内容。">
@@ -403,6 +403,20 @@
 <h2 id="持续交付"><a href="#持续交付" class="headerlink" title="持续交付"></a>持续交付</h2><p>在持续集成的基础上，更进一步，持续交付系统上点击一个按钮就可以完成从编译到版本上线的动作。<br>技术侧是要能做到每一次代码提交都要可交付的。</p>
 <p>此时集中服务器应该还管理证书、异常上报SDK自动接入、发布相关功能的管理等功能</p>
 <h2 id="持续部署"><a href="#持续部署" class="headerlink" title="持续部署"></a>持续部署</h2><p>对于每一次代码变更，都要能部署到生产环境。<br>特别需要热更新的基础支持。</p>
+<h2 id="git相关再记"><a href="#git相关再记" class="headerlink" title="git相关再记"></a>git相关再记</h2><p>虽然一直用但没怎么记录和深入理解过…</p>
+<p>fetch下拉远端的分支到本地，但是不进行与本地库的合并，可以检测本地库是否可提交(合并)到远端库<br>pull后会将本地支合并到下拉的远端支，此时本地的修改可以成为远端支上的一次提交，此时可以push</p>
+<p>pull时:<br>原:<br>1 2<br>1 2</p>
+<p>如果本地什么都没做，远端有修改(提交)<br>本地变为远端的样子<br>1 2 3<br>1 2</p>
+<p>此时如果本地有修改没有提交到本地支，远端有修改(其他提交)<br>会提示本地修改需要提交，否则会失去<br>1 2 3<br>1 2(有修改未提交)</p>
+<p>此时如果本地有修改没有提交到本地支，远端无修改(其他提交)<br>一样的状态，所以什么都不会发生<br>1 2<br>1 2(有修改未提交)</p>
+<p>如果此时修改的在本地并且已经提交，远端也有修改，则分俩种:<br>有冲突:需要修改冲突进行合并，此时相当于在远端拉下的之中进行了修改提交的支<br>无冲突:修改部分不同，可以直接合并，成为基于远端拉下之中进行修改提交的支<br>1 2 3<br>1 2 4</p>
+<p>如果此时修改的在本地并且已经提交，远端无修改，<br>本地不变，因为比远端的多了一次提交，可以直接push<br>1 2<br>1 2 3</p>
+<p>有修改提交代表着有新的节点，以线上的节点形容好理解些</p>
+<h3 id="实际使用时"><a href="#实际使用时" class="headerlink" title="实际使用时"></a>实际使用时</h3><p>下班时的样子:<br>1 2<br>1 2</p>
+<p>上班时的样子:<br>1 2|1 2 3<br>1 2|1 2 </p>
+<p>pull即可成为:<br>1 2 3<br>1 2 3</p>
+<p>写代码，成为上面的6种之一，pull，修改，成为:<br>1 2 3<br>1 2 3 4</p>
+<p>之后build测试、push。<br>push仅在pull之后成为如下时:<br>1 2 3<br>1 2 3 4</p>
 
       
     </div>
@@ -575,7 +589,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续集成"><span class="nav-number">2.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#须知"><span class="nav-number">2.1.</span> <span class="nav-text">须知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#好处"><span class="nav-number">2.2.</span> <span class="nav-text">好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续交付"><span class="nav-number">3.</span> <span class="nav-text">持续交付</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续部署"><span class="nav-number">4.</span> <span class="nav-text">持续部署</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续集成"><span class="nav-number">2.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#须知"><span class="nav-number">2.1.</span> <span class="nav-text">须知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#好处"><span class="nav-number">2.2.</span> <span class="nav-text">好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续交付"><span class="nav-number">3.</span> <span class="nav-text">持续交付</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续部署"><span class="nav-number">4.</span> <span class="nav-text">持续部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git相关再记"><span class="nav-number">5.</span> <span class="nav-text">git相关再记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实际使用时"><span class="nav-number">5.1.</span> <span class="nav-text">实际使用时</span></a></li></ol></li></ol></div>
             
 
           </div>
