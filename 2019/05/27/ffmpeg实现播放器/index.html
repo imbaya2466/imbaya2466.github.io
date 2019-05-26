@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="前言逐步深入多媒体技术。 前置知识补充除了前篇必会的https://xn--74q78i15hxv3arigm4e.cn/2019/04/23/FFmpeg-%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA%E4%B8%8E%E5%85%A5%E9%97%A8/https://xn--74q78i15hxv3arigm4e.cn/2019/04/05/%E4%B8%BA%E">
+<meta name="description" content="前言逐步深入多媒体技术。">
 <meta name="keywords" content="多媒体,FFmpeg">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ffmpeg实现播放器">
 <meta property="og:url" content="http://yoursite.com/2019/05/27/ffmpeg实现播放器/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="前言逐步深入多媒体技术。 前置知识补充除了前篇必会的https://xn--74q78i15hxv3arigm4e.cn/2019/04/23/FFmpeg-%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA%E4%B8%8E%E5%85%A5%E9%97%A8/https://xn--74q78i15hxv3arigm4e.cn/2019/04/05/%E4%B8%BA%E">
+<meta property="og:description" content="前言逐步深入多媒体技术。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-26T16:14:09.665Z">
+<meta property="og:updated_time" content="2019-05-26T16:20:56.494Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ffmpeg实现播放器">
-<meta name="twitter:description" content="前言逐步深入多媒体技术。 前置知识补充除了前篇必会的https://xn--74q78i15hxv3arigm4e.cn/2019/04/23/FFmpeg-%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA%E4%B8%8E%E5%85%A5%E9%97%A8/https://xn--74q78i15hxv3arigm4e.cn/2019/04/05/%E4%B8%BA%E">
+<meta name="twitter:description" content="前言逐步深入多媒体技术。">
 
 
 
@@ -373,6 +373,7 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>逐步深入多媒体技术。</p>
+<a id="more"></a>
 <h2 id="前置知识补充"><a href="#前置知识补充" class="headerlink" title="前置知识补充"></a>前置知识补充</h2><p>除了前篇必会的<br><a href="https://xn--74q78i15hxv3arigm4e.cn/2019/04/23/FFmpeg-%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA%E4%B8%8E%E5%85%A5%E9%97%A8/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2019/04/23/FFmpeg-%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA%E4%B8%8E%E5%85%A5%E9%97%A8/</a><br><a href="https://xn--74q78i15hxv3arigm4e.cn/2019/04/05/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%8E%A9%E7%8E%A9%E5%A4%9A%E5%AA%92%E4%BD%93%E5%91%A2/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2019/04/05/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%8E%A9%E7%8E%A9%E5%A4%9A%E5%AA%92%E4%BD%93%E5%91%A2/</a></p>
 <p>接下来介绍些开发中需要用到的前置</p>
 <h3 id="PPM格式"><a href="#PPM格式" class="headerlink" title="PPM格式"></a>PPM格式</h3><p>一种简单的图像格式<br>头:<br>pn\n表示内容与格式<br>图像宽度 高度\n<br>最大像素值\n 0-255<br>后面直接按pn的要求存图像数据即可</p>

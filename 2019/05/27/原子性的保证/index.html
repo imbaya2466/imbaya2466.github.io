@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="操作原子性x86中内存读写操作是原子的可以使用LOCK锁定总线cache coherency保证cache原子性 x=y 多线程不安全  不原子x++ 多线程不安全  不原子++x lock inc    原子x=1 多线程安全    原子 Bit field（位域）1234567891011121314151617181920struct foo &amp;#123;    int flag : 1;">
+<meta name="description" content="前言有时困扰的原子性问题">
 <meta name="keywords" content="多线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="原子性的保证">
 <meta property="og:url" content="http://yoursite.com/2019/05/27/原子性的保证/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="操作原子性x86中内存读写操作是原子的可以使用LOCK锁定总线cache coherency保证cache原子性 x=y 多线程不安全  不原子x++ 多线程不安全  不原子++x lock inc    原子x=1 多线程安全    原子 Bit field（位域）1234567891011121314151617181920struct foo &amp;#123;    int flag : 1;">
+<meta property="og:description" content="前言有时困扰的原子性问题">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-26T16:03:58.641Z">
+<meta property="og:updated_time" content="2019-05-26T16:21:33.005Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="原子性的保证">
-<meta name="twitter:description" content="操作原子性x86中内存读写操作是原子的可以使用LOCK锁定总线cache coherency保证cache原子性 x=y 多线程不安全  不原子x++ 多线程不安全  不原子++x lock inc    原子x=1 多线程安全    原子 Bit field（位域）1234567891011121314151617181920struct foo &amp;#123;    int flag : 1;">
+<meta name="twitter:description" content="前言有时困扰的原子性问题">
 
 
 
@@ -372,7 +372,9 @@
       
 
       
-        <h3 id="操作原子性"><a href="#操作原子性" class="headerlink" title="操作原子性"></a>操作原子性</h3><p>x86中<br>内存读写操作是原子的<br>可以使用LOCK锁定总线<br>cache coherency保证cache原子性</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>有时困扰的原子性问题</p>
+<a id="more"></a>
+<h3 id="操作原子性"><a href="#操作原子性" class="headerlink" title="操作原子性"></a>操作原子性</h3><p>x86中<br>内存读写操作是原子的<br>可以使用LOCK锁定总线<br>cache coherency保证cache原子性</p>
 <p>x=y 多线程不安全  不原子<br>x++ 多线程不安全  不原子<br>++x lock inc    原子<br>x=1 多线程安全    原子</p>
 <h3 id="Bit-field（位域）"><a href="#Bit-field（位域）" class="headerlink" title="Bit field（位域）"></a>Bit field（位域）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">struct foo &#123;</div><div class="line">    int flag : 1;</div><div class="line">    int counter : 15;</div><div class="line">&#125;;</div><div class="line"> </div><div class="line">struct foo my_foo;</div><div class="line"> </div><div class="line">/* ... */</div><div class="line"> </div><div class="line">/* in thread 1 */</div><div class="line"> </div><div class="line">pthread_mutex_lock(&amp;my_mutex_for_flag);</div><div class="line">my_foo.flag = !my_foo.flag;</div><div class="line">pthread_mutex_unlock(&amp;my_mutex_for_flag);</div><div class="line"> </div><div class="line">/* in thread 2 */</div><div class="line"> </div><div class="line">pthread_mutex_lock(&amp;my_mutex_for_counter);</div><div class="line">++my_foo.counter;</div><div class="line">pthread_mutex_unlock(&amp;my_mutex_for_counter);</div></pre></td></tr></table></figure>
 <p>即使分别加锁，仍然不能保证线程安全，如上。</p>
@@ -559,7 +561,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#操作原子性"><span class="nav-number">1.</span> <span class="nav-text">操作原子性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bit-field（位域）"><span class="nav-number">2.</span> <span class="nav-text">Bit field（位域）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实际使用的锁"><span class="nav-number">3.</span> <span class="nav-text">实际使用的锁</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#操作原子性"><span class="nav-number">1.1.</span> <span class="nav-text">操作原子性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bit-field（位域）"><span class="nav-number">1.2.</span> <span class="nav-text">Bit field（位域）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实际使用的锁"><span class="nav-number">1.3.</span> <span class="nav-text">实际使用的锁</span></a></li></ol></li></ol></div>
             
 
           </div>

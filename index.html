@@ -375,70 +375,14 @@
 
       
         
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>逐步深入多媒体技术。</p>
-<h2 id="前置知识补充"><a href="#前置知识补充" class="headerlink" title="前置知识补充"></a>前置知识补充</h2><p>除了前篇必会的<br><a href="https://xn--74q78i15hxv3arigm4e.cn/2019/04/23/FFmpeg-%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA%E4%B8%8E%E5%85%A5%E9%97%A8/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2019/04/23/FFmpeg-%E5%9F%BA%E7%A1%80%E7%90%86%E8%AE%BA%E4%B8%8E%E5%85%A5%E9%97%A8/</a><br><a href="https://xn--74q78i15hxv3arigm4e.cn/2019/04/05/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%8E%A9%E7%8E%A9%E5%A4%9A%E5%AA%92%E4%BD%93%E5%91%A2/" target="_blank" rel="external">https://xn--74q78i15hxv3arigm4e.cn/2019/04/05/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%8E%A9%E7%8E%A9%E5%A4%9A%E5%AA%92%E4%BD%93%E5%91%A2/</a></p>
-<p>接下来介绍些开发中需要用到的前置</p>
-<h3 id="PPM格式"><a href="#PPM格式" class="headerlink" title="PPM格式"></a>PPM格式</h3><p>一种简单的图像格式<br>头:<br>pn\n表示内容与格式<br>图像宽度 高度\n<br>最大像素值\n 0-255<br>后面直接按pn的要求存图像数据即可</p>
-<h3 id="SDL"><a href="#SDL" class="headerlink" title="SDL"></a>SDL</h3><p>wiki: <a href="https://zh.wikipedia.org/wiki/SDL" target="_blank" rel="external">https://zh.wikipedia.org/wiki/SDL</a><br>SDL(Simple DirectMedia Layer)开源的跨平台多媒体开发库。<br>其跨平台方式是源码跨平台，分发不同平台的链接库</p>
-<p>其目的是精简控制图像声音与输入工具所需要的代码，因此其实现基本为各个平台系统库的再包装。<br>如win上为directX、linux为Xlib。此外还提供了很多功能函数库(网络等)</p>
-<h3 id="openGL"><a href="#openGL" class="headerlink" title="openGL"></a>openGL</h3><p>跨语言、平台的专注图形渲染库，图形加速硬件需要厂商提供驱动实现。</p>
-<h3 id="directX"><a href="#directX" class="headerlink" title="directX"></a>directX</h3><p>linux下的驱动:硬件-&gt;驱动实现-&gt;注册为设备(字符设备、块设备)-&gt;成为文件系统-&gt;对外系统调用接口(read\write)</p>
-<p>微软系统专为多媒体以及游戏开发的应用程序接口，硬件厂商需要为每款硬件产品写DX驱动。</p>
-<h3 id="PTS、DTS"><a href="#PTS、DTS" class="headerlink" title="PTS、DTS"></a>PTS、DTS</h3><p>视编码中，并不是每一帧都是完整的画面，处理分为:<br>I帧:仅利用单帧图像内的空间相关性压缩<br>P帧:空间与时间都参考，向前时间参考<br>B帧:空间与时间都参考，双向时间参考，B帧不可作为参考</p>
-<p>DTS（Decoding Time Stamp）：即解码时间戳，这个时间戳的意义在于告诉播放器该在什么时候解码这一帧的数据。<br>PTS（Presentation Time Stamp）：即显示时间戳，这个时间戳用来告诉播放器该在什么时候显示这一帧的数据。</p>
-<p>当没有b帧时，二者通常一致，有b帧时，DTS告诉解码顺序，PTS告诉显示顺序<br>采集顺序与显示顺序相同。编码顺序、传输顺序和解码顺序相同。</p>
-<h3 id="杂"><a href="#杂" class="headerlink" title="杂"></a>杂</h3><p>指令架构AMD64、Intel64、x64等等兼容x86的都是AMD64指令集…intel商业混淆了半天起了一堆名字….</p>
-<p>FreeBSD也是开源的类unix系统，ps4使用其内核。</p>
-<p>音频转码也叫重采样</p>
-<p>解复用(demux)，表示从一路输入中分离出多路流(视频、音频、字幕等)。<br>复用(mux)，是multiplex的缩写，表示将多路流(视频、音频、字幕等)混入一路输出中(普通文件、流等)。</p>
-<h2 id="FFmpeg使用"><a href="#FFmpeg使用" class="headerlink" title="FFmpeg使用"></a>FFmpeg使用</h2><h3 id="可直接使用的库"><a href="#可直接使用的库" class="headerlink" title="可直接使用的库"></a>可直接使用的库</h3><p>libavcodec 多媒体编解码器库<br>libavdevice 设备库<br>libavfilter 滤镜库<br>libavformat 媒体格式库<br>libavutil 实用工具<br>libpostproc 后处理库<br>libswresample 音频重采样库<br>libswscale 媒体放缩</p>
-<p>FFmpeg可以识别5种流类型：音频(audio, a)，视频(video, v)，字幕(subtitle, s)，附加数据(attachment, t)和普通数据(data, d)。容器可含很多种不同的流。</p>
-<h3 id="内存IO与外部IO"><a href="#内存IO与外部IO" class="headerlink" title="内存IO与外部IO"></a>内存IO与外部IO</h3><p>所谓内存IO，在FFmpeg中叫作“buffered IO”或“custom IO”，指的是将一块内存缓冲区用作FFmpeg的输入或输出。与内存IO操作对应的是指定URL作为FFmpeg的输入或输出，比如URL可能是普通文件或网络流地址等。</p>
-<p>步骤<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">// @opaque  : 用户自定义参数</div><div class="line">// @buf     : 输出buf缓存给ffmpeg-就是avio_alloc_context的参1</div><div class="line">// @buf_size: buf的大小</div><div class="line">// @return  : 本次IO数据量</div><div class="line">static int read_packet(void *opaque, uint8_t *buf, int buf_size)</div><div class="line">&#123;</div><div class="line">    //从自己定义的参数里取数据向buffer里填就行</div><div class="line">    int fd = *((int *)opaque);</div><div class="line">    int ret = read(fd, buf, buf_size);</div><div class="line">    return ret;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    size_t ibuf_size = 4096;</div><div class="line">    // 打开一个FIFO文件的读端</div><div class="line">    int fd = open_fifo_for_read(&quot;/tmp/test_fifo&quot;);</div><div class="line"></div><div class="line">    // 1. 分配缓冲区--用于FFmpeg处理数据</div><div class="line">    uint8_t *ibuf = av_malloc(ibuf_size);</div><div class="line"></div><div class="line">    // 2. 分配AVIOContext，第三个参数write_flag为0</div><div class="line">    // FFmpeg使用的缓冲区、大小、对于FFmpeg是出|入(1|0)、用户自定义数据、读写指针、seek函数</div><div class="line">    AVIOContext *avio_in = avio_alloc_context(ibuf, ibuf_size, 0, &amp;fd, &amp;read_packet, NULL, NULL);</div><div class="line"></div><div class="line">    // 3. 分配AVFormatContext，并指定AVFormatContext.pb字段。必须在调用avformat_open_input()之前完成，指定AV格式环境的流来源，open进一步填写时直接NULL来源即可</div><div class="line">    AVFormatContext *ifmt_ctx = avformat_alloc_context();</div><div class="line">    ifmt_ctx-&gt;pb = avio_in;//avio_open()可打开URL为AVIOContext</div><div class="line"></div><div class="line">    // 4. 打开输入(读取封装格式文件头)，忽略URL参数则使用内存模式(ifmt_ctx为null则自动分配)</div><div class="line">    avformat_open_input(&amp;ifmt_ctx, NULL, NULL, NULL);</div><div class="line">    ......</div><div class="line">    //之后继续对AVFormatContext填充获取信息</div><div class="line">&#125;</div><div class="line">     *                            |              buffer_size              |</div><div class="line">     *                            |---------------------------------------|</div><div class="line">     *                            |                                       |</div><div class="line">     *</div><div class="line">     *                         buffer          buf_ptr       buf_end</div><div class="line">     *                            +---------------+-----------------------+</div><div class="line">     *                            |/ / / / / / / /|/ / / / / / /|         |</div><div class="line">     *  read buffer:              |/ / consumed / | to be read /|         |</div><div class="line">     *                            |/ / / / / / / /|/ / / / / / /|         |</div><div class="line">     *                            +---------------+-----------------------+</div><div class="line">     *</div><div class="line">     *                                                         pos</div><div class="line">     *              +-------------------------------------------+-----------------+</div><div class="line">     *  input file: |                                           |                 |</div><div class="line">     *              +-------------------------------------------+-----------------+</div></pre></td></tr></table></figure></p>
-<p>输出使用类似，只要提供适量缓存就可以将流式结构型文件解析出来。</p>
-<h3 id="AVBuffer、AVFrame、AVPacket"><a href="#AVBuffer、AVFrame、AVPacket" class="headerlink" title="AVBuffer、AVFrame、AVPacket"></a>AVBuffer、AVFrame、AVPacket</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"> _______              ______________</div><div class="line">|       |            |              |</div><div class="line">| input |  demuxer   | encoded data |   decoder</div><div class="line">| file  | ---------&gt; | packets      | -----+</div><div class="line">|_______|            |______________|      |</div><div class="line">                                           v</div><div class="line">                                       _________</div><div class="line">                                      |         |</div><div class="line">                                      | decoded |</div><div class="line">                                      | frames  |</div><div class="line">                                      |_________|</div><div class="line"> ________             ______________       |</div><div class="line">|        |           |              |      |</div><div class="line">| output | &lt;-------- | encoded data | &lt;----+</div><div class="line">| file   |   muxer   | packets      |   encoder</div><div class="line">|________|           |______________|</div></pre></td></tr></table></figure>
-<p>AVBuffer为FFmpeg中使用的缓冲区,使用引用计数管理<br>AVFrame中存储的是经过解码后的原始数据<br>AVPacket中存储的是经过编码的压缩数据。</p>
-<p>AVFrame：<br>data是一个指针数组，数组的每一个元素是一个指针，指向视频中图像的各个plane或音频中的各个plane。交织时如YUVYUV，指向这一个plane即可。<br>对于视频来说，linesize是每行图像的大小(字节数)。注意有对齐要求。<br>对于音频来说，linesize是每个plane的大小(字节数)。音频只使用linesize[0]。对于planar音频来说，每个plane的大小必须一样。<br>width, height视频帧宽和高(像素)。<br>format帧格式<br>nb_samples音频帧中单个声道中包含的采样点数<br>pict_type视频帧类型(I、B、P等)<br>sample_aspect_ratio视频帧的宽高比。<br>pts显示时间戳。单位是time_base。<br>pkt_pts此frame对应的packet中的显示时间戳。<br>pkt_dts此frame对应的packet中的解码时间戳。<br>coded_picture_number在编码流中当前图像的序号。<br>display_picture_number在显示序列中当前图像的序号。<br>sample_rate音频采样率。<br>channel_layout音频声道布局。每bit代表一个特定的声道<br>alloc分配、free释放、ref拷贝并计数</p>
-<p>AVPacket:<br>对于视频而言，一个AVPacket通常只包含一个压缩视频帧。而对于音频而言，一个AVPacket可能包含多个完整的音频压缩帧。编码结束后只需要更新一些参数时就可以发空packet。<br>AVPacket对象可以在栈上分配，注意此处指的是AVPacket对象本身。而AVPacket中包含的数据缓冲区是通过av_malloc()在堆上分配的。<br>pts，显示时间戳<br>dts，解码时间戳<br>duration，当前包解码后的帧播放持续的时长。单位timebase。值等于下一帧pts减当前帧pts。<br>pos，流中的位置</p>
-<p>time_base。pts与dts的基本单位，AVStream中精度高，AVCodecContext中为1/FPS。<br>AVPacket下的pts和dts以AVStream-&gt;time_base为单位<br>AVFrame里面的pkt_pts和pkt_dts是拷贝自AVPacket，同样以AVStream-&gt;time_base为单位；而pts是为输出(显示)准备的，以AVCodecContex-&gt;time_base为单位)。</p>
-<h3 id="滤镜filter"><a href="#滤镜filter" class="headerlink" title="滤镜filter"></a>滤镜filter</h3><p>滤镜filter用于修改未编码的原始音视频数据,多个滤镜可以连接起来<br>FFmpeg比较常用的滤镜有：scale、trim、overlay、rotate、movie、yadif。scale滤镜用于缩放，trim滤镜用于帧级剪切，overlay滤镜用于视频叠加，rotate滤镜实现旋转，movie滤镜可以加载第三方的视频，yadif滤镜可以去隔行。</p>
-<h3 id="编解码"><a href="#编解码" class="headerlink" title="编解码"></a>编解码</h3><p>解码使用avcodec_send_packet()和avcodec_receive_frame()两个函数。<br>编码使用avcodec_send_frame()和avcodec_receive_packet()两个函数。</p>
-<p>关于avcodec_send_packet()与avcodec_receive_frame()的使用说明：</p>
-<ol>
-<li>按dts递增的顺序向解码器送入编码帧packet，解码器按pts递增的顺序输出原始帧frame，实际上解码器不关注输入packet的dts(错值都没关系)，它只管依次处理收到的packet，按需缓冲和解码</li>
-<li>avcodec_receive_frame()输出frame时，会根据各种因素设置好frame-&gt;best_effort_timestamp(文档明确说明)，实测frame-&gt;pts也会被设置(通常直接拷贝自对应的packet.pts，文档未明确说明)用户应确保avcodec_send_packet()发送的packet具有正确的pts，编码帧packet与原始帧frame间的对应关系通过pts确定</li>
-<li>avcodec_receive_frame()输出frame时，frame-&gt;pkt_dts拷贝自当前avcodec_send_packet()发送的packet中的dts，如果当前packet为NULL(flush packet)，解码器进入flush模式，当前及剩余的frame-&gt;pkt_dts值总为AV_NOPTS_VALUE。因为解码器中有缓存帧，当前输出的frame并不是由当前输入的packet解码得到的，所以这个frame-&gt;pkt_dts没什么实际意义，可以不必关注</li>
-<li>avcodec_send_packet()发送第一个NULL会返回成功，后续的NULL会返回AVERROR_EOF。</li>
-<li>avcodec_send_packet()多次发送NULL并不会导致解码器中缓存的帧丢失，使用avcodec_flush_buffers()可以立即丢掉解码器中缓存帧。因此播放完毕时应avcodec_send_packet(NULL)来取完缓存的帧，而SEEK操作或切换流时应调用avcodec_flush_buffers()来直接丢弃缓存帧。</li>
-<li>解码器通常的冲洗方法：调用一次avcodec_send_packet(NULL)(返回成功)，然后不停调用avcodec_receive_frame()直到其返回AVERROR_EOF，取出所有缓存帧，avcodec_receive_frame()返回AVERROR_\EOF这一次是没有有效数据的，仅仅获取到一个结束标志。</li>
-</ol>
-<p>关于avcodec_send_frame()与avcodec_receive_packet()的使用说明：</p>
-<ol>
-<li>按pts递增的顺序向编码器送入原始帧frame，编码器按dts递增的顺序输出编码帧packet，实际上编码器关注输入frame的pts不关注其dts，它只管依次处理收到的frame，按需缓冲和编码</li>
-<li>avcodec_receive_packet()输出packet时，会设置packet.dts，从0开始，每次输出的packet的dts加1，这是视频层的dts，用户写输出前应将其转换为容器层的dts</li>
-<li>avcodec_receive_packet()输出packet时，packet.pts拷贝自对应的frame.pts，这是视频层的pts，用户写输出前应将其转换为容器层的pts</li>
-<li>avcodec_send_frame()发送NULL frame时，编码器进入flush模式</li>
-<li>avcodec_send_frame()发送第一个NULL会返回成功，后续的NULL会返回AVERROR_EOF</li>
-<li>avcodec_send_frame()多次发送NULL并不会导致编码器中缓存的帧丢失，使用avcodec_flush_buffers()可以立即丢掉编码器中缓存帧。因此编码完毕时应使用avcodec_send_frame(NULL)来取完缓存的帧，而SEEK操作或切换流时应调用avcodec_flush_buffers()来直接丢弃缓存帧。</li>
-<li>编码器通常的冲洗方法：调用一次avcodec_send_frame(NULL)(返回成功)，然后不停调用avcodec_receive_packet()直到其返回AVERROR_EOF，取出所有缓存帧，avcodec_receive_packet()返回AVERROR_EOF这一次是没有有效数据的，仅仅获取到一个结束标志。</li>
-<li>对音频来说，如果AV_CODEC_CAP_VARIABLE_FRAME_SIZE(在AVCodecContext.codec.capabilities变量中，只读)标志有效，表示编码器支持可变尺寸音频帧，送入编码器的音频帧可以包含任意数量的采样点。如果此标志无效，则每一个音频帧的采样点数目(frame-&gt;nb_samples)必须等于编码器设定的音频帧尺寸(avctx-&gt;frame_size)，最后一帧除外，最后一帧音频帧采样点数可以小于avctx-&gt;frame_size</li>
-</ol>
-<h3 id="流媒体"><a href="#流媒体" class="headerlink" title="流媒体"></a>流媒体</h3><p>将媒体数据压缩并封装成为流</p>
-<p>FFmpeg中若URL携带“rtmp://”、“rpt://”、“udp://”等前缀，则表示涉及流处理<br>分别使用对应的协议</p>
-<h2 id="实现播放器"><a href="#实现播放器" class="headerlink" title="实现播放器"></a>实现播放器</h2><h3 id="VS通用c-配置方式"><a href="#VS通用c-配置方式" class="headerlink" title="VS通用c++配置方式"></a>VS通用c++配置方式</h3><p>头文件搜索:项目属性、c++中添加附加路径。若使用脚本集成编译则将库头文件复制到项目中添加或使用相对vcxproj添加<br>库文件添加:项目属性、连接器中添加附加路径(lib放进项目时没加也能编)、代码&amp;配置中添加链接目标。若使用脚本集成编译环境则将lib复制进项目中一起编译<br>动态库添加:动态库需要放于应用程序同级便于搜索，也可添加path。编译时加lib用于启动时加载dll。也可全手动加载</p>
-<h3 id="基本过程"><a href="#基本过程" class="headerlink" title="基本过程"></a>基本过程</h3><p>容器-&gt;流*n-&gt;包-&gt;帧</p>
-<h3 id="流程熟悉"><a href="#流程熟悉" class="headerlink" title="流程熟悉"></a>流程熟悉</h3><p>简单实现官方教程，但由于接口过时且说的不够详细，所以仅作为流程了解，核心的参考为之后收集的博客实现</p>
-<p>官方实现:<a href="https://github.com/mpenkov/ffmpeg-tutorial" target="_blank" rel="external">https://github.com/mpenkov/ffmpeg-tutorial</a></p>
-<p>新版本实现:(基于<a href="https://www.cnblogs.com/leisure_chn/p/10284653.html" target="_blank" rel="external">https://www.cnblogs.com/leisure_chn/p/10284653.html</a>)<br><a href="https://github.com/imbaya2466/FFmpeg-play" target="_blank" rel="external">https://github.com/imbaya2466/FFmpeg-play</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://www.cnblogs.com/leisure_chn/category/1351812.html" target="_blank" rel="external">https://www.cnblogs.com/leisure_chn/category/1351812.html</a></li>
-<li><a href="https://blog.csdn.net/leixiaohua1020/article/details/15811977" target="_blank" rel="external">https://blog.csdn.net/leixiaohua1020/article/details/15811977</a></li>
-<li><a href="https://www.cnblogs.com/leisure_chn/p/10584910.html" target="_blank" rel="external">https://www.cnblogs.com/leisure_chn/p/10584910.html</a></li>
-<li><a href="http://dranger.com/ffmpeg/" target="_blank" rel="external">http://dranger.com/ffmpeg/</a></li>
-</ol>
-
-          
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>逐步深入多媒体技术。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/05/27/ffmpeg实现播放器/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -577,20 +521,14 @@
 
       
         
-          
-            <h3 id="操作原子性"><a href="#操作原子性" class="headerlink" title="操作原子性"></a>操作原子性</h3><p>x86中<br>内存读写操作是原子的<br>可以使用LOCK锁定总线<br>cache coherency保证cache原子性</p>
-<p>x=y 多线程不安全  不原子<br>x++ 多线程不安全  不原子<br>++x lock inc    原子<br>x=1 多线程安全    原子</p>
-<h3 id="Bit-field（位域）"><a href="#Bit-field（位域）" class="headerlink" title="Bit field（位域）"></a>Bit field（位域）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">struct foo &#123;</div><div class="line">    int flag : 1;</div><div class="line">    int counter : 15;</div><div class="line">&#125;;</div><div class="line"> </div><div class="line">struct foo my_foo;</div><div class="line"> </div><div class="line">/* ... */</div><div class="line"> </div><div class="line">/* in thread 1 */</div><div class="line"> </div><div class="line">pthread_mutex_lock(&amp;my_mutex_for_flag);</div><div class="line">my_foo.flag = !my_foo.flag;</div><div class="line">pthread_mutex_unlock(&amp;my_mutex_for_flag);</div><div class="line"> </div><div class="line">/* in thread 2 */</div><div class="line"> </div><div class="line">pthread_mutex_lock(&amp;my_mutex_for_counter);</div><div class="line">++my_foo.counter;</div><div class="line">pthread_mutex_unlock(&amp;my_mutex_for_counter);</div></pre></td></tr></table></figure>
-<p>即使分别加锁，仍然不能保证线程安全，如上。</p>
-<p>因为这俩变量本应该毫不相关分别锁，因此可以同时读取赋值。<br>因为读取和赋值都是几个字节一起操作的，因此这种几个位并不是使用位操作读取赋值…而是使用普通的mov等读取赋值，此时一次操作的就不止是一个变量，可能连相邻的变量一并在几个字节中修改了。</p>
-<p>因此这种相邻位域是线程不安全的！！！！</p>
-<p>解决用同一个锁或者使用bool来单独记</p>
-<h3 id="实际使用的锁"><a href="#实际使用的锁" class="headerlink" title="实际使用的锁"></a>实际使用的锁</h3><p>linux中的同步机制、信号量、互斥量等，基于CPU提供的原子操作、关中断、锁内存总线的机制</p>
-<p>单处理器关中断即可保证一定区域原子性。<br>多处理器可以使用test and set操作。这是忙等的…tsl实现有汇编支持，实现赋值1返回旧值的操作，原子。</p>
-<p>比如基于tls实现自旋锁-忙等<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">function Lock(boolean *lock) &#123;</div><div class="line">    while (test_and_set (lock) == 1)</div><div class="line">      ;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>因此可保证你所担心的多线程同时访问锁同时读取状态的问题不会发生，因为cpu的几种原子操作保证了设置锁并返回旧值的操作是原子的！！！</p>
-
-          
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>有时困扰的原子性问题</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/05/27/原子性的保证/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
