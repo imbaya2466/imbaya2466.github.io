@@ -105,7 +105,7 @@
 <meta property="og:image" content="https://i.imgur.com/hkQbs5I.png">
 <meta property="og:image" content="https://i.imgur.com/9b1VRGl.png">
 <meta property="og:image" content="https://i.imgur.com/nyq7RpT.png">
-<meta property="og:updated_time" content="2019-02-23T17:33:08.743Z">
+<meta property="og:updated_time" content="2019-05-15T10:01:37.770Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="android-hook">
 <meta name="twitter:description" content="前言目标写出一个通用的android hook库，开发在AS下进行，方便运行和调试先为了看懂：https://github.com/xiaobaiyey/dexload 钩子(hook)与注入(inject):hook目的是修改执行逻辑，我直接理解为类似AOP的思想，不过这个更注重实现。注入目的是非己内容加入自己代码，分为静态与动态，前者运行前修改可执行文件，后者通过ptrace等。实现部分交集互">
@@ -431,6 +431,7 @@
 <li>AS build出apk里的so与AS调试用的so不一致，即使是debug编译出的。因此找偏移地址时要确定目标so不变。</li>
 <li>native方法不是System.loadLibrary时绑定，是调用native方法时才寻找符号表中符合的，也可以手动绑定。需要看art的native方法oat后的样子才能确定。</li>
 </ol>
+<h3 id="关于多线程安全"><a href="#关于多线程安全" class="headerlink" title="关于多线程安全"></a>关于多线程安全</h3><p>hook时暂停所有线程，并检查是否有线程位于hook点，有时就将其运行随机小时间，之后再次暂停，直到hook点没有执行线程，进行hook。hook后恢复所有线程。</p>
 
       
     </div>
@@ -552,7 +553,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">114</span>
+                <span class="site-state-item-count">116</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -563,7 +564,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -574,7 +575,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">97</span>
+                <span class="site-state-item-count">98</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -609,7 +610,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hook实现分析"><span class="nav-number">2.</span> <span class="nav-text">hook实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GToad的实现"><span class="nav-number">2.1.</span> <span class="nav-text">GToad的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PLT-Hook-amp-Inline-Hook"><span class="nav-number">2.1.1.</span> <span class="nav-text">PLT-Hook&Inline-Hook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOT-hook"><span class="nav-number">2.1.2.</span> <span class="nav-text">GOT-hook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#32位Inline-hook"><span class="nav-number">2.1.3.</span> <span class="nav-text">32位Inline-hook</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#arm32基本步骤"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">arm32基本步骤</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Thumb-2方案"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">Thumb-2方案</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64位Inline-hook"><span class="nav-number">2.1.4.</span> <span class="nav-text">64位Inline-hook</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我的hook方案与实现"><span class="nav-number">3.</span> <span class="nav-text">我的hook方案与实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hook实现分析"><span class="nav-number">2.</span> <span class="nav-text">hook实现分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GToad的实现"><span class="nav-number">2.1.</span> <span class="nav-text">GToad的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PLT-Hook-amp-Inline-Hook"><span class="nav-number">2.1.1.</span> <span class="nav-text">PLT-Hook&Inline-Hook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GOT-hook"><span class="nav-number">2.1.2.</span> <span class="nav-text">GOT-hook</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#32位Inline-hook"><span class="nav-number">2.1.3.</span> <span class="nav-text">32位Inline-hook</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#arm32基本步骤"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">arm32基本步骤</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Thumb-2方案"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">Thumb-2方案</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#64位Inline-hook"><span class="nav-number">2.1.4.</span> <span class="nav-text">64位Inline-hook</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我的hook方案与实现"><span class="nav-number">3.</span> <span class="nav-text">我的hook方案与实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于多线程安全"><span class="nav-number">3.1.</span> <span class="nav-text">关于多线程安全</span></a></li></ol></li></ol></div>
             
 
           </div>
