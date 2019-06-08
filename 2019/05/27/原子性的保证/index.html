@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言有时困扰的原子性问题">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-26T16:21:33.005Z">
+<meta property="og:updated_time" content="2019-05-27T15:59:55.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="原子性的保证">
 <meta name="twitter:description" content="前言有时困扰的原子性问题">
@@ -378,7 +378,7 @@
 <p>x=y 多线程不安全  不原子<br>x++ 多线程不安全  不原子<br>++x lock inc    原子<br>x=1 多线程安全    原子</p>
 <h3 id="Bit-field（位域）"><a href="#Bit-field（位域）" class="headerlink" title="Bit field（位域）"></a>Bit field（位域）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">struct foo &#123;</div><div class="line">    int flag : 1;</div><div class="line">    int counter : 15;</div><div class="line">&#125;;</div><div class="line"> </div><div class="line">struct foo my_foo;</div><div class="line"> </div><div class="line">/* ... */</div><div class="line"> </div><div class="line">/* in thread 1 */</div><div class="line"> </div><div class="line">pthread_mutex_lock(&amp;my_mutex_for_flag);</div><div class="line">my_foo.flag = !my_foo.flag;</div><div class="line">pthread_mutex_unlock(&amp;my_mutex_for_flag);</div><div class="line"> </div><div class="line">/* in thread 2 */</div><div class="line"> </div><div class="line">pthread_mutex_lock(&amp;my_mutex_for_counter);</div><div class="line">++my_foo.counter;</div><div class="line">pthread_mutex_unlock(&amp;my_mutex_for_counter);</div></pre></td></tr></table></figure>
 <p>即使分别加锁，仍然不能保证线程安全，如上。</p>
-<p>因为这俩变量本应该毫不相关分别锁，因此可以同时读取赋值。<br>因为读取和赋值都是几个字节一起操作的，因此这种几个位并不是使用位操作读取赋值…而是使用普通的mov等读取赋值，此时一次操作的就不止是一个变量，可能连相邻的变量一并在几个字节中修改了。</p>
+<p>因为这俩变量本应该毫不相关分别锁，因此可以同时读取赋值。<br>因为读取和赋值都是最小一个字节一起操作的，使用mov读取后用位操作修改再用mov赋值，此时修改了几个位的变量。</p>
 <p>因此这种相邻位域是线程不安全的！！！！</p>
 <p>解决用同一个锁或者使用bool来单独记</p>
 <h3 id="实际使用的锁"><a href="#实际使用的锁" class="headerlink" title="实际使用的锁"></a>实际使用的锁</h3><p>linux中的同步机制、信号量、互斥量等，基于CPU提供的原子操作、关中断、锁内存总线的机制</p>
@@ -504,7 +504,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">116</span>
+                <span class="site-state-item-count">117</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -526,7 +526,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-count">101</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言学校教过软件工程，但最后除了文档内容&amp;amp;规范其他剩下的并不多(形成了写文档的习惯)，真正具有实践指导意义的项目流程理解还需亲身经历。这里简记下具有实践意义的内容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-08T14:54:00.969Z">
+<meta property="og:updated_time" content="2019-06-08T14:12:20.809Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="项目管理实践">
 <meta name="twitter:description" content="前言学校教过软件工程，但最后除了文档内容&amp;amp;规范其他剩下的并不多(形成了写文档的习惯)，真正具有实践指导意义的项目流程理解还需亲身经历。这里简记下具有实践意义的内容。">
@@ -417,6 +417,17 @@
 <p>pull即可成为:<br>1 2 3<br>1 2 3</p>
 <p>写代码，成为上面的6种之一，pull，修改，成为:<br>1 2 3<br>1 2 3 4</p>
 <p>之后build测试、push。<br>push仅在pull之后成为如下时:<br>1 2 3<br>1 2 3 4</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>分支一般用于新功能研发和破坏性测试。以及个人的分支一般用于提交前的build测试。</p>
+<p>主干必须严格把控，一般主干提交代码前先交CR。</p>
+<p>git为分布式，svn集中管理。<br>git内容按元数据存储，svn按文件。<br>svn的分支就是版本库中的另外一个目录。<br>git性能更优。</p>
+<p>svn的操作:<br>必有svn中央服务器，在这里称为远端<br>svn比git简单些，客户端下载好后右键就集成了所有操作。<br>步骤:</p>
+<ol>
+<li>找到自己的分支，从远端中央检出</li>
+<li>开发、及时更新，提交</li>
+<li>远端trunk定期合并(同步)到远端分支，一般会提供相关管理功能</li>
+<li>持续集成</li>
+<li>最后完成模块时远端分支合并到远端trunk。</li>
+</ol>
 
       
     </div>
@@ -536,7 +547,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">116</span>
+                <span class="site-state-item-count">117</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -558,7 +569,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-count">101</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -593,7 +604,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续集成"><span class="nav-number">2.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#须知"><span class="nav-number">2.1.</span> <span class="nav-text">须知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#好处"><span class="nav-number">2.2.</span> <span class="nav-text">好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续交付"><span class="nav-number">3.</span> <span class="nav-text">持续交付</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续部署"><span class="nav-number">4.</span> <span class="nav-text">持续部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git相关再记"><span class="nav-number">5.</span> <span class="nav-text">git相关再记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实际使用时"><span class="nav-number">5.1.</span> <span class="nav-text">实际使用时</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续集成"><span class="nav-number">2.</span> <span class="nav-text">持续集成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#须知"><span class="nav-number">2.1.</span> <span class="nav-text">须知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#好处"><span class="nav-number">2.2.</span> <span class="nav-text">好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续交付"><span class="nav-number">3.</span> <span class="nav-text">持续交付</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持续部署"><span class="nav-number">4.</span> <span class="nav-text">持续部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#git相关再记"><span class="nav-number">5.</span> <span class="nav-text">git相关再记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实际使用时"><span class="nav-number">5.1.</span> <span class="nav-text">实际使用时</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-number">6.</span> <span class="nav-text">补充</span></a></li></ol></div>
             
 
           </div>

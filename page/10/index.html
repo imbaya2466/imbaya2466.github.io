@@ -283,6 +283,159 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/11/android系统架构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/11/android系统架构/" itemprop="url">android系统架构</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T17:20:41+08:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android/" itemprop="url" rel="index">
+                    <span itemprop="name">android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>安卓运行架构：<br><img src="https://i.imgur.com/yQWNzEP.jpg" alt=""></p>
+<p>linux运行：<br><img src="https://i.imgur.com/Oq4q1L9.jpg" alt=""></p>
+<h4 id="关于内核："><a href="#关于内核：" class="headerlink" title="关于内核："></a>关于内核：</h4><p>① Android采用Linux作为内核</p>
+<p>② Android对Linux内核做了修改，目的是适应在移动设备上使用</p>
+<p>③ Android开始作为Linux的一个分支，后来由于无法并入Linux的主开发树，已被Linux Kernel小组从开发树中删除</p>
+<p>Android内核是有标准的Linux内核修改而来的，继承了Linux内核的诸多优点，保留了Linux内核的主题框架，同时Android按照移动设备的要求，在文件系统、内存管理、进程间通信机智和电源管理方面进行了修改，添加了相关的驱动程序和必要的新功能。Android在很大程度上保留了Linux的基本架构，因此Android的应用型和扩展性更强。</p>
+<h4 id="关于HAL"><a href="#关于HAL" class="headerlink" title="关于HAL"></a>关于HAL</h4><p>Android是在Linux内核基础上运行的，提供的核心系统服务包括安全、内存管理、进程管理、网络组和驱动模型等内容。在硬件层和系统中其他软件之间添加了硬件抽象层（HAL）。<br>HAL主要用于屏蔽硬件实现（厂商利益）</p>
+<h4 id="运行时与native"><a href="#运行时与native" class="headerlink" title="运行时与native"></a>运行时与native</h4><p>Android系统的系统层面的底层是Linux，中间加上Dalvik的Java虚拟机，表面层上面是Android运行库。每个Android应用都运行在自己的进程上，享有Dalvik虚拟机为他分配的专有实例。</p>
+<p>Dalvik虚拟机执行的是Dalvik格式的可执行文件（.dex）。Java编译器将Java源码转为.class文件，.class文件又被内置的dx工具转化为.dex格式文件，这种文件在Dalvik虚拟机上注册并运行。</p>
+<p>Android系统的应用软件都是运行在Dalvik上的Java软件，而Dalvik是运行在Linux上的</p>
+<h4 id="官方图："><a href="#官方图：" class="headerlink" title="官方图："></a>官方图：</h4><p><img src="https://i.imgur.com/Ia7sd3G.png" alt=""></p>
+<h4 id="一个程序的过程"><a href="#一个程序的过程" class="headerlink" title="一个程序的过程:"></a>一个程序的过程:</h4><p>待清楚后补充</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/09/android文件系统目录结构/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1744,150 +1897,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/15/c-类的内存存储/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/15/c-类的内存存储/" itemprop="url">c++类的内存存储</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-15T18:24:28+08:00">
-                2018-03-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/编译原理/" itemprop="url" rel="index">
-                    <span itemprop="name">编译原理</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="所有函数都存放在代码区，静态函数也不例外"><a href="#所有函数都存放在代码区，静态函数也不例外" class="headerlink" title="所有函数都存放在代码区，静态函数也不例外"></a>所有函数都存放在代码区，静态函数也不例外</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">Class A</div><div class="line"></div><div class="line">&#123;</div><div class="line"></div><div class="line">  Public:</div><div class="line"></div><div class="line">       Int a;</div><div class="line"></div><div class="line">       Int b;</div><div class="line"></div><div class="line">Int sun(int a1,int b1)</div><div class="line"></div><div class="line">&#123;</div><div class="line"></div><div class="line">       Result a1+b1;</div><div class="line"></div><div class="line">&#125;</div><div class="line">vritual int max(int a1,int b1)</div><div class="line"></div><div class="line">&#125;;</div><div class="line"></div><div class="line">Class A1 Public A</div><div class="line"></div><div class="line">&#123;</div><div class="line"></div><div class="line">  Public:</div><div class="line"></div><div class="line">       Int c;</div><div class="line"></div><div class="line">       int xianjian(int a1,int b1)//2 个数相减 ;</div><div class="line"></div><div class="line">       &#123; result a1-b1;&#125;</div><div class="line">vritual int max(int a1,int b1)</div><div class="line"></div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>new 一个A一个A1<br>共用sun函数地址，对象分配的空间中不含函数的空间，只有虚函数的地址表-继承的变量，自己的变量，因为虚函数每层都不一样所以每层都有各自的虚函数表，<br>表内是各个虚函数的地址，先父后自己，当自己继承了父的虚但仍是虚是父的虚地址改为自己的，若新加虚函数就接着父往后排<br>多重继承时仍只有一个虚函数表，内存中的对象一层一层表示，<br>但c++支持同时继承多个类，此时有多个虚地址表<br><img src="https://i.imgur.com/f5M23IK.jpg" alt=""></p>
-<p>面向对象编程语言中的多重继承指的是一个类可以同时继承多个父类的行为和特征功能。单一继承是指：一个子类只继承一个父类。<br>多重继承指代可以导致某些令人混淆的情况，所以关于它的好处与风险之间孰轻孰重常常受人争论。Java使用了一个折衷的办法：Java允许一个类别继承自多于一个父接口（可以指定某一个类别，它继承了所有父类的类型，并必须拥有所有父类别接口的外部可见方法的具体实现，并允许编译器强制以上要求），但只可以从一个父类别继承实现（方法与数据）。微软的.NET编程语言，例如C#和Visual Basic .NET和REAL Software的REALbasic也使用了这种类接口的做法。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1938,7 +1947,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">116</span>
+                <span class="site-state-item-count">117</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1960,7 +1969,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-count">101</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
