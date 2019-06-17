@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CMake,跨平台," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言跨平台的c&amp;amp;c++开发离不开cmake。 各个平台下都有自己的make工具GUN:Make微软:MSBuild、NMakeBSD:Make  Cmake允许开发者编写平台无关的CMakeList.txt 文件来定制整个编译流程。然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Stud">
+<meta name="keywords" content="CMake,跨平台">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CMake构建跨平台项目与集成第三方开源库">
+<meta property="og:url" content="http://yoursite.com/2019/06/17/CMake构建跨平台项目与集成第三方开源库/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言跨平台的c&amp;amp;c++开发离不开cmake。 各个平台下都有自己的make工具GUN:Make微软:MSBuild、NMakeBSD:Make  Cmake允许开发者编写平台无关的CMakeList.txt 文件来定制整个编译流程。然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Stud">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-06-17T15:59:46.690Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CMake构建跨平台项目与集成第三方开源库">
+<meta name="twitter:description" content="前言跨平台的c&amp;amp;c++开发离不开cmake。 各个平台下都有自己的make工具GUN:Make微软:MSBuild、NMakeBSD:Make  Cmake允许开发者编写平台无关的CMakeList.txt 文件来定制整个编译流程。然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Stud">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/17/CMake构建跨平台项目与集成第三方开源库/"/>
+
+
+
+
+
+  <title>CMake构建跨平台项目与集成第三方开源库 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/17/CMake构建跨平台项目与集成第三方开源库/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CMake构建跨平台项目与集成第三方开源库</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-17T23:50:24+08:00">
+                2019-06-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/基础开发/" itemprop="url" rel="index">
+                    <span itemprop="name">基础开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>跨平台的c&amp;c++开发离不开cmake。</p>
+<p>各个平台下都有自己的make工具<br>GUN:Make<br>微软:MSBuild、NMake<br>BSD:Make </p>
+<p>Cmake允许开发者编写平台无关的CMakeList.txt 文件来定制整个编译流程。然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Studio 工程。</p>
+<p>职责是生成可编译项目，不进行编译。</p>
+<a id="more"></a>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>手册:<br><a href="https://www.zybuluo.com/khan-lau/note/254724" target="_blank" rel="external">https://www.zybuluo.com/khan-lau/note/254724</a></p>
+<h3 id="单个源文件"><a href="#单个源文件" class="headerlink" title="单个源文件"></a>单个源文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># CMake 最低版本号要求</div><div class="line">cmake_minimum_required (VERSION 2.8)</div><div class="line"># 项目信息</div><div class="line">project (Demo1)</div><div class="line"># 指定生成目标</div><div class="line">add_executable(Demo main.cc)</div></pre></td></tr></table></figure>
+<p>由命令、注释和空格组成，其中命令是不区分大小写的。符号 # 后面的内容被认为是注释。命令由命令名称、小括号和参数组成，参数之间使用空格进行间隔。</p>
+<h3 id="多个源文件"><a href="#多个源文件" class="headerlink" title="多个源文件"></a>多个源文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"># ...相同</div><div class="line"></div><div class="line"># 指定生成目标</div><div class="line">add_executable(Demo main.cc MathFunctions.cc)</div></pre></td></tr></table></figure>
+<p>可以直接在add_executable中添加。</p>
+<p>添加目录下所有文件:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"># ...相同</div><div class="line"></div><div class="line"># 查找当前目录下的所有源文件</div><div class="line"># 并将名称保存到 DIR_SRCS 变量</div><div class="line">aux_source_directory(. DIR_SRCS)</div><div class="line"># 指定生成目标</div><div class="line">add_executable(Demo $&#123;DIR_SRCS&#125;)</div></pre></td></tr></table></figure></p>
+<p>aux_source_directory(&lt; dir&gt; &lt; variable&gt;):该命令会查找指定目录下的所有源文件，然后将结果存进指定变量名。</p>
+<h3 id="多目录"><a href="#多目录" class="headerlink" title="多目录"></a>多目录</h3><p>每个目录各放一个CMakeLists.txt<br>可以每个目录里的文件编译为静态库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">|</div><div class="line">+--- main.cc</div><div class="line">|</div><div class="line">+--- math/</div><div class="line">      |</div><div class="line">      +--- MathFunctions.cc</div><div class="line">      |</div><div class="line">      +--- MathFunctions.h</div></pre></td></tr></table></figure></p>
+<p>根:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"># CMake 最低版本号要求</div><div class="line">cmake_minimum_required (VERSION 2.8)</div><div class="line"># 项目信息</div><div class="line">project (Demo3)</div><div class="line"># 查找当前目录下的所有源文件</div><div class="line"># 并将名称保存到 DIR_SRCS 变量</div><div class="line">aux_source_directory(. DIR_SRCS)</div><div class="line"># 添加 math 子目录</div><div class="line">add_subdirectory(math)</div><div class="line"># 指定生成目标 </div><div class="line">add_executable(Demo $&#123;DIR_SRCS&#125;)</div><div class="line"># 添加链接库,链接库的名字是MathFunctions</div><div class="line">target_link_libraries(Demo MathFunctions)</div></pre></td></tr></table></figure></p>
+<p>子:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 查找当前目录下的所有源文件</div><div class="line"># 并将名称保存到 DIR_LIB_SRCS 变量</div><div class="line">aux_source_directory(. DIR_LIB_SRCS)</div><div class="line"># 生成链接库</div><div class="line">add_library (MathFunctions $&#123;DIR_LIB_SRCS&#125;)</div></pre></td></tr></table></figure></p>
+<p>add_library:将源文件编译为静态链接库。</p>
+<h3 id="编译选项"><a href="#编译选项" class="headerlink" title="编译选项"></a>编译选项</h3><p>这些编译选项可以被cmake识别<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"># CMake 最低版本号要求</div><div class="line">cmake_minimum_required (VERSION 2.8)</div><div class="line"># 项目信息</div><div class="line">project (Demo4)</div><div class="line"># 加入一个配置头文件，用于处理 CMake 对源码的设置</div><div class="line">configure_file (</div><div class="line">  &quot;$&#123;PROJECT_SOURCE_DIR&#125;/config.h.in&quot;</div><div class="line">  &quot;$&#123;PROJECT_BINARY_DIR&#125;/config.h&quot;</div><div class="line">  )</div><div class="line"># 是否使用自己的 MathFunctions 库</div><div class="line">option (USE_MYMATH</div><div class="line">       &quot;Use provided math implementation&quot; ON)</div><div class="line"># 是否加入 MathFunctions 库</div><div class="line">if (USE_MYMATH)</div><div class="line">  include_directories (&quot;$&#123;PROJECT_SOURCE_DIR&#125;/math&quot;)</div><div class="line">  add_subdirectory (math)  </div><div class="line">  set (EXTRA_LIBS $&#123;EXTRA_LIBS&#125; MathFunctions)</div><div class="line">endif (USE_MYMATH)</div><div class="line"># 查找当前目录下的所有源文件</div><div class="line"># 并将名称保存到 DIR_SRCS 变量</div><div class="line">aux_source_directory(. DIR_SRCS)</div><div class="line"># 指定生成目标</div><div class="line">add_executable(Demo $&#123;DIR_SRCS&#125;)</div><div class="line">target_link_libraries (Demo  $&#123;EXTRA_LIBS&#125;)</div></pre></td></tr></table></figure></p>
+<p>configure_file用于根据配置生成头文件。<br>option:添加选项</p>
+<p>选项可用在cmake时传入或者可视化选择</p>
+<h3 id="添加第三方依赖"><a href="#添加第三方依赖" class="headerlink" title="添加第三方依赖"></a>添加第三方依赖</h3><p>使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># 添加链接目录</div><div class="line">link_directories($&#123;LINK_DIR&#125;)</div><div class="line"># 添加链接目标</div><div class="line">target_link_libraries(test_boost boost_filesystem boost_system)</div></pre></td></tr></table></figure></p>
+<p>只写库名就可以，就是libxxx.so的中间xxx的部分</p>
+<p>或者直接用add_library、find_library</p>
+<h2 id="常见函数"><a href="#常见函数" class="headerlink" title="常见函数"></a>常见函数</h2><p>具体用法可在:<br><a href="https://www.zybuluo.com/khan-lau/note/254724" target="_blank" rel="external">https://www.zybuluo.com/khan-lau/note/254724</a><br>手册上查找<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div></pre></td><td class="code"><pre><div class="line">加入头文件</div><div class="line">命令: include_directories([AFTER|BEFORE] [SYSTEM] dir1 [dir2 ...])</div><div class="line">作用：</div><div class="line">把dir1, [dir2 …]这（些）个路径添加到当前CMakeLists及其子CMakeLists的头文件包含路径中;</div><div class="line">AFTER 或者 BEFORE 指定了要添加的路径是添加到原有包含列表之前或之后</div><div class="line">若指定 SYSTEM 参数，则把被包含的路径当做系统包含路径来处理</div><div class="line"></div><div class="line">加入源文件</div><div class="line">命令：aux_source_directory(&lt;dir&gt; &lt;variable&gt;)</div><div class="line">作用：查找dir路径下的所有源文件，保存到variable变量中.</div><div class="line"></div><div class="line">加入库目录</div><div class="line">命令：link_directories(directory1 directory2 ...)</div><div class="line">指定连接器查找库的路径。</div><div class="line"></div><div class="line">链接库文件</div><div class="line">命令：target_link_libraries(&lt;target&gt; [item1 [item2 [...]]] [[debug|optimized|general] &lt;item&gt;] ...)</div><div class="line">作用：仅需知道，名字叫$&#123;PROJECT_NAME&#125;这个target需要链接util这个库，会优先搜索libutil.a(windows上就是util.lib), 如果没有就搜索libutil.so(util.dll, util.dylib)’</div><div class="line"></div><div class="line">添加编译器选项</div><div class="line">set(CMAKE_CXX_COMPILER      &quot;clang++&quot; )         # 显示指定使用的C++编译器</div><div class="line">set(CMAKE_CXX_FLAGS   &quot;-std=c++11&quot;)             # c++11</div><div class="line">set(CMAKE_CXX_FLAGS   &quot;-g&quot;)                     # 调试信息</div><div class="line">set(CMAKE_CXX_FLAGS   &quot;-Wall&quot;)                  # 开启所有警告</div><div class="line">set(CMAKE_CXX_FLAGS_DEBUG   &quot;-O0&quot; )             # 调试包不优化</div><div class="line">set(CMAKE_CXX_FLAGS_RELEASE &quot;-O2 -DNDEBUG &quot; )   # release包优化</div><div class="line">CMAKE_CXX_FLAGS 是CMake传给C++编译器的编译选项，通过设置这个值就好比 g++ -std=c++11 -g -Wall</div><div class="line">CMAKE_CXX_FLAGS_DEBUG 是除了CMAKE_CXX_FLAGS外，在Debug配置下，额外的参数</div><div class="line">CMAKE_CXX_FLAGS_RELEASE 同理，是除了CMAKE_CXX_FLAGS外，在Release配置下，额外的参数</div><div class="line"></div><div class="line">创建库目标文件</div><div class="line">add_library(&lt;name&gt; [STATIC | SHARED | MODULE]</div><div class="line">            [EXCLUDE_FROM_ALL]</div><div class="line">            [source1] [source2 ...])</div><div class="line">name文件名、创建库的类型、源。</div><div class="line">add_library命令也可以用来创建导入的库目标</div><div class="line">add_library(&lt;name&gt; &lt;SHARED|STATIC|MODULE|UNKNOWN&gt; IMPORTED)</div><div class="line">导入的库目标是引用了在工程外的一个库文件的目标。没有生成构建这个库的规则。这个目标名字的作用域在它被创建的路径及以下有效。他可以向任何在该工程内构建的目标一样被引用。</div><div class="line"></div><div class="line">寻找库</div><div class="line">find_library(&lt;VAR&gt; name1 [path1 path2 ...])</div><div class="line">查找库文件，存于变量中</div><div class="line"></div><div class="line"></div><div class="line">添加命令:</div><div class="line">add_custom_command 命令有两种主要的功能；第一种是为了生成输出文件，添加一条自定义命令。</div><div class="line"></div><div class="line">添加目标</div><div class="line">add_custom_target 添加一个目标，它没有输出；这样它就总是会被构建。</div><div class="line"></div><div class="line">添加define flag</div><div class="line">add_definitions 为源文件的编译添加由-D引入的define flag。</div><div class="line"></div><div class="line">add_dependencies 为顶层目标引入一个依赖关系。</div><div class="line"></div><div class="line">add_executable 使用给定的源文件，为工程引入一个可执行文件。</div><div class="line"></div><div class="line">add_library 使用指定的源文件向工程中添加一个库。</div><div class="line"></div><div class="line">add_subdirectory(source_dir [binary_dir] </div><div class="line">                   [EXCLUDE_FROM_ALL])</div><div class="line">这条命令的作用是为构建添加一个子路径。source_dir选项指定了CMakeLists.txt源文件和代码文件的位置。</div><div class="line"></div><div class="line">add_test添加测试</div><div class="line"></div><div class="line">aux_source_directory查找某路径下所有源文件</div><div class="line"></div><div class="line">configure_file 将一份文件拷贝到另一个位置并修改它的内容。</div><div class="line">configure_file的作用是让普通文件也能使用CMake中的变量。</div><div class="line"></div><div class="line">define_property 定义并描述（Document）自定义属性。</div><div class="line">在一个域(域（scope)）中定义一个可以用set_property和get_property命令访问的属性。这个命令对于把文档和可以通过get_property命令得到的属性名称关联起来非常有用。</div><div class="line"></div><div class="line">execute_process执行子进程</div><div class="line"></div><div class="line">file文件操作</div><div class="line"></div><div class="line">find_file 查找文件</div><div class="line"></div><div class="line">find_library 查找库文件</div><div class="line"></div><div class="line">include 从给定的文件中读取CMake的清单文件代码。在清单文件中的命令会被立即处理，就像它们是写在这条include命令展开的地方一样。</div><div class="line"></div><div class="line">option:为用户提供可选项</div><div class="line"></div><div class="line">project 为整个工程设置工程名</div><div class="line"></div><div class="line">set 将一个CMAKE变量设置为给定值。</div></pre></td></tr></table></figure></p>
+<p>脚本指令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">函数</div><div class="line">  function(&lt;name&gt; [arg1 [arg2 [arg3 ...]]])</div><div class="line">    COMMAND1(ARGS ...)</div><div class="line">    COMMAND2(ARGS ...)</div><div class="line">    ...</div><div class="line">  endfunction(&lt;name&gt;)</div><div class="line">每个变量执行</div><div class="line">  foreach(loop_var arg1 arg2 ...)</div><div class="line">    COMMAND1(ARGS ...)</div><div class="line">    COMMAND2(ARGS ...)</div><div class="line">    ...</div><div class="line">  endforeach(loop_var)</div><div class="line">条件</div><div class="line">  if(expression)</div><div class="line">    # then section.</div><div class="line">    COMMAND1(ARGS ...)</div><div class="line">    COMMAND2(ARGS ...)</div><div class="line">    ...</div><div class="line">  elseif(expression2)</div><div class="line">    # elseif section.</div><div class="line">    COMMAND1(ARGS ...)</div><div class="line">    COMMAND2(ARGS ...)</div><div class="line">    ...</div><div class="line">  else(expression)</div><div class="line">    # else section.</div><div class="line">    COMMAND1(ARGS ...)</div><div class="line">    COMMAND2(ARGS ...)</div><div class="line">    ...</div><div class="line">  endif(expression)</div><div class="line">宏</div><div class="line">  macro(&lt;name&gt; [arg1 [arg2 [arg3 ...]]])</div><div class="line">    　　COMMAND1(ARGS ...)</div><div class="line">    　　COMMAND2(ARGS ...)</div><div class="line">    　　...</div><div class="line">  endmacro(&lt;name&gt;)</div><div class="line">循环</div><div class="line">  while(condition)</div><div class="line">    COMMAND1(ARGS ...)</div><div class="line">    COMMAND2(ARGS ...)</div><div class="line">    ...</div><div class="line">  endwhile(condition)</div></pre></td></tr></table></figure></p>
+<h2 id="Cmake指令"><a href="#Cmake指令" class="headerlink" title="Cmake指令"></a>Cmake指令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div></pre></td><td class="code"><pre><div class="line">-C &lt;initial-cache&gt;: 预加载一个脚本填充缓存文件。</div><div class="line">　　当cmake在一个空的构建树上第一次运行时，它会创建一个CMakeCache.txt文件，然后向其中写入可定制的项目设置数据。-C选项可以用来指定一个文件，在第一次解析这个工程的cmake清单文件时，从这个文件加载缓存的条目(cache entries)信息。被加载的缓存条目比项目默认的值有更高的优先权。参数中给定的那个文件应该是一个CMake脚本，其中包含有使用CACHE选项的SET命令；而不是一个缓存格式的文件。</div><div class="line">-D &lt;var&gt;:&lt;type&gt;=&lt;value&gt;: 创建一个CMake的缓存条目。</div><div class="line">　　当cmake第一次运行于一个空的构建数时，它会创建一个CMakeCache.txt文件，并且使用可定制的工程设置来填充这个文件。这个选项可以用来指定优先级高于工程的默认值的工程设置值。这个参数可以被重复多次，用来填充所需要数量的缓存条目(cache entries)。</div><div class="line">-U &lt;globbing_expr&gt;: 从CMake的缓存文件中删除一条匹配的条目。</div><div class="line">　　该选项可以用来删除CMakeCache.txt文件中的一或多个变量。文件名匹配表达式(globbing expression)支持通配符*和?的使用。该选项可以重复多次以删除期望数量的缓存条目。使用它时要小心，你可能因此让自己的CMakeCache.txt罢工。</div><div class="line">-G &lt;generator-name&gt;: 指定一个makefile生成工具。</div><div class="line">　　在具体的平台上，CMake可以支持多个原生的构建系统。makefile生成工具的职责是生成特定的构建系统。可能的生成工具的名称将在生成工具一节给出。</div><div class="line">-Wno-dev: 抑制开发者警告。</div><div class="line">　　抑制那些为CMakeLists.txt文件的作者准备的警告信息。</div><div class="line">-Wdev: 使能开发者警告信息输出功能。</div><div class="line">　　允许那些为CMakeLists.txt文件的作者准备的警告信息。</div><div class="line">-E: CMake命令行模式。</div><div class="line">　　为了真正做到与平台无关，CMake提供了一系列可以用于所有系统上的的命令。以-E参数运行CMake会帮助你获得这些命令的用法。可以使用的命令有：chdir, copy, copy_if_different copy_directory, compare_files, echo, echo_append, environment, make_directory, md5sum, remove_directory, remove, tar, time, touch, touch_nocreate, write_regv, delete_regv, comspec, create_symlink。</div><div class="line">-i: 以向导模式运行CMake。</div><div class="line">　　向导模式是在没有GUI时，交互式地运行cmake的模式。cmake会弹出一系列的提示，要求用户回答关于工程配置的一行问题。这些答复会被用来设置cmake的缓存值。</div><div class="line">-L[A][H]: 列出缓存的变量中的非高级的变量。</div><div class="line">　　-L选项会列出缓存变量会运行CMake，并列出所有CMake的内有被标记为INTERNAL或者ADVANCED的缓存变量。这会显示当前的CMake配置信息，然后你可以用-D选项改变这些选项。修改一些变量可能会引起更多的变量被创建出来。如果指定了A选项，那么命令也会显示高级变量。如果指定了H选项，那么命令会显示每个变量的帮助信息。</div><div class="line">　　</div><div class="line">--build &lt;dir&gt;: 构建由CMake生成的工程的二进制树。（这个选项的含义我不是很清楚—译注）</div><div class="line">    该选项用以下的选项概括了内置构建工具的命令行界面</div><div class="line">      &lt;dir&gt;          = 待创建的工程二进制路径。</div><div class="line">      --target &lt;tgt&gt; = 构建&lt;tgt&gt;，而不是默认目标。</div><div class="line">      --config &lt;cfg&gt; = 对于多重配置工具，选择配置&lt;cfg&gt;。</div><div class="line">      --clean-first  = 首先构建目标的clean伪目标，然后再构建。</div><div class="line">                       （如果仅仅要clean掉，使用--target &apos;clean&apos;选项。）</div><div class="line">      --             = 向内置工具（native tools）传递剩余的选项。</div><div class="line">    运行不带选项的cmake --build来获取快速帮助信息。</div><div class="line">-N: 查看模式。</div><div class="line">    仅仅加载缓存信息，并不实际运行配置和生成步骤。</div><div class="line">-P &lt;file&gt;: 处理脚本模式。</div><div class="line">    将给定的cmake文件按照CMake语言编写的脚本进行处理。不执行配置和生成步骤，不修改缓存信息。如果要使用-D选项定义变量，-D选项必须在-P选项之前。</div><div class="line">--graphviz=[file]: 生成依赖的graphviz图。</div><div class="line">    生成一个graphviz软件的输入文件，其中包括了项目中所有库和可执行文件之间的依赖关系。</div><div class="line">--system-information [file]: 输出与该系统相关的信息。</div><div class="line">    输出范围比较广的、与当前使用的系统有关的信息。如果在一个CMake工程的二进制构建树的顶端运行该命令，它还会打印一些附加信息，例如缓存，日志文件等等。</div><div class="line">--debug-trycompile: 不删除“尝试编译”路径。</div><div class="line">    不删除那些为try_compile调用生成的路径。这在调试失败的try_compile文件时比较有用。不过，因为上一次“尝试编译”生成的旧的垃圾输出文件也许会导致一次不正确通过/不通过，且该结果与上次测试的结果不同，所以该选项可能会改变“尝试编译”的结果。对于某一次“尝试编译”，该选项最好只用一次；并且仅仅在调试时使用。</div><div class="line">--debug-output: 将cmake设置为调试模式。</div><div class="line">    在cmake运行时，打印额外的信息；比如使用message(send_error)调用得到的栈跟踪信息。</div><div class="line">--trace: 将cmake设置为跟踪模式。</div><div class="line">    用message(send_error)调用，打印所有调用生成的跟踪信息，以及这些调用发生的位置。（这句话含义不是很确定—译注。）</div><div class="line">--help-command cmd [file]: 打印单个命令cmd的帮助信息，然后退出。</div><div class="line">    显示给定的命令的完整的文档。如果指定了[file]参数，该文档会写入该文件，其输出格式由该文件的后缀名确定。支持的文件类型有：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-command-list [file]: 列出所有可用命令的清单，然后退出。</div><div class="line">    该选项列出的信息含有所有命令的名字；其中，每个命令的帮助信息可以使用--help-command选项后跟一个命令名字得到。如果指定了[file]参数，帮助信息会写到file中，输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-commands [file]: 打印所有命令的帮助文件，然后退出。</div><div class="line">    显示所有当前版本的命令的完整文档。如果指定了[file]参数，帮助信息会写到file中，输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-compatcommands [file]: 打印兼容性命令（过时的命令—译注）的帮助信息。</div><div class="line">    显示所有关于兼容性命令的完整文档。如果指定了[file]参数，帮助信息会写到file中，输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-module module [file]: 打印某单一模块的帮助信息，然后退出。</div><div class="line">    打印关于给定模块的完整信息。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-module-list [file]: 列出所有可用模块名，然后退出。</div><div class="line">    列出的清单包括所有模块的名字；其中，每个模块的帮助信息可以使用--help-module选项，后跟模块名的方式得到。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-modules [file]: 打印所有模块的帮助信息，然后退出。</div><div class="line">    显示关于所有模块的完整文档。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-custom-modules [file]: 打印所有自定义模块名，然后退出。</div><div class="line">    显示所有自定义模块的完整文档。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-policy cmp [file]: 打印单个策略的帮助信息，然后退出。</div><div class="line">    显示给定的策略的完整文档。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-policies [file]: 打印所有策略的帮助信息，然后退出。</div><div class="line">    显示所有策略的完整文档。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-property prop [file]: 打印单个属性的帮助信息，然后退出。</div><div class="line">    显示指定属性的完整文档。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-property-list [file]: 列出所有可用的属性，然后退出。</div><div class="line">    该命令列出的清单包括所有属性的名字；其中，每个属性的帮助信息都可以通过--help-property选项后跟一个属性名的方式获得。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-properties [file]: 打印所有属性的帮助信息，然后退出。</div><div class="line">    显示所有属性的完整文档。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-variable var [file]: 打印单个变量的帮助信息，然后退出。</div><div class="line">    显示指定变量的完整文档。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-variable-list [file]: 列出文档中有记录的变量，然后退出。</div><div class="line">    该命令列出的清单包括所有变量的名字；其中，每个变量的帮助信息都可以通过--help-variable选项后跟一个变量名的方式获得。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--help-variables [file]: 打印所有变量的帮助信息，然后退出。</div><div class="line">    显示所有变量的完整帮助文档。如果指定了[file]参数，帮助信息会写到file中，且输出格式依赖于文件名后缀。支持的文件格式包括：man page，HTML，DocBook以及纯文本。</div><div class="line">--copyright [file]: 打印CMake的版权信息，然后退出。</div><div class="line">    如果指定了[file]参数，版权信息会写到这个文件中。</div><div class="line">--help: 打印用法信息，然后退出。</div><div class="line">    用法信息描述了基本的命令行界面及其选项。</div><div class="line">--help-full [file]: 打印完整的帮助信息，然后退出。</div><div class="line">    显示大多数UNIX man page提供的帮助信息。该选项是为非UNIX平台提供的；但是如果man手册页没有安装，它也能提供便利。如果制定了[file]参数，帮助信息会写到这个文件中。</div><div class="line">--help-html [file]: 以HTML格式打印完整的帮助信息，然后退出。</div><div class="line">    CMake的作者使用该选来帮助生成web页面。如果指定了[file]参数，帮助信息会写到这个文件中。</div><div class="line">--help-man [file]: 以UNIX的man手册页格式打印完整的帮助信息，然后退出。</div><div class="line">    cmake使用该选生成UNIX的man手册页。如果指定了[file]参数，帮助信息会写到这个文件中。</div><div class="line">--version [file]: 显示程序名/版本信息行，然后退出。</div><div class="line">    如果指定了[file]参数，版本信息会写到这个文件中。</div></pre></td></tr></table></figure>
+<p>生成器:可以生成的目标平台工程<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">Borland Makefiles: 生成Borland makefile。</div><div class="line"></div><div class="line">MSYS Makefiles: 生成MSYS makefile。 </div><div class="line">生成的makefile用use /bin/sh作为它的shell。在运行CMake的机器上需要安装msys。</div><div class="line"></div><div class="line">MinGW Makefiles: 生成供mingw32-make使用的make file。 </div><div class="line">生成的makefile使用cmd.exe作为它的shell。生成它们不需要msys或者unix shell。</div><div class="line"></div><div class="line">NMake Makefiles: 生成NMake makefile。</div><div class="line"></div><div class="line">NMake Makefiles JOM: 生成JOM makefile。</div><div class="line"></div><div class="line">Unix Makefiles: 生成标准的UNIX makefile。 </div><div class="line">在构建树上生成分层的UNIX makefile。任何标准的UNIX风格的make程序都可以通过默认的make目标构建工程。生成的makefile也提供了install目标。</div><div class="line"></div><div class="line">Visual Studio X YYYY:VS各版本</div><div class="line"></div><div class="line">Watcom WMake: 生成Watcom WMake makefiles。</div><div class="line"></div><div class="line">CodeBlocks - 各平台: 生成CodeBlock工程文件。 </div><div class="line">在顶层目录以及每层子目录下为CodeBlocks生成工程文件，生成的CMakeList.txt的特点是都包含一个PROJECT()调用。除此之外还会在构建树上生成一套层次性的makefile。通过默认的make目标，正确的make程序可以构建这个工程。makefile还提供了install目标。</div><div class="line"></div><div class="line">Eclipse CDT4 - 各平台: 生成Eclipse CDT 4.0 工程文件。 </div><div class="line">在顶层目录下为Eclipse生成工程文件。在运行源码外构建时，一个连接到顶层源码路径的资源文件会被创建。除此之外还会在构建树上生成一套层次性的makefile。通过默认的make目标，正确的make程序可以构建这个工程。makefile还提供了install目标。</div></pre></td></tr></table></figure></p>
+<h2 id="集成开源库的方式"><a href="#集成开源库的方式" class="headerlink" title="集成开源库的方式"></a>集成开源库的方式</h2><h3 id="本地连编"><a href="#本地连编" class="headerlink" title="本地连编"></a>本地连编</h3><p>基于cmake的本地连编，依据第三方库的编译形式分类:<br>第三方使用cmake时:<br>集成第三方cmake文件在自己的cmake结构树中。</p>
+<p>第三方使用自己的分发脚本时:如ffmpeg<br>一般自己的分发脚本还需要执行环境，所以还需要将其环境集成到项目中<br>难于集成环境时可以预先将其按不同平台分发后拉取，在本地仅做编译</p>
+<p>第三方无平台分发或不跨平台:如wtl<br>直接自己写cmake文件集成，分平台控制即可</p>
+<h3 id="远端包依赖管理"><a href="#远端包依赖管理" class="headerlink" title="远端包依赖管理"></a>远端包依赖管理</h3><p>类似maven、linux包管理<br>注意模块间不要循环依赖，应该是树形依赖<br>简单基于cmake完成包管理:<br><a href="https://github.com/imbaya2466/cmakeDependencyManagement" target="_blank" rel="external">https://github.com/imbaya2466/cmakeDependencyManagement</a></p>
+<h2 id="使用杂记"><a href="#使用杂记" class="headerlink" title="使用杂记"></a>使用杂记</h2><p>cmake中的list就是每个项用;分割</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CMake/" rel="tag"># CMake</a>
+          
+            <a href="/tags/跨平台/" rel="tag"># 跨平台</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/08/内存问题检查工具/" rel="next" title="内存问题检查工具">
+                <i class="fa fa-chevron-left"></i> 内存问题检查工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">118</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">2.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单个源文件"><span class="nav-number">2.1.</span> <span class="nav-text">单个源文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多个源文件"><span class="nav-number">2.2.</span> <span class="nav-text">多个源文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多目录"><span class="nav-number">2.3.</span> <span class="nav-text">多目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译选项"><span class="nav-number">2.4.</span> <span class="nav-text">编译选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加第三方依赖"><span class="nav-number">2.5.</span> <span class="nav-text">添加第三方依赖</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常见函数"><span class="nav-number">3.</span> <span class="nav-text">常见函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cmake指令"><span class="nav-number">4.</span> <span class="nav-text">Cmake指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集成开源库的方式"><span class="nav-number">5.</span> <span class="nav-text">集成开源库的方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本地连编"><span class="nav-number">5.1.</span> <span class="nav-text">本地连编</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#远端包依赖管理"><span class="nav-number">5.2.</span> <span class="nav-text">远端包依赖管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用杂记"><span class="nav-number">6.</span> <span class="nav-text">使用杂记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
