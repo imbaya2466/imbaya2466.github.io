@@ -97,14 +97,14 @@
 <meta name="description" content="前言跨平台的c&amp;amp;c++开发离不开cmake。 各个平台下都有自己的make工具GUN:Make微软:MSBuild、NMakeBSD:Make  Cmake允许开发者编写平台无关的CMakeList.txt 文件来定制整个编译流程。然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Stud">
 <meta name="keywords" content="CMake,跨平台">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CMake构建跨平台项目与集成第三方开源库">
-<meta property="og:url" content="http://yoursite.com/2019/06/17/CMake构建跨平台项目与集成第三方开源库/index.html">
+<meta property="og:title" content="CMake构建跨平台项目与包管理">
+<meta property="og:url" content="http://yoursite.com/2019/06/17/CMake构建跨平台项目与包管理/index.html">
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="前言跨平台的c&amp;amp;c++开发离不开cmake。 各个平台下都有自己的make工具GUN:Make微软:MSBuild、NMakeBSD:Make  Cmake允许开发者编写平台无关的CMakeList.txt 文件来定制整个编译流程。然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Stud">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-17T15:59:46.690Z">
+<meta property="og:updated_time" content="2019-06-18T03:52:41.233Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CMake构建跨平台项目与集成第三方开源库">
+<meta name="twitter:title" content="CMake构建跨平台项目与包管理">
 <meta name="twitter:description" content="前言跨平台的c&amp;amp;c++开发离不开cmake。 各个平台下都有自己的make工具GUN:Make微软:MSBuild、NMakeBSD:Make  Cmake允许开发者编写平台无关的CMakeList.txt 文件来定制整个编译流程。然后再根据目标用户的平台进一步生成所需的本地化 Makefile 和工程文件，如 Unix 的 Makefile 或 Windows 的 Visual Stud">
 
 
@@ -134,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/06/17/CMake构建跨平台项目与集成第三方开源库/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/06/17/CMake构建跨平台项目与包管理/"/>
 
 
 
 
 
-  <title>CMake构建跨平台项目与集成第三方开源库 | GGWP</title>
+  <title>CMake构建跨平台项目与包管理 | GGWP</title>
   
 
 
@@ -283,7 +283,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/17/CMake构建跨平台项目与集成第三方开源库/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/17/CMake构建跨平台项目与包管理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="imbaya">
@@ -300,7 +300,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">CMake构建跨平台项目与集成第三方开源库</h1>
+          <h1 class="post-title" itemprop="name headline">CMake构建跨平台项目与包管理</h1>
         
 
         <div class="post-meta">
@@ -401,7 +401,10 @@
 <h2 id="集成开源库的方式"><a href="#集成开源库的方式" class="headerlink" title="集成开源库的方式"></a>集成开源库的方式</h2><h3 id="本地连编"><a href="#本地连编" class="headerlink" title="本地连编"></a>本地连编</h3><p>基于cmake的本地连编，依据第三方库的编译形式分类:<br>第三方使用cmake时:<br>集成第三方cmake文件在自己的cmake结构树中。</p>
 <p>第三方使用自己的分发脚本时:如ffmpeg<br>一般自己的分发脚本还需要执行环境，所以还需要将其环境集成到项目中<br>难于集成环境时可以预先将其按不同平台分发后拉取，在本地仅做编译</p>
 <p>第三方无平台分发或不跨平台:如wtl<br>直接自己写cmake文件集成，分平台控制即可</p>
-<h3 id="远端包依赖管理"><a href="#远端包依赖管理" class="headerlink" title="远端包依赖管理"></a>远端包依赖管理</h3><p>类似maven、linux包管理<br>注意模块间不要循环依赖，应该是树形依赖<br>简单基于cmake完成包管理:<br><a href="https://github.com/imbaya2466/cmakeDependencyManagement" target="_blank" rel="external">https://github.com/imbaya2466/cmakeDependencyManagement</a></p>
+<h3 id="远端包依赖管理"><a href="#远端包依赖管理" class="headerlink" title="远端包依赖管理"></a>远端包依赖管理</h3><p>类似maven、linux包管理-不过这种都是二进制包管理<br>注意模块间不要循环依赖，应该是树形依赖<br>简单基于cmake完成包管理:<br><a href="https://github.com/imbaya2466/cmakeDependencyManagement" target="_blank" rel="external">https://github.com/imbaya2466/cmakeDependencyManagement</a></p>
+<p>这种实现是非常不适合c/c+++的，因为各种平台、系统、win的(MT、MTD、MD、MDd)、debug、release…..<br>这种交叉形成的种类根本不可能用二进制管理。</p>
+<p>因此必须本地联编，而本地连编+远端依赖管理=下拉源码本地编译</p>
+<p>那怎么解决呢。。。。<br>神器:Vcpkg!!!!!!!!<br>官方库+自定义下拉+自定义cmake编译脚本=自定义远端依赖源码本地联编<br><a href="https://github.com/microsoft/vcpkg" target="_blank" rel="external">https://github.com/microsoft/vcpkg</a><br><a href="https://blog.csdn.net/cjmqas/article/details/79282847" target="_blank" rel="external">https://blog.csdn.net/cjmqas/article/details/79282847</a><br>经测试，即使是ffmpeg这样复杂的环境也可以在win上编译</p>
 <h2 id="使用杂记"><a href="#使用杂记" class="headerlink" title="使用杂记"></a>使用杂记</h2><p>cmake中的list就是每个项用;分割</p>
 
       
