@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="逆向,linux,安全,CTF," />
+  <meta name="keywords" content="逆向,pwn,linux,CTF," />
 
 
 
@@ -95,14 +95,14 @@
 
 
 <meta name="description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。123char s[5];scanf(&amp;quot;%s&amp;quot;,s);参数个数无所谓，从高向低压，不会逆向增长。 当可以自由执行时，就可以让函数跳到任意地址并通过栈构造参数来执行任意函数。即使是一般权限的shell拿到后也可以查看许多数据，获得这个程序">
-<meta name="keywords" content="逆向,linux,安全,CTF">
+<meta name="keywords" content="逆向,pwn,linux,CTF">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PWN">
 <meta property="og:url" content="http://yoursite.com/2018/05/05/PWN/index.html">
 <meta property="og:site_name" content="GGWP">
 <meta property="og:description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。123char s[5];scanf(&amp;quot;%s&amp;quot;,s);参数个数无所谓，从高向低压，不会逆向增长。 当可以自由执行时，就可以让函数跳到任意地址并通过栈构造参数来执行任意函数。即使是一般权限的shell拿到后也可以查看许多数据，获得这个程序">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-03T08:40:00.694Z">
+<meta property="og:updated_time" content="2019-07-20T18:10:58.203Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PWN">
 <meta name="twitter:description" content="自我思考操纵栈的基本条件是获得栈的读写权。scanf的错误在于可以向一个指针指向的地方无限不经检查的添加数据，因此当该指针是指向栈内空间时自由。123char s[5];scanf(&amp;quot;%s&amp;quot;,s);参数个数无所谓，从高向低压，不会逆向增长。 当可以自由执行时，就可以让函数跳到任意地址并通过栈构造参数来执行任意函数。即使是一般权限的shell拿到后也可以查看许多数据，获得这个程序">
@@ -335,8 +335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/安全/" itemprop="url" rel="index">
-                    <span itemprop="name">安全</span>
+                  <a href="/categories/pwn/" itemprop="url" rel="index">
+                    <span itemprop="name">pwn</span>
                   </a>
                 </span>
 
@@ -395,9 +395,9 @@
           
             <a href="/tags/逆向/" rel="tag"># 逆向</a>
           
-            <a href="/tags/linux/" rel="tag"># linux</a>
+            <a href="/tags/pwn/" rel="tag"># pwn</a>
           
-            <a href="/tags/安全/" rel="tag"># 安全</a>
+            <a href="/tags/linux/" rel="tag"># linux</a>
           
             <a href="/tags/CTF/" rel="tag"># CTF</a>
           
@@ -501,7 +501,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">118</span>
+                <span class="site-state-item-count">120</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -512,7 +512,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -523,7 +523,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-count">105</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

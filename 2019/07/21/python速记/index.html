@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="python," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前置python2、3不兼容。脚本的区别可以看print建议先学习py3，但是py2也得会解释语言、脚本语言。必会语言之一 以下速记以token-表达式-语句-块-函数-单元等编译原理为逻辑。以下速记以c/c++ java为基础记不同。(编译型、编译-解释型、解释型)">
+<meta name="keywords" content="python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python速记">
+<meta property="og:url" content="http://yoursite.com/2019/07/21/python速记/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前置python2、3不兼容。脚本的区别可以看print建议先学习py3，但是py2也得会解释语言、脚本语言。必会语言之一 以下速记以token-表达式-语句-块-函数-单元等编译原理为逻辑。以下速记以c/c++ java为基础记不同。(编译型、编译-解释型、解释型)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-20T18:15:04.150Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python速记">
+<meta name="twitter:description" content="前置python2、3不兼容。脚本的区别可以看print建议先学习py3，但是py2也得会解释语言、脚本语言。必会语言之一 以下速记以token-表达式-语句-块-函数-单元等编译原理为逻辑。以下速记以c/c++ java为基础记不同。(编译型、编译-解释型、解释型)">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/21/python速记/"/>
+
+
+
+
+
+  <title>python速记 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/21/python速记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python速记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-21T02:09:12+08:00">
+                2019-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/python/" itemprop="url" rel="index">
+                    <span itemprop="name">python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前置"><a href="#前置" class="headerlink" title="前置"></a>前置</h2><p>python2、3不兼容。脚本的区别可以看print<br>建议先学习py3，但是py2也得会<br>解释语言、脚本语言。必会语言之一</p>
+<p>以下速记以token-表达式-语句-块-函数-单元等编译原理为逻辑。<br>以下速记以c/c++ java为基础记不同。(编译型、编译-解释型、解释型)</p>
+<a id="more"></a>
+<h2 id="基础语法"><a href="#基础语法" class="headerlink" title="基础语法"></a>基础语法</h2><p>脚本头加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/python</div><div class="line">#coding=utf-8</div></pre></td></tr></table></figure></p>
+<p>第一行linux直接执行脚本时决定使用什么解释器执行用的。<br>第二行指定文本的编码方式，解释器按这个编码读取。注释使用中文也要加<br>但是字串在py解释执行处理存储时不一定与脚本中编码一致，指定utf存储要在字串前加u</p>
+<p>py的代码块是使用缩进区别的。同一代码块每条语句缩进必须一致。<br>py新行作为语句结束，可以使用\将语句分为多行:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">total = item_one + \</div><div class="line">        item_two + \</div><div class="line">        item_three</div><div class="line">语句中包含 [], &#123;&#125; 或 () 括号就不需要使用多行连接符。</div><div class="line">days = [&apos;Monday&apos;, &apos;Tuesday&apos;, &apos;Wednesday&apos;,</div><div class="line">        &apos;Thursday&apos;, &apos;Friday&apos;]</div></pre></td></tr></table></figure></p>
+<p>引号’、”、’’’|”””都可，三个可以可跨行，且三引号中的字串不会转义</p>
+<p>注释用#</p>
+<p>缩进相同的一组语句构成一个代码块，我们称之代码组。<br>像if、while、def和class这样的复合语句，首行以关键字开始，以冒号( : )结束，该行之后的一行或多行代码构成代码组。<br>我们将首行及后面的代码组称为一个子句(clause)。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">if expression : </div><div class="line">   suite </div><div class="line">elif expression :  </div><div class="line">   suite  </div><div class="line">else :  </div><div class="line">   suite</div></pre></td></tr></table></figure></p>
+<h2 id="变量、数据类型"><a href="#变量、数据类型" class="headerlink" title="变量、数据类型"></a>变量、数据类型</h2><p>变量不用声明，赋值时创建。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">counter = 100 # 赋值整型变量</div><div class="line">miles = 1000.0 # 浮点型</div><div class="line">name = &quot;John&quot; # 字符串</div></pre></td></tr></table></figure></p>
+<p>可以使用del删除引用</p>
+<p>数据类型:<br>数字、字串、列表、元组、字典</p>
+<p>字串列表有俩种计数，0-n与-1-(-n-1),可以使用[ 头:尾]截取[)<br>可以使用字串*次数操作</p>
+<p>列表使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">list = [ &apos;runoob&apos;, 786 , 2.23, &apos;john&apos;, 70.2 ]</div><div class="line">print list               # 输出完整列表</div><div class="line">print list[0]            # 输出列表的第一个元素</div><div class="line">print list[1:3]          # 输出第二个至第三个元素 </div><div class="line">del list[1]              # 删除列表元素</div></pre></td></tr></table></figure></p>
+<p>元组-不可修改列表使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">tuple = ( &apos;runoob&apos;, 786 , 2.23, &apos;john&apos;, 70.2 )</div><div class="line">print tuple               # 输出完整元组</div><div class="line">print tuple[0]            # 输出元组的第一个元素</div><div class="line">print tuple[1:3]          # 输出第二个至第四个（不包含）的元素</div></pre></td></tr></table></figure></p>
+<p>字典-键值使用:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">dict = &#123;&#125;</div><div class="line">dict[&apos;one&apos;] = &quot;This is one&quot;</div><div class="line">dict[2] = &quot;This is two&quot;</div><div class="line">tinydict = &#123;&apos;name&apos;: &apos;john&apos;,&apos;code&apos;:6734, &apos;dept&apos;: &apos;sales&apos;&#125;</div><div class="line">print dict[&apos;one&apos;]          # 输出键为&apos;one&apos; 的值</div><div class="line">print dict[2]              # 输出键为 2 的值</div><div class="line">print tinydict             # 输出完整的字典</div><div class="line">print tinydict.keys()      # 输出所有键</div><div class="line">print tinydict.values()    # 输出所有值</div><div class="line">del dict[&apos;Name&apos;]           # 删除条目</div></pre></td></tr></table></figure></p>
+<p>数据转化:<br>类型当函数用即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">int(x [,base])</div></pre></td></tr></table></figure></p>
+<h2 id="表达式、语句"><a href="#表达式、语句" class="headerlink" title="表达式、语句"></a>表达式、语句</h2><p>算数+-*/%<br>增加:<br>**幂<br>//返回商的整数部分-突出是整数除法<br>比较== != &gt; &lt; &gt;= &lt;=  注意仅判断值、不判断引用<br>增加:<br>&lt;&gt;不等于<br>赋值= += -= *= /= %= **= //=<br>位运算符&amp; | ^ ~ &lt;&lt; &gt;&gt;<br>逻辑 and or not (不是|| &amp;&amp; !)<br>成员运算符 in  not in 可作用于字串、列表、元组<br>身份运算符 is  is not 判断俩个标识符是否引用同一对象</p>
+<p>条件:不用(条件) 注意加:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">if 判断条件：</div><div class="line">   执行语句</div><div class="line">elif 判断条件:</div><div class="line">   执行语句</div><div class="line">else：</div><div class="line">   执行语句</div></pre></td></tr></table></figure></p>
+<p>没有switch</p>
+<p>循环<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">while 判断条件：</div><div class="line">   执行语句</div><div class="line">for a in l:</div><div class="line">   a</div><div class="line">for index in range(n):#range返回序列</div><div class="line">   index</div></pre></td></tr></table></figure></p>
+<p>break、continue直接用即可。<br>pass可以作为一个语句占位。</p>
+<h2 id="函数、单元"><a href="#函数、单元" class="headerlink" title="函数、单元"></a>函数、单元</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def functionname( parameters ):#参数仅写名字，不指定类型</div><div class="line">   &quot;函数_文档字符串&quot;</div><div class="line">   过程</div><div class="line">   return [expression]</div></pre></td></tr></table></figure>
+<p>py的传参不可变类型(字串、整数、元组)传的是值，可变类型(列表、字典)传的是引用</p>
+<p>python模块是一个python文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 导入模块,写文件名即可</div><div class="line">import support</div><div class="line"># 导入一部分，这种导入后使用时不用加modename.xxx</div><div class="line">from modname import name1[, name2[, ... nameN]]</div><div class="line"></div><div class="line">support.print_func(&quot;1&quot;)</div></pre></td></tr></table></figure></p>
+<p>模块搜索路径:当前目录、PYTHONPATH、默认路径(一般为/usr/local/lib/python/)<br>目录分割使用.可以将目录作为包,但要加init</p>
+<h3 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h3><p>类:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">class ClassName:</div><div class="line">   &apos;类的帮助信息&apos;   #类文档字符串</div><div class="line">   class_suite  #类体</div><div class="line">举例:</div><div class="line">class Employee:</div><div class="line">   &apos;所有员工的基类&apos;</div><div class="line">   empCount = 0</div><div class="line">   </div><div class="line">   # 构造 elf 代表类的实例，self 在定义类的方法时是必须有的，调用时不必传入相应的参数。</div><div class="line">   def __init__(self, name, salary):</div><div class="line">      self.name = name</div><div class="line">      self.salary = salary</div><div class="line">      Employee.empCount += 1</div><div class="line">   </div><div class="line">   def displayCount(self):</div><div class="line">     print &quot;Total Employee %d&quot; % Employee.empCount</div><div class="line"> </div><div class="line">   def displayEmployee(self):</div><div class="line">      print &quot;Name : &quot;, self.name,  &quot;, Salary: &quot;, self.salary</div></pre></td></tr></table></figure></p>
+<p>创建对象:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">emp1 = Employee(&quot;Zara&quot;, 2000)</div><div class="line">emp1.displayEmployee()</div></pre></td></tr></table></figure></p>
+<p>回收:<br>引用计数器和一个循环垃圾收集器</p>
+<h2 id="常用功能"><a href="#常用功能" class="headerlink" title="常用功能"></a>常用功能</h2><p>字串格式化</p>
+<p>字串 % (表达式)<br>字串中格式化符号与c一致<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;My name is %s and weight is %d kg!&quot; % (&apos;Zara&apos;, 21)</div></pre></td></tr></table></figure></p>
+<p>ljust将原字串填充至指定长度</p>
+<p>len() + *都可以用于列表</p>
+<p>输入输出<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#读一行</div><div class="line">str = raw_input(&quot;请输入：&quot;)</div><div class="line">print &quot;你输入的内容是: &quot;, str</div></pre></td></tr></table></figure></p>
+<p>调试python脚本<br>python -m pdb xxx.py<br>n、s单步。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/21/pwn-入门1-基础与栈/" rel="next" title="pwn-入门1-基础与栈">
+                <i class="fa fa-chevron-left"></i> pwn-入门1-基础与栈
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">120</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前置"><span class="nav-number">1.</span> <span class="nav-text">前置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础语法"><span class="nav-number">2.</span> <span class="nav-text">基础语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量、数据类型"><span class="nav-number">3.</span> <span class="nav-text">变量、数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表达式、语句"><span class="nav-number">4.</span> <span class="nav-text">表达式、语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数、单元"><span class="nav-number">5.</span> <span class="nav-text">函数、单元</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#面向对象"><span class="nav-number">5.1.</span> <span class="nav-text">面向对象</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用功能"><span class="nav-number">6.</span> <span class="nav-text">常用功能</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>

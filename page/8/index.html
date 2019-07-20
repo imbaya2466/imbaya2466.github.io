@@ -283,6 +283,366 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/01/frida概观与初步使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/01/frida概观与初步使用/" itemprop="url">frida概观与初步使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-01T23:52:41+08:00">
+                2018-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="随笔"><a href="#随笔" class="headerlink" title="随笔"></a>随笔</h2><p>ARMv7（我的小米3/4）是32位的<br>linux命令 &amp;  表示任务在后台执行。<br>python3\Scripts被自动加入路径<br>python3被自动加入路径</p>
+<h2 id="frida原理"><a href="#frida原理" class="headerlink" title="frida原理"></a>frida原理</h2><p>Frida可以“将你自己的JavaScript代码片段或代码库注入到Windows，MACOS，Linux， iOS，Android和QNX 的本地应用中”。多平台可注非常强大，重点研究。</p>
+<p>具体过程实现未看…之后记得看看源码</p>
+<h2 id="frida安装"><a href="#frida安装" class="headerlink" title="frida安装"></a>frida安装</h2><p>只看官方：<a href="https://www.frida.re/docs/home/" target="_blank" rel="external">https://www.frida.re/docs/home/</a><br>前提：</p>
+<ol>
+<li>python 3</li>
+<li>ptyhon自带的pip</li>
+</ol>
+<p>运行pip install frida即可</p>
+<p>为了调试android需要下载frida-server对应android上的。adb push并777运行之</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>frida的运行依靠py脚本，其核心用c写的，注入代码为js。<br>基本用法为编写python脚本实现输入，里面提供的一些工具也是py脚本+js代码注入写出的。因此可参考api写出自己的工具。</p>
+<p>注入用js的api：<a href="https://www.frida.re/docs/javascript-api/" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/</a><br>针对android多看它的java部分。<a href="https://www.frida.re/docs/javascript-api/#java" target="_blank" rel="external">https://www.frida.re/docs/javascript-api/#java</a></p>
+<p>还有非常多功能，比如dump等</p>
+<p>一般分析流程</p>
+<ol>
+<li>反编译apk，分析代码寻找hook点。</li>
+<li>编写js代码，调用类的方法或者替换。</li>
+<li>在python中执行即可。</li>
+</ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/01/frida概观与初步使用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/31/xposed概观与初步使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/31/xposed概观与初步使用/" itemprop="url">xposed概观与初步使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T00:31:51+08:00">
+                2018-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近先后尝试了各种手写nativehook，开始还好，写到后面越发艰难，最后参看2011年的古河代码后无果，于是决定先使用好常用的hook框架，再针对开源的代码去研究轮子。<br>hook的好处十分多，如可以不修改不重打包逆向程序，而且可以避免反调试和各种壳，但hook时需要详细知道目标函数的符号等信息。</p>
+<p>目前认准有三：<br>1、<strong>XPOSED 开源</strong><br>优点：<br>1）、代码编写方便，开发速度较快。<br>2）、有许多现成的模块可以用，而且很多模块也是开源的，方便学习研究。<br>缺点：<br>1）、每次编写代码需要重启手机生效。<br>2）、不支持native的HOOK。<br>3）、独立性较差，需要依赖XPOSED installer，不易单独分发。</p>
+<p>2、<strong>cydia substrate 不开源</strong><br>这个Supported on versions 2.3 through 4.3的android。在ios上表现很好，android的2013年就停更了。<br>优点：<br>1）、比较擅长在native层的HOOK。<br>2）、独立性较好，实现的功能可以封装在单独APP里分发给用户使用，因此也是较大型外挂辅助工具的首选。<br>缺点：<br>1）、每次编写代码需要重启手机生效。<br>2）、开发效率较低，成本较高。</p>
+<p>3、<strong>frida 开源</strong><br>优点：<br>1）、无须重启手机和目标APP，这个可以节省很多时间，如果APP测试的点需要很复杂地搭建好环境，一旦重新启动就意味着很麻烦地再重新搭建环境，例如账号登录，进入特定关卡等。<br>2）、JS脚本编写，灵活方便，再也不用担心多参数个数和类型问题了。<br>3）、可以直接使用或修改对象的成员变量，非常方便。<br>4）、配合PC终端命令行使用，脚本编写出错也不会导致APP崩溃，只需修改后重新来过即可，有时会有问题，这个时候需要重启下APP或手机即可。</p>
+<p>缺点：<br>1）、JS脚本套在python脚本里面，编写JS脚本时候不是很方便，容易出错，好在即使出错也不会导致APP崩溃掉，修改后重新来过即可。<br>2）、该工具配合PC终端使用，更适合专业者，不利于分发给用户使用。</p>
+<p>接下来依次尝试之。</p>
+<h2 id="Xposed-原理"><a href="#Xposed-原理" class="headerlink" title="Xposed 原理"></a>Xposed 原理</h2><p>通过替换/system/bin/app_process程序控制zygote进程，使得app_process在启动过程中会加载XposedBridge.jar这个jar包，从而完成对Zygote进程及其创建的Dalvik虚拟机的劫持。</p>
+<p>项目梳理：<br>XposedBridge.jar：XposedBridge.jar是Xposed提供的jar文件，负责在Native层与FrameWork层进行交互。/system/bin/app_process进程启动过程中会加载该jar包，其它的Modules的开发与运行都是基于该jar包的。<br>Xposed：Xposed的C++部分，主要是用来替换/system/bin/app_process，并为XposedBridge提供JNI方法。<br>XposedInstaller：Xposed的安装包，负责配置Xposed工作的环境并且提供对基于Xposed框架的Modules的管理。在安装XposedInstaller之后，app_process与XposedBridge.jar放置在了/data/data/de.robv.android.xposed.installer。</p>
+<h2 id="Xposed-安装"><a href="#Xposed-安装" class="headerlink" title="Xposed 安装"></a>Xposed 安装</h2><p>因为要修改系统文件，所以前提需要root<br>经实践发现supersu卡刷非常管用。</p>
+<p>root后安装xposed installer ，进入应用，点击install安装框架（via那个是通过recovery模式安装）</p>
+<p>到此hook框架已经安装完成。可以自己编写模块使用了</p>
+<h2 id="AS下的Xposed编程"><a href="#AS下的Xposed编程" class="headerlink" title="AS下的Xposed编程"></a>AS下的Xposed编程</h2><h3 id="创建工程"><a href="#创建工程" class="headerlink" title="创建工程"></a>创建工程</h3><p>不必有activity，一个空项目就好</p>
+<h3 id="1导入包"><a href="#1导入包" class="headerlink" title="1导入包"></a>1导入包</h3><p>俩种方式：</p>
+<ol>
+<li>把下好的api-82.jar放到lib下，并添加到build.gradle路径中</li>
+<li>由于以传至jcenter()库所以在build.gradle的dependencies下直接写compileOnly ‘de.robv.android.xposed:api:82’</li>
+</ol>
+<p>注意接口包不能包含到插件项目的生成包中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">    implementation fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])</div><div class="line">    implementation &apos;com.android.support:appcompat-v7:27.1.1&apos;</div><div class="line">    testImplementation &apos;junit:junit:4.12&apos;</div><div class="line">    androidTestImplementation &apos;com.android.support.test:runner:1.0.2&apos;</div><div class="line">    androidTestImplementation &apos;com.android.support.test.espresso:espresso-core:3.0.2&apos;</div><div class="line">    compileOnly &apos;de.robv.android.xposed:api:82&apos;</div><div class="line">	compileOnly &apos;de.robv.android.xposed:api:82:sources&apos; 方便Ctrl+Q快速查阅</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意为compileOnly，区别：<br>2.x（3.x）</p>
+<ol>
+<li>（implementation）：只能在内部使用此模块,会参与打包，比如我在一个libiary中使用implementation依赖了gson库，然后我的主项目依赖了libiary，那么，我的主项目就无法访问gson库中的方法。</li>
+<li>compile（api）：使用该方式依赖的库将会参与编译和打包。 也就是全部包含进dex中。又打包又用</li>
+<li>provided（compileOnly）：只在编译时有效，不会参与打包 。运行时寻找android平台上的，只用不打包</li>
+<li>apk（runtimeOnly）：只在生成apk的时候参与打包，编译时不会参与。不用只打包。</li>
+<li>testCompile（testImplementation）：testCompile 只在单元测试代码的编译以及最终打包测试apk时有效。</li>
+<li>debugCompile（debugImplementation）:debugCompile 只在debug模式的编译和最终的debug apk打包时有效</li>
+<li>releaseCompile:Release compile 仅仅针对Release 模式的编译和最终的Release apk打包。</li>
+</ol>
+<p>API 类真正的实现则在 Xposed FramWork中。所以选择compileOnly<br>jar为.class集合。</p>
+<h3 id="2改manifest"><a href="#2改manifest" class="headerlink" title="2改manifest"></a>2改manifest</h3><p>AndroidManifest.xml中添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;application</div><div class="line">    android:allowBackup=&quot;true&quot;</div><div class="line">    android:icon=&quot;@mipmap/ic_launcher&quot;</div><div class="line">    android:label=&quot;@string/app_name&quot;</div><div class="line">    android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;</div><div class="line">    android:supportsRtl=&quot;true&quot;</div><div class="line">    android:theme=&quot;@style/AppTheme&quot;&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposedmodule&quot;</div><div class="line">    android:value=&quot;true&quot;/&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposeddescription&quot;</div><div class="line">    android:value=&quot;Easy example&quot;/&gt;</div><div class="line"></div><div class="line">&lt;meta-data</div><div class="line">    android:name=&quot;xposedminversion&quot;</div><div class="line">    android:value=&quot;54&quot;/&gt;</div><div class="line">&lt;/application&gt;</div></pre></td></tr></table></figure></p>
+<p>xposedmodule：代表的是Android程序作为Xposed中的一个模块，所以值为true；<br>xposeddescription：代表的是对本模块的功能的描述，可以自己简单叙述下就可以了；项目名是插件名，这是底下的描述<br>xposedminversion：代表的是本模块开发时用到的xposed的jar包的最低版本号；</p>
+<h3 id="3java中写类"><a href="#3java中写类" class="headerlink" title="3java中写类"></a>3java中写类</h3><p>只要新建一个实现IXposedHookLoadPackage接口的类，然后在handleLoadPackage回调方法中进行拦截操作即可，详细见下文。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">import de.robv.android.xposed.IXposedHookLoadPackage;</div><div class="line">import de.robv.android.xposed.XposedBridge;</div><div class="line">import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;</div><div class="line"></div><div class="line">public class main implements IXposedHookLoadPackage &#123;</div><div class="line">    public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable &#123;</div><div class="line">        XposedBridge.log(&quot;Loaded app: &quot; + lpparam.packageName);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="4添加模块入口"><a href="#4添加模块入口" class="headerlink" title="4添加模块入口"></a>4添加模块入口</h3><p>告诉Xposed框架一个模块中Hook的入口</p>
+<ol>
+<li>main下建assets文件夹</li>
+<li>assets文件夹下建xposed_init文件</li>
+<li>xposed_init中写包名.类名</li>
+</ol>
+<p><strong>main文件夹下的东西都会被打包</strong></p>
+<h3 id="构建安装"><a href="#构建安装" class="headerlink" title="构建安装"></a>构建安装</h3><p>构建安装apk至手机中，框架即可自动识别到模块，点击启动，重启后即可生效。</p>
+<p>注意AS的Instant Run（闪电）是加快apk安装速度的功能，可能涉及的方面有：</p>
+<ol>
+<li>优化apk大小，可能把不用的类优化掉了（xposed时小心）</li>
+<li>热更新方法内代码</li>
+<li>热更新资源</li>
+<li>热更新新方法</li>
+</ol>
+<h2 id="api详解"><a href="#api详解" class="headerlink" title="api详解"></a>api详解</h2><p>首先是api官网：<br><a href="https://api.xposed.info/reference/packages.html" target="_blank" rel="external">https://api.xposed.info/reference/packages.html</a></p>
+<p>android.app:有关当前应用程序信息的方法。<br>android.content.res:包含替换资源所需的类。<br>de.robv.android.xposed:包含Xposed框架的主要类。<br>de.robv.android.xposed.callbacks:包含回调的基类。<br>de.robv.android.xposed.services:包含Xposed框架提供的文件访问服务。<br><img src="https://i.imgur.com/nhQbI7d.png" alt=""></p>
+<h4 id="android-app"><a href="#android-app" class="headerlink" title="android.app"></a>android.app</h4><p>就一个AndroidAppHelper类，用于查询当前应用程序信息的各种方法</p>
+<h4 id="de-robv-android-xposed"><a href="#de-robv-android-xposed" class="headerlink" title="de.robv.android.xposed"></a>de.robv.android.xposed</h4><p>这个是主要功能包<br>IXposedHookLoadPackage接口：这个接口应该由模块的主类来实现。Xposed会自动注册为回叫。在每个app加载时收到通知。其唯一方法在加载时调用：void handleLoadPackage （XC_LoadPackage.LoadPackageParam lpparam）参数为de.robv.android.xposed.callbacks包中XC_LoadPackage的子类，其为包装关于正在加载的应用程序的信息的类。可返回packageName，classLoader等</p>
+<p>里面还有：XposedHelpers静态类用于简化hook如：findAndHookMethod<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">public static XC_MethodHook.Unhook findAndHookMethod (String className, ClassLoader classLoader, String methodName, Object... parameterTypesAndCallback)</div><div class="line">参数为：</div><div class="line">1. 类名</div><div class="line">2. 类加载器</div><div class="line">3. 目标方法名称</div><div class="line">4. 参数类型与回调函数</div><div class="line"></div><div class="line">官方示例：</div><div class="line"></div><div class="line">public class Tutorial implements IXposedHookLoadPackage &#123;</div><div class="line">	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable &#123;</div><div class="line">		if (!lpparam.packageName.equals(&quot;com.android.systemui&quot;))</div><div class="line">			return;</div><div class="line"></div><div class="line">		findAndHookMethod(&quot;com.android.systemui.statusbar.policy.Clock&quot;, lpparam.classLoader, &quot;updateClock&quot;, new XC_MethodHook() &#123;</div><div class="line">  		 @Override</div><div class="line"> 		  protected void beforeHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">    			 String oldText = (String) param.args[0];</div><div class="line">     			Log.d(&quot;MyModule&quot;, oldText);</div><div class="line">    			 param.args[0] = &quot;test&quot;;</div><div class="line">    			 param.args[1] = 42; // auto-boxing is working here</div><div class="line">    			 setBooleanField(param.args[2], &quot;great&quot;, true);//设置类的字段XposedHelpers中</div><div class="line">			     // 这样写不行，因为myclass编译时未知</div><div class="line">    			 //   MyClass myClass = (MyClass) param.args[2];</div><div class="line">   			  //   myClass.great = true;</div><div class="line">			@Override</div><div class="line">			protected void afterHookedMethod(MethodHookParam param) throws Throwable &#123;</div><div class="line">				TextView tv = (TextView) param.thisObject;</div><div class="line">				String text = tv.getText().toString();</div><div class="line">				tv.setText(text + &quot; :)&quot;);</div><div class="line">				tv.setTextColor(Color.RED);</div><div class="line">			&#125;</div><div class="line">		&#125;);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>XC_MethodHook钩子类，其含俩个方法用于目标方法之前与之后调用，其有俩个内部类：<br>MethodHookParam可获得参数（字段args数组）与返回信息（方法）<br>XC_MethodHook.Unhook管理hook用。可用来删除回调</p>
+<p>具体灵活使用还是需要系统框架源码知识和xposed源码实现原理。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/26/android-注入初试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -375,22 +735,17 @@
 
       
         
-          
-            <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373</a></p>
+          <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373" target="_blank" rel="external">https://jaq.alibaba.com/community/art/show?spm=a313e.7916648.0.0.E3QzcI&amp;articleid=373</a></p>
 <p>hooking linux与android<br>框架非常多，hook native，jni和java层的函数，但是需要研究原理，可以阅读开源框架的代码，比如xpose。</p>
 <h2 id="原生层hook"><a href="#原生层hook" class="headerlink" title="原生层hook"></a>原生层hook</h2><p>其实无论是hook还是调试都离不开ptrace这个system call<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);</div><div class="line"></div><div class="line">//其中request参数为一个联合体，该参数决定了ptrace函数的行为，pid参数为远程进程的ID，addr参数与data参数在不同的request参数取值下表示不同的含义。</div><div class="line">//因为long随linux系统位数改变，所以返回采用long</div></pre></td></tr></table></figure></p>
 <p>自己实现了个交叉编译make脚本，见同期博客</p>
-<h3 id="hook1获取目标系统调用"><a href="#hook1获取目标系统调用" class="headerlink" title="hook1获取目标系统调用"></a>hook1获取目标系统调用</h3><p>这个是获取目标信息<br>hook1:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line">#include &lt;sys/ptrace.h&gt;</div><div class="line">#include &lt;sys/types.h&gt;</div><div class="line">#include &lt;sys/wait.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;errno.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;sys/syscall.h&gt;</div><div class="line"></div><div class="line">long getSysCallNo(int pid, struct pt_regs *regs)</div><div class="line">&#123;</div><div class="line">    long scno = 0;</div><div class="line">    scno = ptrace(PTRACE_PEEKTEXT, pid, (void *)(regs-&gt;ARM_pc - 4), NULL);//读取一个指令(4字节)，从指定内存地址 pc-4所指向的 </div><div class="line">    if(scno == 0)</div><div class="line">        return 0;</div><div class="line">         //ARM架构上，所有的系统调用都是通过SWI来实现的。并且在ARM 架构中有两个SWI指令，分别针对EABI和OABI：</div><div class="line">    if (scno == 0xef000000) &#123;</div><div class="line">        scno = regs-&gt;ARM_r7;</div><div class="line">/*</div><div class="line">[EABI] 机器码：</div><div class="line"></div><div class="line">1110 1111 0000 0000 2字节 SWI 0 </div><div class="line">0为立即数 表示系统调用 </div><div class="line">具体的调用号存放在寄存器r7中. </div><div class="line">*/ </div><div class="line">    &#125; else &#123;</div><div class="line">    	//    命令后半 +立即数的半字节 因为立即数=调用号|0x900000所以  查看立即数是否合法  </div><div class="line">        if ((scno &amp; 0x0ff00000) != 0x0f900000) &#123;</div><div class="line">            return -1;</div><div class="line">        &#125;</div><div class="line">        scno &amp;= 0x000fffff;     //取调用号 </div><div class="line">/*</div><div class="line">[OABI] 机器码：</div><div class="line"></div><div class="line">1101 1111 vvvv vvvv 2字节 SWI immed_8 </div><div class="line">immed_8  为立即数 </div><div class="line">调用号进行转换以后得到指令中的立即数。立即数=调用号 | 0x900000 立即数中含调用号 </div><div class="line">*/ </div><div class="line">    &#125;</div><div class="line">    return scno;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">void hookSysCallBefore(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs regs;</div><div class="line">    int sysCallNo = 0;</div><div class="line">    </div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);    //读取寄存器</div><div class="line">    sysCallNo = getSysCallNo(pid, &amp;regs);</div><div class="line">    printf(&quot;Before SysCallNo = %d\n&quot;,sysCallNo);</div><div class="line">    //关于system call number对应的具体system call可以参考</div><div class="line">    </div><div class="line">    if(sysCallNo == __NR_write)</div><div class="line">    &#123;</div><div class="line">        printf(&quot;__NR_write: %ld %p %ld\n&quot;,regs.ARM_r0,(void*)regs.ARM_r1,regs.ARM_r2);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void hookSysCallAfter(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs regs;</div><div class="line">    int sysCallNo = 0;</div><div class="line"></div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);  </div><div class="line">    sysCallNo = getSysCallNo(pid, &amp;regs);</div><div class="line">    </div><div class="line">    printf(&quot;After SysCallNo = %d\n&quot;,sysCallNo);</div><div class="line">    </div><div class="line">    if(sysCallNo == __NR_write)</div><div class="line">    &#123;</div><div class="line">        printf(&quot;__NR_write return: %ld\n&quot;,regs.ARM_r0);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    printf(&quot;\n&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char *argv[])</div><div class="line">&#123;</div><div class="line">    if(argc != 2) &#123;</div><div class="line">        printf(&quot;Usage: %s &lt;pid to be traced&gt;\n&quot;, argv[0]);//第一个参数为文件名 </div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">                                                                                                     </div><div class="line">    pid_t pid; //32位为int </div><div class="line">    int status;</div><div class="line">    pid = atoi(argv[1]); //字串化为int </div><div class="line">    </div><div class="line">    if(0 != ptrace(PTRACE_ATTACH, pid, NULL, NULL))  //附着目标任务 </div><div class="line">    &#123;</div><div class="line">        printf(&quot;Trace process failed:%d.\n&quot;, errno);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">        </div><div class="line">    ptrace(PTRACE_SYSCALL, pid, NULL, NULL); //在system call前下断点 再次使用使syscall后也停。 </div><div class="line">    </div><div class="line">    while(1)</div><div class="line">    &#123;</div><div class="line">        wait(&amp;status);//等待子进程终止（fork，clone出的），任意一个子进程停则返回，返回id，状态存于status中 </div><div class="line">        hookSysCallBefore(pid);</div><div class="line">        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">        </div><div class="line">        wait(&amp;status);</div><div class="line">        hookSysCallAfter(pid);</div><div class="line">        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    ptrace(PTRACE_DETACH, pid, NULL, NULL);//结束附着 </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>用ps命令找到目标进程的pid。./hook1 xx 即可。原理就是用ptrace附着进程。 具体见代码注释，printf本质就是调用write这个系统调用，参数为流，内容，大小。</p>
-<p><img src="https://i.imgur.com/fFlShDh.png" alt=""></p>
-<h3 id="hook2更改目标内存"><a href="#hook2更改目标内存" class="headerlink" title="hook2更改目标内存"></a>hook2更改目标内存</h3><p>这个是更改目标内存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div></pre></td><td class="code"><pre><div class="line">#include &lt;sys/ptrace.h&gt;</div><div class="line">#include &lt;sys/types.h&gt;</div><div class="line">#include &lt;sys/wait.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;errno.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;sys/syscall.h&gt;</div><div class="line"></div><div class="line">const int long_size = sizeof(long);</div><div class="line">//随着宏__WORDSIZE值的改变，long int数据类型的大小也会发生改变。如果__WORDSIZE的值为32，则long int和int类型一样，占有32位。 </div><div class="line">// 字=word=int=long =32位下为4字节      </div><div class="line"></div><div class="line">long getSysCallNo(int pid, struct pt_regs *regs)</div><div class="line">&#123;</div><div class="line">    long scno = 0;</div><div class="line">     </div><div class="line">    scno = ptrace(PTRACE_PEEKTEXT, pid, (void *)(regs-&gt;ARM_pc - 4), NULL);</div><div class="line">    if(scno == 0)</div><div class="line">        return 0;</div><div class="line">         </div><div class="line">    if (scno == 0xef000000) &#123;</div><div class="line">        scno = regs-&gt;ARM_r7;</div><div class="line">    &#125; else &#123;</div><div class="line">        if ((scno &amp; 0x0ff00000) != 0x0f900000) &#123;</div><div class="line">            return -1;</div><div class="line">        &#125;</div><div class="line">        scno &amp;= 0x000fffff;</div><div class="line">    &#125;</div><div class="line">    return scno;    </div><div class="line">&#125;</div><div class="line"></div><div class="line">void reverse(char *str)</div><div class="line">&#123;   int i, j;</div><div class="line">    char temp;</div><div class="line">    for(i = 0, j = strlen(str) - 2;//\n不翻所以多-1 </div><div class="line">        i &lt;= j; ++i, --j) &#123;</div><div class="line">        temp = str[i];</div><div class="line">        str[i] = str[j];</div><div class="line">        str[j] = temp;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void getdata(pid_t child, long addr,</div><div class="line">             char *str, int len)</div><div class="line">&#123;   char *laddr;</div><div class="line">    int i, j;</div><div class="line">    union u &#123;</div><div class="line">            long val;</div><div class="line">            char chars[long_size];</div><div class="line">    &#125;data;//date读时作为long  写时作为char数组 </div><div class="line">    i = 0;</div><div class="line">    j = len / long_size;</div><div class="line">    laddr = str;</div><div class="line">    while(i &lt; j) &#123;</div><div class="line">        data.val = ptrace(PTRACE_PEEKDATA,</div><div class="line">                          child, addr + i * 4,</div><div class="line">                          NULL); </div><div class="line">//用PEEKTEXT去取程序指令,用PEEKDATA去取数据,因为linux下程序质量和数据都在一个地址空间,所以没区别</div><div class="line">        memcpy(laddr, data.chars, long_size);</div><div class="line">        ++i;</div><div class="line">        laddr += long_size;</div><div class="line">    &#125;</div><div class="line">    j = len % long_size;</div><div class="line">    if(j != 0) &#123;//把余下的读了 </div><div class="line">        data.val = ptrace(PTRACE_PEEKDATA,</div><div class="line">                          child, addr + i * 4,</div><div class="line">                          NULL);</div><div class="line">        memcpy(laddr, data.chars, j);</div><div class="line">    &#125;</div><div class="line">    str[len] = &apos;\0&apos;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void putdata(pid_t child, long addr,</div><div class="line">             char *str, int len)</div><div class="line">&#123;   char *laddr;</div><div class="line">    int i, j;</div><div class="line">    union u &#123;</div><div class="line">            long val;</div><div class="line">            char chars[long_size];</div><div class="line">    &#125;data;</div><div class="line">    i = 0;</div><div class="line">    j = len / long_size;</div><div class="line">    laddr = str;</div><div class="line">    while(i &lt; j) &#123;</div><div class="line">        memcpy(data.chars, laddr, long_size);</div><div class="line">        ptrace(PTRACE_POKEDATA, child,</div><div class="line">               addr + i * 4, data.val);//写时long（4字节）直接用参4传 </div><div class="line">        ++i;</div><div class="line">        laddr += long_size;</div><div class="line">    &#125;</div><div class="line">    j = len % long_size;</div><div class="line">    if(j != 0) &#123;</div><div class="line">        memcpy(data.chars, laddr, j);</div><div class="line">        ptrace(PTRACE_POKEDATA, child,</div><div class="line">               addr + i * 4, data.val);//这里可能会覆盖目标内存中字串后的一部分 </div><div class="line">//应该首先通过request参数为PTRACE_PEEKTEXT的ptrace函数读取原内存中的一个word大小的数据，然后将要写入的数据复制到读取出的数据的低位，然后调用ptrace函数将修改后的数据写入远程进程的内存地址处。</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//翻转字符串        任务id     字串地址     字串长度 </div><div class="line">void modifyString(pid_t pid, long addr, long strlen)</div><div class="line">&#123;</div><div class="line">    char* str;</div><div class="line">    str = (char *)calloc((strlen+1) * sizeof(char), 1);//分配内存在自己这里 </div><div class="line">    getdata(pid, addr, str, strlen);//取 </div><div class="line">    reverse(str);//翻 </div><div class="line">    putdata(pid, addr, str, strlen);//存 </div><div class="line">&#125;</div><div class="line"></div><div class="line">void hookSysCallBefore(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs regs;</div><div class="line">    int sysCallNo = 0;</div><div class="line">    </div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);    //取寄存器 </div><div class="line">    sysCallNo = getSysCallNo(pid, &amp;regs);//取系统调用编号 </div><div class="line">    printf(&quot;Before SysCallNo = %d\n&quot;,sysCallNo);</div><div class="line">    </div><div class="line">    if(sysCallNo == __NR_write)</div><div class="line">    &#123;</div><div class="line">        printf(&quot;__NR_write: %ld %p %ld\n&quot;,regs.ARM_r0,(void*)regs.ARM_r1,regs.ARM_r2);</div><div class="line">        modifyString(pid, regs.ARM_r1, regs.ARM_r2);//r1指向字符串，r2存储长度 </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void hookSysCallAfter(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs regs;</div><div class="line">    int sysCallNo = 0;</div><div class="line"></div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);  </div><div class="line">    sysCallNo = getSysCallNo(pid, &amp;regs);</div><div class="line">    </div><div class="line">    printf(&quot;After SysCallNo = %d\n&quot;,sysCallNo);</div><div class="line">    </div><div class="line">    if(sysCallNo == __NR_write)</div><div class="line">    &#123;</div><div class="line">        printf(&quot;__NR_write return: %ld\n&quot;,regs.ARM_r0);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    printf(&quot;\n&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char *argv[])</div><div class="line">&#123;</div><div class="line">    if(argc != 2) &#123;</div><div class="line">        printf(&quot;Usage: %s &lt;pid to be traced&gt;\n&quot;, argv[0]);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">                                                                                                     </div><div class="line">    pid_t pid;</div><div class="line">    int status;</div><div class="line">    pid = atoi(argv[1]);</div><div class="line">    </div><div class="line">    if(0 != ptrace(PTRACE_ATTACH, pid, NULL, NULL))</div><div class="line">    &#123;</div><div class="line">        printf(&quot;Trace process failed:%d.\n&quot;, errno);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">        </div><div class="line">    ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">    </div><div class="line">    while(1)</div><div class="line">    &#123;</div><div class="line">        wait(&amp;status);</div><div class="line">        hookSysCallBefore(pid);</div><div class="line">        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">        </div><div class="line">        wait(&amp;status);</div><div class="line">        hookSysCallAfter(pid);</div><div class="line">        ptrace(PTRACE_SYSCALL, pid, NULL, NULL);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    ptrace(PTRACE_DETACH, pid, NULL, NULL);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="hook3动态执行sleep-函数"><a href="#hook3动态执行sleep-函数" class="headerlink" title="hook3动态执行sleep()函数"></a>hook3动态执行sleep()函数</h3><p>这个是调用用远程已有模块执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;sys/user.h&gt;</div><div class="line">#include &lt;sys/ptrace.h&gt;</div><div class="line">#include &lt;sys/ptrace.h&gt;</div><div class="line">#include &lt;sys/wait.h&gt;</div><div class="line">#include &lt;sys/mman.h&gt;</div><div class="line">#include &lt;dlfcn.h&gt;</div><div class="line">#include &lt;dirent.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">#include &lt;elf.h&gt;</div><div class="line">#include &lt;android/log.h&gt;</div><div class="line">#include &lt;errno.h&gt;</div><div class="line"></div><div class="line">#define CPSR_T_MASK     ( 1u &lt;&lt; 5 )</div><div class="line"></div><div class="line">const char *libc_path = &quot;/system/lib/libc.so&quot;;</div><div class="line">const int long_size = sizeof(long);</div><div class="line"></div><div class="line"></div><div class="line">//设置寄存器 </div><div class="line">int ptrace_setregs(pid_t pid, struct pt_regs * regs)</div><div class="line">&#123;</div><div class="line">    if (ptrace(PTRACE_SETREGS, pid, NULL, regs) &lt; 0) &#123;</div><div class="line">        perror(&quot;ptrace_setregs: Can not set register values&quot;);</div><div class="line">        return -1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//使目标继续执行 </div><div class="line">int ptrace_continue(pid_t pid)</div><div class="line">&#123;</div><div class="line">    if (ptrace(PTRACE_CONT, pid, NULL, 0) &lt; 0) &#123;</div><div class="line">        perror(&quot;ptrace_cont&quot;);</div><div class="line">        return -1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//往目标地址     id       地址     数据    大小 </div><div class="line">void putdata(pid_t child, long addr,</div><div class="line">             char *str, int len)</div><div class="line">&#123;   char *laddr;</div><div class="line">    int i, j;</div><div class="line">    union u &#123;</div><div class="line">            long val;</div><div class="line">            char chars[long_size];</div><div class="line">    &#125;data;</div><div class="line">    i = 0;</div><div class="line">    j = len / long_size;</div><div class="line">    laddr = str;</div><div class="line">    while(i &lt; j) &#123;</div><div class="line">        memcpy(data.chars, laddr, long_size);</div><div class="line">        ptrace(PTRACE_POKEDATA, child,</div><div class="line">               addr + i * 4, data.val);</div><div class="line">        ++i;</div><div class="line">        laddr += long_size;</div><div class="line">    &#125;</div><div class="line">    j = len % long_size;</div><div class="line">    if(j != 0) &#123;</div><div class="line">        memcpy(data.chars, laddr, j);</div><div class="line">        ptrace(PTRACE_POKEDATA, child,</div><div class="line">               addr + i * 4, data.val);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//取模块地址 </div><div class="line">void* get_module_base(pid_t pid, const char* module_name)</div><div class="line">&#123;</div><div class="line">    FILE *fp;</div><div class="line">    long addr = 0;</div><div class="line">    char *pch;</div><div class="line">    char filename[32];</div><div class="line">    char line[1024];</div><div class="line"></div><div class="line">//读取proc运行时数据/pid/maps </div><div class="line">    if (pid == 0) &#123;</div><div class="line">        snprintf(filename, sizeof(filename), &quot;/proc/self/maps&quot;);</div><div class="line">    &#125; else &#123;</div><div class="line">        snprintf(filename, sizeof(filename), &quot;/proc/%d/maps&quot;, pid);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    fp = fopen(filename, &quot;r&quot;);</div><div class="line"></div><div class="line">    if (fp != NULL) &#123;</div><div class="line">        while (fgets(line, sizeof(line), fp)) &#123;</div><div class="line">            if (strstr(line, module_name)) &#123;</div><div class="line">                pch = strtok( line, &quot;-&quot; );        //这里不清楚，需要linux系统知识 </div><div class="line">                addr = strtoul( pch, NULL, 16 );</div><div class="line"></div><div class="line">                if (addr == 0x8000)</div><div class="line">                    addr = 0;</div><div class="line"></div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        fclose(fp) ;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return (void *)addr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//取sleep地址                任务名          模块名                   本地地址 </div><div class="line">long get_remote_addr(pid_t target_pid, const char* module_name, void* local_addr)</div><div class="line">&#123;</div><div class="line">    void* local_handle, *remote_handle;</div><div class="line"></div><div class="line">    local_handle = get_module_base(0, module_name);//取自己的libc.so地址 </div><div class="line">    remote_handle = get_module_base(target_pid, module_name);//取目标的libc.so地址 </div><div class="line"></div><div class="line">    printf(&quot;module_base: local[%p], remote[%p]\n&quot;, local_handle, remote_handle);</div><div class="line"></div><div class="line">    long ret_addr = (long)((uint32_t)local_addr + (uint32_t)remote_handle - (uint32_t)local_handle);</div><div class="line"></div><div class="line">    printf(&quot;remote_addr: [%p]\n&quot;, (void*) ret_addr); </div><div class="line"></div><div class="line">    return ret_addr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//远程调用函数  目标id      函数地址    参数          参数个数                 寄存器 </div><div class="line">int ptrace_call(pid_t pid, long addr, long *params, uint32_t num_params, struct pt_regs* regs)</div><div class="line">&#123;</div><div class="line">    uint32_t i;</div><div class="line">    for (i = 0; i &lt; num_params &amp;&amp; i &lt; 4; i ++) &#123;</div><div class="line">        regs-&gt;uregs[i] = params[i]; //填参数，寄存器只能填4个 </div><div class="line">    &#125;</div><div class="line">    //</div><div class="line">    // push remained params onto stack</div><div class="line">    //</div><div class="line">    if (i &lt; num_params) &#123;//其它的用栈填 </div><div class="line">        regs-&gt;ARM_sp -= (num_params - i) * sizeof(long) ;//栈先减  一个参用4个字节    </div><div class="line">        putdata(pid, (long)regs-&gt;ARM_sp, (char*)&amp;params[i], (num_params - i) * sizeof(long));//直接存数据</div><div class="line">		//参数入栈是从右到左压的，所以右在高左在低，所以填充直接从低往高写即可。（设计就是为了这样便利） </div><div class="line">    &#125;</div><div class="line"></div><div class="line">    regs-&gt;ARM_pc = addr;//pc指向函数 </div><div class="line">    //决定以什么模式运行函数 由pc决定 </div><div class="line">    if (regs-&gt;ARM_pc &amp; 1) &#123;</div><div class="line">        /* thumb */</div><div class="line">        regs-&gt;ARM_pc &amp;= (~1u);</div><div class="line">        regs-&gt;ARM_cpsr |= CPSR_T_MASK;</div><div class="line">    &#125; else &#123;</div><div class="line">        /* arm */</div><div class="line">        regs-&gt;ARM_cpsr &amp;= ~CPSR_T_MASK;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    regs-&gt;ARM_lr = 0;</div><div class="line">//远程进程的函数调用结束后，会跳转到LR寄存器存储的地址处，但由于LR寄存器被设置为0，会导致远程进程执行出错，此时进程会进入暂停状态</div><div class="line"></div><div class="line">    if (ptrace_setregs(pid, regs) == -1</div><div class="line">            || ptrace_continue(pid) == -1) &#123;//设置且继续执行 </div><div class="line">        printf(&quot;error\n&quot;);</div><div class="line">        return -1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    int stat = 0;</div><div class="line">    waitpid(pid, &amp;stat, WUNTRACED);//waitpid()会暂时停止目前进程的执行，直到有信号来到或子进程结束。WUNTRACED若子进程进入暂停状态，则马上返回</div><div class="line">    while (stat != 0xb7f) &#123;</div><div class="line">        if (ptrace_continue(pid) == -1) &#123;</div><div class="line">            printf(&quot;error\n&quot;);</div><div class="line">            return -1;</div><div class="line">        &#125;</div><div class="line">        waitpid(pid, &amp;stat, WUNTRACED);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">void inject(pid_t pid)</div><div class="line">&#123;</div><div class="line">    struct pt_regs old_regs,regs;</div><div class="line">    long sleep_addr;</div><div class="line"></div><div class="line">    //save old regs</div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;old_regs);</div><div class="line">    memcpy(&amp;regs, &amp;old_regs, sizeof(regs));//存寄存器 </div><div class="line"></div><div class="line">    printf(&quot;getting remote sleep_addr:\n&quot;);</div><div class="line">    sleep_addr = get_remote_addr(pid, libc_path, (void *)sleep);//取sleep地址 hook3貌似写成能通用的了 </div><div class="line">    </div><div class="line">    long parameters[1];</div><div class="line">    parameters[0] = 5;//参数，每个参数4字节（32位下） </div><div class="line">    </div><div class="line">    ptrace_call(pid, sleep_addr, parameters, 1, &amp;regs);//运行sleep </div><div class="line">    </div><div class="line">    //restore old regs</div><div class="line">    ptrace(PTRACE_SETREGS, pid, NULL, &amp;old_regs);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">int main(int argc, char *argv[])</div><div class="line">&#123;</div><div class="line">    if(argc != 2) &#123;</div><div class="line">        printf(&quot;Usage: %s &lt;pid to be traced&gt;\n&quot;, argv[0]);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">                                                                                                     </div><div class="line">    pid_t pid;</div><div class="line">    int status;</div><div class="line">    pid = atoi(argv[1]);</div><div class="line">    </div><div class="line">    if(0 != ptrace(PTRACE_ATTACH, pid, NULL, NULL))//附加操作会中断目标进程 </div><div class="line">    &#123;</div><div class="line">        printf(&quot;Trace process failed:%d.\n&quot;, errno);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">    printf(&quot;\n\n   hook3  \n\n&quot;);</div><div class="line">    inject(pid); //远程执行 </div><div class="line">    ptrace(PTRACE_DETACH, pid, NULL, 0);</div><div class="line">	//这个是脱离附着 ，在detach后被注入进程将继续运行。但是我却显示Stopped (signal)而退出了，原因未知</div><div class="line">	 </div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="hook4利用Ptrace动态加载so并执行自定义函数"><a href="#hook4利用Ptrace动态加载so并执行自定义函数" class="headerlink" title="hook4利用Ptrace动态加载so并执行自定义函数"></a>hook4利用Ptrace动态加载so并执行自定义函数</h3><p>这个失败了。</p>
-<p>hook4：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;sys/user.h&gt;</div><div class="line">#include &lt;sys/ptrace.h&gt;</div><div class="line">#include &lt;sys/ptrace.h&gt;</div><div class="line">#include &lt;sys/wait.h&gt;</div><div class="line">#include &lt;sys/mman.h&gt;</div><div class="line">#include &lt;dlfcn.h&gt;</div><div class="line">#include &lt;dirent.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">#include &lt;elf.h&gt;</div><div class="line">#include &lt;android/log.h&gt;</div><div class="line">#include &lt;errno.h&gt;</div><div class="line"></div><div class="line">#define CPSR_T_MASK     ( 1u &lt;&lt; 5 )</div><div class="line"></div><div class="line">const char *libc_path = &quot;/system/lib/libc.so&quot;;</div><div class="line"></div><div class="line">const int long_size = sizeof(long);</div><div class="line"></div><div class="line">//设置寄存器 </div><div class="line">int ptrace_setregs(pid_t pid, struct pt_regs * regs)</div><div class="line">&#123;</div><div class="line">    if (ptrace(PTRACE_SETREGS, pid, NULL, regs) &lt; 0) &#123;</div><div class="line">        perror(&quot;ptrace_setregs: Can not set register values&quot;);</div><div class="line">        return -1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//继续执行 </div><div class="line">int ptrace_continue(pid_t pid)</div><div class="line">&#123;</div><div class="line">    if (ptrace(PTRACE_CONT, pid, NULL, 0) &lt; 0) &#123;</div><div class="line">        perror(&quot;ptrace_cont&quot;);</div><div class="line">        return -1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line">//放数据 </div><div class="line">void putdata(pid_t child, long addr,</div><div class="line">             char *str, int len)</div><div class="line">&#123;   char *laddr;</div><div class="line">    int i, j;</div><div class="line">    union u &#123;</div><div class="line">            long val;</div><div class="line">            char chars[long_size];</div><div class="line">    &#125;data;</div><div class="line">    i = 0;</div><div class="line">    j = len / long_size;</div><div class="line">    laddr = str;</div><div class="line">    while(i &lt; j) &#123;</div><div class="line">        memcpy(data.chars, laddr, long_size);</div><div class="line">        ptrace(PTRACE_POKEDATA, child,</div><div class="line">               addr + i * 4, data.val);</div><div class="line">        ++i;</div><div class="line">        laddr += long_size;</div><div class="line">    &#125;</div><div class="line">    j = len % long_size;</div><div class="line">    if(j != 0) &#123;</div><div class="line">        memcpy(data.chars, laddr, j);</div><div class="line">        ptrace(PTRACE_POKEDATA, child,</div><div class="line">               addr + i * 4, data.val);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//取模块地址 </div><div class="line">void* get_module_base(pid_t pid, const char* module_name)</div><div class="line">&#123;</div><div class="line">    FILE *fp;</div><div class="line">    long addr = 0;</div><div class="line">    char *pch;</div><div class="line">    char filename[32];</div><div class="line">    char line[1024];</div><div class="line"></div><div class="line">    if (pid == 0) &#123;</div><div class="line">        snprintf(filename, sizeof(filename), &quot;/proc/self/maps&quot;);</div><div class="line">    &#125; else &#123;</div><div class="line">        snprintf(filename, sizeof(filename), &quot;/proc/%d/maps&quot;, pid);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    fp = fopen(filename, &quot;r&quot;);</div><div class="line"></div><div class="line">    if (fp != NULL) &#123;</div><div class="line">        while (fgets(line, sizeof(line), fp)) &#123;</div><div class="line">            if (strstr(line, module_name)) &#123;</div><div class="line">                pch = strtok( line, &quot;-&quot; );</div><div class="line">                addr = strtoul( pch, NULL, 16 );</div><div class="line"></div><div class="line">                if (addr == 0x8000)</div><div class="line">                    addr = 0;</div><div class="line"></div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        fclose(fp) ;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return (void *)addr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//取目标函数地址 </div><div class="line">long get_remote_addr(pid_t target_pid, const char* module_name, void* local_addr)</div><div class="line">&#123;</div><div class="line">    void* local_handle, *remote_handle;</div><div class="line"></div><div class="line">    local_handle = get_module_base(0, module_name);</div><div class="line">    remote_handle = get_module_base(target_pid, module_name);</div><div class="line"></div><div class="line">    long ret_addr = (long)((uint32_t)local_addr + (uint32_t)remote_handle - (uint32_t)local_handle);</div><div class="line"></div><div class="line">    return ret_addr;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//调用目标函数 </div><div class="line">int ptrace_call(pid_t pid, uint32_t addr, long *params, uint32_t num_params, struct pt_regs* regs)</div><div class="line">&#123;</div><div class="line">    uint32_t i;</div><div class="line">    for (i = 0; i &lt; num_params &amp;&amp; i &lt; 4; i ++) &#123;</div><div class="line">        regs-&gt;uregs[i] = params[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //</div><div class="line">    // push remained params onto stack</div><div class="line">    //</div><div class="line">    if (i &lt; num_params) &#123;</div><div class="line">        regs-&gt;ARM_sp -= (num_params - i) * sizeof(long) ;</div><div class="line">        putdata(pid, regs-&gt;ARM_sp, (char*)&amp;params[i], (num_params - i) * sizeof(long));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    regs-&gt;ARM_pc = addr;</div><div class="line">    if (regs-&gt;ARM_pc &amp; 1) &#123;</div><div class="line">        /* thumb */</div><div class="line">        regs-&gt;ARM_pc &amp;= (~1u);</div><div class="line">        regs-&gt;ARM_cpsr |= CPSR_T_MASK;</div><div class="line">    &#125; else &#123;</div><div class="line">        /* arm */</div><div class="line">        regs-&gt;ARM_cpsr &amp;= ~CPSR_T_MASK;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    regs-&gt;ARM_lr = 0;</div><div class="line">    </div><div class="line">    if (ptrace_setregs(pid, regs) == -1</div><div class="line">            || ptrace_continue(pid) == -1) &#123;</div><div class="line">        printf(&quot;error\n&quot;);</div><div class="line">        return -1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    int stat = 0;</div><div class="line">    waitpid(pid, &amp;stat, WUNTRACED);</div><div class="line">    while (stat != 0xb7f) &#123;//返回为执行完成发生返回地址错误时 regs-&gt;ARM_lr = 0;</div><div class="line">        if (ptrace_continue(pid) == -1) &#123;</div><div class="line">            printf(&quot;error\n&quot;);</div><div class="line">            return -1;</div><div class="line">        &#125;</div><div class="line">        waitpid(pid, &amp;stat, WUNTRACED);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//加载模块并调用执行函数      id  so的路径    函数名    参数 </div><div class="line">void injectSo(pid_t pid,char* so_path, char* function_name,char* parameter)</div><div class="line">&#123;</div><div class="line">    struct pt_regs old_regs,regs;</div><div class="line">    long mmap_addr, dlopen_addr, dlsym_addr, dlclose_addr;</div><div class="line"></div><div class="line">//保存当前寄存器的状态 </div><div class="line"></div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;old_regs);</div><div class="line">    memcpy(&amp;regs, &amp;old_regs, sizeof(regs));</div><div class="line"></div><div class="line"></div><div class="line">//取目标程序的mmap, dlopen, dlsym, dlclose 地址 </div><div class="line">    printf(&quot;getting remote addres:\n&quot;);</div><div class="line">    mmap_addr = get_remote_addr(pid, libc_path, (void *)mmap);</div><div class="line">    dlopen_addr = get_remote_addr( pid, libc_path, (void *)dlopen );</div><div class="line">    dlsym_addr = get_remote_addr( pid, libc_path, (void *)dlsym );</div><div class="line">    dlclose_addr = get_remote_addr( pid, libc_path, (void *)dlclose );</div><div class="line">    </div><div class="line">    printf(&quot;mmap_addr=%p dlopen_addr=%p dlsym_addr=%p dlclose_addr=%p\n&quot;,</div><div class="line">    (void*)mmap_addr,(void*)dlopen_addr,(void*)dlsym_addr,(void*)dlclose_addr);</div><div class="line">    </div><div class="line">    </div><div class="line">    long parameters[10];</div><div class="line"></div><div class="line">//调用mmap分配一段内存空间用来保存参数信息,因为它的参数都可以只用栈传递，但其他函数有的需要字串不能用栈传，因此要开辟空间 </div><div class="line">/*</div><div class="line">mmap()可以用来将一个文件或者其它对象映射进内存，如果我们把flag设置为MAP_ANONYMOUS并且把参数fd设置为0的话就相当于直接映射一段内容为空的内存</div><div class="line">	void *mmap(void *start,size_t length,int prot,int fd,off_t offset);</div><div class="line">start：映射区的开始地址，设置为0时表示由系统决定映射区的起始地址。</div><div class="line">length：映射区的长度。 </div><div class="line">prot：期望的内存保护标志，不能与文件的打开模式冲突。我们这里设置为RWX。 </div><div class="line">flags：指定映射对象的类型，映射选项和映射页是否可以共享。我们这里设置为：MAP_ANONYMOUS(匿名映射，映射区不与任何文件关联)，MAP_PRIVATE(建立一个写入时拷贝的私有映射。内存区域的写入不会影响到原文件)。 </div><div class="line">fd：有效的文件描述词。匿名映射设置为0。 </div><div class="line">off_toffset：被映射对象内容的起点。设置为0。</div><div class="line">*/</div><div class="line"></div><div class="line">    parameters[0] = 0; //start</div><div class="line">    parameters[1] = 0x4000; //length</div><div class="line">    parameters[2] = PROT_READ | PROT_WRITE | PROT_EXEC; //prot =WRX</div><div class="line">    parameters[3] = MAP_ANONYMOUS | MAP_PRIVATE; //flag</div><div class="line">    parameters[4] = 0; //fd</div><div class="line">    parameters[5] = 0; //offset</div><div class="line">    </div><div class="line">    ptrace_call(pid, mmap_addr, parameters, 6, &amp;regs);</div><div class="line">    //获取返回结果 </div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);</div><div class="line">    long map_base = regs.ARM_r0;</div><div class="line">    printf(&quot;map_base = %p\n&quot;, (void*)map_base);</div><div class="line"></div><div class="line">//调用dlopen加载so文件</div><div class="line"></div><div class="line">    printf(&quot;save so_path = %s to map_base = %p\n&quot;, so_path, (void*)map_base);</div><div class="line">    putdata(pid, map_base, so_path, strlen(so_path) + 1);//把so路径放入目标内存中 </div><div class="line"></div><div class="line">    parameters[0] = map_base;//参1 路径 </div><div class="line">    parameters[1] = RTLD_NOW| RTLD_GLOBAL;</div><div class="line"></div><div class="line">    ptrace_call(pid, dlopen_addr, parameters, 2, &amp;regs);</div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);//调用函数并返回库引用</div><div class="line">    </div><div class="line">    long handle = regs.ARM_r0;</div><div class="line">    </div><div class="line">    printf(&quot;handle = %p\n&quot;,(void*) handle);</div><div class="line"></div><div class="line">//调用dlsym找到目标函数地址</div><div class="line"></div><div class="line">    printf(&quot;save function_name = %s to map_base = %p\n&quot;, function_name, (void*)map_base);</div><div class="line">    putdata(pid, map_base, function_name, strlen(function_name) + 1);//存函数名 </div><div class="line"></div><div class="line">    parameters[0] = handle;</div><div class="line">    parameters[1] = map_base;</div><div class="line"></div><div class="line">    ptrace_call(pid, dlsym_addr, parameters, 2, &amp;regs);</div><div class="line">    ptrace(PTRACE_GETREGS, pid, NULL, &amp;regs);</div><div class="line">    </div><div class="line">    long function_ptr = regs.ARM_r0;//取函数地址 </div><div class="line"></div><div class="line">    printf(&quot;function_ptr = %p\n&quot;, (void*)function_ptr);</div><div class="line"></div><div class="line">//使用ptrace_call执行目标函数</div><div class="line"></div><div class="line">    printf(&quot;save parameter = %s to map_base = %p\n&quot;, parameter, (void*)map_base);</div><div class="line">    putdata(pid, map_base, parameter, strlen(parameter) + 1);</div><div class="line"></div><div class="line">    parameters[0] = map_base;</div><div class="line">    printf(&quot;执行目标函数&quot;);</div><div class="line">    ptrace_call(pid, function_ptr, parameters, 1, &amp;regs);</div><div class="line">	printf(&quot;执行目标函数完了&quot;);</div><div class="line">//调用 dlclose 卸载so文件</div><div class="line"></div><div class="line">    parameters[0] = handle;</div><div class="line"></div><div class="line">    ptrace_call(pid, dlclose_addr, parameters, 1, &amp;regs);</div><div class="line">    </div><div class="line">//恢复寄存器的状态</div><div class="line"></div><div class="line">    ptrace(PTRACE_SETREGS, pid, NULL, &amp;old_regs);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">int main(int argc, char *argv[])</div><div class="line">&#123;</div><div class="line">    if(argc != 2) &#123;</div><div class="line">        printf(&quot;Usage: %s &lt;pid to be traced&gt;\n&quot;, argv[0]);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">                                                                                                     </div><div class="line">    pid_t pid;</div><div class="line">    int status;</div><div class="line">    pid = atoi(argv[1]);</div><div class="line">    </div><div class="line">    if(0 != ptrace(PTRACE_ATTACH, pid, NULL, NULL))</div><div class="line">    &#123;</div><div class="line">        printf(&quot;Trace process failed:%d.\n&quot;, errno);</div><div class="line">        return 1;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    char* so_path = &quot;/data/local/tmp/libinject.so&quot;;//动态加载的文件 </div><div class="line">    char* function_name = &quot;mzhengHook&quot;;//调用的函数名 </div><div class="line">    char* parameter = &quot;sevenWeapons&quot;;//参数 </div><div class="line">    injectSo(pid, so_path, function_name, parameter);//远程加载调用 </div><div class="line">    </div><div class="line">    ptrace(PTRACE_DETACH, pid, NULL, 0);</div><div class="line">    </div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>inject.c:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;android/log.h&gt;</div><div class="line">#include &lt;elf.h&gt;</div><div class="line">#include &lt;fcntl.h&gt;</div><div class="line"></div><div class="line">#define LOG_TAG &quot;DEBUG&quot;</div><div class="line">#define LOGD(fmt, args...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, fmt, ##args)</div><div class="line"></div><div class="line">int mzhengHook(char * str)&#123;</div><div class="line">    printf(&quot;mzheng Hook pid = %d\n&quot;, getpid());</div><div class="line">    printf(&quot;Hello %s\n&quot;, str);</div><div class="line">    LOGD(&quot;mzheng Hook pid = %d\n&quot;, getpid());</div><div class="line">    LOGD(&quot;Hello %s\n&quot;, str);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>关于arm的regs<br>pt_regs结构的定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">struct pt_regs &#123;</div><div class="line"></div><div class="line"> long uregs[18];32位</div><div class="line"></div><div class="line">&#125;;</div><div class="line"></div><div class="line"> </div><div class="line">#define ARM_cpsr uregs[16]</div><div class="line">#define ARM_pc uregs[15]</div><div class="line">#define ARM_lr uregs[14]</div><div class="line">#define ARM_sp uregs[13]</div><div class="line">#define ARM_ip uregs[12]</div><div class="line">#define ARM_fp uregs[11]</div><div class="line">#define ARM_r10 uregs[10]</div><div class="line">#define ARM_r9 uregs[9]</div><div class="line">#define ARM_r8 uregs[8]</div><div class="line">#define ARM_r7 uregs[7]</div><div class="line">#define ARM_r6 uregs[6]</div><div class="line">#define ARM_r5 uregs[5]</div><div class="line">#define ARM_r4 uregs[4]</div><div class="line">#define ARM_r3 uregs[3]</div><div class="line">#define ARM_r2 uregs[2]</div><div class="line">#define ARM_r1 uregs[1]</div><div class="line">#define ARM_r0 uregs[0]</div><div class="line">#define ARM_ORIG_r0 uregs[17]</div></pre></td></tr></table></figure></p>
-<h3 id="还有一篇下暂时暂停，因为hook4不成功，且需要其成功"><a href="#还有一篇下暂时暂停，因为hook4不成功，且需要其成功" class="headerlink" title="还有一篇下暂时暂停，因为hook4不成功，且需要其成功"></a>还有一篇下暂时暂停，因为hook4不成功，且需要其成功</h3>
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/05/26/android-注入初试/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1537,341 +1892,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/AS下cmake使用/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/10/AS下cmake使用/" itemprop="url">AS下cmake使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-10T22:02:24+08:00">
-                2018-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>首先将以前写的搬出来方便看</p>
-<h2 id="AS下编辑native—较新方法-使用cmake（常用！）"><a href="#AS下编辑native—较新方法-使用cmake（常用！）" class="headerlink" title="AS下编辑native—较新方法-使用cmake（常用！）"></a>AS下编辑native—较新方法-使用cmake（常用！）</h2><p>AS可以先写好java类，然后点击错误修正可以自动生成对应c文件与原生函数头。<br><strong> AS生成的：注意as下如果是cpp文件extern “C” 必加 </strong><br>当你使用错误修正时是生成c版本的时自动不加，当是cpp文件中错误修正时自动加 </p>
-<p><strong>AS所有配置文件基础目录都是当前同一目录下</strong><br>例如AndroidManifest.xml中指明了java代码路径<br>build.gradle中的文件cmakelist从当前下找</p>
-<h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a>创建项目</h3><p>创建支持原生代码的项目与创建任何其他 Android Studio 项目类似，不过前者还需要额外几个步骤：</p>
-<ol>
-<li>在向导的 Configure your new project 部分，选中 Include C++ Support 复选框。点击 Next。</li>
-<li>正常填写所有其他字段并完成向导接下来的几个部分。</li>
-<li>在向导的 Customize C++ Support 部分，您可以使用下列选项自定义项目：<br>C++ Standard：使用下拉列表选择您希望使用哪种 C++ 标准。选择 Toolchain Default 会使用默认的 CMake 设置。<br>Exceptions Support：如果您希望启用对 C++ 异常处理的支持，请选中此复选框。如果启用此复选框，Android Studio 会将 -fexceptions 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>Runtime Type Information Support：如果您希望支持 RTTI，请选中此复选框。如果启用此复选框，Android Studio 会将 -frtti 标志添加到模块级 build.gradle 文件的 cppFlags 中，Gradle 会将其传递到 CMake。<br>点击 Finish。</li>
-</ol>
-<h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><ol>
-<li>在 cpp 组中，您可以找到属于项目的所有原生源文件、标头和预构建库。对于新项目，Android Studio 会创建一个示例 C++ 源文件 native-lib.cpp，并将其置于应用模块的 src/main/cpp/ 目录中。本示例代码提供了一个简单的 C++ 函数 stringFromJNI()，此函数可以返回字符串“Hello from C++”。</li>
-<li>在 External Build Files 组中，您可以找到 CMake 或 ndk-build 的构建脚本。与 build.gradle 文件指示 Gradle 如何构建应用一样，CMake 和 ndk-build 需要一个构建脚本来了解如何构建您的原生库。对于新项目，Android Studio 会创建一个 CMake 构建脚本 CMakeLists.txt，并将其置于模块的根目录中。且必须叫这个名字。</li>
-<li>cmake与ndk-build的配置都在build.gradle的管理配置下。<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">使用cmake构建，指定文件</div><div class="line">    externalNativeBuild &#123;</div><div class="line">        cmake &#123;</div><div class="line">            path &quot;CMakeLists.txt&quot;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="运行过程"><a href="#运行过程" class="headerlink" title="运行过程"></a>运行过程</h3><ol>
-<li>Gradle 调用您的外部构建脚本 CMakeLists.txt。</li>
-<li>CMake 按照构建脚本中的命令将 C++ 源文件 native-lib.cpp 编译到共享的对象库中，并命名为 libnative-lib.so，Gradle 随后会将其打包到 APK 中。</li>
-<li>运行时，应用的 MainActivity 会使用 System.loadLibrary() 加载原生库。现在，应用可以使用库的原生函数 stringFromJNI()。</li>
-<li>MainActivity.onCreate() 调用 stringFromJNI()，这将返回“Hello from C++”并使用这些文字更新 TextView。</li>
-</ol>
-<h3 id="CMakeLists-txt"><a href="#CMakeLists-txt" class="headerlink" title="CMakeLists.txt"></a>CMakeLists.txt</h3><p>cmake_minimum_required(VERSION 3.4.1)<br>CMake最小版本使用的是3.4.1。</p>
-<h4 id="add-library"><a href="#add-library" class="headerlink" title="add_library()"></a>add_library()</h4><p><strong>这个就是往项目中添加要生成的东西</strong> 即使是第三方库生成或使用也要先生成目标文件，这里决定最后lib中有什么<br>配置so库信息（为当前当前脚本文件添加库）<br>参一：这个是声明引用so库的名称，在项目中，如果需要使用这个so文件，引用的名称就是这个。生成的会加前后缀<br>参二：<br>STATIC：静态库，是目标文件的归档文件，在链接其它目标的时候使用。<br>SHARED：动态库，会被动态链接，在运行时被加载。<br>MODULE：模块库，是不会被链接到其它目标中的插件，但是可能会在运行时使用dlopen-系列的函数动态链接。<br>参三：构建so库的源文件路径，注意是相对cmakelist的。</p>
-<p>还可以用来构建有源代码的库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">add_library( app-glue</div><div class="line">             STATIC</div><div class="line">             $&#123;ANDROID_NDK&#125;/sources/android/native_app_glue/android_native_app_glue.c )</div><div class="line"></div><div class="line"># You need to link static libraries against your shared native library.</div><div class="line">target_link_libraries( native-lib app-glue $&#123;log-lib&#125; )</div></pre></td></tr></table></figure></p>
-<p>还可以用来构建使用已有so的库,set_target_properties用于设置查找so库的路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">add_library( imported-lib</div><div class="line">             SHARED</div><div class="line">             IMPORTED )</div><div class="line">set_target_properties(target1 target2 ...</div><div class="line">                      PROPERTIES prop1 value1</div><div class="line">                      prop2 value2 ...)</div></pre></td></tr></table></figure></p>
-<h4 id="include-directories"><a href="#include-directories" class="headerlink" title="include_directories"></a>include_directories</h4><p>配置头文件路径,注意这里指定的是目录而非文件</p>
-<h4 id="find-library"><a href="#find-library" class="headerlink" title="find_library()"></a>find_library()</h4><p><strong>这个就是用来使用android上提供的</strong><br>这个方法与我们要创建的so库无关而是使用NDK的Apis或者库，默认情况下Android平台集成了很多NDK库文件，所以这些文件是没有必要打包到apk里面去的。直接声明想要使用的库名称即可<br>参一：出口，存放库的路径<br>参二：指定使用的库</p>
-<h4 id="target-link-libraries"><a href="#target-link-libraries" class="headerlink" title="target_link_libraries()"></a>target_link_libraries()</h4><p><strong>这个就是一个连接操作，将后面的连接到第一个文件中</strong></p>
-<p>如果你本地的库（native-lib）想要调用log库的方法，那么就需要配置这个属性，意思是把NDK库关联到本地库。<br>参一：要被关联的库名称<br>其它参：要关联的库名称。${log-lib}为取找到的路径</p>
-<h4 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div></pre></td><td class="code"><pre><div class="line">#添加一个库，可用于目标</div><div class="line">add_library( # 指定库的名称。生成后会加前后缀根据下面的设置</div><div class="line">             native-lib</div><div class="line"></div><div class="line">             # 将库设置为共享库。</div><div class="line">             SHARED</div><div class="line"></div><div class="line">             # 提供源文件的相对路径。可以多个文件编译为一个库</div><div class="line">             src/main/jni/native-lib.cpp )</div><div class="line">#添加头文件</div><div class="line">include_directories(src/main/cpp/include/)</div><div class="line"></div><div class="line">______________________________________________________________________</div><div class="line"></div><div class="line">#从源码形式的库获取</div><div class="line">add_library( app-glue</div><div class="line">             STATIC</div><div class="line">             $&#123;ANDROID_NDK&#125;/sources/android/native_app_glue/android_native_app_glue.c )</div><div class="line"></div><div class="line">______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line">#添加一个已有的库</div><div class="line">add_library( imported-lib</div><div class="line">             SHARED</div><div class="line">			 #表示这个已经存在，只要导入就可以，set_target_properties()指定路径</div><div class="line">             IMPORTED )</div><div class="line">#指定目标库的位置</div><div class="line">set_target_properties( # Specifies the target library.</div><div class="line">                       imported-lib</div><div class="line"></div><div class="line">                       # Specifies the parameter you want to define.</div><div class="line">                       PROPERTIES IMPORTED_LOCATION</div><div class="line"></div><div class="line">                       # Provides the path to the library you want to import.</div><div class="line">                       imported-lib/src/$&#123;ANDROID_ABI&#125;/libimported-lib.so )</div><div class="line">#编译时定位标头文件</div><div class="line">include_directories( imported-lib/include/ )</div><div class="line"></div><div class="line">_______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line">#使用android上存在的</div><div class="line">find_library( # find用来找到库，这个变量被赋予要找的库的路径</div><div class="line">              log-lib</div><div class="line"></div><div class="line">              # 这里是你要找的库的名字，该库已存在于android中</div><div class="line">              log )</div><div class="line"></div><div class="line"></div><div class="line">_______________________________________________________________________</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">#第一个参数是最终要生成的，其它都是需要连接进去的</div><div class="line">target_link_libraries( # 指定目标库</div><div class="line">                       native-lib</div><div class="line"></div><div class="line">					   #连接已有的库</div><div class="line">					   imported-lib</div><div class="line">					   #连接自己建的库 </div><div class="line">                       app-glue</div><div class="line">                       # 连接的android ndk平台已存在目标，将找到的路径传入即可</div><div class="line">                       $&#123;log-lib&#125; )</div></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/08/androidNDK逆向初步/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/08/androidNDK逆向初步/" itemprop="url">androidNDK逆向初步</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-08T23:01:48+08:00">
-                2018-05-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android逆向/" itemprop="url" rel="index">
-                    <span itemprop="name">android逆向</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="知识补充"><a href="#知识补充" class="headerlink" title="知识补充"></a>知识补充</h2><ol>
-<li>elf，linux下程序执行，连接等需要详细补充。</li>
-</ol>
-<h2 id="原生程序启动流程概述-2013"><a href="#原生程序启动流程概述-2013" class="headerlink" title="原生程序启动流程概述 2013"></a>原生程序启动流程概述 2013</h2><p>注意这里是原生可执行程序，不是动态库so的加载运行过程<br><strong>静态链接出的可执行文件</strong>：<br>_start(crtbegin_static.S)调用__libc_init(bionic\lib\bionic\libc_init_static.c)调用main</p>
-<p><strong>*动态连接出的可执行文件</strong>（.interp段指定加载器默认为system/bin/linker）：<br>linker(begin.S)调用<strong>linker_init(linker.c)返回入口函数并执行_start(crtbegin_dynamic.S)调用</strong>libc_init(libc_init_dtnamic.c)调用main</p>
-<p>动态连接库文件：<br><strong>on_dlclose(crtbegin_so.c)调用</strong>cxa_finalize记录计数</p>
-<p>说明：</p>
-<ol>
-<li>目前静态动态_start都一样</li>
-<li>__libc_init动态的少点因为大部分工作linker做了</li>
-</ol>
-<h2 id="原生文件格式"><a href="#原生文件格式" class="headerlink" title="原生文件格式"></a>原生文件格式</h2><p>不同系统、架构下的elf有所不同。android下的elf遵循了arm的标准，不同版本ndk与连接器脚本生成的elf有所不同。具体的格式需要阅读源码：NDK的platforms\android-14\arch-arm\usr\include\sys\exec_elf.h<br>目前简单百度了下，大概可理解为由头部决定节头和段头的位置，由段头和节头分别决定段与节的位置，节用来存储数据代码等给link用的，而段是内存中用来执行的。<br><img src="https://i.imgur.com/wP0XSIH.png" alt=""></p>
-<h2 id="原生c的逆向分析"><a href="#原生c的逆向分析" class="headerlink" title="原生c的逆向分析"></a>原生c的逆向分析</h2><p>注意主要用寄存器传参 R0 R1 R2 依次左到右（不同于栈的右到左压，右在高地址）。返回用R0<br>R11常作为栈帧<br>ida蓝色表示顺序执行，绿色满足时，红色不满足时执行<br>全局变量从全局偏移表里取（具体？详细了解elf结构和内存布局后）</p>
-<p>switch依旧依靠跳转表</p>
-<p>gcc的-O2优化效果好，取消了栈的存储操作，基本全用寄存器，而且逻辑上也省去了许多无用的部分</p>
-<h2 id="原生c-的逆向分析"><a href="#原生c-的逆向分析" class="headerlink" title="原生c++的逆向分析"></a>原生c++的逆向分析</h2><p>c++的类被解析为结构体的空间分配，而各函数代码都是直接化在流程中了，不是分成块的存储调用方式。<br>c++的各种特性库slt（如gunslt、stlport、gabi++、system）都分别支持各种不同的c++功能，其中前俩个提供容器类，默认为system自动连接，其它的都分为动态和静态连接方式。详见ndk高级编程中</p>
-<p>动态连接时ida可以解析出函数的来源，而静态时ida只能识别出子程序调用，无法识别出具体的函数。因此静态分析难度更大，只有动态分析好用</p>
-<h2 id="JNI"><a href="#JNI" class="headerlink" title="JNI"></a>JNI</h2><p>而DNK中最为常用的就是jni中的交互函数：JNIEnv和JavaVM<br>前者是原生与java交互用，后者代表虚拟机常用于多线程中。<br>c中都是指向函数表结构体的指针，c++中为类对象指针。为了方便ida识别出JNI的结构体，需要导入jni头文件用来看出具体调用的函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">struct _JNIEnv;</div><div class="line">struct _JavaVM;</div><div class="line">typedef const struct JNINativeInterface* C_JNIEnv;</div><div class="line"></div><div class="line">#if defined(__cplusplus)</div><div class="line">typedef _JNIEnv JNIEnv;</div><div class="line">typedef _JavaVM JavaVM;</div><div class="line">#else</div><div class="line">typedef const struct JNINativeInterface* JNIEnv;</div><div class="line">typedef const struct JNIInvokeInterface* JavaVM;</div><div class="line">#endif</div><div class="line"></div><div class="line">在定义完JNI俩个函数指针集合结构体之后</div><div class="line"></div><div class="line">定义c++用的类</div><div class="line">struct _JNIEnv &#123;</div><div class="line">    /* do not rename this; it does not seem to be entirely opaque */</div><div class="line">    const struct JNINativeInterface* functions;</div><div class="line"></div><div class="line">......定义类的方法调用该结构体。</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>以下为ida解析头文件结构体方法：<br>进入ida，点击文件-&gt;读取文件-&gt;解析c头文件<br>这里选择ndk的jni文件(已修改并存入工具库中)，需要删除报错的俩个include和1107的#define JNIEXPORT  …改为#define JNIEXPORT<br>然后结构体选项卡按insert-&gt;Add standard structure<br>之后反汇编窗口中选中env函数偏移的量右键中会出现解析为该结构体的内容</p>
-<p><strong> java与c的native函数可以手动映射</strong></p>
-<p>因此下坑的地方很多，比如init数组加密操作，javaload加密操作，so中一般名字的native方法不能说明什么。要全部分析<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">static JNINativeMethod methods[] = &#123;</div><div class="line">	&#123;&quot;initSN&quot;, &quot;()V&quot;, (void*)n1&#125;,</div><div class="line">	&#123;&quot;saveSN&quot;, &quot;(Ljava/lang/String;)V&quot;, (void*)n2&#125;,</div><div class="line">	&#123;&quot;work&quot;, &quot;()V&quot;, (void*)n3&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">/*</div><div class="line"> * 库加载时注册native函数</div><div class="line"> */</div><div class="line">jint JNI_OnLoad(JavaVM* vm, void* reserved)&#123;</div><div class="line">	if(JNI_OK != (*vm)-&gt;GetEnv(vm, (void**)&amp;g_env, JNI_VERSION_1_6))&#123;</div><div class="line">		return -1;</div><div class="line">	&#125;</div><div class="line">	LOGV(&quot;JNI_OnLoad()&quot;);</div><div class="line">	native_class = (*g_env)-&gt;FindClass(g_env, &quot;com/droider/ndkapp/MyApp&quot;);</div><div class="line">	if (JNI_OK ==(*g_env)-&gt;RegisterNatives(g_env,</div><div class="line">			native_class, methods, NELEM(methods)))&#123;//把java类的native函数对应到原生函数中,手动。自动的话是按javah生成的对应，这里没有包含javah生成的头文件</div><div class="line">		LOGV(&quot;RegisterNatives() --&gt; nativeMethod() ok&quot;);</div><div class="line">	&#125; else &#123;</div><div class="line">		LOGE(&quot;RegisterNatives() --&gt; nativeMethod() failed&quot;);</div><div class="line">		return -1;</div><div class="line">	&#125;</div><div class="line">	return JNI_VERSION_1_6;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void JNI_OnUnLoad(JavaVM* vm, void* reserved)&#123;</div><div class="line">	LOGV(&quot;JNI_OnUnLoad()&quot;);</div><div class="line">	(*g_env)-&gt;UnregisterNatives(g_env, native_class);</div><div class="line">	LOGV(&quot;UnregisterNatives()&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="init"><a href="#init" class="headerlink" title="init"></a>init</h2><p>编写：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)</div><div class="line">&#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">    return JNI_VERSION_1_6;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//init函数定义，必须为_init</div><div class="line">extern &quot;C&quot;  void _init(void)&#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">__attribute__((constructor,visibility(&quot;hidden&quot;))) void init_array_0(void) &#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">__attribute__((constructor,visibility(&quot;hidden&quot;))) void  init_array_1(void) &#123;</div><div class="line">    LOGD(&quot;%s&quot; , __FUNCTION__);</div><div class="line">&#125;</div><div class="line"></div><div class="line">extern &quot;C&quot; void preinit(int argc, char **argv, char **envp) &#123;</div><div class="line">    LOGD(&quot;preinit_array never be called in so&quot;);</div><div class="line">&#125;</div><div class="line">__attribute__((section(&quot;.preinit_array&quot;))) typeof(preinit) *__preinit = preinit;</div></pre></td></tr></table></figure></p>
-<p><a href="https://blog.csdn.net/qq1084283172/article/details/54233552" target="_blank" rel="external">https://blog.csdn.net/qq1084283172/article/details/54233552</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1922,7 +1942,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">118</span>
+                <span class="site-state-item-count">120</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1933,7 +1953,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1944,7 +1964,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">103</span>
+                <span class="site-state-item-count">105</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

