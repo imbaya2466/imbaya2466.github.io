@@ -283,6 +283,187 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/12/android逆向基本常用操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/12/android逆向基本常用操作/" itemprop="url">android逆向基本常用操作</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-12T21:36:28+08:00">
+                2018-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/android逆向/" itemprop="url" rel="index">
+                    <span itemprop="name">android逆向</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本篇总结于2018.5.12的ctf与安卓逆向看雪书籍1,2,8章</p>
+<p>adb用法：<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/24/root%E4%B8%8Eadb/</a></p>
+<h1 id="静态分析"><a href="#静态分析" class="headerlink" title="静态分析"></a>静态分析</h1><h2 id="手动分析"><a href="#手动分析" class="headerlink" title="手动分析"></a>手动分析</h2><h3 id="apk拆包"><a href="#apk拆包" class="headerlink" title="apk拆包"></a>apk拆包</h3><p>一般使用官方的apktool即可<br>指令：apktool d apk名 -o 输出文件名</p>
+<p>mali/baksmali 针对单个dex文件更好。</p>
+<h3 id="拆包后"><a href="#拆包后" class="headerlink" title="拆包后"></a>拆包后</h3><p>含有smail代码及资源，注意其对string资源的引用为id索引。目前修改java层的代码只能在这里改smail</p>
+<p>静态ida HexView改so的内容后，点击”Edit-&gt;Plugins-&gt;modifyfile”，然后就可以保存新的so文件了。</p>
+<p>问题:改dex的其它方案？如何dump内存内的dex/so?。</p>
+<h3 id="apk打包"><a href="#apk打包" class="headerlink" title="apk打包"></a>apk打包</h3><p>apktool b 文件名<br>会把打包好的文件输出到文件下的dist目录</p>
+<h3 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h3><p>用已加好的bat脚本启动signapk.jar<br>signapk apk名  即可完成签名<br>注意一点在win下不加入path的程序，当前目录要写全才可以运行(./xxx)和linux下一样。<br>win下\分割  linux下/分割</p>
+<h2 id="一键式分析"><a href="#一键式分析" class="headerlink" title="一键式分析"></a>一键式分析</h2><p>java-拖入jeb<br>c/c++-拖入ida</p>
+<h1 id="动态分析"><a href="#动态分析" class="headerlink" title="动态分析"></a>动态分析</h1><h2 id="java层"><a href="#java层" class="headerlink" title="java层"></a>java层</h2><p><strong>AS动态调试smali</strong><br>成功<br>参见之前的博客：android动态调试-java层<a href="http://xn--74q78i15hxv3arigm4e.cn/2018/04/29/android%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95-java%E5%B1%82/" target="_blank" rel="external">http://xn--74q78i15hxv3arigm4e.cn/2018/04/29/android%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95-java%E5%B1%82/</a><br>用AS加插件或者jeb都好使的很<br>DDMS：log可设置过滤器查看。点击Start Method Profiling可以获取一段时间的函数调用过程。</p>
+<p>原理:java代码调试接口:JDWP是传统java虚拟机调试java的协议，dalvik也实现了该接口。启用调试的da虚拟机(需要指令adb shell am start -D -n)会启动JDWP调试线程，系统属性ro.debuggable为1时所有程序都可以开启调试支持（不用分别改android:debuggable了），我个人理解为adb负责转发android环境到DDMS，DDMS自带端口转发功能，将对java的调试信息通过指定端口(8700)转发到对应的调试线程中。<br>线程-&gt;adb-&gt;DDMS转发端口-&gt;java调试器</p>
+<p><strong>jeb</strong><br>成功<br>jeb可调试smali，不可调试java与so。<br>最初adb shell am start -D -n packageName/ActivityName或者debugger开启下直接运行，之后找到pid附加即可。注意以下几点：先下断点在smali再attach，断点才可以使用。可查看线程与运行时数据，F6为单步</p>
+<h2 id="c-c-层"><a href="#c-c-层" class="headerlink" title="c/c++层"></a>c/c++层</h2><p>ida的debugger-&gt;run/attach选项只有不加载文件时才有。<br><strong>前提:</strong><br>将ida的android_server复制到android设备中执行。并转发本地端口到设备端口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">放server这个文件路径随意</div><div class="line">adb push android_server /data/local/tmp</div><div class="line">adb shell chmod 777 /data/local/tmp/android_server</div><div class="line">运行server</div><div class="line">adb shell su  /data/local/tmp/android_server</div><div class="line"></div><div class="line">转发端口</div><div class="line">adb forward tcp:23946 tcp:23946</div></pre></td></tr></table></figure></p>
+<p>执行android_server提示中指明了端口号，用adb forward tcp:xxx tcp:xxx 转发pc端口(参一)到android(参二)。</p>
+<p><strong>执行已有原生程序：</strong><br>成功<br>注意生成native程序时Android.mk加如下语句,否则Android 5.0 and later only support position-independent executables (-fPIE).是android5.0之后随机分配程序的内存地址机制<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">LOCAL_CFLAGS += -pie -fPIE</div><div class="line">LOCAL_LDFLAGS += -pie -fPIE</div></pre></td></tr></table></figure></p>
+<ol>
+<li>前提完成,且要调试的文件放入android并保证可以运行</li>
+<li>打开ida不加载文件。</li>
+<li>debugger-&gt;Run-&gt;Remote即可运行调试原生程序。需要填入目标程序在android的全路径和目标程序所在目录，本地端口填localhost  之前写的那个pcXXX。ida会自动加载分析该文件并执行(知道模块的文件位置即可加载分析)</li>
+</ol>
+<p><strong>调试so库俩种方式</strong><br><strong>直接附加app的开始</strong><br>成功<br>此方法一般脱壳用，从应用的一开始加载调试。dump(自己写ida脚本)内存取出正确的dex与so</p>
+<ol>
+<li>前提完成，apk安装</li>
+<li>adb shell am start -D -n packageName/ActivityName开启android进程调试状态</li>
+<li>adb forward tcp:8700 jdwp:PID(目标应用的进程号)转发pc端口到android指定调试进程(这就是DDMS的功能之一)</li>
+<li>ida-&gt;debugger-&gt;attach-&gt;localhost(此时可设置debug options设置ida断点位置，比如在加载so时停下，可分析一个app的所有过程<strong>经测试不管用，要在进入调试窗口后的debugger-&gt;debugger options中设置有用</strong>，加载so时会直接断在linker中)-&gt;指定目标进程附加,此时该进程会处于ida调试之中。</li>
+<li>jdb -connect com.sun.jdi.SocketAttach:hostname=localhost,port=8700（jdb进行附加）这个就是java层的调试原理，通过java调试协议JDWP运行该应用，此时jdb调试与应用一起被ida中断</li>
+<li>此时ida中就可以使用od调试方法了。</li>
+</ol>
+<p><strong>静态分析so后附加进程</strong><br>成功<br>此方法用于已经有了so文件,停在so文件指定的位置。</p>
+<ol>
+<li>前提完成,apk安装。</li>
+<li>首先打开ida加载指定so,找到需要调试的函数并记住函数的地址</li>
+<li>运行应用并保证要调的模块已经加载(此时JNI_Onload()什么的已经执行了)</li>
+<li>ida-&gt;debugger-&gt;selectdebugger-&gt;..-&gt;process option设置localhost。但其他的不用改，那是指定应该匹配什么so文件用的之后会匹配对应模块</li>
+<li>ida-&gt;debugger-&gt;Attach to process。之后选择要附加的进程进行附加，附加成功后弹出模块找不到错误(大概为ida找不到模块的代码文件(已加载进程序的so，ida不知其路径，而对于之前的可执行程序有路径就可分析文件中的代码))但是有一个模块可选same按钮，这是识别出进程中某模块和本地ida分析的文件名相同</li>
+<li>ctrl+s找到与目标so同名的模块code区记住其start地址，按G跳到该地址加之前记住的函数地址处即可找到该函数，断点即可。</li>
+<li>android中触发原生函数，即可中断开始调试</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/10/AS下cmake使用/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1838,299 +2019,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/25/ARM汇编/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="imbaya">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/1.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="GGWP">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/25/ARM汇编/" itemprop="url">ARM汇编</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-25T22:07:44+08:00">
-                2018-04-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/android/" itemprop="url" rel="index">
-                    <span itemprop="name">android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="一前备小理解"><a href="#一前备小理解" class="headerlink" title="一前备小理解"></a>一前备小理解</h2><h4 id="1-平台"><a href="#1-平台" class="headerlink" title="1.平台"></a>1.平台</h4><p> linux内核可以被交叉编译为任意平台的系统。只需对应的编译器即可。因此可以在arm下运行（google采用arm为最初的android支持的处理器架构）。类比于一些linux发行版（ubuntu）支持i386（intel32位）和amd64</p>
-<h4 id="2-x86汇编与AT-amp-T汇编"><a href="#2-x86汇编与AT-amp-T汇编" class="headerlink" title="2.x86汇编与AT&amp;T汇编"></a>2.x86汇编与AT&amp;T汇编</h4><p> x86汇编与AT&amp;T汇编。其实层次应该是AT&amp;T与intel都属于x86汇编。二者区别主要为语法与格式。（我学的王爽汇编是intel）举几个例子：<br>AT&amp;T: movw 4(%bp), %dx<br>Intel: mov dx,[bp+4]</p>
-<h4 id="3-中断"><a href="#3-中断" class="headerlink" title="3.中断"></a>3.中断</h4><p>中断用于cpu停止执行当前代码，转而执行中断处理，处理后可以回到原代码处。<br>分类：可分为CPU内部与外部中断，百度上：<br>硬件中断：</p>
-<ol>
-<li>可屏蔽中断：可以被屏蔽</li>
-<li>非可屏蔽中断：不可屏蔽的硬件中断</li>
-<li>处理器间中断：一种特殊的硬件中断。由处理器发出，被其它处理器接收。用于多处理器间同步</li>
-<li>伪中断：一类不希望被产生的硬件中断。</li>
-</ol>
-<p>软件中断：</p>
-<ol>
-<li>软件中断。是一条CPU指令，用以自陷一个中断。由于软中断指令通常要运行一个切换CPU至内核态（Kernel Mode/Ring 0）的子例程，它常被用作实现系统调用（System call）。x86中的od基于int 3中断</li>
-</ol>
-<p>内存中从0开始的部分有着中断向量表，用于cpu寻找对应的中断发生时该执行的代码位置</p>
-<h4 id="4-端口"><a href="#4-端口" class="headerlink" title="4.端口"></a>4.端口</h4><p>和cpu通过总线相连的除了内存RAM、内部寄存器，还有各种芯片（外设），它们对cpu提供端口（寄存器）从而cpu可操控。</p>
-<p>另注：读懂操作系统底层资源管理需要：汇编，微机原理</p>
-<h2 id="二ARM处理器"><a href="#二ARM处理器" class="headerlink" title="二ARM处理器"></a>二ARM处理器</h2><p>ARM采用RISC指令集，主要全面用于嵌入式及移动领域<br>ARM处理器家族：<br><img src="https://i.imgur.com/zKymBGG.jpg" alt=""><br>相同架构兼容同一套ARM指令集<br>特性解释：</p>
-<ol>
-<li>Thumb是ARM指令压缩形式子集，1为16位，2扩充32位</li>
-<li>VFP提供浮点运算能力</li>
-<li>Jazelle为 .class文件运行加速dex无用</li>
-<li>NEON、SIMD多媒体加速</li>
-</ol>
-<p>我的1+5：骁龙835是兼容ARM指令集的处理器，由高通公司产，支持快充。<br>ARM公司本身并不参与终端处理器芯片的制造和销售，而是通过向其它芯片厂商授权设计方案，来获取收益。但也有少数手机处理器厂商，如高通，直接在ARM v7指令集的基础上深度开发自己的处理器微架构，如高通公司的Scorpion和Krait，进而设计自主的CPU，具有更大的灵活性。</p>
-<h2 id="三android支持的架构"><a href="#三android支持的架构" class="headerlink" title="三android支持的架构"></a>三android支持的架构</h2><p>最初选择ARM并做了大量优化。但也支持其他架构cpu。比如：x86、atom（凌动）、MIPS</p>
-<h2 id="四android-native-与arm汇编程序"><a href="#四android-native-与arm汇编程序" class="headerlink" title="四android native 与arm汇编程序"></a>四android native 与arm汇编程序</h2><p>android ndk可将c++编译为基于特定处理器的可执行文件于apk的lib中。这是我环境下打包apk/lib中的：<br><img src="https://i.imgur.com/TspgmUE.png" alt=""><br>可见不同cpu架构下的可执行文件不同，操作系统只能提供api来屏蔽底层。但为了执行还需ABI相同。<br>在这里主要为arm elf<br>android的arm汇编是gun arm汇编格式，使用的汇编器为GAS<br>android ndk中编译使用的是gcc。过程：</p>
-<ol>
-<li>预处理 -E 生成.i全部展开</li>
-<li>编译 -S 语法检查生成arm汇编代码.s</li>
-<li>汇编 -c 生成.o目标文件</li>
-<li>连接 生成可执行文件</li>
-</ol>
-<p>底层汇编与c同用一套api接口<br>arm处理器有7种运行模式，一般为用户模式，不同模式寄存器与可访问资源不同<br>arm处理器有俩种工作状态：arm与thumb</p>
-<h3 id="arm汇编程序结构"><a href="#arm汇编程序结构" class="headerlink" title="arm汇编程序结构"></a>arm汇编程序结构</h3><p>示例：</p>
-<p>c：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line"></div><div class="line">int main(int argc, char* argv[])&#123;</div><div class="line">	printf(&quot;Hello ARM!\n&quot;);</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>ARM：<strong>.s</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line">@开头为架构定义</div><div class="line">  .arch armv5te  @指定arm处理器架构确定指令集</div><div class="line">        .fpu softvfp @协处理类型，这里表示用浮点运算库模拟协处理器。</div><div class="line">        .eabi_attribute 20, 1 @接口属性</div><div class="line">        .eabi_attribute 21, 1</div><div class="line">        .eabi_attribute 23, 3</div><div class="line">        .eabi_attribute 24, 1</div><div class="line">        .eabi_attribute 25, 1</div><div class="line">        .eabi_attribute 26, 2</div><div class="line">        .eabi_attribute 30, 6</div><div class="line">        .eabi_attribute 34, 0</div><div class="line">        .eabi_attribute 18, 4</div><div class="line">        .file   &quot;hello.c&quot;</div><div class="line">        .section        .rodata   @段1：只读</div><div class="line">        .align  2</div><div class="line">.LC0:</div><div class="line">        .ascii  &quot;Hello ARM World\000&quot;</div><div class="line">        .text     @段2：代码</div><div class="line">        .align  2</div><div class="line">        .global main</div><div class="line">        .type   main, %function</div><div class="line">main:</div><div class="line">        @ args = 0, pretend = 0, frame = 8</div><div class="line">        @ frame_needed = 1, uses_anonymous_args = 0</div><div class="line">        stmfd   sp!, &#123;fp, lr&#125;   </div><div class="line">        add     fp, sp, #4</div><div class="line">        sub     sp, sp, #8</div><div class="line">        str     r0, [fp, #-8]</div><div class="line">        str     r1, [fp, #-12]</div><div class="line">        ldr     r3, .L3</div><div class="line">.LPIC0:</div><div class="line">        add     r3, pc, r3</div><div class="line">        mov     r0, r3</div><div class="line">        bl      puts(PLT)</div><div class="line">        mov     r3, #0</div><div class="line">        mov     r0, r3</div><div class="line">        sub     sp, fp, #4</div><div class="line">        @ sp needed</div><div class="line">        ldmfd   sp!, &#123;fp, pc&#125;</div><div class="line">.L4:</div><div class="line">        .align  2</div><div class="line">.L3:</div><div class="line">        .word   .LC0-(.LPIC0+8) @字符串相对于调用处的偏移</div><div class="line">        .size   main, .-main</div><div class="line">        .ident  &quot;GCC: (GNU) 4.8.2&quot;</div><div class="line">        .section        .note.GNU-stack,&quot;&quot;,%progbits  @段3：禁止生成可执行堆栈，放溢出漏洞</div></pre></td></tr></table></figure>
-<p>EXPORT 表示被程序导出</p>
-<h4 id="段"><a href="#段" class="headerlink" title="段"></a>段</h4><p>c等语言的段（节区）是编译器自动生成的：列如.data .text之类<br>section的存在并不是为了以数据功能为准则划分数据，而是以数据属性为标准来归类数据。就是可读性、可写性以及可执行性。<br>c中的节区十分自由，常见的有：</p>
-<ol>
-<li>.text - 不多说了，就是保存代码的节</li>
-<li>.data - 保存数据的节，这个对应C语言中以初始化的全局变量数据。想想为什么你在源码里初始化一个全局变量后运行时这个变量的值正是你想要的那个？int a = 12;并不意味着CRT为你执行了一个赋值语句，而是a在PE文件中保存的位置已经被硬编码了一个12的值。这样loader加载程序时，你给的初值被从PE文件读取到了内存中变量a的位置，这样才使你的变量a有了初值。</li>
-<li>.rdata - 保存常量数据的节。这个可以对应C语言中的常数和常量字符串，同上面一样的原因，他们的初值被保存到了PE文件的次Section中，而不是在运行时被赋值。</li>
-<li>.bss - (Block Start with Symbol)这个section对应C程序中的全局未初始化变量。啥？你说C中未初始化的全局变量实际上全被初始化成了0？这是因为实际上操作系统是这样干的——你的全局未初始化变量由于没有初值，所以不需要将值像上面两个一样保存到PE文件中（所以.bss节除了描述信息之外不占据磁盘空间），但是.bss会描述一段内存区域，loader在加载.bss section时直接开辟这么一块包括所有未初始化数据的内存区域，然后直接将这区域清零。这就是C中全局未初始化数据之所以为零的原因了。</li>
-<li>.idata - 这个是保存程序导入表(Import Table)的节。当然，IT、ILT以及IAT也常常被保存在.rdata中，为什么？是考虑到安全的因素，所以将IAT放在不可写的.rdata里以防止IAT被恶意更改从而造成程序的安全隐患吧。</li>
-<li>.edata - 这个是保存导处表的(Export Table)的节。</li>
-<li>.reloc - 这个节是保存重定位数据的</li>
-<li>.rsrc - 这节是保存程序资源的。想你的程序字符串啊、对话框模板啊、位图、鼠标光标什么的都在这里。实际上这个节储存.resx文件编译后的结果。</li>
-<li>.textbss - 这节比较好玩，它是和微软Incremental Linking(增量链接)特性相关的。</li>
-</ol>
-<p>而在汇编中，我们需要手动分段（汇编基本就是机器码助记符，基本内存中就不变了）<br>arm下：<br>.section name flag type 平台参数<br>flag：段的属性：读写执行<br>type：段的类型progbits表示有数据，note表示数据非本程序使用</p>
-<h4 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h4><p>arm汇编支持俩种：</p>
-<ol>
-<li>/<em> </em>/</li>
-<li>@一行</li>
-</ol>
-<h4 id="标号"><a href="#标号" class="headerlink" title="标号"></a>标号</h4><p>标号名 :<br>标号名任意，前面不用加.</p>
-<h4 id="编译器指令"><a href="#编译器指令" class="headerlink" title="编译器指令"></a>编译器指令</h4><p>arm汇编中所有.开头的都是汇编器指令，汇编器指令与汇编器相关，不属于arm指令集<br>GAS本示例中有：</p>
-<ol>
-<li>.file指定了源文件名</li>
-<li>.align指定代码对齐方式，后面的数是2的几次方</li>
-<li>.ascii申明字符串</li>
-<li>.global申明全局符号</li>
-<li>.type指定符号类型</li>
-<li>.word用来存放地址</li>
-<li>.size设置指定符号的大小</li>
-<li>ident编译器标识，无用。生成后位于.comment段中。（注解）</li>
-</ol>
-<h4 id="子程序与参数传递"><a href="#子程序与参数传递" class="headerlink" title="子程序与参数传递"></a>子程序与参数传递</h4><p>.global 函数名<br>.type 函数名,%function<br>函数名：<br>函数体</p>
-<p><strong>ARM汇编规定：R0-R3这4个寄存器用来传递函数调用的1到4个参数，多的用堆栈来传递。R0寄存器用于存放函数返回值</strong></p>
-<h2 id="五ARM寄存器"><a href="#五ARM寄存器" class="headerlink" title="五ARM寄存器"></a>五ARM寄存器</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>ARM微处理器共有37个32位寄存器，其中31个为通用寄存器，6个为状态寄存器。但是这些寄存器不能被同时访问，具体哪些寄存器是可以访问的，取决ARM处理器的工作状态及具体的运行模式。但在任何时候，通用寄存器R14~R0、程序计数器PC、一个状态寄存器都是可访问的。都是32位。</p>
-<h3 id="7种状态"><a href="#7种状态" class="headerlink" title="7种状态"></a>7种状态</h3><p>ARM手册中的寄存器状态图：<br><img src="https://i.imgur.com/qwUMkRh.png" alt=""><br>上面为通用寄存器。下面为状态寄存器。<br>CPU会根据不同的工作模式，使部分寄存器可见（即可被使用），图中有灰色下标的正是不同模式下可见的寄存器，被称为分组寄存器。未分组的寄存器在不同模式下都是可见的，但是在寄存器使用时，分组寄存器会屏蔽共享寄存器，从而实现特殊用途。</p>
-<h3 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h3><h4 id="通用寄存器"><a href="#通用寄存器" class="headerlink" title="通用寄存器"></a>通用寄存器</h4><ol>
-<li>不分组寄存器（R0-R7） ：R0-R7是不分组寄存器。这意味着在所有处理器模式下，访问的都是同一个物理寄存器。不分组寄存器没有被系统用于特别的用途，任何可采用通用寄存器的应用场合都可以使用未分组寄存器。</li>
-<li>分组寄存器（R8-R14） ：在不同模式下可能作用不同，且每个寄存器不同状态可能对应不同物理寄存器。（表中的_后缀）。主要用于在中断等的备份。</li>
-<li>程序计数器R15（PC）：寄存器R15被用作程序计数器，也称为PC。其值等于当前正在执行的指令的地址+8。</li>
-</ol>
-<p>几个特殊的：<br>1、R13 ——&gt; SP，为堆栈寄存器，用于C语言类程序之间调用所需的空间指针；</p>
-<p>2、R14 ——&gt; LR，为连接寄存器，在发生程序调用时，一般用户存放程序返回地址；</p>
-<p>3、R15 ——&gt; PC，为程序计数寄存器，存放西一条要执行的程序码地址。</p>
-<h4 id="cpu执行过程详解"><a href="#cpu执行过程详解" class="headerlink" title="cpu执行过程详解"></a>cpu执行过程详解</h4><p>LR的俩个功能：</p>
-<ol>
-<li>保存子程序返回地址，使用BL或BLX时，跳转指令自动把返回地址放入r14中</li>
-<li>当异常发生时，异常模式的r14用来保存异常返回地址，将r14入栈可以处理嵌套中断。</li>
-</ol>
-<p>ARM处理器的三级流水线和多级流水线：<br><img src="https://i.imgur.com/dy0Ee5S.jpg" alt=""></p>
-<p>一条汇编指令的运行有三个步骤，取指、译码、执行，当第一条汇编指令取指完成后，紧接着就是第二条指令的取指，然后第三条…如此嵌套<br>因此一条arm指令为4字节但是却+8<br>注意存的LR是自动存跳转时+4。所以直接赋给pc就回去了。<br>但异常时就不一定了，pc要单独计算。</p>
-<h4 id="状态寄存器"><a href="#状态寄存器" class="headerlink" title="状态寄存器"></a>状态寄存器</h4><p>CPSR在每个异常模式下都有一个对应的物理寄存器——程序状态保存寄存器SPSR。当异常出现时，SPSR用于保存CPSR的值，以便异常返回后恢复异常发生时的工作状态。</p>
-<p><img src="https://i.imgur.com/LiWHGVL.png" alt=""></p>
-<h5 id="条件标志位"><a href="#条件标志位" class="headerlink" title="条件标志位"></a>条件标志位</h5><p>N(Negative)、Z(Zero)、C(Carry)及V(oVerflow)统称为条件标志位。大部分的ARM指令可以根据CPSR中的这些条件标志位来选择性地执行。</p>
-<ol>
-<li>N:本位设置成当前指令运算结果的bit[31)的值当两个补码表示的有符号整数运算时，N=I表示运算的结果为负数；N=0表示结果为正数或零。</li>
-<li>Z:Z=1表示运算的结果为零；Z=0表示运算的结果不为零。对于CMP指令，Z=1表示进行比较的两个数大小相等。</li>
-<li>C:在加法指令中(包括比较指令CMN)，当结果产生了进位，则C=1，表示无符号数运算发生上溢出；其他情况下C=0。<br>在减法指令中(包括比较指令CMP)，当运算中发生借位则C=0表示无符号数运算发生下溢出；其他情况下C=1。<br>对于包含移位操作的非加／减法运算指令，C中包含最后一次溢出的位数数值。<br>对于其他非加／减法运算指令，C位的值通常不受影响。</li>
-<li>V:对于加／减法运算指令，当操作数和运算结果为二进制的补码表示的带符号数时V＝1表示符号位溢出。通常其他的指令不影响V位.</li>
-</ol>
-<h5 id="Q标志位"><a href="#Q标志位" class="headerlink" title="Q标志位"></a>Q标志位</h5><p>主要用于指示增强的DSP指令是否发生了溢出。</p>
-<h5 id="CPSR中的控制位"><a href="#CPSR中的控制位" class="headerlink" title="CPSR中的控制位"></a>CPSR中的控制位</h5><p>CPSR的低8位I、F、T及M[4：0]统称为控制位。当异常中断发生时这些位发生变化。在特权级的处理器模式下，软件可以修改这些控制位。</p>
-<ol>
-<li>当I=1时禁止IRQ中断。<br>当F=1时禁止FIQ中断。</li>
-<li>对于ARMv4以及更高版本的T系列的ARM处理器：<br>T=0表示执行ARM指令。<br>T=1表示执行Thumb指令。<br>对于ARMv5以及更高的版本的非T系列的ARM处理器：<br>T=0表示执行ARM指令。<br>T=1表示强制下一条执行的指令产生未定义指令中断。</li>
-<li>控制位M[4：0]控制处理器模式：<br><img src="https://i.imgur.com/9MziHmD.png" alt=""></li>
-</ol>
-<p>CPSR中的其他位用于将来ARM版本的扩展。</p>
-<h2 id="六ARM汇编"><a href="#六ARM汇编" class="headerlink" title="六ARM汇编"></a>六ARM汇编</h2><h3 id="ARM处理器寻址方式"><a href="#ARM处理器寻址方式" class="headerlink" title="ARM处理器寻址方式"></a>ARM处理器寻址方式</h3><p>寻址：找操作数</p>
-<ol>
-<li>立即寻址：<br>mov R0,#123  R0=123<br>立即数以#前缀，表示16进制时用0x开头。</li>
-<li>寄存器寻址：<br>mov R0,R1    R0=R1</li>
-<li>寄存器位移寻址：<br>LSL逻辑左移，LSL逻辑右移，ASR算数（用符号位补）右移,ROR循环右移，RRX带扩展的循环右移<br>mov R0，R1,LSL #2   R0=R1*4;</li>
-<li>寄存器间接寻址：<br>LDR R0,[R1]<br>取地址为R1值上的值。</li>
-<li>基址寻址：<br>LDR R0,[R1,#-4]<br>带偏移的指针取值</li>
-<li>多寄存器寻址：<br>LMDIA R0,{R1-R4}<br>R1=[R0]  R2=[R0+#4]……</li>
-<li>堆栈寻址：<br>LMDFD SP！,{R1-R7,LR}<br>针对栈的LMD</li>
-<li>块拷贝寻址：<br>LMDIA R0!,{R1-R3}<br>!表示带写回</li>
-<li>相对寻址：<br>BL NEXT<br>…<br>NEXT:<br>…<br>偏移+当前执行PC</li>
-</ol>
-<h3 id="ARM指令集"><a href="#ARM指令集" class="headerlink" title="ARM指令集"></a>ARM指令集</h3><p>指令和伪指令：前者编译后会生成一串1和0组成的机器码，后者帮助前者进行编译过程，不会生成机器码。<br>&lt;必须&gt;{可选}<br>指令格式：助记符{执行条件}{S}{.W|.N}+参1，参2，{参3}<br><strong> 格式说明 </strong><br>助记符：指令助记符<br>执行条件后缀：<br><img src="https://i.imgur.com/vrpY3LR.png" alt=""><br>S表示是否影响CPSR寄存器的值<br>.W.N表示有些代码可以生成的宽度。<br>参1表示目的，参2,参3表示源</p>
-<p><strong> LDR/STR架构 </strong><br>ARM采用RISC架构，CPU本身不能直接读取内存，而需要先将内存中内容加载入CPU中通用寄存器中才能被CPU处理。ldr/str组合用来实现 ARM CPU和内存数据交换。</p>
-<p><strong>指令后缀 </strong><br>大部分指令适用<br>依次：</p>
-<ol>
-<li>type  默认为4字节</li>
-<li>条件  默认AL</li>
-<li>S    有的默认改变</li>
-<li>WN</li>
-</ol>
-<p>type有：<br>B、H：无符号8、16位<br>SB、SH：有符号8、16位</p>
-<h4 id="1-跳转"><a href="#1-跳转" class="headerlink" title="1.跳转"></a>1.跳转</h4><p>跳转方式：使用指令或者给pc寄存器赋值</p>
-<ol>
-<li>B ： B{执行条件}+标号  直接跳</li>
-<li>BL ： BL{执行条件}+标号    存下一条地址到LR中，然后跳</li>
-<li>BX ： BX{执行条件}+Rm 判断Rm的位0是否为1，如果1就跳时改变CPSR的T标志位为1否则为0。</li>
-<li>BLX ： BX+BL</li>
-</ol>
-<h4 id="2-存储器访问"><a href="#2-存储器访问" class="headerlink" title="2.存储器访问"></a>2.存储器访问</h4><p>ldmia r0, {r2 - r3}</p>
-<p>LDR ：寄存器&lt;-存储器<br>STR ：寄存器-&gt;存储器<br>批量<br>LDM、STM可以加后缀大块存储器与多个寄存器传输，其后缀：<br>ia先传输，再地址+4<br>ib先地址+4，再传输<br>da先传输，再地址-4<br>db先地址-4，再传输<br>fd满递减堆栈<br>ed空递减堆栈<br>fa满递增堆栈<br>ea空递增堆栈<br>后四个最后针对栈的主要：<br>空栈：栈指针指向空位，每次存入时可以直接存入然后栈指针移动一格；而取出时需要先移动一格才能取出。<br>满栈：栈指针指向栈中最后一格数据，每次存入时需要先移动栈指针一格再存入；取出时可以直接取出，然后再移动栈指针。<br>增栈：栈指针移动时向地址增加的方向移动的栈。<br>减栈：栈指针移动时向地址减小的方向移动的栈。</p>
-<p>！：感叹号的作用就是r0的值在ldm过程中发生的增加或者减少最后写回到r0去，也就是说ldm时会改变r0的值。<br>^ ：在目标寄存器中有pc时，会同时将spsr写入到cpsr，一般用于从异常模式返回。</p>
-<p>各种后缀以理解为主，不需记忆，最常见的是stmia和stmfd。<br>谨记：操作栈时使用相同的后缀就不会出错，不管是满栈还是空栈、增栈还是减栈。<br>ia、ib、da、db都是手动决定加减传输。fd、ed、fa、ea指的是专门4种栈的方式，由stm、ldm自动识别并相反处理。</p>
-<p>—————————————————————————<br>PUSH：将寄存器推入满递减堆栈，可批量<br>POP：从满递减堆栈中弹出。<br>SWP：SWP R1，R2，[R3]  R3所指到R1，R2赋给R3所指</p>
-<h4 id="3-数据处理指令"><a href="#3-数据处理指令" class="headerlink" title="3.数据处理指令"></a>3.数据处理指令</h4><p>mov R&lt;-X数据传送<br>mvn R&lt;-X数据非后传送</p>
-<p>add R1,R2,R3  R1=R2+R3<br>ADC R1,R2,R3  R1=R2+R3+CPSR的C条件位</p>
-<p>SUB R1,R2,R3   R1=R2-R3<br>RSB R1,R2,R3   R1=R3-R2<br>SBC R1,R2,R3   R1=R2-R3再减去取反的C条件位<br>RSC R1,R2,R3   R1=R3-R2再减去取反的C条件位</p>
-<p>MUL R1,R2,R3   R1=R2<em>R3<br>MLS R1,R2,R3,R4 R1=R4-R2</em>R3<br>MLA R1,R2,R3,R4 R1=R4+R2<em>R3<br>UMULL R1,R2,R3,R4 （R2,R1)=R3</em>R4 无符号<br>UMLAL R1,R2,R3,R4 （R2,R1)=R3<em>R4+（R2,R1) 无符号<br>SMULL R1,R2,R3,R4 （R2,R1)=R3</em>R4 有符号<br>SMLAL R1,R2,R3,R4 （R2,R1)=R3*R4+（R2,R1) 有符号</p>
-<p>SDIV R1,R2,R3 有符号除法<br>UDIV R1,R2,R3 R0=R1/R2无符号除法</p>
-<p>ASR算数右移<br>LSL逻辑左移<br>LSR逻辑右移<br>ROR循环右移<br>RRX带扩展循环右移</p>
-<p>AND逻辑与<br>ORR逻辑或<br>EOR异或<br>BIC R1,R2,R3 R3取反与R2与赋给R1 清除指令</p>
-<p>CMP R1,R2 R1-R2仅改标志位<br>CMN R1,R2 R1+R2仅改标志位<br>TST R1,R2 R1&amp;R2仅改标志位<br>TEQ R1,R2 R1异或^R2仅改标志位</p>
-<p>SWI R0   软中断R0为24位中断号，系统中断为0<br>NOP 空指令<br>MRS R1,CPSR读取状态寄存器<br>MSR R1,CPSR写入状态存储器</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2176,7 +2069,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">120</span>
+                <span class="site-state-item-count">121</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2198,7 +2091,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-count">106</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

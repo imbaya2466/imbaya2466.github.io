@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="fuzz," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。 简单理解fuzz :自动化执行大量随机测试用例用途:测试、挖洞，漏洞与软件bug是相伴的。高效的fuzz可以快速测试出软件的carsh漏洞。之后可以利用漏洞完成崩溃或者是攻击。由于软件逻辑扩大，仅靠人力不可能测出所有bug。">
+<meta name="keywords" content="fuzz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fuzz总结">
+<meta property="og:url" content="http://yoursite.com/2019/12/23/fuzz总结/index.html">
+<meta property="og:site_name" content="GGWP">
+<meta property="og:description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。 简单理解fuzz :自动化执行大量随机测试用例用途:测试、挖洞，漏洞与软件bug是相伴的。高效的fuzz可以快速测试出软件的carsh漏洞。之后可以利用漏洞完成崩溃或者是攻击。由于软件逻辑扩大，仅靠人力不可能测出所有bug。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-22T16:40:01.015Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="fuzz总结">
+<meta name="twitter:description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。 简单理解fuzz :自动化执行大量随机测试用例用途:测试、挖洞，漏洞与软件bug是相伴的。高效的fuzz可以快速测试出软件的carsh漏洞。之后可以利用漏洞完成崩溃或者是攻击。由于软件逻辑扩大，仅靠人力不可能测出所有bug。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/23/fuzz总结/"/>
+
+
+
+
+
+  <title>fuzz总结 | GGWP</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">GGWP</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/23/fuzz总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="imbaya">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/1.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="GGWP">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">fuzz总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-23T00:39:27+08:00">
+                2019-12-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pwn/" itemprop="url" rel="index">
+                    <span itemprop="name">pwn</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。<br>在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。</p>
+<h2 id="简单理解"><a href="#简单理解" class="headerlink" title="简单理解"></a>简单理解</h2><p>fuzz :自动化执行大量随机测试用例<br>用途:测试、挖洞，漏洞与软件bug是相伴的。<br>高效的fuzz可以快速测试出软件的carsh漏洞。之后可以利用漏洞完成崩溃或者是攻击。由于软件逻辑扩大，仅靠人力不可能测出所有bug。</p>
+<p>如何生成测试用例。<br>1）基于变异：根据已知数据样本通过变异的方法生成新的测试用例；<br>2）基于生成：根据已知的协议或接口规范进行建模，生成测试用例；</p>
+<p>AFL、honggfuzz是典型的基于变异，大致流程:</p>
+<ol>
+<li>从源码编译程序时进行插桩，以记录代码覆盖率（Code Coverage）；这一步需要编译器的支持，可以基于函数、基本块、边界。clang 支持并提供了相应的回调函数。也可以进行二进制插桩</li>
+<li>选择一些输入文件，作为初始测试集加入输入队列（queue）；这个选择是有要求的，小而精…</li>
+<li>将队列中的文件按一定的策略进行“突变”；</li>
+<li>如果经过变异文件更新了覆盖范围，则将其保留添加到队列中;</li>
+<li>上述过程会一直循环进行，期间触发了crash的文件会被记录下来；会自动判断crash的触发条件是否重复，重复不记录</li>
+</ol>
+<p>语料库:<br>好的种子可以加快fuzzing的速度，因此也不能是完全随机的。<br>有效的输入-无效输入产生bug与崩溃，但是有效输入更快的找到执行路径。<br>尽量小的体积-减少测试和处理的时间<br>开源语料库&gt;测试用例&gt;随意<br>语料库蒸馏-语料库是庞大的，寻找到的大量文件需要精简。尝试找到与语料库全集具有相同覆盖范围的最小子集。</p>
+<p>fuzz的几种接口:不同的是在目标应用中插入的控制代码<br>Persistent fuzzing<br>    由用户自己的程序连接fuzz模块，在一个进程内进行持久的fuzz<br>文件输入<br>    由文件参数输入，使用forkserver运行目标</p>
+<p>黑盒fuzz方式:<br>二进制插桩：使用Pin或DynamoRIO动态插桩监控代码覆盖率，比如winafl<br>虚拟化技术：使用Qemu或Boch等虚拟化技术实现应用层和内核层的代码覆盖率监控，比如afl、bochpwn<br>硬件级技术：使用Intel Processor Trace（PT）技术，比如honggfuzz</p>
+<h2 id="honggfuzz"><a href="#honggfuzz" class="headerlink" title="honggfuzz"></a>honggfuzz</h2><p>代码的覆盖信息由编译器提供，LLVM的SanitizerCoverage<br>SanitizerCoverage简介:<br>随着-fsanitize-coverage=trace-pc编译器将插入 __sanitizer_cov_trace_pc()每个边缘。每次间接调用都会插入一个附加…=trace-pc,indirect-calls标志 。这些回调未在Sanitizer运行时实现，应由用户定义。<br>edge （默认）：检测边缘<br>bb：基本块被检测。<br>func：只会检测每个函数的输入块。</p>
+<p>AddressSanitizer是google的，llvm对其做了集成，可以使用-fsanitize=address开启。<br>-fno-omit-frame-pointer禁止把ebp当做通用寄存器使用，因为优化后可能将栈帧优化掉，其不利于对栈进行分析遍历调用<br>-fsanitize-coverage=trace-pc-guard,trace-cmp,trace-gep,trace-div<br>coverage为代码覆盖相关选项，trace-pc-guard跟踪调用块<br>trace-cmp跟踪比较检测，trace-gep捕获数组索引，trace-div检测整数除法指令<br>indirect-calls </p>
+<p>honggfuzz 参数:<br>-P ： 用于开启 persistent 模式<br>-f :  初始文件文集<br>-W :  工作目录</p>
+<p>honggfuzz注册了llvm trace_pc的各种回调，用来记录代码覆盖率<br>ASAN-style的Persistent fuzzing中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#include &lt;inttypes.h&gt;</div><div class="line">#include &lt;testlib.h&gt;   </div><div class="line">extern int LLVMFuzzerTestOneInput(uint8\_t **buf, size\_t *len);</div><div class="line">int LLVMFuzzerTestOneInput(uint8\_t *buf, size\_t len) &#123;</div><div class="line">    \_FuncFromFuzzedLib\_(buf, len);// 目标函数</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>ASAN-style是由honggfuzz驱动，使用HF_ITER，和自己写HF_ITER style没区别。</p>
+<p>因此输入形式有:<br>Persistent、直接向标准输入输入(in)、直接传入命令行(___FILE___)</p>
+<h2 id="java-fuzz"><a href="#java-fuzz" class="headerlink" title="java fuzz"></a>java fuzz</h2><p>classloader彻底理解<br>java里面 命名空间就是  类明+加载他的类加载器，所以开叉会加载俩遍，不同类加载器加载同一个类也处于不同的命名空间中，在内存中被视为不同的类。<br>判断自己是都加载过-&gt;委托向上<br>所以结果从下到上看是否加载过，然后再从上到下加载<br>contextClassLoader:<br>父Classloader可以使用当前线程Thread.currentthread().getContextLoader()中指定的classloader中加载的类。颠覆了父ClassLoader不能使用子Classloader或者是其它没有直接父子关系的Classloader中加载的类这种情况。这个就是Context Class Loader的意义。<br>Thread默认继承Parent Thread的 Context ClassLoader。如果你整个应用中都没有对此作任何处理，那么所有的Thread都会以System ClassLoader作为Context ClassLoader<br>获得全部线程:<br>ThreadGroup的enumerate可以设置第二个参数获得全部子线程<br>activeCount 返回此线程组及其子组中活动线程数的估计值。递归地迭代此线程组中的所有子组。</p>
+<p>java实用工具:<br>jmap -dump:live,format=b,file=heap.bin pid（进程号）<br>jhat -J-mx512m heap.bin 分析，结果以网页展示<a href="http://ip:7000/" target="_blank" rel="external">http://ip:7000/</a>  含详尽的类实例、引用、类加载器信息。</p>
+<p>jps:java 进程信息<br>jstack:某个进程的线程堆栈信息<br>jmap: 堆内存使用状况<br>jstat:jvm状态检测<br>hprof:java -agentlib:hprof[=options] ToBeProfiledClass    hprof能够展现CPU使用率，统计堆内存使用情况。</p>
+<p>java fuzz的目的:</p>
+<ol>
+<li>辅助测试，帮助进行java接口部分的持久测试</li>
+<li>寻找 low-severity或非安全问题，如RuntimeExceptions，抛出一个未声明要抛出异常的代码。包括超时、jvm堆栈溢出、空指针、资源利用等。</li>
+<li>java代码已知安全问题-反序列化、SSRF、XXE</li>
+<li>java-jni-native中的问题。这样可以直接在java角度测试整个模块而不用拆分出jni接口实现fuzz </li>
+</ol>
+<p>实现参考jqf。agent fuzz模式作为毕设项目一部分</p>
+<h2 id="libfuzz-源码简记"><a href="#libfuzz-源码简记" class="headerlink" title="libfuzz 源码简记"></a>libfuzz 源码简记</h2><p>使用:<br>实现接口、连接到libfuzzer库即可。</p>
+<p>驱动在Fuzzer::Loop() </p>
+<p>核心在 Fuzzer::MutateAndTestOne()<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">void Fuzzer::MutateAndTestOne() &#123;</div><div class="line">  MD.StartMutationSequence();</div><div class="line"></div><div class="line">  //取一个语料----emmm我看的就是随机的取语料。。。。</div><div class="line">  auto &amp;II = Corpus.ChooseUnitToMutate(MD.GetRand());</div><div class="line">  const auto &amp;U = II.U;</div><div class="line">  memcpy(BaseSha1, II.Sha1, sizeof(BaseSha1));</div><div class="line">  assert(CurrentUnitData);</div><div class="line">  size\_t Size = U.size();</div><div class="line">  assert(Size &lt;= MaxInputLen &amp;&amp; &quot;Oversized Unit&quot;);</div><div class="line">  //拷贝样本数据到CurrentUnitData</div><div class="line">  memcpy(CurrentUnitData, U.data(), Size);</div><div class="line"></div><div class="line">  assert(MaxMutationLen &gt; 0);</div><div class="line"></div><div class="line">  size\_t CurrentMaxMutationLen =</div><div class="line">      Options.ExperimentalLenControl</div><div class="line">          ? ComputeMutationLen(Corpus.MaxInputSize(), MaxMutationLen,</div><div class="line">                               MD.GetRand())</div><div class="line">          : MaxMutationLen;</div><div class="line"></div><div class="line">  for (int i = 0; i &lt; Options.MutateDepth; i++) &#123;</div><div class="line">    if (TotalNumberOfRuns &gt;= Options.MaxNumberOfRuns)</div><div class="line">      break;</div><div class="line">    size\_t NewSize = 0;</div><div class="line">    //执行变异</div><div class="line">    NewSize = MD.Mutate(CurrentUnitData, Size, CurrentMaxMutationLen);</div><div class="line">    assert(NewSize &gt; 0 &amp;&amp; &quot;Mutator returned empty unit&quot;);</div><div class="line">    assert(NewSize &lt;= CurrentMaxMutationLen &amp;&amp; &quot;Mutator return overisized unit&quot;);</div><div class="line">    Size = NewSize;</div><div class="line">    if (i == 0)</div><div class="line">      StartTraceRecording();</div><div class="line">    II.NumExecutedMutations++;</div><div class="line">	//这里执行一次用例</div><div class="line">    if (size\_t NumFeatures = RunOne(CurrentUnitData, Size)) &#123;</div><div class="line">      Corpus.AddToCorpus(&#123;CurrentUnitData, CurrentUnitData + Size&#125;, NumFeatures,</div><div class="line">                         /*MayDeleteFile=*/true);</div><div class="line">      ReportNewCoverage(&amp;II, &#123;CurrentUnitData, CurrentUnitData + Size&#125;);</div><div class="line">      CheckExitOnSrcPosOrItem();</div><div class="line">    &#125;</div><div class="line">    StopTraceRecording();</div><div class="line">    TryDetectingAMemoryLeak(CurrentUnitData, Size,</div><div class="line">                            /*DuringInitialCorpusExecution*/ false);</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">变异在:</div><div class="line">// Mutates Data in place, returns new size.</div><div class="line">size\_t MutationDispatcher::MutateImpl(uint8\_t *Data, size\_t Size,</div><div class="line">                                      size\_t MaxSize,</div><div class="line">                                      const std::vector&lt;Mutator&gt; &amp;Mutators) &#123;</div><div class="line">  assert(MaxSize &gt; 0);</div><div class="line">  // Some mutations may fail (e.g. can&apos;t insert more bytes if Size == MaxSize),</div><div class="line">  // in which case they will return 0.</div><div class="line">  // Try several times before returning un-mutated data.</div><div class="line">  for (int Iter = 0; Iter &lt; 100; Iter++) &#123;</div><div class="line">      //随机100次变异，有一次变异成功就返回</div><div class="line">    auto M = Mutators[Rand(Mutators.size())];</div><div class="line">    size\_t NewSize = (this-&gt;*(M.Fn))(Data, Size, MaxSize);</div><div class="line">    if (NewSize &amp;&amp; NewSize &lt;= MaxSize) &#123;</div><div class="line">      if (Options.OnlyASCII)</div><div class="line">        ToASCII(Data, NewSize);</div><div class="line">        //记录当前的变异序列</div><div class="line">      CurrentMutatorSequence.push\_back(M);</div><div class="line">      return NewSize;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  *Data = &apos; &apos;;</div><div class="line">  return 1;   // Fallback, should not happen frequently.</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Mutators中的变异类型有:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">DefaultMutators.insert(</div><div class="line">    DefaultMutators.begin(),</div><div class="line">    &#123;</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_EraseBytes, &quot;EraseBytes&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_InsertByte, &quot;InsertByte&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_InsertRepeatedBytes,</div><div class="line">         &quot;InsertRepeatedBytes&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_ChangeByte, &quot;ChangeByte&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_ChangeBit, &quot;ChangeBit&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_ShuffleBytes, &quot;ShuffleBytes&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_ChangeASCIIInteger, &quot;ChangeASCIIInt&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_ChangeBinaryInteger, &quot;ChangeBinInt&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_CopyPart, &quot;CopyPart&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_CrossOver, &quot;CrossOver&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_AddWordFromManualDictionary,</div><div class="line">         &quot;ManualDict&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_AddWordFromTemporaryAutoDictionary,</div><div class="line">         &quot;TempAutoDict&quot;&#125;,</div><div class="line">        &#123;&amp;MutationDispatcher::Mutate\_AddWordFromPersistentAutoDictionary,</div><div class="line">         &quot;PersAutoDict&quot;&#125;,</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
+<p>EraseBytes:删除随机位置的随机个字节<br>InsertByte:随机位置加一个字节<br>InsertRepeatedBytes:随机位置加多个字节<br>ChangeByte:随机位置改一个字节<br>ChangeBit:随机改一位</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/fuzz/" rel="tag"># fuzz</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/21/python速记/" rel="next" title="python速记">
+                <i class="fa fa-chevron-left"></i> python速记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/1.png"
+               alt="imbaya" />
+          <p class="site-author-name" itemprop="name">imbaya</p>
+           
+              <p class="site-description motion-element" itemprop="description">..........</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">121</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">106</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单理解"><span class="nav-number">2.</span> <span class="nav-text">简单理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#honggfuzz"><span class="nav-number">3.</span> <span class="nav-text">honggfuzz</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java-fuzz"><span class="nav-number">4.</span> <span class="nav-text">java fuzz</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#libfuzz-源码简记"><span class="nav-number">5.</span> <span class="nav-text">libfuzz 源码简记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">imbaya</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":100,"height":200,"hOffset":0,"vOffset":-50},"mobile":{"show":false},"react":{"opacityDefault":1,"opacityOnHover":1},"log":false});</script></body>
+</html>
