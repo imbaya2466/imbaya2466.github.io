@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。 简单理解fuzz :自动化执行大量随机测试用例用途:测试、挖洞，漏洞与软件bug是相伴的。高效的fuzz可以快速测试出软件的carsh漏洞。之后可以利用漏洞完成崩溃或者是攻击。由于软件逻辑扩大，仅靠人力不可能测出所有bug。">
+<meta name="description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。">
 <meta name="keywords" content="fuzz">
 <meta property="og:type" content="article">
 <meta property="og:title" content="fuzz总结">
 <meta property="og:url" content="http://yoursite.com/2019/12/23/fuzz总结/index.html">
 <meta property="og:site_name" content="GGWP">
-<meta property="og:description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。 简单理解fuzz :自动化执行大量随机测试用例用途:测试、挖洞，漏洞与软件bug是相伴的。高效的fuzz可以快速测试出软件的carsh漏洞。之后可以利用漏洞完成崩溃或者是攻击。由于软件逻辑扩大，仅靠人力不可能测出所有bug。">
+<meta property="og:description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-22T16:40:01.015Z">
+<meta property="og:updated_time" content="2019-12-22T16:45:09.220Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="fuzz总结">
-<meta name="twitter:description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。 简单理解fuzz :自动化执行大量随机测试用例用途:测试、挖洞，漏洞与软件bug是相伴的。高效的fuzz可以快速测试出软件的carsh漏洞。之后可以利用漏洞完成崩溃或者是攻击。由于软件逻辑扩大，仅靠人力不可能测出所有bug。">
+<meta name="twitter:description" content="前言找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。">
 
 
 
@@ -373,6 +373,7 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>找工作终于稳定了博客也该继续更起来了。后续可能主要都是更全平台开发相关的了。<br>在此之前，7-10月做了一段时间fuzz相关，毕设也要做fuzz。所以先总结下fuzz相关。</p>
+<a id="more"></a>
 <h2 id="简单理解"><a href="#简单理解" class="headerlink" title="简单理解"></a>简单理解</h2><p>fuzz :自动化执行大量随机测试用例<br>用途:测试、挖洞，漏洞与软件bug是相伴的。<br>高效的fuzz可以快速测试出软件的carsh漏洞。之后可以利用漏洞完成崩溃或者是攻击。由于软件逻辑扩大，仅靠人力不可能测出所有bug。</p>
 <p>如何生成测试用例。<br>1）基于变异：根据已知数据样本通过变异的方法生成新的测试用例；<br>2）基于生成：根据已知的协议或接口规范进行建模，生成测试用例；</p>
 <p>AFL、honggfuzz是典型的基于变异，大致流程:</p>
